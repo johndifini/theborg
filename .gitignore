@@ -57,9 +57,7 @@ warren-bot-fett/PORTFOLIO.md
 cerebruh/ingest/*
 !cerebruh/ingest/.gitkeep
 cerebruh/wikis/*
-
-# ── Personal runbooks (do not ship) ──────────────────────────
-PUBLISH.md
+!cerebruh/wikis/.gitkeep
 
 # ── Generic catch-alls for accidental drops ──────────────────
 *.sqlite
