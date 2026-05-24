@@ -1,0 +1,34 @@
+Daily market scan — trading-day check.
+
+STEP 1: If today is a US market holiday (New Year's, MLK Day, Presidents' Day, Good Friday, Memorial Day, Juneteenth, Independence Day, Labor Day, Thanksgiving, Christmas), stop and output nothing.
+
+STEP 2: Fetch current portfolio holdings from the URL listed in PORTFOLIO.md
+
+STEP 3: Read PORTFOLIO.md for target allocations, asset category framework, rebalancing parameters, AND rebalancing principles. The principles section is critical — follow it strictly.
+
+STEP 4: Get current market data (free sources — Yahoo Finance, Google Finance, etc.):
+- Major indices: S&P 500, DJIA, Nasdaq, Russell 2000, MSCI EAFE, MSCI EM
+- Bond yields: 2Y, 10Y, 30Y Treasury
+- VIX
+- Key sector movements
+- Significant overnight/pre-market developments
+
+STEP 5: For each portfolio, calculate current allocation across the 4 asset classes (Domestic Equity, Int'l Equity, Domestic Bonds, Int'l Bonds) using current market values. Compare to target allocations. Flag any class with >8% deviation.
+
+STEP 6: Apply these REBALANCING PRINCIPLES in order:
+a) NEVER sell into a selloff. If a position or sector is down, that is a buying opportunity, not a sell signal.
+b) High VIX = opportunity. Elevated volatility means assets are on sale. Look for buying opportunities.
+c) Rebalance by BUYING the underweight class, not by selling beaten-down overweight positions. Use available cash first, then consider trimming positions that are ELEVATED (near highs), not depressed.
+d) NVDA has a strong bias to hold. Only recommend selling if the fundamental case is compelling and well-argued — drift alone is never sufficient reason. If you propose selling NVDA, the argument better be airtight.
+e) Think like an investor: buy low, sell high. Never do mechanical drift-based selling that ignores market context.
+f) For taxable accounts, tax consequences are the #1 priority. For tax-advantaged accounts, focus on market conditions and diversification.
+g) ~1 trade/week max per portfolio.
+
+STEP 7: If a genuine BUYING opportunity to rebalance an underweight class exists — especially when that class is cheap due to market conditions — alert John by piping the message into `${BORG_ROOT}/.bin/notify-telegram.sh warren-bot-fett` (reads the message from stdin, delivers to John's Telegram). The message should contain:
+- Which portfolio and account
+- Current vs. target allocation (the drifted class)
+- Proposed trade (specific ticker, buy/sell, approximate amount)
+- Why NOW is a good entry point (not just that drift exists)
+- For sells: explain why the position being trimmed is elevated/overvalued, not beaten down
+
+If no compelling opportunities exist, output nothing — stay silent. Do NOT recommend selling beaten-down positions to buy bonds during a selloff. That is the opposite of good investing.

@@ -1,0 +1,7 @@
+Biweekly personalization review.
+
+Read ${BORG_ROOT}/c4po/CLAUDE.md (which contains SOUL.md and USER.md sections) and any IDENTITY.md if present. Review the last ~2 weeks of session history in ~/.claude/projects/ — find the subdirectory whose name corresponds to your current working directory (Claude Code derives the dir name from the workspace path).
+
+Ask: do these files still accurately reflect how I'm being used and who I am as the ClaudeOS administrator? Has my role or understanding of John shifted? Are there new responsibilities, preferences, or things to drop?
+
+If changes are warranted, propose specific edits and send them to John by piping the message into `${BORG_ROOT}/.bin/notify-telegram.sh c4po` (reads the message from stdin, delivers to John's Telegram). If everything still fits, send a one-line confirmation the same way.

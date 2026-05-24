@@ -1,0 +1,26 @@
+# Gitleaks config for The Borg.
+#
+# Extends the built-in default ruleset (do NOT remove `useDefault = true` —
+# that's what gives us AWS keys, GitHub tokens, Slack tokens, etc.).
+#
+# Custom additions live under [[rules]] below.
+
+[extend]
+useDefault = true
+
+# ---------------------------------------------------------------------------
+# Google Docs / Sheets / Drive / Forms URLs.
+#
+# Why: "anyone with the link" Google Docs URLs are de facto secrets in this
+# workspace (live spreadsheets contain holdings, sheets contain drafts, etc.).
+# Gitleaks' default rules don't catch them because there's no token signature.
+#
+# Matches any docs.google.com URL — spreadsheets, document, presentation,
+# forms, drawings — plus the drive.google.com share/file form, since those
+# share the same "link == access" property.
+# ---------------------------------------------------------------------------
+[[rules]]
+id          = "google-docs-url"
+description = "Google Docs/Sheets/Drive share URL (anyone-with-link == secret)"
+regex       = '''https?://(?:docs|drive)\.google\.com/[^\s'"<>)]+'''
+tags        = ["url", "google", "share-link"]
