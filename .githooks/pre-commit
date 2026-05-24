@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Pre-commit hook: scan staged changes for secrets with gitleaks.
+#
+# Install (per clone, one-time):
+#   git config core.hooksPath .githooks
+#
+# Bypass for a single commit (use sparingly, e.g. for a known false positive
+# you've already added to .gitleaksignore in a follow-up commit):
+#   SKIP_GITLEAKS=1 git commit ...
+
+set -euo pipefail
+
+if [[ "${SKIP_GITLEAKS:-0}" == "1" ]]; then
+  echo "pre-commit: SKIP_GITLEAKS=1 set — skipping gitleaks scan" >&2
+  exit 0
+fi
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+  cat >&2 <<'EOF'
+pre-commit: gitleaks not found in PATH.
+
+Install it:
+  macOS:  brew install gitleaks
+  Linux:  see https://github.com/gitleaks/gitleaks#installing
+
+Or bypass this commit (NOT recommended) with:
+  SKIP_GITLEAKS=1 git commit ...
+EOF
+  exit 1
+fi
+
+# `gitleaks git --staged` scans only what's in the index — fast, and the
+# right surface for blocking a commit before it lands in history.
+if ! gitleaks git --staged --no-banner --redact --verbose; then
+  cat >&2 <<'EOF'
+
+pre-commit: gitleaks found potential secrets in your staged changes.
+Remove the secret (and rotate it if it ever hit disk), then re-stage.
+
+If this is a false positive, add the fingerprint to .gitleaksignore.
+Emergency bypass: SKIP_GITLEAKS=1 git commit ...
+EOF
+  exit 1
+fi

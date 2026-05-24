@@ -1,0 +1,13 @@
+Scan John's tech sources for the latest episodes/videos: AI Daily Brief, Hard Fork, AI and I, The Artificial Intelligence Show, This Week in Startups, BG2Pod, All-in, Matt Wolfe, AI for Humans, Futurepedia.
+
+Draft X (Twitter) post options ONLY — do NOT include LinkedIn versions unless specifically asked.
+
+IMPORTANT: Provide your 3 BEST drafts only. No more than 3.
+
+Instead of just summarizing episodes, identify key insights and takeaways. Include @mentions, quotes, and YouTube timestamps where possible. Style: friendly, funny, informative; punchy and platform-native.
+
+Avoid overtly political topics (e.g. Anthropic vs Pentagon).
+
+Use ===================================== as separators between options. If nothing compelling found, say so briefly.
+
+Deliver the drafts by piping them into `${BORG_ROOT}/.bin/notify-telegram.sh mrs-beast` (reads the message from stdin, delivers to John's Telegram).

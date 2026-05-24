@@ -1,0 +1,65 @@
+AI Sleeve monthly rebalance — first business day of the month.
+
+STEP 1: This job is fired by launchd on calendar days 1–5 of each month, but should only execute on the first trading day. Stop and output nothing if any of the following are true:
+- Today is Saturday or Sunday.
+- Today is a US market holiday (New Year's, MLK Day, Presidents' Day, Good Friday, Memorial Day, Juneteenth, Independence Day, Labor Day, Thanksgiving, Christmas).
+- ${BORG_ROOT}/warren-bot-fett/ai-sleeve/last-rebalance.json exists and its `date` field is in the current calendar month (already ran this month).
+
+The scheduler will retry on the next business day.
+
+STEP 2: Read ${BORG_ROOT}/warren-bot-fett/ai-sleeve/universe.md. Extract:
+- `basket_size` and `floor_pct` from the Tunables YAML block
+- `ticker_floors` from the Tunables YAML block if present — a map of `{TICKER: floor_pct}` overrides (empty map if absent)
+- The `categories` block: each entry is `{name, members: [list of tickers], min: integer (default 0 if absent)}`
+- All tickers in the `soft_excludes` code block (ignore everything after `#` on each line)
+
+The active candidate universe = union of all `members` across all categories, minus tickers in `soft_excludes`. A ticker may appear in multiple categories (it then counts toward each category's min).
+
+Validate:
+- For each category, drop soft-excluded tickers from its effective members. If `len(effective_members) < min` for any category, halt and report which category is over-constrained by soft-excludes.
+- The sum of all category `min` values must not exceed `basket_size`. If exceeded, halt with details.
+
+STEP 3: For each active candidate, fetch current total market cap. Use stockanalysis.com as primary source: https://stockanalysis.com/stocks/{TICKER_LOWER}/ — the market cap appears on the overview page. If a ticker page fails, fall back to https://stockanalysis.com/etf/{TICKER_LOWER}/ for ETFs, then to companiesmarketcap.com search. Do NOT use Yahoo Finance — it returns 503 to WebFetch.
+
+Record cap in $B for each ticker.
+
+STEP 4: Select the basket using constraint-aware cap-ranking.
+
+a) Rank all candidates by cap descending. Provisionally take the top `basket_size`.
+
+b) For each category, count how many of its `members` are in the provisional basket. If count < min, the category has a shortfall of (min - count).
+
+c) If there are shortfalls: resolve them iteratively. For each unsatisfied category, pick the highest-cap missing member as the inclusion candidate. Find the lowest-cap name currently in the basket that is NOT a member of any still-unsatisfied category and whose removal would NOT push another category below its min. Swap: remove that name, insert the inclusion candidate. Repeat until all categories are satisfied.
+
+d) If no valid swap exists (every basket name is either constraint-protected or its removal would violate another constraint), halt and report which categories collide and which candidates are competing for the same slot.
+
+e) The final basket has exactly `basket_size` names. Track which names were "forced" (would not have been in the cap-ranked top N without the constraint system) — needed for the Telegram report in STEP 7.
+
+STEP 5: Compute weights:
+a) raw_weight[t] = cap[t] / sum(cap for top N)
+b) effective_floor[t] = ticker_floors[t] if t is in ticker_floors, else floor_pct. Mark each name "floored" if raw_weight[t] < effective_floor[t], else "free"
+c) Each floored name's final weight = effective_floor[t]
+d) floored_total = sum(effective_floor[t] for all floored names)
+e) free_pool = 100 - floored_total
+f) free_cap_sum = sum(cap for free names)
+g) Each free name's final weight = (cap[t] / free_cap_sum) * free_pool
+
+Sanity check: sum of all final weights must equal 100 ± 0.05. If not, halt and report the math error.
+
+STEP 6: Read ${BORG_ROOT}/warren-bot-fett/ai-sleeve/last-rebalance.json if it exists. It contains the previous month's basket as `{"date": "YYYY-MM-DD", "weights": {"TICKER": pct, ...}}`. Use it to compute month-over-month deltas.
+
+If the file does not exist, this is the first run — skip MoM diff.
+
+STEP 7: Send a Telegram message to John by piping the report into `${BORG_ROOT}/.bin/notify-telegram.sh warren-bot-fett` (reads the report from stdin). The report should contain:
+- Header: "AI Sleeve — monthly rebalance — {today}"
+- Target weights table (rank, ticker, weight %, status: free/floored). Mark forced names with a trailing "*".
+- Category status: for each category, list its min, members present in the basket, and any forced inclusions. Example: `power_generation (min 2): GEV, BE* — BE forced (rank N/A in raw cap order)`.
+- MoM section: weight deltas for held names, list of new entrants and dropouts (only if last-rebalance.json existed)
+- Soft excludes section: the current excluded list with their inline notes from universe.md
+- Reminder line: "Theses for AAPL, TSLA, and discretionary names should be reevaluated — see universe.md."
+
+Format the table as a monospace block (tabs or padded spaces) so columns align in Telegram.
+
+STEP 8: Write ${BORG_ROOT}/warren-bot-fett/ai-sleeve/last-rebalance.json with `{"date": "YYYY-MM-DD", "weights": {ticker: final_weight_pct, ...}}` for next month's diff.
+
+Do not propose buy/sell trades — this iteration outputs target weights only. Sleeve sizing and portfolio assignment are deferred until John specifies them.

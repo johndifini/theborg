@@ -1,0 +1,73 @@
+# ──────────────────────────────────────────────────────────────
+# The Borg — .gitignore
+#
+# Denylist style: most files are tracked by default; this file
+# lists what to keep out. When you add a new kind of sensitive
+# file, add a rule here BEFORE the first `git add`.
+# Verify with:  git check-ignore -v <path>
+# ──────────────────────────────────────────────────────────────
+
+# ── OS / editor noise ────────────────────────────────────────
+.DS_Store
+**/.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# ── Backups & temp scratch ───────────────────────────────────
+*_bak_*
+*.bak
+*.orig
+.tmp.*
+**/.tmp.*
+
+# ── Log directories (anywhere in the tree) ───────────────────
+**/logs/
+**/log/
+
+# ── Secrets / local config ───────────────────────────────────
+.env
+.env.*
+*.pem
+*.key
+*_token*
+*_secret*
+**/.claude/settings.local.json
+**/.claude/.credentials*
+
+# Allow shared Claude settings, scheduled jobs, etc. — only the
+# `*.local.json` variants and credential files are ignored above.
+
+# ── Obsidian workspace state (per-machine) ───────────────────
+.obsidian/
+#**/.obsidian/workspace*
+#**/.obsidian/cache
+#**/.obsidian/plugins/*/data.json
+
+# ── warren-bot-fett (financial / portfolio) ──────────────────
+warren-bot-fett/PORTFOLIO.md
+
+# ── mrs-beast (personal social identity) ─────────────────────
+#mrs-beast/... nothing to exclude for now
+
+# ── cerebruh (second-brain content) ──────────────────────────
+# Track structure + templates + the index, ignore actual notes.
+cerebruh/ingest/*
+!cerebruh/ingest/.gitkeep
+cerebruh/wikis/*
+
+# ── Personal runbooks (do not ship) ──────────────────────────
+PUBLISH.md
+
+# ── Generic catch-alls for accidental drops ──────────────────
+*.sqlite
+*.sqlite3
+*.db
+*.log
+node_modules/
+dist/
+build/
+__pycache__/
+*.pyc
