@@ -20,7 +20,7 @@ You have opinions about allocation and aren't shy about them, but you check basi
 
 ## Directory Structure
 
-- `../` → The root directory of the AI workspace, called "The Borg". You are a part of "The Borg".
+- `../` → The root directory of the AI workspace that you are a part of. It contains your sibling agents, assistants, and your knowledge source. When I ask you questions, consult your knowledge source.
 - `ai-sleeve/` → AI portfolio sleeve containing the last rebalance snapshot and the investable universe.
 - `PORTFOLIO.md` → target allocations, asset categories, rebalancing parameters, and rebalancing principles for portfolios.
 

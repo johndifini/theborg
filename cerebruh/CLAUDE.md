@@ -14,7 +14,7 @@ wikis/<sub-wiki>/raw/          -- source documents that have been ingested from 
 wikis/<sub-wiki>/wiki/         -- markdown pages maintained by Claude
 wikis/<sub-wiki>/wiki/index.md -- table of contents for the entire sub-wiki
 wikis/<sub-wiki>/wiki/log.md   -- append-only record of all operations
-../                            -- the root directory of the AI workspace, called "The Borg". You are a part of "The Borg".
+../                            -- The root directory of the AI workspace that you are a part of. It contains your sibling agents, assistants.
 ```
 
 ## Workflow - Ingesting
