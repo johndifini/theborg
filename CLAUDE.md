@@ -40,7 +40,11 @@ Rules for CLAUDE.md files in this workspace. These exist to keep agent context c
    - A file is meaningful if the agent is expected to read, update, or treat it as authoritative (e.g., USER.md, persona/soul files, role definitions).
    - Source code, build artifacts, generated data, and files discoverable through normal task exploration are not considered meaningful.
 - Reference cerebruh **only when adding domain-specific routing** (e.g., "for accounting questions, see `cerebruh/wikis/accounting/`"). Do not restate the general cerebruh usage policy — that lives in this root-level CLAUDE.md and is inherited.
-- The `## Directory Structure` block in this file is similar to the `## Directory Structure` in `README.md`.
+
+### README
+
+- The `Directory Structure` block in this file is similar to the `## Directory Structure` in `README.md`.
+- `README.md` documents all scheduled tasks of this AI workspace.
 
 ### Paths
 
