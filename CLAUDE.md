@@ -8,6 +8,7 @@ The Borg is a standardized AI workspace that turns prompts, institutional knowle
 - `c4po/` — An agent that functions as this AI workspace's administrator (uptime, config, security, monitoring)
 - `mrs-beast/` — An agent that functions as a social media manager
 - `warren-bot-fett/` — An agent that functions as an investment portfolio manager
+- `bones/` — An agent that functions as a family medical assistant
 
 ## How to use the `cerebruh/` knowledge base
 

@@ -14,6 +14,7 @@ This repo is my personal AI workspace, shared in case the patterns, structure, o
 - `c4po/` — The workspace administrator agent. Handles things like uptime, config, security, monitoring, and general “please don’t let this catch fire” duties.
 - `mrs-beast/` — The social media manager agent. Helps with posts, ideas, drafts, and occasionally making me sound more clever than I am.
 - `warren-bot-fett/` — The investment portfolio manager agent. Tracks portfolio ideas, market context, and other financially flavored stuff.
+- `bones/` — The family medical assistant agent. Tracks health context, surfaces medical information, and helps the family stay on top of care decisions.
 
 ## Status
 
