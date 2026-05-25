@@ -23,9 +23,10 @@ Thumbs.db
 .tmp.*
 **/.tmp.*
 
-# ── Log directories (anywhere in the tree) ───────────────────
+# ── Log and state directories (anywhere in the tree) ───────────────────
 **/logs/
 **/log/
+**/state/
 
 # ── Secrets / local config ───────────────────────────────────
 .env
