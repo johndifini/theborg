@@ -7,7 +7,7 @@ The Borg is a standardized AI workspace that turns prompts, institutional knowle
 - `cerebruh/` — shared knowledge base that functions as a second-brain wiki available to every directory of The Borg.
 - `c4po/` — An agent that functions as this AI workspace's administrator (uptime, config, security, monitoring)
 - `mrs-beast/` — An agent that functions as a social media manager
-- `warren-bot-fett/` — An agent that functions as a investment portfolio manager
+- `warren-bot-fett/` — An agent that functions as an investment portfolio manager
 
 ## How to use the `cerebruh/` knowledge base
 
@@ -48,3 +48,9 @@ Rules for CLAUDE.md files in this workspace. These exist to keep agent context c
 ### Imports
 
 - Imports do not compound. Along any path from a working directory up to the workspace root, a given file must be imported at most once. Never import a file that an ancestor CLAUDE.md already imports. Siblings or cousins may share the same imported file — that does not duplicate content in any single context.
+
+### MCP servers
+
+- Every MCP server loaded by any Borg agent must have an entry in `c4po/MCP.md` with scope, source, which agent(s) load it, and a one-line justification.
+- A server not listed in `c4po/MCP.md` is unapproved — remove it or add an entry.
+- Prefer the narrowest scope that works.
