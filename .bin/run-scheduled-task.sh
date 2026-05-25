@@ -20,7 +20,23 @@ LOG_DIR="$AGENT_DIR/.claude/scheduled/logs"
 LOG_FILE="$LOG_DIR/$TASK_NAME.log"
 mkdir -p "$LOG_DIR"
 
+# launchd starts jobs with a minimal PATH and does not source any shell
+# profile, so `claude` (and anything else installed via Homebrew, nvm, etc.)
+# won't be found. The user keeps PATH in ~/.zshenv — source it before
+# resolving CLAUDE_BIN. Errors are swallowed so a profile hiccup never
+# blocks the task; if claude still can't be resolved we'll fail loudly below.
+if [[ -f "$HOME/.zshenv" ]]; then
+  # shellcheck disable=SC1091
+  set +u
+  source "$HOME/.zshenv" 2>/dev/null || true
+  set -u
+fi
+
 CLAUDE_BIN="${CLAUDE_BIN:-claude}"
+if ! command -v "$CLAUDE_BIN" >/dev/null 2>&1; then
+  echo "claude binary not found on PATH after sourcing ~/.zshenv (PATH=$PATH)" >&2
+  exit 127
+fi
 
 # BORG_ROOT: workspace root, auto-detected from this script's location
 # (.bin/ sits at the workspace root). Override by exporting BORG_ROOT
