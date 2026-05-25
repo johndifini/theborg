@@ -16,6 +16,31 @@ This repo is my personal AI workspace, shared in case the patterns, structure, o
 - `warren-bot-fett/` — The investment portfolio manager agent. Tracks portfolio ideas, market context, and other financially flavored stuff.
 - `bones/` — The family medical assistant agent. Tracks health context, surfaces medical information, and helps the family stay on top of care decisions.
 
+## Scheduled Jobs
+
+Each agent runs background tasks via macOS launchd. Plists live in `~/Library/LaunchAgents/` under the `com.theborg.*` namespace. All jobs are driven by `.bin/run-scheduled-task.sh` and log to `<agent>/.claude/scheduled/logs/launchd.{out,err}`.
+
+### c4po
+
+| Label | Schedule | What it does |
+|---|---|---|
+| `c4po-security-audit` | Daily at 10:00 AM | Audits all agent settings files, hooks, permission rules, Telegram access lists, and MCP servers for security issues. Notifies via Telegram if anything critical is found; silent if clean. |
+| `c4po-lint-audit-monthly` | 1st–5th of each month at 9:00 AM¹ | Audits the entire workspace against the lint rules in the root CLAUDE.md. Reports violations grouped by rule section via Telegram; silent if clean. Runs once per month (state tracked in `c4po/.claude/scheduled/state/`). |
+
+### mrs-beast
+
+| Label | Schedule | What it does |
+|---|---|---|
+| `mrs-beast-social-media-drafts` | Sun–Wed at 4:00 PM | Scans AI/tech podcast and YouTube sources for new content, then delivers 3 best X (Twitter) post drafts via Telegram. |
+
+### warren-bot-fett
+
+| Label | Schedule | What it does |
+|---|---|---|
+| `warren-bot-fett-daily-market-scan` | Mon–Fri at 9:00 AM | Fetches market data (indices, yields, VIX), checks portfolio allocations against targets, and alerts via Telegram only when a genuine buying opportunity exists. Silent otherwise. |
+| `warren-bot-fett-ai-sleeve-monthly` | 1st–5th of each month at 9:00 AM¹ | Runs the AI Sleeve rebalance on the first trading day of the month: ranks candidates by market cap, enforces category minimums, computes floor-adjusted weights, and delivers a target-weights report via Telegram. Writes `ai-sleeve/last-rebalance.json` for month-over-month diffs. |
+¹ Fired on days 1–5 as a retry window in case the machine was asleep on day 1. The prompt enforces once-per-month execution via a state file.
+
 ## Status
 
 This is one person’s working setup, not a polished product.
