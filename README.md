@@ -41,6 +41,14 @@ Each agent runs background tasks via macOS launchd. Plists live in `~/Library/La
 | `warren-bot-fett-ai-sleeve-monthly` | 1st–5th of each month at 9:00 AM¹ | Runs the AI Sleeve rebalance on the first trading day of the month: ranks candidates by market cap, enforces category minimums, computes floor-adjusted weights, and delivers a target-weights report via Telegram. Writes `ai-sleeve/last-rebalance.json` for month-over-month diffs. |
 ¹ Fired on days 1–5 as a retry window in case the machine was asleep on day 1. The prompt enforces once-per-month execution via a state file.
 
+## Slash Commands
+
+Project-scoped slash commands live in `.claude/commands/` and are available in any session started under `theborg/`.
+
+| Command | What it does |
+|---|---|
+| `/retro` | End-of-session retrospective. Asks "is there anything here worth saving?" — scans the session (or a user-supplied note about where Claude's default diverged from what was actually wanted) for lessons worth persisting to a memory file or `CLAUDE.md`. High bar for writing anything; per-item approval before any change. Optional free-text argument: `/retro I went with this version XYZ`. |
+
 ## Status
 
 This is one person’s working setup, not a polished product.
