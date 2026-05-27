@@ -44,7 +44,7 @@ Rules for CLAUDE.md files in this workspace. These exist to keep agent context c
 ### README
 
 - The `Directory Structure` block in this file is similar to the `## Directory Structure` in `README.md`.
-- `README.md` documents all scheduled tasks of this AI workspace.
+- `README.md` documents all scheduled tasks and slash commands of this AI workspace.
 
 ### Paths
 

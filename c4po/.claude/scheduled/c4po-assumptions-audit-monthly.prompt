@@ -1,0 +1,92 @@
+Monthly assumptions audit of the ClaudeOS workspace at ${BORG_ROOT}.
+
+This audit re-evaluates ephemeral best-practice assumptions that aren't codified
+as lint rules. The lint audit enforces written rules; this audit asks whether
+those rules and tooling choices are still right given evolving Claude Code,
+model, and harness behavior.
+
+STEP 1: This job is fired by launchd on calendar days 1-5 of each month, but
+should only execute once per month. Stop and output nothing if:
+- ${BORG_ROOT}/c4po/.claude/scheduled/state/c4po-assumptions-audit-monthly.json
+  exists and its `date` field is in the current calendar month (already ran
+  this month).
+
+The scheduler retries on subsequent days if an earlier attempt was missed
+(e.g., laptop asleep).
+
+STEP 2: Re-evaluate each assumption below. For each, decide one of:
+- STILL VALID — no change, nothing to report.
+- RECONSIDER — likely outdated; explain why in one sentence.
+- UPDATE — propose a specific replacement in one sentence.
+
+Be honest. These are intentionally ephemeral; "STILL VALID" should be earned,
+not defaulted to.
+
+Assumption A — CLAUDE.md line ceiling (200 lines)
+  Current guideline: CLAUDE.md files should be fewer than 200 lines.
+  This guidance is ephemeral — it shifts as harness behavior, context windows,
+  and model capability evolve. Use WebSearch to check current Anthropic
+  guidance on CLAUDE.md size (search terms like "Claude Code CLAUDE.md best
+  practices size" — look for anthropic.com, docs.claude.com, or recent
+  authoritative posts). If a different threshold or no threshold is now
+  considered best practice, flag UPDATE with the new number.
+  Then scan every CLAUDE.md under ${BORG_ROOT} (exclude .git, node_modules,
+  dist, build, and any *_bak_* backup files) and list any that exceed the
+  current ceiling along with their line count.
+
+Assumption B — launchd is the right scheduler
+  Current choice: macOS launchd, with prompts driven by
+  ${BORG_ROOT}/.bin/run-scheduled-task.sh.
+  Consider alternatives that may have matured: Claude Code's native scheduled
+  tasks (the `schedule` skill, `/loop`, scheduled-tasks MCP, routine plugins),
+  or other cron-like tools. Has any alternative become a clearly better fit
+  for this workspace? Weigh reliability, observability, ease of edit,
+  portability across machines, and ongoing maintenance burden. Use WebSearch
+  if helpful to check what's current.
+
+Assumption C — Slash commands remain useful and unsuperseded
+  List the slash commands currently in:
+    - ${BORG_ROOT}/.claude/commands/
+    - ${BORG_ROOT}/c4po/.claude/commands/ (if it exists)
+    - ${BORG_ROOT}/mrs-beast/.claude/commands/ (if it exists)
+    - ${BORG_ROOT}/warren-bot-fett/.claude/commands/ (if it exists)
+    - ${BORG_ROOT}/bones/.claude/commands/ (if it exists)
+  For each command, decide whether it still earns its place or has been
+  superseded by a built-in skill, plugin, or harness feature. Flag any
+  individual command as RECONSIDER or UPDATE rather than the whole assumption,
+  if some are fine and others aren't.
+
+STEP 3: If any assumption (or any sub-item like a specific CLAUDE.md file or a
+specific slash command) is RECONSIDER or UPDATE, pipe a report into
+`${BORG_ROOT}/.bin/notify-telegram.sh c4po` (reads message body from stdin).
+Format:
+
+  Borg assumptions audit - {YYYY-MM-DD}
+
+  Assumption A (line ceiling): {STILL VALID|RECONSIDER|UPDATE}
+    {one-line reason if not STILL VALID}
+    Over-limit files:
+      {path}: {line_count}
+      ...
+    (omit the "Over-limit files" block if none)
+
+  Assumption B (launchd): {STILL VALID|RECONSIDER|UPDATE}
+    {one-line reason if not STILL VALID}
+
+  Assumption C (slash commands): {STILL VALID|RECONSIDER|UPDATE}
+    {one-line reason if not STILL VALID}
+    Per-command notes:
+      {/command}: {verdict} - {one-line reason}
+      ...
+    (omit per-command block if all STILL VALID)
+
+Omit any assumption block that is STILL VALID with nothing to add. If every
+assumption is STILL VALID and every CLAUDE.md is within the ceiling, stay
+silent — send nothing, output nothing further.
+
+STEP 4: Write
+${BORG_ROOT}/c4po/.claude/scheduled/state/c4po-assumptions-audit-monthly.json
+with `{"date": "YYYY-MM-DD", "flagged": <count>}` so the run isn't repeated
+this month. `mkdir -p` the state directory first if it doesn't exist. `flagged`
+is the count of items (assumptions + sub-items) that were RECONSIDER or UPDATE;
+0 means a clean audit.

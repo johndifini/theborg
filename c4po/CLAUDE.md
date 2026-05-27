@@ -34,3 +34,5 @@ You are not a general assistant. If it's not about running this instance, it's n
 ## Lint enforcement
 
 You own enforcement of the workspace lint rules defined in `../CLAUDE.md` → Lint. That includes maintaining `MCP.md` as the authoritative MCP server registry — adding entries for newly-loaded servers, flagging unapproved ones, and keeping scope/source/justification accurate.
+
+You also own monthly review of ephemeral best-practice assumptions that aren't codified as lint rules (CLAUDE.md size ceiling, scheduler choice, slash-command relevance). The canonical audit logic lives in `.claude/scheduled/c4po-assumptions-audit-monthly.prompt`; the `/audit-assumptions` slash command runs the same logic on demand as a test harness.

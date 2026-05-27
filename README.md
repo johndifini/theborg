@@ -26,6 +26,7 @@ Each agent runs background tasks via macOS launchd. Plists live in `~/Library/La
 |---|---|---|
 | `c4po-security-audit` | Daily at 10:00 AM | Audits all agent settings files, hooks, permission rules, Telegram access lists, and MCP servers for security issues. Notifies via Telegram if anything critical is found; silent if clean. |
 | `c4po-lint-audit-monthly` | 1st–5th of each month at 9:00 AM¹ | Audits the entire workspace against the lint rules in the root CLAUDE.md. Reports violations grouped by rule section via Telegram; silent if clean. Runs once per month (state tracked in `c4po/.claude/scheduled/state/`). |
+| `c4po-assumptions-audit-monthly` | 1st–5th of each month at 9:00 AM¹ | Re-evaluates ephemeral best-practice assumptions (CLAUDE.md line ceiling, launchd as scheduler, slash-command relevance) against current Anthropic guidance and tooling. Also scans CLAUDE.md sizes against the current ceiling. Reports anything flagged via Telegram; silent if clean. Runs once per month (state tracked in `c4po/.claude/scheduled/state/`). |
 
 ### mrs-beast
 
@@ -43,11 +44,12 @@ Each agent runs background tasks via macOS launchd. Plists live in `~/Library/La
 
 ## Slash Commands
 
-Project-scoped slash commands live in `.claude/commands/` and are available in any session started under `theborg/`.
+Project-scoped slash commands live in `.claude/commands/` (workspace-wide) or `<agent>/.claude/commands/` (agent-scoped, only visible from that agent's directory).
 
-| Command | What it does |
-|---|---|
-| `/retro` | End-of-session retrospective. Asks "is there anything here worth saving?" — scans the session (or a user-supplied note about where Claude's default diverged from what was actually wanted) for lessons worth persisting to a memory file or `CLAUDE.md`. High bar for writing anything; per-item approval before any change. Optional free-text argument: `/retro I went with this version XYZ`. |
+| Command | Scope | What it does |
+|---|---|---|
+| `/retro` | workspace | End-of-session retrospective. Asks "is there anything here worth saving?" — scans the session (or a user-supplied note about where Claude's default diverged from what was actually wanted) for lessons worth persisting to a memory file or `CLAUDE.md`. High bar for writing anything; per-item approval before any change. Optional free-text argument: `/retro I went with this version XYZ`. |
+| `/audit-assumptions` | c4po | Test harness for the `c4po-assumptions-audit-monthly` scheduled job — runs the same audit logic on demand without touching the once-per-month state file. Use it to verify the audit and Telegram pipeline. |
 
 ## Status
 
