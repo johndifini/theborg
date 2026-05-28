@@ -48,6 +48,7 @@ Project-scoped slash commands live in `.claude/commands/` (workspace-wide) or `<
 
 | Command | Scope | What it does |
 |---|---|---|
+| `/remember` | workspace | Save durable context to the current agent's Auto Memory file (`~/.claude/projects/<project>/memory/MEMORY.md`) so it persists across sessions. With no argument, writes a concise gist of the current conversation; with an argument, saves that specific item as a standing fact or rule. Shows the proposed addition for approval before writing unless the request is unambiguous. |
 | `/retro` | workspace | End-of-session retrospective. Asks "is there anything here worth saving?" — scans the session (or a user-supplied note about where Claude's default diverged from what was actually wanted) for lessons worth persisting to a memory file or `CLAUDE.md`. High bar for writing anything; per-item approval before any change. Optional free-text argument: `/retro I went with this version XYZ`. |
 | `/audit-assumptions` | c4po | Test harness for the `c4po-assumptions-audit-monthly` scheduled job — runs the same audit logic on demand without touching the once-per-month state file. Use it to verify the audit and Telegram pipeline. |
 
