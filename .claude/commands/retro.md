@@ -18,7 +18,7 @@ A self-improvement retrospective on this session. Not a decision log, not a summ
 
 ## The bar for saving anything
 
-Memory files and CLAUDE.md files cost tokens on **every future session**. The bar is high. A candidate is worth saving only if it is **both**:
+Memory files, rule files, and CLAUDE.md files cost tokens on **every future session**. The bar is high. A candidate is worth saving only if it is **both**:
 
 1. **Likely to recur** — the situation will come up again, not a one-off.
 2. **Something you'd plausibly get wrong again** without the nudge — i.e. your default behavior doesn't already cover it.
@@ -30,6 +30,7 @@ If a candidate fails either test, drop it. Writing nothing is the correct outcom
 1. **Identify candidates.** Either from `$ARGUMENTS` or by scanning the session. Be honest — most sessions have zero or one real candidate, not five.
 2. **For each candidate, propose the smallest fix that closes the gap.** Usually one of:
    - A one-line addition to an Auto Memory file (user/project/reference) — for cross-session preferences and facts.
+   - An instruction in a rules file (`<project>/.claude/rules/<rule>.md`). This keeps instructions modular and easier for teams to maintain. If practical, scope the rule to a specific file path.
    - A sentence in a `CLAUDE.md` — for rules that should bind every future session in a specific directory. Prefer the narrowest scope (project subdirectory > project root > workspace root).
    - **Nothing** — if the lesson isn't general enough, say so explicitly and move on.
 3. **Ask per-item before writing.** No auto-pick. Show the user:
