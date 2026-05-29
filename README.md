@@ -46,11 +46,18 @@ Each agent runs background tasks via macOS launchd. Plists live in `~/Library/La
 
 Project-scoped slash commands live in `.claude/commands/` (workspace-wide) or `<agent>/.claude/commands/` (agent-scoped, only visible from that agent's directory).
 
+Every scheduled task has a matching interactive command (named after the task, minus the agent prefix). Each delegates to the same `.prompt` the launchd job runs — no duplicated logic — applying only the overrides needed for interactive use: skip once-per-month state gates and state/data-file writes, and report to the session instead of Telegram.
+
 | Command | Scope | What it does |
 |---|---|---|
 | `/remember` | workspace | Save durable context to the current agent's Auto Memory file (`~/.claude/projects/<project>/memory/MEMORY.md`) so it persists across sessions. With no argument, writes a concise gist of the current conversation; with an argument, saves that specific item as a standing fact or rule. Shows the proposed addition for approval before writing unless the request is unambiguous. |
 | `/retro` | workspace | End-of-session retrospective. Asks "is there anything here worth saving?" — scans the session (or a user-supplied note about where Claude's default diverged from what was actually wanted) for lessons worth persisting to a memory file or `CLAUDE.md`. High bar for writing anything; per-item approval before any change. Optional free-text argument: `/retro I went with this version XYZ`. |
-| `/audit-assumptions` | c4po | Test harness for the `c4po-assumptions-audit-monthly` scheduled job — runs the same audit logic on demand without touching the once-per-month state file. Use it to verify the audit and Telegram pipeline. |
+| `/audit-assumptions` | c4po | Runs the `c4po-assumptions-audit-monthly` audit logic interactively, reporting the full result (all verdicts, not just flagged) to the session instead of Telegram. Skips the once-per-month state file so it never blocks the scheduled run. |
+| `/security-audit` | c4po | Runs the `c4po-security-audit` logic interactively, reporting what was checked and the verdict (including a clean bill of health) to the session instead of Telegram. |
+| `/lint-audit` | c4po | Runs the `c4po-lint-audit-monthly` logic interactively, reporting the full result (including a clean audit) to the session instead of Telegram. Skips the once-per-month state file so it never blocks the scheduled run. |
+| `/social-media-drafts` | mrs-beast | Runs the `mrs-beast-social-media-drafts` logic interactively, outputting the post drafts to the session instead of Telegram. |
+| `/market-scan` | warren-bot-fett | Runs the `warren-bot-fett-daily-market-scan` logic interactively, reporting the full scan (allocations vs. targets, deviations, opportunity verdict) to the session instead of Telegram. Skips the market-holiday gate so it always runs. |
+| `/ai-sleeve-rebalance` | warren-bot-fett | Runs the `warren-bot-fett-ai-sleeve-monthly` logic interactively, reporting target weights and the month-over-month diff to the session instead of Telegram. Skips the once-per-month gate and does not write `last-rebalance.json`, so it never clobbers the scheduled run's diff baseline. |
 
 ## Status
 
