@@ -33,7 +33,7 @@ c) If there are shortfalls: resolve them iteratively. For each unsatisfied categ
 
 d) If no valid swap exists (every basket name is either constraint-protected or its removal would violate another constraint), halt and report which categories collide and which candidates are competing for the same slot.
 
-e) The final basket has exactly `basket_size` names. Track which names were "forced" (would not have been in the cap-ranked top N without the constraint system) — needed for the Telegram report in STEP 7.
+e) The final basket has exactly `basket_size` names. Track which names were "forced" (would not have been in the cap-ranked top N without the constraint system) — needed for the report in STEP 7.
 
 STEP 5: Compute weights:
 a) raw_weight[t] = cap[t] / sum(cap for top N)
@@ -50,7 +50,7 @@ STEP 6: Read ${BORG_ROOT}/warren-bot-fett/ai-sleeve/last-rebalance.json if it ex
 
 If the file does not exist, this is the first run — skip MoM diff.
 
-STEP 7: Send a Telegram message to John by piping the report into `${BORG_ROOT}/.bin/notify-telegram.sh warren-bot-fett` (reads the report from stdin). The report should contain:
+STEP 7: Email a report to John by piping it into `${BORG_ROOT}/.bin/notify-email.sh warren-bot-fett` (reads the report from stdin). The report should contain:
 - Header: "AI Sleeve — monthly rebalance — {today}"
 - Target weights table (rank, ticker, weight %, status: free/floored). Mark forced names with a trailing "*".
 - Category status: for each category, list its min, members present in the basket, and any forced inclusions. Example: `power_generation (min 2): GEV, BE* — BE forced (rank N/A in raw cap order)`.
@@ -58,7 +58,7 @@ STEP 7: Send a Telegram message to John by piping the report into `${BORG_ROOT}/
 - Soft excludes section: the current excluded list with their inline notes from universe.md
 - Reminder line: "Theses for AAPL, TSLA, and discretionary names should be reevaluated — see universe.md."
 
-Format the table as a monospace block (tabs or padded spaces) so columns align in Telegram.
+Format the table as a monospace block (tabs or padded spaces) so columns align in a plain-text email.
 
 STEP 8: Write ${BORG_ROOT}/warren-bot-fett/ai-sleeve/last-rebalance.json with `{"date": "YYYY-MM-DD", "weights": {ticker: final_weight_pct, ...}}` for next month's diff.
 

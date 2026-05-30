@@ -7,7 +7,7 @@ The scheduler retries on subsequent days if an earlier attempt was missed (e.g.,
 
 STEP 2: Audit the workspace against the rules in `${BORG_ROOT}/CLAUDE.md` → Lint. Those rules are authoritative — do not paraphrase or reinterpret them here; apply them as written. Collect each violation as `{file, rule_section, detail, suggested_fix}`. Do NOT auto-fix — this task reports only.
 
-STEP 3: If any findings exist, pipe a report into `${BORG_ROOT}/.bin/notify-telegram.sh c4po` (reads from stdin). Format:
+STEP 3: If any findings exist, pipe a report into `${BORG_ROOT}/.bin/notify-email.sh c4po` (reads from stdin). Format:
 - Header: `Borg lint audit — {YYYY-MM-DD} — {total} finding(s)`
 - Group findings by the Lint subsection they violate (Coverage, Cross-references, Paths, Imports, MCP servers). Within each group, one line per finding: `<file>: <detail> → <suggested_fix>`.
 - Omit empty groups.

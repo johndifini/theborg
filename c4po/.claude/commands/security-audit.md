@@ -12,7 +12,7 @@ Treat every occurrence of `${BORG_ROOT}` in that file as the literal path
 `/Users/john/theborg`.
 
 One override for interactive invocation:
-1. Do NOT pipe to `notify-telegram.sh`. Instead, output the result directly into
+1. Do NOT pipe to `notify-email.sh`. Instead, output the result directly into
    this session. Also drop the silent-if-clean rule: always report what was
    checked and the verdict — including a clean bill of health — so the run is
    legible.

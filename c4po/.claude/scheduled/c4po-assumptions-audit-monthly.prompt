@@ -58,7 +58,7 @@ Assumption C — Slash commands remain useful and unsuperseded
 
 STEP 3: If any assumption (or any sub-item like a specific CLAUDE.md file or a
 specific slash command) is RECONSIDER or UPDATE, pipe a report into
-`${BORG_ROOT}/.bin/notify-telegram.sh c4po` (reads message body from stdin).
+`${BORG_ROOT}/.bin/notify-email.sh c4po` (reads message body from stdin).
 Format:
 
   Borg assumptions audit - {YYYY-MM-DD}
