@@ -45,6 +45,12 @@ fi
 BORG_ROOT="${BORG_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 export BORG_ROOT
 
+# Pin a session id for this run so notifications (notify-email.sh) can tell John
+# how to resume this exact headless session: `claude --resume $BORG_SESSION_ID`.
+# Lowercased — claude stores/looks up session ids in lowercase.
+SESSION_ID="$(uuidgen | tr '[:upper:]' '[:lower:]')"
+export BORG_SESSION_ID="$SESSION_ID"
+
 cd "$AGENT_DIR"
 
 # Render the prompt: substitute only ${BORG_ROOT}. Bash parameter
@@ -57,9 +63,12 @@ PROMPT_CONTENT=${PROMPT_CONTENT//\$\{BORG_ROOT\}/$BORG_ROOT}
 # channel's MCP server. server.ts kills whatever poller holds bot.pid, so a
 # scheduled run would silently clobber the agent's interactive session poller
 # and leave it deaf to Telegram. Scheduled tasks send outbound via
-# .bin/notify-telegram.sh instead.
+# .bin/notify-email.sh instead.
+#
+# --session-id pins the run to $SESSION_ID so the notification can hand John a
+# `claude --resume` command pointing at this exact session.
 {
-  echo "===== $(date -u +%Y-%m-%dT%H:%M:%SZ) start $TASK_NAME (cwd=$AGENT_DIR) ====="
-  "$CLAUDE_BIN" -p "$PROMPT_CONTENT" --strict-mcp-config < /dev/null
+  echo "===== $(date -u +%Y-%m-%dT%H:%M:%SZ) start $TASK_NAME (cwd=$AGENT_DIR, session=$SESSION_ID) ====="
+  "$CLAUDE_BIN" -p "$PROMPT_CONTENT" --session-id "$SESSION_ID" --strict-mcp-config < /dev/null
   echo "===== $(date -u +%Y-%m-%dT%H:%M:%SZ) end $TASK_NAME ====="
 } >> "$LOG_FILE" 2>&1

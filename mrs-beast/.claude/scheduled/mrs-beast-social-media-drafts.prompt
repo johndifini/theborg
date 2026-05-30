@@ -10,4 +10,4 @@ Avoid overtly political topics (e.g. Anthropic vs Pentagon).
 
 Use ===================================== as separators between options. If nothing compelling found, say so briefly.
 
-Deliver the drafts by piping them into `${BORG_ROOT}/.bin/notify-telegram.sh mrs-beast` (reads the message from stdin, delivers to John's Telegram).
+Deliver the drafts by piping them into `${BORG_ROOT}/.bin/notify-email.sh mrs-beast` (reads the message from stdin, emails it to John).

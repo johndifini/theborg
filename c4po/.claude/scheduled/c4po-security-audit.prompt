@@ -7,6 +7,6 @@ Run the /security-review skill against the current state of ~/theborg. Specifica
 - Telegram access lists at ~/.claude/channels/telegram-*/access.json
 - any new MCP servers added since last audit
 
-If anything critical is found (auth weakness, dangerous permission, broken access policy, suspicious MCP server, leaked secret), notify John by piping the finding and a recommended fix into `${BORG_ROOT}/.bin/notify-telegram.sh c4po` (reads the message from stdin and delivers it to John's Telegram).
+If anything critical is found (auth weakness, dangerous permission, broken access policy, suspicious MCP server, leaked secret), notify John by piping the finding and a recommended fix into `${BORG_ROOT}/.bin/notify-email.sh c4po` (reads the message from stdin and emails it to John).
 
 If clean, stay silent — send no message, output nothing further.

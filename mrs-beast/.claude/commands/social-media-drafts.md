@@ -12,5 +12,5 @@ Treat every occurrence of `${BORG_ROOT}` in that file as the literal path
 `/Users/user/theborg`.
 
 One override for interactive invocation:
-1. Do NOT pipe the drafts to `notify-telegram.sh`. Instead, output them directly
+1. Do NOT pipe the drafts to `notify-email.sh`. Instead, output them directly
    into this session.
