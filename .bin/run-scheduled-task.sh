@@ -45,7 +45,7 @@ fi
 BORG_ROOT="${BORG_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 export BORG_ROOT
 
-# Pin a session id for this run so notifications (notify-email.sh) can tell John
+# Pin a session id for this run so notifications (notify-email.sh) can tell the user
 # how to resume this exact headless session: `claude --resume $BORG_SESSION_ID`.
 # Lowercased — claude stores/looks up session ids in lowercase.
 SESSION_ID="$(uuidgen | tr '[:upper:]' '[:lower:]')"
@@ -65,7 +65,7 @@ PROMPT_CONTENT=${PROMPT_CONTENT//\$\{BORG_ROOT\}/$BORG_ROOT}
 # and leave it deaf to Telegram. Scheduled tasks send outbound via
 # .bin/notify-email.sh instead.
 #
-# --session-id pins the run to $SESSION_ID so the notification can hand John a
+# --session-id pins the run to $SESSION_ID so the notification can hand the user a
 # `claude --resume` command pointing at this exact session.
 {
   echo "===== $(date -u +%Y-%m-%dT%H:%M:%SZ) start $TASK_NAME (cwd=$AGENT_DIR, session=$SESSION_ID) ====="

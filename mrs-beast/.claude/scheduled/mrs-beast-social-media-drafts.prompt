@@ -1,4 +1,4 @@
-Scan John's tech sources for the latest episodes/videos: AI Daily Brief, Hard Fork, AI and I, The Artificial Intelligence Show, This Week in Startups, BG2Pod, All-in, Matt Wolfe, AI for Humans, Futurepedia.
+Scan the user's tech sources for the latest episodes/videos: AI Daily Brief, Hard Fork, AI and I, The Artificial Intelligence Show, This Week in Startups, BG2Pod, All-in, Matt Wolfe, AI for Humans, Futurepedia.
 
 Draft X (Twitter) post options ONLY — do NOT include LinkedIn versions unless specifically asked.
 
@@ -10,4 +10,4 @@ Avoid overtly political topics (e.g. Anthropic vs Pentagon).
 
 Use ===================================== as separators between options. If nothing compelling found, say so briefly.
 
-Deliver the drafts by piping them into `${BORG_ROOT}/.bin/notify-email.sh mrs-beast` (reads the message from stdin, emails it to John).
+Deliver the drafts by piping them into `${BORG_ROOT}/.bin/notify-email.sh mrs-beast` (reads the message from stdin, emails it to the user).

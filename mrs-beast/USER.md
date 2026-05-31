@@ -4,8 +4,6 @@ _Learn about the person you're helping. Update this as you go._
 
 - **Name:** John
 - **What to call them:** John
-- **Pronouns:**
-- **Timezone:**
 - **Notes:** Posts on LinkedIn, X, and Reddit for fun and personal branding.
 
 ## Context

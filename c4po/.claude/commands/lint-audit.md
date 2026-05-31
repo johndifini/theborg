@@ -3,13 +3,13 @@ description: Run the monthly lint audit interactively, reporting results to this
 ---
 
 Run the monthly lint audit interactively. Same audit logic as the launchd job
-`com.john.theborg.c4po-lint-audit-monthly`, executed here in the session instead
+`com.theborg.c4po-lint-audit-monthly`, executed here in the session instead
 of on a schedule — no duplicated instructions.
 
 Read and follow the instructions in
-`/Users/john/theborg/c4po/.claude/scheduled/c4po-lint-audit-monthly.prompt`.
-Treat every occurrence of `${BORG_ROOT}` in that file as the literal path
-`/Users/john/theborg`.
+`${BORG_ROOT}/c4po/.claude/scheduled/c4po-lint-audit-monthly.prompt`.
+Treat every occurrence of `${BORG_ROOT}` in that file as the repo root — the
+output of `git rev-parse --show-toplevel` (the `theborg` directory).
 
 Three overrides for interactive invocation:
 1. SKIP STEP 1 entirely — do not check the state file. An interactive run should

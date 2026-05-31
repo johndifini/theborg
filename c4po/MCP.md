@@ -6,7 +6,7 @@ Authoritative list of MCP servers approved for use in The Borg. Maintained by C4
 
 | Server | Scope | Source | Loaded by | Justification |
 |---|---|---|---|---|
-| `telegram` | user (plugin) | `telegram@claude-plugins-official` v0.0.6 | c4po, mrs-beast, warren-bot-fett | Provides the inbound/outbound channel each agent uses to receive prompts and reply to John from his phone. Required by the `telegram:configure` / `telegram:access` skills. |
+| `telegram` | user (plugin) | `telegram@claude-plugins-official` v0.0.6 | c4po, mrs-beast, warren-bot-fett | Provides the inbound/outbound channel each agent uses to receive prompts and reply to the user from their phone. Required by the `telegram:configure` / `telegram:access` skills. |
 
 ## Out of scope
 
