@@ -21,7 +21,7 @@ Derivation:
 2. Replace every `/` in that path with `-`.
 3. The memory file lives at `~/.claude/projects/<that-encoded-string>/memory/MEMORY.md`.
 
-Example: cwd `/Users/user/theborg/bones` → git root `/Users/user/theborg` → `~/.claude/projects/-Users-john-theborg/memory/MEMORY.md`. All agents under the same repo share this file.
+Example: cwd `${BORG_ROOT}/bones` → git root `${BORG_ROOT}` → `~/.claude/projects/<dash-encoded-git-root>/memory/MEMORY.md`. All agents under the same repo share this file.
 
 **Fallback (no git repo):** if `git rev-parse --show-toplevel` fails (not inside a repo), fall back to encoding the current working directory itself with the same dash-replacement scheme, and tell the user you did so.
 
@@ -45,7 +45,7 @@ Organize MEMORY.md by topic with `##` headings. When adding to an existing secti
 
 ## Before writing
 
-Show the user the proposed addition (file path + exact text) and wait for approval, unless the request is unambiguous (e.g. `/remember John prefers metric units` — just save it).
+Show the user the proposed addition (file path + exact text) and wait for approval, unless the request is unambiguous (e.g. `/remember the user prefers metric units` — just save it).
 
 ## After writing
 

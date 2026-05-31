@@ -7,9 +7,9 @@ Run the daily market scan interactively. Same logic as the launchd job
 session instead of on a schedule — no duplicated instructions.
 
 Read and follow the instructions in
-`/Users/user/theborg/warren-bot-fett/.claude/scheduled/warren-bot-fett-daily-market-scan.prompt`.
-Treat every occurrence of `${BORG_ROOT}` in that file as the literal path
-`/Users/user/theborg`.
+`${BORG_ROOT}/warren-bot-fett/.claude/scheduled/warren-bot-fett-daily-market-scan.prompt`.
+Treat every occurrence of `${BORG_ROOT}` in that file as the repo root — the
+output of `git rev-parse --show-toplevel` (the `theborg` directory).
 
 Two overrides for interactive invocation:
 1. SKIP STEP 1 entirely — do not stop on market holidays. An interactive run

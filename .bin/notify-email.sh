@@ -14,12 +14,12 @@
 #   EMAIL_SMTP_USER  — Gmail address used to authenticate (e.g. selfaware97@gmail.com)
 #   EMAIL_SMTP_PASS  — a Gmail *App Password* (not the account password; needs 2FA)
 #   EMAIL_FROM       — From address (defaults to EMAIL_SMTP_USER)
-#   EMAIL_TO         — recipient (e.g. johndifini@gmail.com)
+#   EMAIL_TO         — recipient (e.g. the-user@example.com)
 #   EMAIL_SMTP_HOST  — optional; defaults to smtp.gmail.com
 #   EMAIL_SMTP_PORT  — optional; defaults to 587
 #
 # When $BORG_SESSION_ID is set (run-scheduled-task.sh exports it for scheduled
-# runs), a footer is appended telling John how to resume that exact session.
+# runs), a footer is appended telling the user how to resume that exact session.
 set -euo pipefail
 
 AGENT="${1:?usage: notify-email.sh <agent> [subject] < body}"

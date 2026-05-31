@@ -7,9 +7,9 @@ launchd job `com.theborg.c4po-assumptions-audit-monthly`, executed here in
 the session instead of on a schedule — no duplicated instructions.
 
 Read and follow the instructions in
-`/Users/user/theborg/c4po/.claude/scheduled/c4po-assumptions-audit-monthly.prompt`.
-Treat every occurrence of `${BORG_ROOT}` in that file as the literal path
-`/Users/user/theborg`.
+`${BORG_ROOT}/c4po/.claude/scheduled/c4po-assumptions-audit-monthly.prompt`.
+Treat every occurrence of `${BORG_ROOT}` in that file as the repo root — the
+output of `git rev-parse --show-toplevel` (the `theborg` directory).
 
 Three overrides for interactive invocation:
 1. SKIP STEP 1 entirely — do not check the state file. An interactive run

@@ -7,9 +7,9 @@ Run the daily security audit interactively. Same audit logic as the launchd job
 on a schedule — no duplicated instructions.
 
 Read and follow the instructions in
-`/Users/user/theborg/c4po/.claude/scheduled/c4po-security-audit.prompt`.
-Treat every occurrence of `${BORG_ROOT}` in that file as the literal path
-`/Users/user/theborg`.
+`${BORG_ROOT}/c4po/.claude/scheduled/c4po-security-audit.prompt`.
+Treat every occurrence of `${BORG_ROOT}` in that file as the repo root — the
+output of `git rev-parse --show-toplevel` (the `theborg` directory).
 
 One override for interactive invocation:
 1. Do NOT pipe to `notify-email.sh`. Instead, output the result directly into

@@ -24,7 +24,7 @@ e) Think like an investor: buy low, sell high. Never do mechanical drift-based s
 f) For taxable accounts, tax consequences are the #1 priority. For tax-advantaged accounts, focus on market conditions and diversification.
 g) ~1 trade/week max per portfolio.
 
-STEP 7: If a genuine BUYING opportunity to rebalance an underweight class exists — especially when that class is cheap due to market conditions — alert John by piping the message into `${BORG_ROOT}/.bin/notify-email.sh warren-bot-fett` (reads the message from stdin, emails it to John). The message should contain:
+STEP 7: If a genuine BUYING opportunity to rebalance an underweight class exists — especially when that class is cheap due to market conditions — alert the user by piping the message into `${BORG_ROOT}/.bin/notify-email.sh warren-bot-fett` (reads the message from stdin, emails it to the user). The message should contain:
 - Which portfolio and account
 - Current vs. target allocation (the drifted class)
 - Proposed trade (specific ticker, buy/sell, approximate amount)

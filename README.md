@@ -20,7 +20,9 @@ This repo is my personal AI workspace, shared in case the patterns, structure, o
 
 Each agent runs background tasks via macOS launchd. Plists live in `~/Library/LaunchAgents/` under the `com.theborg.*` namespace. All jobs are driven by `.bin/run-scheduled-task.sh` and log to `<agent>/.claude/scheduled/logs/launchd.{out,err}`.
 
-Jobs notify John by **email** via `.bin/notify-email.sh` (outbound Gmail SMTP; creds in `~/.claude/channels/email-shared/.env`). `run-scheduled-task.sh` pins each run to a fixed `--session-id`, so the notification email includes a `claude --resume <id>` command to continue that exact session on the Mac Studio. `.bin/notify-telegram.sh` remains in the tree as a manual/backup channel but is no longer wired into any scheduled job.
+Jobs notify the user by **email** via `.bin/notify-email.sh` (outbound Gmail SMTP; creds in `~/.claude/channels/email-shared/.env`). `run-scheduled-task.sh` pins each run to a fixed `--session-id`, so the notification email includes a `claude --resume <id>` command to continue that exact session on the Mac Studio. `.bin/notify-telegram.sh` remains in the tree as a manual/backup channel but is no longer wired into any scheduled job.
+
+For more info about each job, see `<agent>/.claude/scheduled/<label>.prompt`.
 
 ### c4po
 
