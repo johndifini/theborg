@@ -31,6 +31,10 @@ Thumbs.db
 # ── Secrets / local config ───────────────────────────────────
 .env
 .env.*
+# …but committed *.example templates carry keys + docs, never values
+# (e.g. .bin/email-shared.env.example). Re-allow them past the .env.* rule.
+!**/.env.example
+!**/*.env.example
 *.pem
 *.key
 *_token*

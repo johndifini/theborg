@@ -18,7 +18,7 @@ This repo is my personal AI workspace, shared in case the patterns, structure, o
 
 ## Scheduled Jobs
 
-Each agent runs background tasks via macOS launchd. Plists live in `~/Library/LaunchAgents/` under the `com.theborg.*` namespace. All jobs are driven by `.bin/run-scheduled-task.sh` and log to `<agent>/.claude/scheduled/logs/launchd.{out,err}`.
+Each agent runs background tasks via macOS launchd. Plists live in `~/Library/LaunchAgents/` under the `com.theborg.*` namespace. All jobs are driven by `.bin/run-scheduled-task.sh` and log to `<agent>/.claude/scheduled/logs/launchd.{out,err}`. The plists embed absolute paths and aren't committed verbatim — regenerate them from your checkout with `.bin/install-scheduled-tasks.sh` (which holds the schedule table as the single source of truth; add `--load` to (re)register them with launchd).
 
 Jobs notify the user by **email** via `.bin/notify-email.sh` (outbound Gmail SMTP; creds in `~/.claude/channels/email-shared/.env`). `run-scheduled-task.sh` pins each run to a fixed `--session-id`, so the notification email includes a `claude --resume <id>` command to continue that exact session on the Mac Studio. `.bin/notify-telegram.sh` remains in the tree as a manual/backup channel but is no longer wired into any scheduled job.
 
@@ -79,4 +79,6 @@ Before you make this your own:
 
 1. Clone the repo.
 1. Install the pre-commit hook: `git config core.hooksPath .githooks`
+1. Set up email notifications: `cp .bin/email-shared.env.example ~/.claude/channels/email-shared/.env`, `chmod 600` it, then fill in a Gmail App Password (see the file's header).
+1. Install the scheduled tasks: `.bin/install-scheduled-tasks.sh --load` — generates the launchd plists from your checkout path and registers them.
 1. Read [SECURITY.md](./SECURITY.md) before your first commit — There’s a short forker checklist in there that may save you from accidentally publishing secrets, personal notes, API keys, or other spicy artifacts.
