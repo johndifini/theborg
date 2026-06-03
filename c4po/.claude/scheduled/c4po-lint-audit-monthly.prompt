@@ -9,7 +9,7 @@ STEP 2: Audit the workspace against the rules in `${BORG_ROOT}/CLAUDE.md` → Li
 
 STEP 3: If any findings exist, pipe a report into `${BORG_ROOT}/.bin/notify-email.sh c4po` (reads from stdin). Format:
 - Header: `Borg lint audit — {YYYY-MM-DD} — {total} finding(s)`
-- Group findings by the Lint subsection they violate (Coverage, Cross-references, Paths, Imports, MCP servers). Within each group, one line per finding: `<file>: <detail> → <suggested_fix>`.
+- Group findings by the Lint subsection they violate (Coverage, Size, Cross-references, Paths, Imports, MCP servers). Within each group, one line per finding: `<file>: <detail> → <suggested_fix>`.
 - Omit empty groups.
 
 If the audit is clean, stay silent — send nothing, output nothing further.
