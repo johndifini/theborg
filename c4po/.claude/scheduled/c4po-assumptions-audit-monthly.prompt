@@ -1,9 +1,15 @@
 Monthly assumptions audit of the ClaudeOS workspace at ${BORG_ROOT}.
 
-This audit re-evaluates ephemeral best-practice assumptions that aren't codified
-as lint rules. The lint audit enforces written rules; this audit asks whether
-those rules and tooling choices are still right given evolving Claude Code,
-model, and harness behavior.
+This audit re-evaluates ephemeral best-practice assumptions — the thresholds and
+tooling choices that shift as Claude Code, models, and the harness evolve. Some
+are codified as lint rules (e.g. the CLAUDE.md size ceiling), some aren't. The
+lint audit enforces conformance to whatever value is written; this audit asks
+whether that written value or choice is still right.
+
+When an assumption is flagged RECONSIDER or UPDATE, the report must name **where
+the fix lands** — the canonical file(s) that hold the codified value or choice —
+so the change can be made without re-deriving it. Each assumption below ends
+with a "Where to update if flagged" pointer; carry it into the report.
 
 STEP 1: This job is fired by launchd on calendar days 1-5 of each month, but
 should only execute once per month. Stop and output nothing if:
@@ -22,17 +28,31 @@ STEP 2: Re-evaluate each assumption below. For each, decide one of:
 Be honest. These are intentionally ephemeral; "STILL VALID" should be earned,
 not defaulted to.
 
-Assumption A — CLAUDE.md line ceiling (200 lines)
-  Current guideline: CLAUDE.md files should be fewer than 200 lines.
-  This guidance is ephemeral — it shifts as harness behavior, context windows,
-  and model capability evolve. Use WebSearch to check current Anthropic
-  guidance on CLAUDE.md size (search terms like "Claude Code CLAUDE.md best
-  practices size" — look for anthropic.com, docs.claude.com, or recent
-  authoritative posts). If a different threshold or no threshold is now
-  considered best practice, flag UPDATE with the new number.
-  Then scan every CLAUDE.md under ${BORG_ROOT} (exclude .git, node_modules,
-  dist, build, and any *_bak_* backup files) and list any that exceed the
-  current ceiling along with their line count.
+Assumption A — CLAUDE.md size ceiling
+  Canonical home: the ceiling is codified as a lint rule in
+  ${BORG_ROOT}/CLAUDE.md → Lint → Size. The lint audit enforces conformance to
+  that number (and flags over-limit files); this audit re-evaluates whether the
+  number itself is still right and whether content should move out of CLAUDE.md.
+  Do NOT re-scan for over-limit files here — that is the lint audit's job.
+  Re-evaluate in three steps:
+  1. Search the GENERAL web for the latest CLAUDE.md sizing recommendations,
+     weighted to the current Claude model and Claude Code version (search terms
+     like "Claude Code CLAUDE.md size best practice", plus the current year;
+     developer blogs, forums, GitHub, practitioner posts). Note where community
+     practice has landed and why.
+  2. Balance that against Anthropic's own latest recommendation (anthropic.com,
+     docs.claude.com, code.claude.com). Where community and Anthropic diverge,
+     prefer Anthropic's position but note the gap in one line.
+  3. Read every CLAUDE.md under ${BORG_ROOT} (exclude .git, node_modules, dist,
+     build, and any *_bak_* backup files) and look for content that should be
+     moved OUT of CLAUDE.md into a skill or a scoped rule — durable procedures,
+     reusable multi-step workflows, or domain knowledge that doesn't need to
+     load every session. CLAUDE.md should hold only always-on context.
+  Flag UPDATE if steps 1–2 show the codified ceiling is outdated (give the new
+  number) and/or step 3 finds relocatable content (name the file and what
+  should move where).
+  Where to update if flagged: the **Size** rule in ${BORG_ROOT}/CLAUDE.md for
+  the ceiling number; the specific CLAUDE.md file(s) named for content moves.
 
 Assumption B — launchd is the right scheduler
   Current choice: macOS launchd, with prompts driven by
@@ -43,6 +63,9 @@ Assumption B — launchd is the right scheduler
   for this workspace? Weigh reliability, observability, ease of edit,
   portability across machines, and ongoing maintenance burden. Use WebSearch
   if helpful to check what's current.
+  Where to update if flagged: the scheduler implementation —
+  ${BORG_ROOT}/.bin/run-scheduled-task.sh and the `com.theborg.*` launchd
+  plists — plus the scheduled-tasks documentation in ${BORG_ROOT}/README.md.
 
 Assumption C — Slash commands remain useful and unsuperseded
   List the slash commands currently in:
@@ -55,6 +78,28 @@ Assumption C — Slash commands remain useful and unsuperseded
   superseded by a built-in skill, plugin, or harness feature. Flag any
   individual command as RECONSIDER or UPDATE rather than the whole assumption,
   if some are fine and others aren't.
+  Where to update if flagged: the specific command file under
+  `.claude/commands/`; if a command is retired, also its paired `.prompt` (for
+  scheduled commands) and the slash-command listing in ${BORG_ROOT}/README.md.
+
+Assumption D — cerebruh raw source ceiling (75k tokens per sub-wiki)
+  Current guideline (${BORG_ROOT}/cerebruh/CLAUDE.md): each
+  `cerebruh/wikis/<sub-wiki>/raw/` directory should hold less than about 75,000
+  tokens of raw source documents; exceeding it triggers a proposed split.
+  This ceiling is ephemeral — it tracks context-window size, model capability,
+  and the retrieval pattern (full-context read vs. RAG). Use WebSearch to check
+  whether the rationale behind it still holds (search terms like "LLM wiki
+  context window scaling limit" or "Obsidian knowledge base RAG threshold"); if
+  a different ceiling or a retrieval change makes the 75k number outdated, flag
+  UPDATE with the new guidance.
+  Then estimate the total raw-source token count of each sub-wiki: for every
+  `cerebruh/wikis/<sub-wiki>/raw/` directory, sum the sizes of its source files
+  and approximate tokens as bytes/4. List any sub-wiki whose estimate exceeds
+  the current ceiling along with its estimated token count, so an over-limit
+  sub-wiki can be proposed for a split.
+  Where to update if flagged: the 75k-token ceiling lives in
+  ${BORG_ROOT}/cerebruh/CLAUDE.md (editable as lint scaffolding); over-limit
+  sub-wikis are split through cerebruh's own ingest workflow, not here.
 
 STEP 3: If any assumption (or any sub-item like a specific CLAUDE.md file or a
 specific slash command) is RECONSIDER or UPDATE, pipe a report into
@@ -63,15 +108,21 @@ Format:
 
   Borg assumptions audit - {YYYY-MM-DD}
 
-  Assumption A (line ceiling): {STILL VALID|RECONSIDER|UPDATE}
-    {one-line reason if not STILL VALID}
-    Over-limit files:
-      {path}: {line_count}
+Each non-STILL-VALID block ends with a "Where to update" line naming the
+canonical file(s) to edit (from that assumption's "Where to update if flagged"
+pointer above).
+
+  Assumption A (size ceiling): {STILL VALID|RECONSIDER|UPDATE}
+    {one-line reason if not STILL VALID — new number and/or what should move}
+    Content to relocate:
+      {path}: {what should move → which skill or rule}
       ...
-    (omit the "Over-limit files" block if none)
+    (omit the "Content to relocate" block if none)
+    Where to update: {e.g. Size rule in ${BORG_ROOT}/CLAUDE.md; <file(s)> for moves}
 
   Assumption B (launchd): {STILL VALID|RECONSIDER|UPDATE}
     {one-line reason if not STILL VALID}
+    Where to update: {.bin/run-scheduled-task.sh, launchd plists, README.md}
 
   Assumption C (slash commands): {STILL VALID|RECONSIDER|UPDATE}
     {one-line reason if not STILL VALID}
@@ -79,10 +130,20 @@ Format:
       {/command}: {verdict} - {one-line reason}
       ...
     (omit per-command block if all STILL VALID)
+    Where to update: {the specific command file(s); paired .prompt + README.md if retired}
+
+  Assumption D (raw source ceiling): {STILL VALID|RECONSIDER|UPDATE}
+    {one-line reason if not STILL VALID}
+    Over-limit sub-wikis:
+      {sub-wiki}: ~{token_estimate} tokens
+      ...
+    (omit the "Over-limit sub-wikis" block if none)
+    Where to update: {75k ceiling in ${BORG_ROOT}/cerebruh/CLAUDE.md}
 
 Omit any assumption block that is STILL VALID with nothing to add. If every
-assumption is STILL VALID and every CLAUDE.md is within the ceiling, stay
-silent — send nothing, output nothing further.
+assumption is STILL VALID and every sub-wiki is within the raw source ceiling,
+stay silent — send nothing, output nothing further. (CLAUDE.md over-limit files
+are the lint audit's responsibility, not this audit's.)
 
 STEP 4: Write
 ${BORG_ROOT}/c4po/.claude/scheduled/state/c4po-assumptions-audit-monthly.json
