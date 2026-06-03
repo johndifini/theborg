@@ -33,7 +33,7 @@ foundry_semicap:
   members: [TSM, ASML, AMAT, LRCX, KLAC, INTC]
 
 networking_and_systems:
-  members: [ANET, DELL, NOK]
+  members: [ANET, DELL, NOK, CSCO]
 
 memory:
   members: [MU, FLKR]
@@ -83,3 +83,4 @@ SPACEX    # pending IPO — at listing, replace placeholder with real ticker, ad
 - **ARM** — IP licensor; royalties scale with every AI-capable mobile/edge SoC and increasingly with datacenter Arm-based silicon (Graviton, Grace).
 - **CRWV / NBIS** — neocloud GPU-rental capacity; complements hyperscalers when GPU supply is the binding constraint. Forced in via `ai_neoclouds` min.
 - **NOK** — optical and data-center networking gear (IP routing, optical transport) for AI buildout interconnect; complements ANET on the systems side. Reevaluate if AI-driven networking demand fails to offset legacy telco-capex softness.
+- **CSCO** — data-center switching/routing and optics for AI fabric; Ethernet-for-AI positioning against ANET. Reevaluate if AI orders fail to offset legacy campus-networking softness.
