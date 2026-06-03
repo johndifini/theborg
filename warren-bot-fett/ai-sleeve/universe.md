@@ -33,7 +33,7 @@ foundry_semicap:
   members: [TSM, ASML, AMAT, LRCX, KLAC, INTC]
 
 networking_and_systems:
-  members: [ANET, DELL]
+  members: [ANET, DELL, NOK]
 
 memory:
   members: [MU, FLKR]
@@ -82,3 +82,4 @@ SPACEX    # pending IPO — at listing, replace placeholder with real ticker, ad
 - **INTC** — x86 CPU franchise plus Intel Foundry buildout. Dual-listed in `chip_designers` and `foundry_semicap` to reflect IDM model. Reevaluate if foundry roadmap slips materially.
 - **ARM** — IP licensor; royalties scale with every AI-capable mobile/edge SoC and increasingly with datacenter Arm-based silicon (Graviton, Grace).
 - **CRWV / NBIS** — neocloud GPU-rental capacity; complements hyperscalers when GPU supply is the binding constraint. Forced in via `ai_neoclouds` min.
+- **NOK** — optical and data-center networking gear (IP routing, optical transport) for AI buildout interconnect; complements ANET on the systems side. Reevaluate if AI-driven networking demand fails to offset legacy telco-capex softness.
