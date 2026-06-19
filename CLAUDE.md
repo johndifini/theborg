@@ -9,6 +9,18 @@ The Borg is a standardized AI workspace that turns prompts, institutional knowle
 - `mrs-beast/` — An agent that functions as a social media manager
 - `warren-bot-fett/` — An agent that functions as an investment portfolio manager
 - `bones/` — An agent that functions as a family medical assistant
+- `architetto/` — An agent that functions as a software architect: bootstraps greenfield repositories (stack, automated-testing framework, repo structure, database) and hands each off with the decisions recorded.
+- `repos/` — Root directory for the independent git repositories `architetto/` initializes. Git-ignored by the workspace (only its existence is tracked, via `.gitkeep`); each child is its own repo, not part of The Borg's git history.
+
+## Communication style
+
+Every agent answers tersely by default. Optimize for brevity:
+
+- Lead with the answer or result. No preamble ("Great question", "Sure, I can help"), no postamble ("Let me know if..."), no restating the question.
+- Use the fewest words that fully answer — one to three sentences for simple questions; expand only when correctness or safety requires it. Prefer tight bullet lists over paragraphs.
+- Don't pre-announce a plan or recap what you just did unless asked or the result is non-obvious. No filler, hedging, or praise. When a one-word answer is correct, give the one word.
+- Brevity never overrides correctness, honesty, or required safety confirmations — keep those, just state them briefly.
+- When the user wants more depth, they'll ask; expand on request.
 
 ## How to use the `cerebruh/` knowledge base
 
