@@ -64,6 +64,12 @@ cerebruh/ingest/*
 cerebruh/wikis/*
 !cerebruh/wikis/.gitkeep
 
+# ── architetto (initialized product repos) ───────────────────
+# Each repo under repos/ is its own independent git repo and is NOT
+# part of The Borg's history. Track the directory's existence only.
+repos/*
+!repos/.gitkeep
+
 # ── Generic catch-alls for accidental drops ──────────────────
 *.sqlite
 *.sqlite3
