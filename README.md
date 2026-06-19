@@ -15,6 +15,8 @@ This repo is my personal AI workspace, shared in case the patterns, structure, o
 - `mrs-beast/` — The social media manager agent. Helps with posts, ideas, drafts, and occasionally making me sound more clever than I am.
 - `warren-bot-fett/` — The investment portfolio manager agent. Tracks portfolio ideas, market context, and other financially flavored stuff.
 - `bones/` — The family medical assistant agent. Tracks health context, surfaces medical information, and helps the family stay on top of care decisions.
+- `architetto/` — The software architect agent. Bootstraps greenfield repos — picking the stack, automated-testing framework, repo structure, and database — then hands them off with the decisions written down.
+- `repos/` — Where `architetto` parks the repos it initializes. Each is its own independent git repo; the workspace git-ignores the contents (structure only, via `.gitkeep`) so product code stays out of The Borg's history.
 
 ## Scheduled Jobs
 
