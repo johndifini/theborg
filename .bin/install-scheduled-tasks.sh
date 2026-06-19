@@ -33,6 +33,8 @@ TASKS=(
   "c4po|c4po-security-audit|daily-10-00"
   "c4po|c4po-lint-audit-monthly|month-first5-09-00"
   "c4po|c4po-assumptions-audit-monthly|month-first5-09-00"
+  "c4po|c4po-dream|weekly-sat-sun-22-00"
+  "c4po|c4po-consolidate-memory|weekly-sun-mon-23-00"
   "mrs-beast|mrs-beast-social-media-drafts|weekly-sun-wed-16-00"
   "warren-bot-fett|warren-bot-fett-daily-market-scan|weekly-mon-fri-09-00"
   "warren-bot-fett|warren-bot-fett-ai-sleeve-monthly|month-first5-09-00"
@@ -70,6 +72,16 @@ schedule_xml() {
     weekly-mon-fri-09-00)
       printf '    <key>StartCalendarInterval</key>\n    <array>\n'
       for w in 1 2 3 4 5; do cal_entry "Weekday=$w" "Hour=9" "Minute=0"; done
+      printf '    </array>\n'
+      ;;
+    weekly-sat-sun-22-00)
+      printf '    <key>StartCalendarInterval</key>\n    <array>\n'
+      for w in 6 0; do cal_entry "Weekday=$w" "Hour=22" "Minute=0"; done
+      printf '    </array>\n'
+      ;;
+    weekly-sun-mon-23-00)
+      printf '    <key>StartCalendarInterval</key>\n    <array>\n'
+      for w in 0 1; do cal_entry "Weekday=$w" "Hour=23" "Minute=0"; done
       printf '    </array>\n'
       ;;
     *)
