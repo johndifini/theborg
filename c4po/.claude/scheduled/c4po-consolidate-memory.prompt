@@ -1,0 +1,31 @@
+Weekly memory consolidation for every Auto Memory store in the ClaudeOS workspace at ${BORG_ROOT}.
+
+This job tidies the Auto Memory stores in place — it does NOT harvest new knowledge (that is the c4po-dream job's role). Think compaction, not capture.
+
+STEP 1: This job is fired by launchd on Sunday and (as a retry) Monday, but should only execute once per ISO week. Determine the current ISO week with `date +%G-W%V` (e.g. `2026-W25`). Stop and output nothing if:
+- `${BORG_ROOT}/c4po/.claude/scheduled/state/c4po-consolidate-memory.json` exists and its `week` field equals the current ISO week (already ran this week).
+
+The Monday firing is a retry in case the machine was asleep Sunday.
+
+STEP 2: Identify every Auto Memory store to consolidate. Auto Memory is keyed to a git repo root and lives at `$HOME/.claude/projects/<repo-root-path-with-slashes-as-dashes>/memory/`. The stores in scope:
+- The shared workspace store: encode `${BORG_ROOT}` by replacing every `/` with `-`, then target `$HOME/.claude/projects/<encoded>/memory/`. All Borg agents share this one.
+- Each independent repo under `${BORG_ROOT}/repos/*`: for every child directory that is its own git repo (has a `.git`), encode its absolute path the same way and target `$HOME/.claude/projects/<encoded>/memory/` if that directory exists.
+
+Skip any store whose `memory/` directory does not exist. Build the final list of existing store directories before proceeding.
+
+STEP 3: For each store directory, apply the consolidation logic of the `anthropic-skills:consolidate-memory` skill. For the shared workspace store, invoking that skill directly is fine (this job runs from c4po, whose git root is the workspace). For the `repos/*` stores, apply the same operations to those files directly. Consolidation means, within a single store:
+- Merge duplicate or overlapping facts into one file; keep one fact per file with valid frontmatter.
+- Fix or remove stale and contradictory facts. Before deleting anything, verify the claim against the current files — if a memory contradicts what you find, prefer correcting it over silently dropping it.
+- Repair the index: every `MEMORY.md` pointer must resolve to an existing file, and every fact file must be indexed. Remove dead `[[links]]` and broken pointers.
+- Preserve the per-owning-agent organization (sections/tags) and never invent new facts. This job only reorganizes what is already there.
+
+Track, per store, what changed: `{store, merged, corrected, pruned, index_fixes}`.
+
+STEP 4: If any store changed, pipe a digest into `${BORG_ROOT}/.bin/notify-email.sh c4po` (reads from stdin). Format:
+- Header: `Borg memory consolidation — {YYYY-MM-DD} — {stores_changed} store(s) tidied`
+- One block per changed store: the store path, then one line per change category with counts and a short note on what moved.
+- Omit stores with no changes.
+
+If nothing changed across all stores, stay silent — send nothing, output nothing further.
+
+STEP 5: Write `${BORG_ROOT}/c4po/.claude/scheduled/state/c4po-consolidate-memory.json` with `{"week":"YYYY-Www","date":"YYYY-MM-DD","stores":<count examined>,"changes":<total changes>}` so the run isn't repeated this week. `mkdir -p` the state directory first if it doesn't exist.
