@@ -17,13 +17,10 @@ ticker_floors:
 
 ```categories
 hyperscalers:
-  members: [MSFT, GOOGL, AMZN, META]
-
-datacenter:
-  members: [CRWV, ORCL]
+  members: [MSFT, GOOGL, AMZN, META, ORCL]
 
 ai_neoclouds:
-  members: [CRWV, NBIS]
+  members: [CRWV, NBIS, SPCX]
   min: 1
 
 chip_designers:
@@ -33,7 +30,7 @@ foundry_semicap:
   members: [TSM, ASML, AMAT, LRCX, KLAC, INTC]
 
 networking_and_systems:
-  members: [ANET, DELL, NOK, CSCO]
+  members: [ANET, DELL, NOK, CSCO, HPE]
 
 memory:
   members: [MU, FLKR]
@@ -55,6 +52,9 @@ ai_devices:
 
 world_models:
   members: [TSLA]
+
+datacenter_reits:
+  members: [EQIX, DLR]
 ```
 
 ## Soft excludes (this month)
@@ -66,7 +66,6 @@ CEG       # existing nuclear fleet — unconvinced it can scale with AI demand p
 VST       # legacy gas/coal/nuclear mix — unconvinced it can scale with AI demand pace
 OPENAI    # pending IPO — at listing, replace placeholder with real ticker, add to a new frontier_labs category, then remove this line
 ANTHROPIC # pending IPO — at listing, replace placeholder with real ticker, add to a new frontier_labs category, then remove this line
-SPACEX    # pending IPO — at listing, replace placeholder with real ticker, add to the same category(ies) as CRWV (datacenter, ai_neoclouds), then remove this line
 ```
 
 ## Inclusion theses (notes for monthly review)
@@ -82,5 +81,9 @@ SPACEX    # pending IPO — at listing, replace placeholder with real ticker, ad
 - **INTC** — x86 CPU franchise plus Intel Foundry buildout. Dual-listed in `chip_designers` and `foundry_semicap` to reflect IDM model. Reevaluate if foundry roadmap slips materially.
 - **ARM** — IP licensor; royalties scale with every AI-capable mobile/edge SoC and increasingly with datacenter Arm-based silicon (Graviton, Grace).
 - **CRWV / NBIS** — neocloud GPU-rental capacity; complements hyperscalers when GPU supply is the binding constraint. Forced in via `ai_neoclouds` min.
+- **SPCX** — SpaceX (IPO'd 2026-06-12). Starlink as orbital data connectivity backbone plus growing datacenter/compute ambitions; grouped with the neoclouds per the original placeholder thesis. Reevaluate category fit once post-IPO segment reporting clarifies the AI/datacenter revenue mix.
 - **NOK** — optical and data-center networking gear (IP routing, optical transport) for AI buildout interconnect; complements ANET on the systems side. Reevaluate if AI-driven networking demand fails to offset legacy telco-capex softness.
 - **CSCO** — data-center switching/routing and optics for AI fabric; Ethernet-for-AI positioning against ANET. Reevaluate if AI orders fail to offset legacy campus-networking softness.
+- **HPE** — AI servers (ProLiant, Cray AI supercomputers) and GreenLake consumption infrastructure, plus networking from Aruba and the Juniper acquisition. Reevaluate if AI systems demand fails to offset legacy compute/storage softness or Juniper integration stalls.
+- **EQIX** — datacenter REIT; retail colocation + interconnection. Moat is network density at its IBX hubs (carrier/cloud clustering → high switching costs). Levered to AI inference/edge where low-latency interconnect matters.
+- **DLR** — datacenter REIT; wholesale/hyperscale capacity leased to the hyperscalers (MSFT/GOOGL/AMZN/META). More direct hyperscaler-capex leverage than EQIX, but more exposed to supply gluts and power-availability constraints.
