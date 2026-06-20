@@ -27,7 +27,7 @@ chip_designers:
   members: [NVDA, AMD, AVGO, MRVL, QCOM, INTC, ARM, CBRS]
 
 foundry_semicap:
-  members: [TSM, ASML, AMAT, LRCX, KLAC, INTC]
+  members: [TSM, ASML, AMAT, LRCX, KLAC, INTC, Q]
 
 networking_and_systems:
   members: [ANET, DELL, NOK, CSCO, HPE]
@@ -79,6 +79,7 @@ ANTHROPIC # pending IPO — at listing, replace placeholder with real ticker, ad
 - **FLKR** — Franklin FTSE South Korea ETF, held as a proxy for Samsung Electronics and SK Hynix (the HBM leaders) until they list US ADRs. Forced in via the `memory` min:2 constraint; ETF AUM ranks below the cap-ranked basket, so it relies on the constraint to enter and on its `ticker_floors` entry to pin a 2% weight. Replace with direct ADRs once available and drop this line.
 - **BE** — fuel cells for on-site/distributed power at AI data centers; complements GEV (grid + turbines) when grid interconnection wait times are the binding constraint. Forced in via `power_generation` constraint.
 - **INTC** — x86 CPU franchise plus Intel Foundry buildout. Dual-listed in `chip_designers` and `foundry_semicap` to reflect IDM model. Reevaluate if foundry roadmap slips materially.
+- **Q** — Qnity Electronics, DuPont's electronics-materials spin-off (NYSE, S&P 500 from 2025-11-01). Semiconductor and interconnect materials — picks-and-shovels of chip fabrication, levered to AI-driven wafer demand. Reevaluate if semiconductor materials growth decouples from AI capex.
 - **ARM** — IP licensor; royalties scale with every AI-capable mobile/edge SoC and increasingly with datacenter Arm-based silicon (Graviton, Grace).
 - **CRWV / NBIS** — neocloud GPU-rental capacity; complements hyperscalers when GPU supply is the binding constraint. Forced in via `ai_neoclouds` min.
 - **SPCX** — SpaceX (IPO'd 2026-06-12). Starlink as orbital data connectivity backbone plus growing datacenter/compute ambitions; grouped with the neoclouds per the original placeholder thesis. Reevaluate category fit once post-IPO segment reporting clarifies the AI/datacenter revenue mix.
