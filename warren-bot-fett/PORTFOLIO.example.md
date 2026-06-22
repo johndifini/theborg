@@ -99,7 +99,7 @@ Categories within asset classes are **tactical, not formulaic**. Priority order:
 - **Cron thinking level:** high
 
 ## Rebalancing Principles (Learned)
-- **NEVER sell into a selloff.** If a position is down, that's not a reason to sell — it's a reason to hold or buy more.
+- **Avoid selling depressed assets solely to rebalance** unless risk, liquidity, tax, or fundamental reasons override. A position being down is not, by itself, a reason to sell — more often it's a reason to hold or buy more.
 - **High VIX = opportunity.** Elevated volatility means assets are on sale. Look for buying opportunities, not exits.
 - **Rebalance by buying the underweight,** not by selling beaten-down overweight positions. Use cash or trim positions that are *elevated* relative to their history.
 - **High-conviction holdings:** If you have a core holding you want to keep through drift, name it here and require a fundamental case before any sell recommendation. "Rebalancing drift" alone is never a sufficient reason.
