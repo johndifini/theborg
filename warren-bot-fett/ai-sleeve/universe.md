@@ -20,7 +20,7 @@ hyperscalers:
   members: [MSFT, GOOGL, AMZN, META, ORCL, SPCX]
 
 ai_neoclouds:
-  members: [CRWV, NBIS]
+  members: [CRWV, NBIS, IREN]
   min: 1
 
 chip_designers:
@@ -82,6 +82,7 @@ ANTHROPIC # pending IPO — at listing, replace placeholder with real ticker, ad
 - **Q** — Qnity Electronics, DuPont's electronics-materials spin-off (NYSE, S&P 500 from 2025-11-01). Semiconductor and interconnect materials — picks-and-shovels of chip fabrication, levered to AI-driven wafer demand. Reevaluate if semiconductor materials growth decouples from AI capex.
 - **ARM** — IP licensor; royalties scale with every AI-capable mobile/edge SoC and increasingly with datacenter Arm-based silicon (Graviton, Grace).
 - **CRWV / NBIS** — neocloud GPU-rental capacity; complements hyperscalers when GPU supply is the binding constraint. Forced in via `ai_neoclouds` min.
+- **IREN** — vertically integrated neocloud; ex-bitcoin miner (Iris Energy) that owns its power and data-center sites, a structural cost edge over GPU-only renters. Distant third in the public pure-play tier (~$17B cap vs. CRWV/NBIS at $50B+). Reevaluate if the AI-cloud pivot stalls or it reverts toward crypto-mining economics.
 - **SPCX** — SpaceX (IPO'd 2026-06-12). **Reclassified to `hyperscalers` 2026-06-27** (was `ai_neoclouds`): the Feb 2026 xAI acquisition brought in Colossus 1 (~220K NVIDIA GPUs) and Grok, and SpaceX is now leasing frontier-scale compute — Anthropic ~$1.25B/mo, Google ~$920M/mo (~110K GPUs from Oct 2026), plus Reflection — ~$76B through 2029 (~$25B/yr, exceeding Starlink + launch + AI combined). Owns the fleet *and* a frontier model it serves: the vertically integrated own-the-infra profile of META/GOOGL/ORCL, not the rent-a-GPU neocloud profile of CRWV/NBIS. Starlink connectivity and the AI1 orbital-datacenter constellation are upside optionality, not the core compute thesis. Reevaluate if the compute-leasing contracts fail to renew past 2029 or orbital economics prove uneconomic.
 - **NOK** — optical and data-center networking gear (IP routing, optical transport) for AI buildout interconnect; complements ANET on the systems side. Reevaluate if AI-driven networking demand fails to offset legacy telco-capex softness.
 - **CSCO** — data-center switching/routing and optics for AI fabric; Ethernet-for-AI positioning against ANET. Reevaluate if AI orders fail to offset legacy campus-networking softness.
