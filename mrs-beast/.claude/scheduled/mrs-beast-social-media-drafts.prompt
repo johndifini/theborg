@@ -1,13 +1,43 @@
-Scan the user's tech sources for the latest episodes/videos: AI Daily Brief, Hard Fork, AI and I, The Artificial Intelligence Show, This Week in Startups, Matt Wolfe, AI for Humans, Futurepedia.
+Scan the user's regular tech sources for the latest episodes/videos: AI Daily
+Brief, Hard Fork, AI and I, The Artificial Intelligence Show, This Week in
+Startups, Matt Wolfe, AI for Humans, Futurepedia.
 
-Draft X (Twitter) post options ONLY — do NOT include LinkedIn versions unless specifically asked.
+TRANSCRIPTS FIRST. For each item, get the transcript directly where possible:
+  - YouTube videos: fetch captions with yt-dlp, e.g.
+        yt-dlp --skip-download --write-auto-sub --write-sub --sub-lang en \
+               --sub-format vtt -o '%(id)s' '<video-url>'
+  - Otherwise, find the transcript via web search.
+
+FALLBACK. Only if a transcript can't be found, use the /last30days skill to
+search ALL sources, looking back just 4 days:
+
+        /last30days <topic> --days 4
+
+Prefer real transcript text over last30days evidence whenever a transcript was
+found; use last30days only to fill the gaps.
+
+TOOLING HEALTH — do NOT fail silently. When last30days runs, inspect its footer
+(the emoji-tree per-source counts). If a source you expected (e.g. X or YouTube)
+shows 0 results or is absent, that means a backend did not run (expired Firefox
+burner cookies for X, missing node/yt-dlp on PATH, or an egress block). Draft
+from whatever DID return, and append a short "⚠️ Tooling health" line naming the
+empty source so the user can fix it. Never present an empty backend as "nothing
+compelling found."
+
+Draft X (Twitter) post options ONLY — do NOT include LinkedIn versions unless
+specifically asked.
 
 IMPORTANT: Provide your 3 BEST drafts only. No more than 3.
 
-Instead of just summarizing episodes, identify key insights and takeaways. Include @mentions, quotes, and YouTube timestamps where possible. Style: friendly, funny, informative; punchy and platform-native.
+Instead of just summarizing episodes, identify key insights and takeaways.
+Include @mentions, quotes, and YouTube timestamps where possible. Style:
+friendly, funny, informative; punchy and platform-native.
 
 Avoid overtly political topics (e.g. Anthropic vs Pentagon).
 
-Use ===================================== as separators between options. If nothing compelling found, say so briefly.
+Use ===================================== as separators between options. If
+nothing compelling found (and all sources reported healthy), say so briefly.
 
-Deliver the drafts by piping them into `${BORG_ROOT}/.bin/notify-email.sh mrs-beast` (reads the message from stdin, emails it to the user).
+Deliver the drafts by piping them into
+`${BORG_ROOT}/.bin/notify-email.sh mrs-beast` (reads the message from stdin,
+emails it to the user).
