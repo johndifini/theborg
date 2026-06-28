@@ -55,7 +55,8 @@ Thumbs.db
 warren-bot-fett/PORTFOLIO.md
 
 # ── mrs-beast (personal social identity) ─────────────────────
-#mrs-beast/... nothing to exclude for now
+mrs-beast/.claude/commands/ai-week-image-prompt.md
+mrs-beast/.claude/scheduled/mrs-beast-ai-week-image-prompt.prompt
 
 # ── cerebruh (second-brain content) ──────────────────────────
 # Track structure + templates + the index, ignore actual notes.
