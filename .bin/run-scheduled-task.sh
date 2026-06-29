@@ -59,6 +59,15 @@ cd "$AGENT_DIR"
 PROMPT_CONTENT=$(<"$PROMPT_FILE")
 PROMPT_CONTENT=${PROMPT_CONTENT//\$\{BORG_ROOT\}/$BORG_ROOT}
 
+# Per-task effort. The weekly "dream" harvest reasons over dozens of transcripts,
+# so it runs at max effort (xhigh) to match an interactive Opus run — a default-effort
+# headless pass under-harvests. Routine jobs (audits, scans) stay at default effort to
+# avoid the extra token cost. Add task names here to opt them in.
+EXTRA_ARGS=()
+case "$TASK_NAME" in
+  c4po-dream) EXTRA_ARGS+=(--effort xhigh) ;;
+esac
+
 # --strict-mcp-config: a scheduled `claude -p` run must NOT spawn the telegram
 # channel's MCP server. server.ts kills whatever poller holds bot.pid, so a
 # scheduled run would silently clobber the agent's interactive session poller
@@ -69,6 +78,6 @@ PROMPT_CONTENT=${PROMPT_CONTENT//\$\{BORG_ROOT\}/$BORG_ROOT}
 # `claude --resume` command pointing at this exact session.
 {
   echo "===== $(date -u +%Y-%m-%dT%H:%M:%SZ) start $TASK_NAME (cwd=$AGENT_DIR, session=$SESSION_ID) ====="
-  "$CLAUDE_BIN" -p "$PROMPT_CONTENT" --session-id "$SESSION_ID" --strict-mcp-config < /dev/null
+  "$CLAUDE_BIN" -p "$PROMPT_CONTENT" --session-id "$SESSION_ID" --strict-mcp-config ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"} < /dev/null
   echo "===== $(date -u +%Y-%m-%dT%H:%M:%SZ) end $TASK_NAME ====="
 } >> "$LOG_FILE" 2>&1
