@@ -127,9 +127,9 @@ Assumption E — "dreaming" is still a custom job, not a native feature
   ${BORG_ROOT}/.bin/install-scheduled-tasks.sh and the `com.theborg.*` plists; and
   the scheduled-jobs + slash-command listings in ${BORG_ROOT}/README.md.
 
-STEP 3: If any assumption (or any sub-item like a specific CLAUDE.md file or a
-specific slash command) is RECONSIDER or UPDATE, pipe a report into
-`${BORG_ROOT}/.bin/notify-email.sh c4po` (reads message body from stdin).
+STEP 3: Always pipe a report into
+`${BORG_ROOT}/.bin/notify-email.sh c4po` (reads message body from stdin) —
+even when every assumption is STILL VALID, so the user can confirm the job ran.
 Format:
 
   Borg assumptions audit - {YYYY-MM-DD}
@@ -174,8 +174,9 @@ pointer above).
 
 Omit any assumption block that is STILL VALID with nothing to add. If every
 assumption is STILL VALID and every sub-wiki is within the raw source ceiling,
-stay silent — send nothing, output nothing further. (CLAUDE.md over-limit files
-are the lint audit's responsibility, not this audit's.)
+the body is a one-liner: `All assumptions STILL VALID — nothing to update.`
+(CLAUDE.md over-limit files are the lint audit's responsibility, not this
+audit's.)
 
 STEP 4: Write
 ${BORG_ROOT}/c4po/.claude/scheduled/state/c4po-assumptions-audit-monthly.json

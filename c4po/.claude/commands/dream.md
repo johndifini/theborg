@@ -22,8 +22,8 @@ Apply these overrides for interactive invocation, referenced by phase name:
    last 7 days, or the window named in `$ARGUMENTS` if one is given (e.g. "last 14
    days").
 3. In the **OUTPUT** phase — do NOT pipe to `notify-email.sh`. Output the full
-   digest into this session, and drop the silent-if-empty rule: say "nothing
-   cleared the bar" when that is the outcome. For cerebruh candidates, do NOT
+   digest into this session (say "nothing cleared the bar" when that is the
+   outcome). For cerebruh candidates, do NOT
    auto-stage into `cerebruh/ingest/`; instead show the proposed source file (path
    + content) and ask before staging it. (Rule / CLAUDE.md / skill candidates
    remain propose-only, exactly as in the scheduled run.)

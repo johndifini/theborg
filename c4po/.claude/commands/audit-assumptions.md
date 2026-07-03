@@ -16,8 +16,7 @@ Three overrides for interactive invocation:
    should always execute, regardless of whether the scheduled job already ran
    this month.
 2. STEP 3 — do NOT pipe to `notify-email.sh`. Instead, output the report
-   directly into this session. Also drop the silent-if-clean rule: always show
-   the full result, including assumptions that are STILL VALID, so the run is
-   legible.
+   directly into this session, including assumptions that are STILL VALID, so
+   the run is legible.
 3. SKIP STEP 4 entirely — do not write the state file. An interactive run must
    not block the next scheduled run from firing.

@@ -22,3 +22,6 @@ Overrides for interactive invocation:
 4. SKIP STEP 8 entirely — do NOT write `ai-sleeve/last-rebalance.json`. That file
    is the month-over-month diff baseline for the scheduled run; an interactive
    run must not clobber it.
+5. If a step halts with an error — do NOT pipe the failure email to
+   `notify-email.sh`. Report the halt reason and details directly into this
+   session.

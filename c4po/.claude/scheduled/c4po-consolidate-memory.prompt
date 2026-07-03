@@ -19,7 +19,7 @@ CONSOLIDATE — run the skill once per store; never do the consolidation by hand
 Pass exactly one workspace constraint into every run: preserve the per-owning-agent section tags (e.g. "(bones)", "(c4po)") the workspace uses to attribute entries. Add no other consolidation instructions — the skill defines the rest. Collect each store's change summary (the skill ends every run with one).
 
 REPORT — route the skill's summaries, don't rewrite them.
-If any store changed, pipe a digest into `${BORG_ROOT}/.bin/notify-email.sh c4po` (reads from stdin). Header: `Borg memory consolidation — {YYYY-MM-DD} — {stores_changed} store(s) tidied`. One block per changed store: the store path, then the skill's own summary for it. Omit stores the skill reported no changes for. If nothing changed across all stores, stay silent — send nothing, output nothing further.
+Always pipe a digest into `${BORG_ROOT}/.bin/notify-email.sh c4po` (reads from stdin) — even when nothing changed, so the user can confirm the job ran. Header: `Borg memory consolidation — {YYYY-MM-DD} — {stores_changed} store(s) tidied`. One block per changed store: the store path, then the skill's own summary for it. Omit stores the skill reported no changes for. If nothing changed across all stores, the body is a one-liner: `{N} store(s) examined — no changes needed.`
 
 RECORD STATE — mark the week done.
 Write `${BORG_ROOT}/c4po/.claude/scheduled/state/c4po-consolidate-memory.json` with `{"week":"YYYY-Www","date":"YYYY-MM-DD","stores":<count examined>,"changes":<count of stores changed>}` so the run isn't repeated this week. `mkdir -p` the state directory first if it doesn't exist.
