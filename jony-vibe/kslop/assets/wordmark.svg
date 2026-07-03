@@ -1,0 +1,38 @@
+<svg viewBox="0 0 1000 360" xmlns="http://www.w3.org/2000/svg">
+  <!-- KSLOP — arched burst wordmark. Letterforms are stroke-built paths (no font dependency). -->
+  <defs>
+    <path id="ltrK" d="M14,4 V96 M64,4 L14,52 M34,42 L66,96"/>
+    <path id="ltrS" d="M66,12 H26 L14,24 V40 L26,50 H54 L66,60 V76 L54,88 H12"/>
+    <path id="ltrL" d="M14,4 V88 H66"/>
+    <path id="ltrO" d="M28,6 H52 L66,20 V80 L52,94 H28 L14,80 V20 Z"/>
+    <path id="ltrP" d="M14,96 V6 H52 L66,20 V38 L52,52 H14"/>
+  </defs>
+
+  <!-- amber burst panel -->
+  <polygon fill="#FFB000" stroke="#E85D04" stroke-width="8" stroke-linejoin="miter"
+    points="22,180 128,132 96,58 226,90 268,20 380,66 500,14 620,66 732,20 774,90 904,58 872,132 978,180 872,228 904,302 774,270 732,340 620,294 500,346 380,294 268,340 226,270 96,302 128,228"/>
+
+  <!-- KSLOP, arched -->
+  <g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+    <g transform="translate(105,100) scale(1.75) rotate(-9,40,50)">
+      <use href="#ltrK" stroke="#05130A" stroke-width="30"/>
+      <use href="#ltrK" stroke="#00FF41" stroke-width="15"/>
+    </g>
+    <g transform="translate(270,76) scale(1.75) rotate(-4.5,40,50)">
+      <use href="#ltrS" stroke="#05130A" stroke-width="30"/>
+      <use href="#ltrS" stroke="#00FF41" stroke-width="15"/>
+    </g>
+    <g transform="translate(435,66) scale(1.75)">
+      <use href="#ltrL" stroke="#05130A" stroke-width="30"/>
+      <use href="#ltrL" stroke="#00FF41" stroke-width="15"/>
+    </g>
+    <g transform="translate(600,76) scale(1.75) rotate(4.5,40,50)">
+      <use href="#ltrO" stroke="#05130A" stroke-width="30"/>
+      <use href="#ltrO" stroke="#00FF41" stroke-width="15"/>
+    </g>
+    <g transform="translate(765,100) scale(1.75) rotate(9,40,50)">
+      <use href="#ltrP" stroke="#05130A" stroke-width="30"/>
+      <use href="#ltrP" stroke="#00FF41" stroke-width="15"/>
+    </g>
+  </g>
+</svg>
