@@ -57,6 +57,7 @@ warren-bot-fett/PORTFOLIO.md
 # ── mrs-beast (personal social identity) ─────────────────────
 mrs-beast/.claude/commands/ai-week-image-prompt.md
 mrs-beast/.claude/scheduled/mrs-beast-ai-week-image-prompt.prompt
+mrs-beast/.claude/scheduled/last30days-raw/
 mrs-beast/.bin/install-personal-tasks.sh
 
 # ── cerebruh (second-brain content) ──────────────────────────

@@ -1,0 +1,207 @@
+<svg viewBox="0 0 1320 2868" xmlns="http://www.w3.org/2000/svg">
+  <!-- KSLOP — iOS launch screen (iPhone Pro Max class, crops safely to smaller ratios). -->
+  <defs>
+    <path id="ltrK" d="M14,4 V96 M64,4 L14,52 M34,42 L66,96"/>
+    <path id="ltrS" d="M66,12 H26 L14,24 V40 L26,50 H54 L66,60 V76 L54,88 H12"/>
+    <path id="ltrL" d="M14,4 V88 H66"/>
+    <path id="ltrO" d="M28,6 H52 L66,20 V80 L52,94 H28 L14,80 V20 Z"/>
+    <path id="ltrP" d="M14,96 V6 H52 L66,20 V38 L52,52 H14"/>
+    <path id="ltrT" d="M6,10 H74 M40,10 V96"/>
+    <path id="ltrH" d="M14,4 V96 M66,4 V96 M14,50 H66"/>
+    <path id="ltrE" d="M66,6 H14 V96 H66 M14,52 H54"/>
+    <path id="ltrB" d="M14,6 V94 M14,6 H50 L62,18 V34 L50,46 H14 M14,46 H54 L66,58 V82 L54,94 H14"/>
+    <path id="ltrA" d="M14,96 V34 L34,6 H46 L66,34 V96 M14,58 H66"/>
+    <path id="ltrD" d="M14,6 V94 M14,6 H48 L66,24 V76 L48,94 H14"/>
+    <radialGradient id="bgGlow" cx="50%" cy="40%" r="75%">
+      <stop offset="0%" stop-color="#0A3D1E"/>
+      <stop offset="60%" stop-color="#0A0E0A"/>
+      <stop offset="100%" stop-color="#050705"/>
+    </radialGradient>
+    <radialGradient id="eyeGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00FF41" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#00FF41" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="scan" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect width="8" height="4" fill="#00FF41" opacity="0.04"/>
+    </pattern>
+    <pattern id="grid" width="120" height="120" patternUnits="userSpaceOnUse">
+      <path d="M120,0 H0 V120" fill="none" stroke="#00FF41" stroke-width="2" opacity="0.06"/>
+    </pattern>
+  </defs>
+
+  <!-- background -->
+  <rect width="1320" height="2868" fill="url(#bgGlow)"/>
+  <rect width="1320" height="2868" fill="url(#grid)"/>
+
+  <!-- ===== top lockup: KSLOP burst ===== -->
+  <g transform="translate(85,180) scale(1.15)">
+    <polygon fill="#FFB000" stroke="#E85D04" stroke-width="8" stroke-linejoin="miter"
+      points="22,180 128,132 96,58 226,90 268,20 380,66 500,14 620,66 732,20 774,90 904,58 872,132 978,180 872,228 904,302 774,270 732,340 620,294 500,346 380,294 268,340 226,270 96,302 128,228"/>
+    <g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+      <g transform="translate(105,100) scale(1.75) rotate(-9,40,50)">
+        <use href="#ltrK" stroke="#05130A" stroke-width="30"/>
+        <use href="#ltrK" stroke="#00FF41" stroke-width="15"/>
+      </g>
+      <g transform="translate(270,76) scale(1.75) rotate(-4.5,40,50)">
+        <use href="#ltrS" stroke="#05130A" stroke-width="30"/>
+        <use href="#ltrS" stroke="#00FF41" stroke-width="15"/>
+      </g>
+      <g transform="translate(435,66) scale(1.75)">
+        <use href="#ltrL" stroke="#05130A" stroke-width="30"/>
+        <use href="#ltrL" stroke="#00FF41" stroke-width="15"/>
+      </g>
+      <g transform="translate(600,76) scale(1.75) rotate(4.5,40,50)">
+        <use href="#ltrO" stroke="#05130A" stroke-width="30"/>
+        <use href="#ltrO" stroke="#00FF41" stroke-width="15"/>
+      </g>
+      <g transform="translate(765,100) scale(1.75) rotate(9,40,50)">
+        <use href="#ltrP" stroke="#05130A" stroke-width="30"/>
+        <use href="#ltrP" stroke="#00FF41" stroke-width="15"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- ===== starburst behind the bot ===== -->
+  <g transform="translate(51,948) scale(2.3)">
+    <polygon fill="#0A3D1E" stroke="#00FF41" stroke-width="5" stroke-linejoin="miter" opacity="0.9"
+      points="256,31 300,160 422,100 362,222 491,266 362,310 422,432 300,372 256,501 212,372 90,432 150,310 21,266 150,222 90,100 212,160"/>
+  </g>
+
+  <!-- ===== The Bad Bot, full body ===== -->
+  <g transform="translate(-119,-306) scale(1.18)">
+  <!-- cape (behind everything) -->
+  <path d="M540,1480 C450,1600 400,1780 380,1950 L470,1900 L560,1970 L660,1910 L760,1975 L860,1905 L1000,1955 C970,1780 890,1600 780,1480 Z"
+        fill="#FFB000" stroke="#05130A" stroke-width="14" stroke-linejoin="round"/>
+  <path d="M780,1480 C890,1600 970,1780 1000,1955 L900,1920 C940,1760 870,1580 780,1480 Z"
+        fill="#E85D04" stroke="#05130A" stroke-width="10" stroke-linejoin="round"/>
+
+  <!-- burst behind fist -->
+  <polygon points="905,1030 930,1100 1000,1110 935,1145 950,1220 897,1165 830,1200 863,1130 810,1080 887,1095"
+           fill="#FFB000" stroke="#E85D04" stroke-width="8" opacity="0.95"/>
+
+  <!-- right arm raised with fist -->
+  <path d="M760,1500 C850,1430 905,1320 898,1195" fill="none" stroke="#05130A" stroke-width="80" stroke-linecap="round"/>
+  <path d="M760,1500 C850,1430 905,1320 898,1195" fill="none" stroke="#17E85F" stroke-width="52" stroke-linecap="round"/>
+  <circle cx="886" cy="1232" r="44" fill="#FFB000" stroke="#05130A" stroke-width="10"/>
+  <circle cx="900" cy="1148" r="58" fill="#0FBF4C" stroke="#05130A" stroke-width="14"/>
+  <g stroke="#05130A" stroke-width="8" stroke-linecap="round" fill="none">
+    <path d="M866,1118 q14,-10 28,-6"/>
+    <path d="M904,1106 q16,-2 26,8"/>
+  </g>
+
+  <!-- left arm out -->
+  <path d="M520,1500 C450,1560 412,1620 392,1678" fill="none" stroke="#05130A" stroke-width="80" stroke-linecap="round"/>
+  <path d="M520,1500 C450,1560 412,1620 392,1678" fill="none" stroke="#17E85F" stroke-width="52" stroke-linecap="round"/>
+  <circle cx="386" cy="1700" r="50" fill="#0FBF4C" stroke="#05130A" stroke-width="12"/>
+  <g stroke="#05130A" stroke-width="7" stroke-linecap="round" fill="none">
+    <path d="M360,1676 q-8,14 -4,28"/>
+    <path d="M410,1668 q10,12 8,28"/>
+  </g>
+
+  <!-- legs -->
+  <rect x="540" y="1750" width="88" height="215" rx="30" fill="#17E85F" stroke="#05130A" stroke-width="14"/>
+  <rect x="652" y="1750" width="88" height="215" rx="30" fill="#17E85F" stroke="#05130A" stroke-width="14"/>
+  <!-- boots -->
+  <rect x="498" y="1928" width="158" height="100" rx="36" fill="#0FBF4C" stroke="#05130A" stroke-width="14"/>
+  <rect x="632" y="1928" width="158" height="100" rx="36" fill="#0FBF4C" stroke="#05130A" stroke-width="14"/>
+  <rect x="506" y="1922" width="142" height="20" rx="10" fill="#FFB000" stroke="#05130A" stroke-width="8"/>
+  <rect x="640" y="1922" width="142" height="20" rx="10" fill="#FFB000" stroke="#05130A" stroke-width="8"/>
+
+  <!-- torso -->
+  <rect x="500" y="1440" width="280" height="310" rx="64" fill="#17E85F" stroke="#05130A" stroke-width="14"/>
+  <!-- chest terminal -->
+  <rect x="553" y="1500" width="174" height="120" rx="18" fill="#05130A" stroke="#0FBF4C" stroke-width="8"/>
+  <path d="M582,1542 l28,19 -28,19" fill="none" stroke="#00FF41" stroke-width="12" stroke-linecap="square"/>
+  <rect x="628" y="1546" width="20" height="32" fill="#00FF41"/>
+  <!-- belt -->
+  <rect x="496" y="1712" width="288" height="48" rx="12" fill="#FFB000" stroke="#05130A" stroke-width="12"/>
+  <rect x="610" y="1704" width="62" height="64" rx="10" fill="#E85D04" stroke="#05130A" stroke-width="10"/>
+
+  <!-- head (shared head group, sans starburst) -->
+  <g transform="translate(346,1097) scale(1.15)">
+    <g stroke="#05130A" stroke-width="14" stroke-linecap="round">
+      <line x1="320" y1="122" x2="364" y2="52"/>
+    </g>
+    <circle cx="368" cy="46" r="30" fill="url(#eyeGlow)"/>
+    <circle cx="368" cy="46" r="15" fill="#FFB000" stroke="#05130A" stroke-width="8"/>
+    <path d="M132,132 C70,110 60,60 118,38 C186,12 282,28 330,72 C284,58 250,66 240,90 C216,64 160,80 132,132 Z"
+          fill="#FFB000" stroke="#05130A" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M150,66 C176,48 216,42 252,50" fill="none" stroke="#E85D04" stroke-width="9" stroke-linecap="round"/>
+    <path d="M126,96 C146,74 178,64 210,66" fill="none" stroke="#E85D04" stroke-width="9" stroke-linecap="round"/>
+    <rect x="136" y="96" width="240" height="212" rx="64" fill="#17E85F" stroke="#05130A" stroke-width="12"/>
+    <circle cx="136" cy="212" r="22" fill="#0FBF4C" stroke="#05130A" stroke-width="10"/>
+    <circle cx="376" cy="212" r="22" fill="#0FBF4C" stroke="#05130A" stroke-width="10"/>
+    <rect x="158" y="128" width="196" height="66" rx="22" fill="#05130A"/>
+    <polygon points="172,146 226,172 224,190 174,166" fill="#00FF41"/>
+    <polygon points="340,146 286,172 288,190 338,166" fill="#00FF41"/>
+    <circle cx="192" cy="160" r="5" fill="#EAFFF2"/>
+    <circle cx="320" cy="160" r="5" fill="#EAFFF2"/>
+    <rect x="148" y="196" width="216" height="120" rx="48" fill="#0FBF4C" stroke="#05130A" stroke-width="12"/>
+    <g fill="#05130A" opacity="0.9">
+      <rect x="192" y="214" width="30" height="13" rx="6"/>
+      <rect x="241" y="214" width="30" height="13" rx="6"/>
+      <rect x="290" y="214" width="30" height="13" rx="6"/>
+    </g>
+    <path d="M170,252 Q256,298 342,252 Q350,286 302,302 Q256,312 210,302 Q162,286 170,252 Z"
+          fill="#EAFFF2" stroke="#05130A" stroke-width="10" stroke-linejoin="round"/>
+    <g stroke="#05130A" stroke-width="6" stroke-linecap="round">
+      <line x1="210" y1="272" x2="212" y2="298"/>
+      <line x1="246" y1="282" x2="247" y2="306"/>
+      <line x1="282" y1="280" x2="283" y2="304"/>
+      <line x1="316" y1="268" x2="314" y2="294"/>
+    </g>
+    <path d="M342,252 Q356,246 362,236" fill="none" stroke="#05130A" stroke-width="10" stroke-linecap="round"/>
+  </g>
+  </g><!-- end bot scale group -->
+
+  <!-- ===== circuit clouds ===== -->
+  <g fill="#0A3D1E" stroke="#05130A" stroke-width="12">
+    <circle cx="140" cy="2140" r="130"/>
+    <circle cx="330" cy="2080" r="150"/>
+    <circle cx="540" cy="2150" r="140"/>
+    <circle cx="760" cy="2090" r="160"/>
+    <circle cx="980" cy="2160" r="140"/>
+    <circle cx="1180" cy="2100" r="130"/>
+    <circle cx="230" cy="2280" r="160"/>
+    <circle cx="560" cy="2310" r="170"/>
+    <circle cx="900" cy="2300" r="170"/>
+    <circle cx="1180" cy="2280" r="150"/>
+  </g>
+  <g fill="none" stroke="#00FF41" stroke-width="7" opacity="0.75">
+    <path d="M110,2150 H300 V2080 H510"/>
+    <path d="M700,2110 H930 V2190 H1150"/>
+    <path d="M300,2290 H520 V2230 H720"/>
+    <path d="M820,2320 H1060 V2260 H1220"/>
+  </g>
+  <g fill="#00FF41" opacity="0.85">
+    <circle cx="110" cy="2150" r="11"/>
+    <circle cx="510" cy="2080" r="11"/>
+    <circle cx="700" cy="2110" r="11"/>
+    <circle cx="1150" cy="2190" r="11"/>
+    <circle cx="300" cy="2290" r="11"/>
+    <circle cx="720" cy="2230" r="11"/>
+    <circle cx="820" cy="2320" r="11"/>
+    <circle cx="1220" cy="2260" r="11"/>
+  </g>
+
+  <!-- ===== ribbon banner: THE BAD BOT ===== -->
+  <!-- end folds -->
+  <polygon points="170,2530 262,2530 262,2672 216,2620 170,2672" fill="#E85D04" stroke="#05130A" stroke-width="10"/>
+  <polygon points="1150,2530 1058,2530 1058,2672 1104,2620 1150,2672" fill="#E85D04" stroke="#05130A" stroke-width="10"/>
+  <!-- main band -->
+  <rect x="250" y="2482" width="820" height="160" rx="14" fill="#FFB000" stroke="#05130A" stroke-width="12"/>
+  <g fill="none" stroke="#05130A" stroke-linecap="square" stroke-linejoin="miter" stroke-width="24">
+    <g transform="translate(300,2522) scale(0.82)"><use href="#ltrT"/></g>
+    <g transform="translate(366,2522) scale(0.82)"><use href="#ltrH"/></g>
+    <g transform="translate(432,2522) scale(0.82)"><use href="#ltrE"/></g>
+    <g transform="translate(536,2522) scale(0.82)"><use href="#ltrB"/></g>
+    <g transform="translate(602,2522) scale(0.82)"><use href="#ltrA"/></g>
+    <g transform="translate(668,2522) scale(0.82)"><use href="#ltrD"/></g>
+    <g transform="translate(772,2522) scale(0.82)"><use href="#ltrB"/></g>
+    <g transform="translate(838,2522) scale(0.82)"><use href="#ltrO"/></g>
+    <g transform="translate(904,2522) scale(0.82)"><use href="#ltrT"/></g>
+  </g>
+
+  <!-- scanline overlay -->
+  <rect width="1320" height="2868" fill="url(#scan)"/>
+</svg>
