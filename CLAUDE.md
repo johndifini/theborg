@@ -11,6 +11,7 @@ The Borg is a standardized AI workspace that turns prompts, institutional knowle
 - `bones/` — An agent that functions as a family medical assistant
 - `architetto/` — An agent that functions as a software architect: bootstraps greenfield repositories (stack, automated-testing framework, repo structure, database) and hands each off with the decisions recorded.
 - `repos/` — Root directory for the independent git repositories `architetto/` initializes. Git-ignored by the workspace (only its existence is tracked, via `.gitkeep`); each child is its own repo, not part of The Borg's git history.
+- `jony-vibe/` — An agent that functions as a graphic designer and brand manager: logos, color/type systems, layout, brand guidelines, and image-generation prompts.
 
 ## Communication style
 

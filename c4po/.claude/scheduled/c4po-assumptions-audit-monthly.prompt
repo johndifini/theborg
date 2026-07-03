@@ -128,8 +128,9 @@ Assumption E — "dreaming" is still a custom job, not a native feature
   the scheduled-jobs + slash-command listings in ${BORG_ROOT}/README.md.
 
 STEP 3: Always pipe a report into
-`${BORG_ROOT}/.bin/notify-email.sh c4po` (reads message body from stdin) —
-even when every assumption is STILL VALID, so the user can confirm the job ran.
+`${BORG_ROOT}/.bin/notify-email.sh c4po "Borg assumptions audit — {YYYY-MM-DD} — {N} flagged"`
+(reads message body from stdin) — even when every assumption is STILL VALID
+(subject reads "— 0 flagged"), so the user can confirm the job ran.
 Format:
 
   Borg assumptions audit - {YYYY-MM-DD}
