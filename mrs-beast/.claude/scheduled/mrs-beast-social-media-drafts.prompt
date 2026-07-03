@@ -39,5 +39,5 @@ Use ===================================== as separators between options. If
 nothing compelling found (and all sources reported healthy), say so briefly.
 
 Deliver the drafts by piping them into
-`${BORG_ROOT}/.bin/notify-email.sh mrs-beast` (reads the message from stdin,
-emails it to the user).
+`${BORG_ROOT}/.bin/notify-email.sh mrs-beast "Social media drafts — {YYYY-MM-DD} — {N} draft(s)"`
+(reads the message from stdin, emails it to the user).

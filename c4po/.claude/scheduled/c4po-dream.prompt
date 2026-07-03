@@ -28,7 +28,7 @@ For rule / CLAUDE.md / skill candidates: do NOT write any file. Compose a digest
 
 For cerebruh candidates: the cerebruh wiki is read-only; the ONLY permitted write is staging a new, descriptively-named `.md` source file into `${BORG_ROOT}/cerebruh/ingest/`. Stage it, then note in the digest that it is staged and that the user must run cerebruh's own injection-scanned ingest workflow to file it into the wiki. Never write `cerebruh/raw/` or `cerebruh/wiki/`. Never auto-ingest.
 
-Always pipe the digest into `${BORG_ROOT}/.bin/notify-email.sh c4po` (reads from stdin) — even when empty, so the user can confirm the job ran. Header: `Borg dream — {YYYY-MM-DD} — {N} proposal(s), {K} cerebruh candidate(s) staged`. Group by destination type. If nothing cleared the bar and nothing was staged, the body is a one-liner: `{N} session(s) scanned — nothing cleared the bar.`
+Always pipe the digest into `${BORG_ROOT}/.bin/notify-email.sh c4po "Borg dream — {YYYY-MM-DD} — {N} proposal(s), {K} staged"` (reads from stdin) — even when empty, so the user can confirm the job ran. Body header: `Borg dream — {YYYY-MM-DD} — {N} proposal(s), {K} cerebruh candidate(s) staged`. Group by destination type. If nothing cleared the bar and nothing was staged, the body is a one-liner: `{N} session(s) scanned — nothing cleared the bar.`
 
 RECORD STATE — mark the week done and move the window boundary.
 Write `${BORG_ROOT}/c4po/.claude/scheduled/state/c4po-dream.json` with `{"week":"YYYY-Www","date":"YYYY-MM-DD","ts":"<ISO 8601 timestamp of this run>","sessions_scanned":<count>,"proposals":<count>,"staged":<count>}`. The `ts` becomes the next run's harvest-window boundary. `mkdir -p` the state directory first if it doesn't exist.

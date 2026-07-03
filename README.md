@@ -17,12 +17,13 @@ This repo is my personal AI workspace, shared in case the patterns, structure, o
 - `bones/` — The family medical assistant agent. Tracks health context, surfaces medical information, and helps the family stay on top of care decisions.
 - `architetto/` — The software architect agent. Bootstraps greenfield repos — picking the stack, automated-testing framework, repo structure, and database — then hands them off with the decisions written down.
 - `repos/` — Where `architetto` parks the repos it initializes. Each is its own independent git repo; the workspace git-ignores the contents (structure only, via `.gitkeep`) so product code stays out of The Borg's history.
+- `jony-vibe/` — The graphic design and branding agent. Handles logos, color/type systems, layout, brand guidelines, and image-generation prompts.
 
 ## Scheduled Jobs
 
 Each agent runs background tasks via macOS launchd. Plists live in `~/Library/LaunchAgents/` under the `com.theborg.*` namespace. All jobs are driven by `.bin/run-scheduled-task.sh` and log to `<agent>/.claude/scheduled/logs/launchd.{out,err}`. The plists embed absolute paths and aren't committed verbatim — regenerate them from your checkout with `.bin/install-scheduled-tasks.sh` (which holds the schedule table as the single source of truth; add `--load` to (re)register them with launchd).
 
-Jobs notify the user by **email** via `.bin/notify-email.sh` (outbound Gmail SMTP; creds in `~/.claude/channels/email-shared/.env`). `run-scheduled-task.sh` pins each run to a fixed `--session-id`, so the notification email includes a `claude --resume <id>` command to continue that exact session on the Mac Studio. `.bin/notify-telegram.sh` remains in the tree as a manual/backup channel but is no longer wired into any scheduled job.
+Jobs notify the user by **email** via `.bin/notify-email.sh <agent> [subject]` (outbound Gmail SMTP; creds in `~/.claude/channels/email-shared/.env`). Every job passes a short, descriptive subject (e.g. `Borg security audit — 2026-07-03 — 0 finding(s)`) so the inbox is scannable without opening each message. `run-scheduled-task.sh` pins each run to a fixed `--session-id`, so the notification email includes a `claude --resume <id>` command to continue that exact session on the Mac Studio. `.bin/notify-telegram.sh` remains in the tree as a manual/backup channel but is no longer wired into any scheduled job.
 
 For more info about each job, see `<agent>/.claude/scheduled/<label>.prompt`.
 

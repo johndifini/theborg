@@ -50,8 +50,8 @@ STEP 6: Read ${BORG_ROOT}/warren-bot-fett/ai-sleeve/last-rebalance.json if it ex
 
 If the file does not exist, this is the first run — skip MoM diff.
 
-STEP 7: Email a report to the user by piping it into `${BORG_ROOT}/.bin/notify-email.sh warren-bot-fett` (reads the report from stdin). The report should contain:
-- Header: "AI Sleeve — monthly rebalance — {today}"
+STEP 7: Email a report to the user by piping it into `${BORG_ROOT}/.bin/notify-email.sh warren-bot-fett "AI Sleeve — monthly rebalance — {today}"` (reads the report from stdin). The report should contain:
+- Header (body): "AI Sleeve — monthly rebalance — {today}"
 - Target weights table (rank, ticker, weight %, status: free/floored). Mark forced names with a trailing "*".
 - Category status: for each category, list its min, members present in the basket, and any forced inclusions. Example: `power_generation (min 2): GEV, BE* — BE forced (rank N/A in raw cap order)`.
 - MoM section: weight deltas for held names, list of new entrants and dropouts (only if last-rebalance.json existed)
@@ -64,4 +64,4 @@ STEP 8: Write ${BORG_ROOT}/warren-bot-fett/ai-sleeve/last-rebalance.json with `{
 
 Do not propose buy/sell trades — this iteration outputs target weights only. Sleeve sizing and portfolio assignment are deferred until the user specifies them.
 
-If any step above halts with an error (over-constrained category, no valid swap, weight-sum mismatch, etc.), still email: pipe the halt reason and details into `${BORG_ROOT}/.bin/notify-email.sh warren-bot-fett` with header "AI Sleeve — monthly rebalance FAILED — {today}", and do NOT write last-rebalance.json (so the scheduler retries). The user should hear from this job every month it executes, success or failure.
+If any step above halts with an error (over-constrained category, no valid swap, weight-sum mismatch, etc.), still email: pipe the halt reason and details into `${BORG_ROOT}/.bin/notify-email.sh warren-bot-fett "AI Sleeve — monthly rebalance FAILED — {today}"`, and do NOT write last-rebalance.json (so the scheduler retries). The user should hear from this job every month it executes, success or failure.
