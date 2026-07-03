@@ -63,3 +63,5 @@ Format the table as a monospace block (tabs or padded spaces) so columns align i
 STEP 8: Write ${BORG_ROOT}/warren-bot-fett/ai-sleeve/last-rebalance.json with `{"date": "YYYY-MM-DD", "weights": {ticker: final_weight_pct, ...}}` for next month's diff.
 
 Do not propose buy/sell trades — this iteration outputs target weights only. Sleeve sizing and portfolio assignment are deferred until the user specifies them.
+
+If any step above halts with an error (over-constrained category, no valid swap, weight-sum mismatch, etc.), still email: pipe the halt reason and details into `${BORG_ROOT}/.bin/notify-email.sh warren-bot-fett` with header "AI Sleeve — monthly rebalance FAILED — {today}", and do NOT write last-rebalance.json (so the scheduler retries). The user should hear from this job every month it executes, success or failure.
