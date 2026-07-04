@@ -1,5 +1,6 @@
 ---
 description: Stage all changes, commit, and push to the remote
+model: sonnet
 ---
 
 Stage, commit, and push the current changes:
