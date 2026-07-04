@@ -1,0 +1,3 @@
+# Backlog
+
+- [ ] **Extend daily security audit to cover `repos/`** (c4po, added 2026-07-04) — `c4po-security-audit.prompt` (`c4po/.claude/scheduled/c4po-security-audit.prompt`) only reviews Borg-agent `settings*.json`, hooks, permission rules, Telegram access, and MCP servers. Confirmed via the run logs (`c4po/.claude/scheduled/logs/c4po-security-audit.log`) that every entry checks "7 settings files" and never mentions `repos/*`. The independent git repos under `repos/` (e.g. `repos/waiq`) have their own `.claude/` config, potential hooks, and secrets that go unaudited despite living inside `~/theborg`. Add a step to sweep each `repos/*/.claude/settings*.json`, hooks, and secret patterns — or explicitly document why they're intentionally out of scope.
