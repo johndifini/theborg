@@ -47,7 +47,7 @@ Rules for CLAUDE.md files in this workspace. These exist to keep agent context c
 
 ### Size
 
-- CLAUDE.md files should stay under **200 lines**. This ceiling is a moving target — C4PO's monthly assumptions audit re-evaluates the number against current Anthropic and community guidance and updates it here; the lint audit enforces conformance to whatever number is written above.
+- CLAUDE.md files should stay under **150 lines**. This ceiling is a moving target — C4PO's monthly assumptions audit re-evaluates the number against current Anthropic and community guidance and updates it here; the lint audit enforces conformance to whatever number is written above.
 - Content that is durable, reusable, or domain-specific — procedures, multi-step workflows, knowledge that doesn't need to load every session — belongs in a skill or a scoped rule, not in CLAUDE.md. When a file approaches the ceiling, relocate such content rather than padding the file.
 
 ### Cross-references
