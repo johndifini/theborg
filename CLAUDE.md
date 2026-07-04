@@ -62,7 +62,8 @@ Rules for CLAUDE.md files in this workspace. These exist to keep agent context c
 ### README
 
 - The `Directory Structure` block in this file is similar to the `## Directory Structure` in `README.md`.
-- `README.md` documents all scheduled tasks and slash commands of this AI workspace.
+- `README.md` documents all **non-private** scheduled tasks and slash commands of this AI workspace.
+- **Private items are exempt from README.** A scheduled task or slash command marked private is intentionally omitted from `README.md` and must not be flagged as a coverage gap. Mark a command private with `private: true` in its YAML frontmatter; mark a scheduled task private with a `<!-- Private: true -->` marker line at the top of its `.prompt`. Private items still obey every other lint rule (the scheduled-task↔command pairing, step-reference and override completeness, paths) — privacy only excuses them from the public-facing README, not from consistency checks.
 
 ### Paths
 
