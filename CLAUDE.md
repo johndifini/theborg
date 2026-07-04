@@ -59,6 +59,11 @@ Rules for CLAUDE.md files in this workspace. These exist to keep agent context c
    - Source code, build artifacts, generated data, and files discoverable through normal task exploration are not considered meaningful.
 - Reference cerebruh **only when adding domain-specific routing** (e.g., "for accounting questions, see `cerebruh/wikis/accounting/`"). Do not restate the general cerebruh usage policy — that lives in this root-level CLAUDE.md and is inherited.
 
+### Repo design folders
+
+- `jony-vibe/CLAUDE.md` lists every `repos/*/design/` directory that exists on disk, and every repo design path it lists exists. Check the filesystem, not git — `repos/` is git-ignored, so its children never appear in workspace git status.
+- This is the one sanctioned cross-reference from an agent's CLAUDE.md into `repos/` (design deliverables live inside the target repo, so Jony Vibe needs the pointer). Other agents do not list `repos/` children.
+
 ### README
 
 - The `Directory Structure` block in this file is similar to the `## Directory Structure` in `README.md`.
