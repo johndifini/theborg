@@ -60,8 +60,11 @@ Every scheduled task has a matching interactive command (named after the task, m
 
 | Command | Scope | What it does |
 |---|---|---|
+| `/h` | workspace | Runs the given prompt on the latest Haiku model. |
+| `/s` | workspace | Runs the given prompt on the latest Sonnet model. |
 | `/remember` | workspace | Save durable context to the current agent's Auto Memory file (`~/.claude/projects/<project>/memory/MEMORY.md`) so it persists across sessions. With no argument, writes a concise gist of the current conversation; with an argument, saves that specific item as a standing fact or rule. Shows the proposed addition for approval before writing unless the request is unambiguous. |
 | `/push` | workspace | Stages all changes (`git add -A`), commits with a concise message matching recent commit style (or the supplied argument as the message), and pushes to the current branch's remote. Reports the commit hash. |
+| `/backlog` | workspace | Adds items to the shared workspace backlog (`BACKLOG.md` at the workspace root, entries tagged by owning agent). With no argument, scans the current session for loose ends (deferred work, unfixed problems, abandoned ideas) and proposes them for approval; with an argument, backlogs that specific item, asking clarifying questions if the scope or context is unclear. |
 | `/retro` | workspace | End-of-session retrospective. Asks "is there anything here worth saving?" — scans the session (or a user-supplied note about where Claude's default diverged from what was actually wanted) for lessons worth persisting to a memory file or `CLAUDE.md`. High bar for writing anything; per-item approval before any change. Optional free-text argument: `/retro I went with this version XYZ`. |
 | `/audit-assumptions` | c4po | Runs the `c4po-assumptions-audit-monthly` audit logic interactively, reporting the full result (all verdicts, not just flagged) to the session instead of email. Skips the once-per-month state file so it never blocks the scheduled run. |
 | `/dream` | c4po | Runs the `c4po-dream` harvest logic interactively, reporting all proposals (rules, CLAUDE.md, skills, cerebruh candidates) to the session instead of email. Defaults to a 7-day window (override via argument, e.g. `/dream last 14 days`); asks before staging any cerebruh candidate. Skips the once-per-week state file so it never moves the scheduled run's harvest boundary. |
@@ -71,7 +74,6 @@ Every scheduled task has a matching interactive command (named after the task, m
 | `/social-media-drafts` | mrs-beast | Runs the `mrs-beast-social-media-drafts` logic interactively, outputting the post drafts to the session instead of email. |
 | `/market-scan` | warren-bot-fett | Runs the `warren-bot-fett-daily-market-scan` logic interactively, reporting the full scan (allocations vs. targets, deviations, opportunity verdict) to the session instead of email. Skips the market-holiday gate so it always runs. |
 | `/ai-sleeve-rebalance` | warren-bot-fett | Runs the `warren-bot-fett-ai-sleeve-monthly` logic interactively, reporting target weights and the month-over-month diff to the session instead of email. Skips the once-per-month gate and does not write `last-rebalance.json`, so it never clobbers the scheduled run's diff baseline. |
-
 ## Status
 
 This is one person’s working setup, not a polished product.
