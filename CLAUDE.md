@@ -13,6 +13,11 @@ The Borg is a standardized AI workspace that turns prompts, institutional knowle
 - `repos/` — Root directory for the independent git repositories `architetto/` initializes. Git-ignored by the workspace (only its existence is tracked, via `.gitkeep`); each child is its own repo, not part of The Borg's git history.
 - `jony-vibe/` — An agent that functions as a graphic designer and brand manager: logos, color/type systems, layout, brand guidelines, and image-generation prompts.
 
+## Environment
+
+- An agent here may be driven by either the **Claude Code terminal CLI** or the **Claude Desktop app** (macOS) — don't assume which. This is an open-source project; contributors may use the CLI more than the maintainer does.
+- Terminal-only affordances exist in the CLI but **not** in Desktop: `/exit`, `/quit`, `Ctrl+D`, and `Ctrl+C` end a session in the CLI, while Desktop has none of them (start a new chat or close the conversation instead). Headless `claude -p` is CLI-only and does not run in Desktop. Ending a session is zero-token either way — tokens are spent only when a message triggers a model turn.
+
 ## Communication style
 
 Every agent answers tersely by default. Optimize for brevity:
