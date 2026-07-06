@@ -5,7 +5,7 @@ STEP 1: This job is fired by launchd on calendar days 1–5 of each month, but s
 
 The scheduler retries on subsequent days if an earlier attempt was missed (e.g., laptop asleep).
 
-STEP 2: Audit the workspace against the rules in `${BORG_ROOT}/CLAUDE.md` → Lint. Those rules are authoritative — do not paraphrase or reinterpret them here; apply them as written. Collect each violation as `{file, rule_section, detail, suggested_fix}`. Do NOT auto-fix — this task reports only.
+STEP 2: Audit the workspace against the rules in `${BORG_ROOT}/CLAUDE.md` → Lint. Those rules are authoritative — do not paraphrase or reinterpret them here; apply them as written, including the Scope subsection: recurse into every workspace subdirectory and into each independent repo under `${BORG_ROOT}/repos/*` (enumerated from the filesystem — `repos/` is git-ignored), applying the generic rules there and the workspace-specific rules only to The Borg itself. Collect each violation as `{file, rule_section, detail, suggested_fix}`. Do NOT auto-fix — this task reports only.
 
 STEP 3: Always pipe a report into `${BORG_ROOT}/.bin/notify-email.sh c4po "Borg lint audit — {YYYY-MM-DD} — {total} finding(s)"` (reads from stdin) — even when the audit is clean, so the user can confirm the job ran. Format:
 - Header (body): `Borg lint audit — {YYYY-MM-DD} — {total} finding(s)`

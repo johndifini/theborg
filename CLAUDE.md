@@ -45,6 +45,12 @@ Every agent answers tersely by default. Optimize for brevity:
 
 Rules for CLAUDE.md files in this workspace. These exist to keep agent context consistent, discoverable, and low-maintenance.
 
+### Scope
+
+- The lint audit walks every CLAUDE.md in the workspace tree **and** recurses into each independent repo under `repos/*` (enumerate the filesystem — `repos/` is git-ignored, so its children never appear in workspace git status).
+- `repos/*` inherit the **generic** rules — Coverage, Size, Cross-references, Paths, Imports — with each repo's root CLAUDE.md treated like the workspace root (no parent-directory mention required).
+- The **workspace-specific** rules — Repo design folders, README, MCP servers, Scheduled tasks — bind The Borg itself, not `repos/*`; a repo documents its own commands and automation in its own README. (MCP servers loaded from a repo's config are still covered by the registry rule via the daily security audit.)
+
 ### Coverage
 
 - CLAUDE.md is required at **context boundaries** — places where an agent's operating rules, role, or domain changes. Concretely: the workspace root, each top-level directory (e.g., `cerebruh/`), and any subdirectory with rules that meaningfully differ from its parent.
