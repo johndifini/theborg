@@ -6,6 +6,12 @@ Run the /security-review skill against the current state of ~/theborg. Specifica
 - exposed paths and permission rules
 - Telegram access lists at ~/.claude/channels/telegram-*/access.json
 - any new MCP servers added since last audit
+- the independent repos under ~/theborg/repos/ (git-ignored — enumerate the
+  filesystem, not git status; e.g. repos/waiq): each repo's .claude/settings*.json
+  and the hooks those settings configure, its .claude/commands/ and skills for
+  anything that executes or exfiltrates, any .mcp.json or MCP server not
+  registered in ~/theborg/c4po/MCP.md, and a secret-pattern sweep (API keys,
+  tokens, plaintext credentials) of the repo's config files
 
 Always email the result by piping it into `${BORG_ROOT}/.bin/notify-email.sh c4po "Borg security audit — {YYYY-MM-DD} — {N} finding(s)"` (reads the message from stdin and emails it to the user) — even when the audit is clean, so the user can confirm the job ran. Body header: same as the subject.
 - If anything critical is found (auth weakness, dangerous permission, broken access policy, suspicious MCP server, leaked secret), include each finding and a recommended fix.
