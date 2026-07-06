@@ -1,0 +1,35 @@
+Weekly backlog burndown: in the ~4 hours before the account's weekly Claude usage reset, spend the remaining credits implementing backlog items across The Borg.
+
+This job runs headless from `${BORG_ROOT}/c4po` with the workspace root added as a working directory (see `.bin/run-scheduled-task.sh`). It is EXPECTED to die mid-run when credits run out — every phase therefore leaves durable state (commits, checked boxes) before moving on, and the plan email goes out before implementation starts.
+
+The phases below are named, not numbered, so the paired `/backlog-burndown` command can reference them without breaking when this file is edited.
+
+GATE — run at most once per ISO week.
+Determine the current ISO week with `date +%G-W%V`. Stop and output nothing if `${BORG_ROOT}/c4po/.claude/scheduled/state/c4po-backlog-burndown.json` exists and its `week` field equals the current ISO week.
+
+WINDOW — abort if fired outside the pre-reset window.
+The account's weekly usage reset is **Wednesday 10:59 AM local** (from `/status`); launchd fires this job Wednesday 6:59 AM. If the current local time is not Wednesday between 06:30 and 10:29 (launchd fires missed events on wake, so a sleeping Mac can delay the run), stop and output nothing — running after the reset would burn the fresh week's budget, which defeats the purpose. If the account's reset time ever changes, update this paragraph and the `weekly-wed-06-59` schedule in `.bin/install-scheduled-tasks.sh` together.
+
+PRIORITIZE — reorder every backlog in place.
+Enumerate the backlogs: `${BORG_ROOT}/BACKLOG.md` (workspace) and every `${BORG_ROOT}/repos/*/BACKLOG.md` (check the filesystem — `repos/` is git-ignored, so its children never appear in workspace git status). Reorder each file's open items by priority, preserving that file's own format and conventions (the workspace file is a flat checkbox list — reorder it highest-priority-first; a repo file with priority tiers keeps its tiers, moving items between tiers only when clearly warranted). Priority rubric: user pain in active use > bugs > security/correctness > features > nice-to-haves; weigh what unblocks other items. Do not rewrite item content. Commit each reordered file in its own repo (workspace file in the theborg repo, repo files in their repos).
+
+CONSOLIDATE — build the run plan.
+Write `${BORG_ROOT}/c4po/.claude/scheduled/state/c4po-backlog-burndown-plan.md` (overwriting any previous run's plan): a single prioritized union of all open items across every backlog, one checkbox line per item with its source file and owning agent/repo. Items a headless run cannot do get a `needs-user:` marker with a one-line reason instead of a checkbox — anything requiring a physical device, user-only verification, credentials or purchases, app-store/publishing actions, or a destructive/irreversible operation. Order the actionable rest by the same priority rubric.
+
+NOTIFY PLAN — email the plan before burning.
+Pipe the plan into `${BORG_ROOT}/.bin/notify-email.sh c4po "Borg backlog burndown — {YYYY-MM-DD} — plan: {N} item(s), {K} needs-user"` (reads the message from stdin). Body header: same as the subject. This email is sent BEFORE implementation because the run is expected to die when credits run out; it is the user's record of what the run set out to do.
+
+RECORD STATE — mark the week done before burning.
+Write `${BORG_ROOT}/c4po/.claude/scheduled/state/c4po-backlog-burndown.json` with `{"week":"YYYY-Www","date":"YYYY-MM-DD","ts":"<ISO 8601 timestamp>","planned":<N>,"needs_user":<K>}`. `mkdir -p` the state directory first if needed. State is recorded now, not at the end, because the end may never arrive.
+
+BURN — implement items until credits run out.
+Loop over the plan top-down, one item at a time:
+- Implement the item in its owning repo (workspace items under `${BORG_ROOT}`, repo items in their repo under `repos/`), following that repo's CLAUDE.md, rules, and ADR conventions.
+- Verify as far as a headless run allows — run the repo's tests/build if it has them; never claim verification the item reserves for a device or the user.
+- Commit in the owning repo with a clear message. Never push to any remote. Never write `cerebruh/` wiki content (read-only; the deny rules enforce this).
+- Update trackers: check the item off (or move it to a Done section, per that file's convention) in its source BACKLOG.md and in the plan file; commit the tracker updates with the work.
+- If an item proves infeasible headless, mark it `skipped: <reason>` in the plan file and move on.
+Continue until no actionable items remain — or the session dies with the credits, which is the expected exit; the commits and checked boxes are the durable record.
+
+WRAP — only reached if the plan empties before the credits do.
+Pipe a summary (items completed / skipped / needs-user, with commit hashes) into `${BORG_ROOT}/.bin/notify-email.sh c4po "Borg backlog burndown — {YYYY-MM-DD} — {C} done, {S} skipped"`. Body header: same as the subject.

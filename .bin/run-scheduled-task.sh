@@ -67,6 +67,15 @@ case "$TASK_NAME" in
   c4po-dream) EFFORT=xhigh ;;
 esac
 
+# Per-task extra CLI args. The backlog burndown edits files across the whole
+# workspace (root BACKLOG.md, sibling agents, the git-ignored repos/*), not
+# just its agent dir — grant it the workspace root as an additional working
+# directory. Other tasks stay confined to their agent dir.
+EXTRA_ARGS=()
+case "$TASK_NAME" in
+  c4po-backlog-burndown) EXTRA_ARGS+=(--add-dir "$BORG_ROOT") ;;
+esac
+
 # --strict-mcp-config: a scheduled `claude -p` run must NOT spawn the telegram
 # channel's MCP server. server.ts kills whatever poller holds bot.pid, so a
 # scheduled run would silently clobber the agent's interactive session poller
@@ -77,6 +86,6 @@ esac
 # `claude --resume` command pointing at this exact session.
 {
   echo "===== $(date -u +%Y-%m-%dT%H:%M:%SZ) start $TASK_NAME (cwd=$AGENT_DIR, session=$SESSION_ID) ====="
-  "$CLAUDE_BIN" -p "$PROMPT_CONTENT" --session-id "$SESSION_ID" --strict-mcp-config --effort "$EFFORT" < /dev/null
+  "$CLAUDE_BIN" -p "$PROMPT_CONTENT" --session-id "$SESSION_ID" --strict-mcp-config --effort "$EFFORT" ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"} < /dev/null
   echo "===== $(date -u +%Y-%m-%dT%H:%M:%SZ) end $TASK_NAME ====="
 } >> "$LOG_FILE" 2>&1
