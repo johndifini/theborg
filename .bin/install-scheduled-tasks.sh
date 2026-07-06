@@ -34,6 +34,7 @@ TASKS=(
   "c4po|c4po-lint-audit-monthly|month-first5-09-00"
   "c4po|c4po-assumptions-audit-monthly|month-first5-09-00"
   "c4po|c4po-dream|weekly-sat-sun-22-00"
+  "c4po|c4po-backlog-burndown|weekly-wed-06-59"
   "c4po|c4po-consolidate-memory|weekly-sun-mon-23-00"
   "mrs-beast|mrs-beast-social-media-drafts|weekly-sun-wed-16-00"
   "warren-bot-fett|warren-bot-fett-daily-market-scan|weekly-mon-fri-09-00"
@@ -78,6 +79,15 @@ schedule_xml() {
       printf '    <key>StartCalendarInterval</key>\n    <array>\n'
       for w in 6 0; do cal_entry "Weekday=$w" "Hour=22" "Minute=0"; done
       printf '    </array>\n'
+      ;;
+    # 6:59 AM Wednesday — ~4h before the account's weekly usage reset (Wed
+    # 10:59 AM); the prompt's WINDOW phase aborts late (post-reset) firings.
+    weekly-wed-06-59)
+      printf '    <key>StartCalendarInterval</key>\n    <dict>\n'
+      printf '        <key>Weekday</key>\n        <integer>3</integer>\n'
+      printf '        <key>Hour</key>\n        <integer>6</integer>\n'
+      printf '        <key>Minute</key>\n        <integer>59</integer>\n'
+      printf '    </dict>\n'
       ;;
     weekly-sun-mon-23-00)
       printf '    <key>StartCalendarInterval</key>\n    <array>\n'
