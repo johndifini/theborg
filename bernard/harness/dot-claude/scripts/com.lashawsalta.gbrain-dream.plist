@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.lashawsalta.gbrain-dream</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/zsh</string>
+    <string>-lc</string>
+    <string>bash /Users/lashawsalta/life-wiki/.claude/scripts/gbrain-job.sh dream</string>
+  </array>
+  <!-- gbrain-job.sh writes the newest-first dated run log to gbrain-dream.log
+       and filters progress-ticker spam. The paths below catch stray output. -->
+
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>3</integer>
+    <key>Minute</key>
+    <integer>15</integer>
+  </dict>
+
+  <key>StandardOutPath</key>
+  <string>/Users/lashawsalta/life-wiki/.claude/logs/gbrain-dream-launchd.log</string>
+
+  <key>StandardErrorPath</key>
+  <string>/Users/lashawsalta/life-wiki/.claude/logs/gbrain-dream-launchd.err</string>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/Users/lashawsalta/.bun/bin:/usr/local/bin:/usr/bin:/bin</string>
+  </dict>
+</dict>
+</plist>
