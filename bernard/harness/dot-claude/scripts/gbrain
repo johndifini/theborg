@@ -1,0 +1,58 @@
+#!/bin/zsh
+# Thin wrapper so `gbrain` works without a global install.
+# Symlink this onto PATH or call it directly.
+#
+# OLLAMA_KEEP_ALIVE: keep nomic-embed-text loaded in GPU memory for 60 min
+# after last use. Without this, the model unloads after 5 min and every
+# cold-start query takes 2–5 min. With it, repeat queries take ~5s.
+export OLLAMA_KEEP_ALIVE=60m
+
+# Start Ollama on first use; it will self-terminate after 60 min of idle.
+if ! pgrep -x ollama > /dev/null 2>&1; then
+  ollama serve > /dev/null 2>&1 &
+  sleep 3  # wait for the HTTP server to be ready
+fi
+
+_GBRAIN_PGLITE_LOCK_DIR="/Users/lashawsalta/.gbrain/brain.pglite/.gbrain-lock"
+
+cleanup_child_lock() {
+  local child_pid="$1"
+  local lock_file="${_GBRAIN_PGLITE_LOCK_DIR}/lock"
+
+  [[ -n "$child_pid" && -f "$lock_file" ]] || return 0
+  grep -q "\"pid\":${child_pid}" "$lock_file" 2>/dev/null || return 0
+  kill -0 "$child_pid" 2>/dev/null && return 0
+
+  rm -rf "$_GBRAIN_PGLITE_LOCK_DIR" 2>/dev/null || true
+}
+
+if [[ "$1" == "query" || "$1" == "search" ]]; then
+  # Evict any orphaned query/search processes so the PGLite lock is free.
+  # Only targets query/search — never kills serve, import, or embed.
+  pgrep -f "gbrain/src/cli.ts query"  2>/dev/null | xargs kill -9 2>/dev/null
+  pgrep -f "gbrain/src/cli.ts search" 2>/dev/null | xargs kill -9 2>/dev/null
+  sleep 0.3
+
+  # Run with a hard timeout (default 5 min; override with GBRAIN_QUERY_TIMEOUT
+  # seconds — results stream to stdout long before the process exits, so batch
+  # callers like wiki-eval.sh use a short cap once Ollama is warm). macOS has no
+  # `timeout` command, so we background the process and terminate it if the
+  # timer fires first. Send TERM before KILL so GBrain can release the PGLite lock.
+  bun run /Users/lashawsalta/gbrain/src/cli.ts "$@" &
+  _pid=$!
+  (
+    sleep "${GBRAIN_QUERY_TIMEOUT:-300}"
+    kill -TERM $_pid 2>/dev/null
+    sleep 5
+    kill -0 $_pid 2>/dev/null && kill -KILL $_pid 2>/dev/null
+  ) &
+  _timer=$!
+  wait $_pid 2>/dev/null
+  _rc=$?
+  kill $_timer 2>/dev/null
+  wait $_timer 2>/dev/null
+  cleanup_child_lock "$_pid"
+  exit $_rc
+else
+  exec bun run /Users/lashawsalta/gbrain/src/cli.ts "$@"
+fi

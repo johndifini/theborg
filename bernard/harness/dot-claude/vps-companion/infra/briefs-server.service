@@ -1,0 +1,12 @@
+[Unit]
+Description=Static server for health-wiki briefs (loopback, no listing)
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 %h/health-wiki-workspace/infra/briefs_server.py
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+
+[Install]
+WantedBy=default.target

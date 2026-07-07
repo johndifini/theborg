@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.lashawsalta.wiki-mirror-sync</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/zsh</string>
+    <string>-lc</string>
+    <string>/Users/lashawsalta/life-wiki/.claude/scripts/vps-mirror-sync.sh</string>
+  </array>
+
+  <!-- Daily at 07:00 (runs on next wake if the Mac was asleep/off), plus once
+       at login via RunAtLoad. On-demand: bash .claude/scripts/vps-mirror-sync.sh -->
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>7</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+
+  <key>RunAtLoad</key>
+  <true/>
+
+  <!-- The script now writes its own newest-first log to wiki-mirror-sync.log
+       (via lib/wikilog.sh) — so manual runs are finally logged too. This path
+       only catches stray stdout. -->
+  <key>StandardOutPath</key>
+  <string>/Users/lashawsalta/life-wiki/.claude/logs/wiki-mirror-sync-launchd.log</string>
+
+  <key>StandardErrorPath</key>
+  <string>/Users/lashawsalta/life-wiki/.claude/logs/wiki-mirror-sync.err</string>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+  </dict>
+</dict>
+</plist>

@@ -1,0 +1,55 @@
+#!/bin/bash
+# wiki-query: gbrain semantic search with raw/ source documents filtered out.
+#
+# Raw Epic PDFs with double-encoded OCR score high semantically but are unreadable
+# noise in factual queries. This wrapper strips any result whose slug contains /raw/,
+# leaving only processed wiki pages in the output.
+#
+# Usage: wiki-query "search terms" [--n N] [--format FORMAT] [--show-raw]
+#
+# --show-raw: bypass the filter and return all results (for debugging)
+
+show_raw=false
+passthrough_args=()
+
+for arg in "$@"; do
+    if [[ "$arg" == "--show-raw" ]]; then
+        show_raw=true
+    else
+        passthrough_args+=("$arg")
+    fi
+done
+
+if [[ ${#passthrough_args[@]} -eq 0 ]]; then
+    echo "Usage: wiki-query \"search terms\" [--n N] [--format FORMAT] [--show-raw]" >&2
+    exit 1
+fi
+
+if $show_raw; then
+    "$(dirname "$0")/gbrain" query "${passthrough_args[@]}"
+    exit $?
+fi
+
+"$(dirname "$0")/gbrain" query "${passthrough_args[@]}" | python3 -c "
+import sys, re
+
+current_block = []
+current_is_raw = False
+
+for line in sys.stdin:
+    match = re.match(r'^\[[\d.]+\]\s+(\S+)\s+--', line)
+    if match:
+        # Flush previous block if it was a wiki page (not raw)
+        if current_block and not current_is_raw:
+            print(''.join(current_block), end='')
+        # Start new block
+        slug = match.group(1)
+        current_is_raw = '/raw/' in slug
+        current_block = [line]
+    else:
+        current_block.append(line)
+
+# Flush final block
+if current_block and not current_is_raw:
+    print(''.join(current_block), end='')
+"

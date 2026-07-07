@@ -18,6 +18,7 @@ This repo is my personal AI workspace, shared in case the patterns, structure, o
 - `architetto/` — The software architect agent. Bootstraps greenfield repos — picking the stack, automated-testing framework, repo structure, and database — then hands them off with the decisions written down.
 - `repos/` — Where `architetto` parks the repos it initializes. Each is its own independent git repo; the workspace git-ignores the contents (structure only, via `.gitkeep`) so product code stays out of The Borg's history.
 - `jony-vibe/` — The graphic design and branding agent. Handles logos, color/type systems, layout, brand guidelines, and image-generation prompts.
+- `bernard/` — A case study, not an agent: the sanitized harness of a private health wiki and its family-facing WhatsApp companion agent (Bernard) — how it was built and what everything does.
 
 ## Scheduled Jobs
 
