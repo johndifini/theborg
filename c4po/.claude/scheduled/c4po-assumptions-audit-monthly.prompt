@@ -145,6 +145,40 @@ Assumption F — default Claude model pinned in ~/.claude/settings.json
   (user-level, outside the repo), and this assumption's pinned value so the
   next audit verifies the new choice.
 
+Assumption G — the LLM Wiki pattern is the best lightweight RAG for this setup
+  Current choice: cerebruh implements Andrej Karpathy's "LLM Wiki" pattern
+  (${BORG_ROOT}/cerebruh/CLAUDE.md) — Claude-maintained interlinked markdown
+  pages retrieved by reading `wikis/index.md`, then a sub-wiki's `wiki/index.md`,
+  then the relevant pages into full context. There is no embedding/vector index;
+  retrieval is index-guided full-context read. This suits small, curated
+  corpora, but the right approach is ephemeral — it tracks corpus size, context
+  window, and the maturity of lightweight retrieval tooling.
+  Re-evaluate in two steps:
+  1. Estimate the workspace's data volume: sum the raw-source token counts
+     across all `cerebruh/wikis/<sub-wiki>/raw/` directories (reuse Assumption
+     D's bytes/4 estimate) and note the number of sub-wikis and pages. This is
+     the corpus the retrieval approach must serve.
+  2. Use WebSearch to check whether a lightweight RAG approach has become a
+     clearly better fit at this data volume (search terms like "lightweight RAG
+     vs full context 2026", "LLM wiki pattern vs vector search", "Claude Code
+     semantic search / retrieval MCP", "agentic retrieval small corpus"). Weigh
+     retrieval quality, setup/maintenance burden, portability, and whether the
+     corpus has outgrown index-guided full-context read.
+  Flag:
+  - STILL VALID if the LLM Wiki pattern remains the best fit at the current
+    data volume (small enough that full-context read beats the complexity of a
+    vector/embedding pipeline).
+  - RECONSIDER if the corpus is approaching a size where the pattern strains
+    but no alternative is a clear win yet (note the pressure point).
+  - UPDATE if a specific lightweight RAG approach is now clearly better for this
+    data volume (name it and what would change).
+  Where to update if flagged: the retrieval approach is codified in the
+  Question-Answering workflow and folder structure of
+  ${BORG_ROOT}/cerebruh/CLAUDE.md (editable as lint scaffolding); the routing
+  policy in ${BORG_ROOT}/CLAUDE.md → "How to use the cerebruh knowledge base"
+  may also need updating. Note that any structural change to cerebruh itself is
+  made through cerebruh's own workflow, not here.
+
 STEP 3: Always pipe a report into
 `${BORG_ROOT}/.bin/notify-email.sh c4po "Borg assumptions audit — {YYYY-MM-DD} — {N} flagged"`
 (reads message body from stdin) — even when every assumption is STILL VALID
@@ -195,6 +229,11 @@ pointer above).
     {one-line reason if not STILL VALID — the value actually found in
      ~/.claude/settings.json and/or the replacement model id}
     Where to update: {`model` field in ~/.claude/settings.json; this assumption's pinned value in the .prompt}
+
+  Assumption G (LLM Wiki RAG fit): {STILL VALID|RECONSIDER|UPDATE}
+    {one-line reason if not STILL VALID — estimated corpus size and the
+     alternative retrieval approach, if any, that now fits better}
+    Where to update: {cerebruh/CLAUDE.md retrieval workflow; cerebruh routing in ${BORG_ROOT}/CLAUDE.md — changes to cerebruh made via its own workflow}
 
 Omit any assumption block that is STILL VALID with nothing to add. If every
 assumption is STILL VALID and every sub-wiki is within the raw source ceiling,
