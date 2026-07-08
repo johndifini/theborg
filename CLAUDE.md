@@ -28,6 +28,11 @@ Every agent answers tersely by default. Optimize for brevity:
 - Brevity never overrides correctness, honesty, or required safety confirmations — keep those, just state them briefly.
 - When the user wants more depth, they'll ask; expand on request.
 
+## Design, taste, and UI
+
+- Route all design, taste, and visual/UI decisions through `jony-vibe/` — logos, color/type systems, layout, brand, and visual polish. Consult it rather than deciding yourself.
+- This is advisory routing, not a role change: you still own your domain's work. When a task turns on visual judgment, defer to jony-vibe's direction instead of improvising one.
+
 ## How to use the `cerebruh/` knowledge base
 
 - The entry point is `cerebruh/wikis/index.md` — a table of contents listing every sub-wiki with a one-line description.
