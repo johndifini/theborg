@@ -1,14 +1,17 @@
-Weekly backlog burndown: in the ~4 hours before the account's weekly Claude usage reset, spend the remaining credits implementing backlog items across The Borg.
+Weekly backlog burndown: in the ~10 hours before the account's weekly Claude usage reset, spend the remaining credits implementing backlog items across The Borg. The job fires twice (Wed 00:59 and Wed 06:09) because the 5-hour session limit caps what one run can burn: the first run typically dies at the session limit, and the second starts with a fresh session window and resumes the same plan.
 
 This job runs headless from `${BORG_ROOT}/c4po` with the workspace root added as a working directory (see `.bin/run-scheduled-task.sh`). It is EXPECTED to die mid-run when credits run out — every phase therefore leaves durable state (commits, checked boxes) before moving on, and the plan email goes out before implementation starts.
 
 The phases below are named, not numbered, so the paired `/backlog-burndown` command can reference them without breaking when this file is edited.
 
-GATE — run at most once per ISO week.
-Determine the current ISO week with `date +%G-W%V`. Stop and output nothing if `${BORG_ROOT}/c4po/.claude/scheduled/state/c4po-backlog-burndown.json` exists and its `week` field equals the current ISO week.
+GATE — decide the run mode: FRESH, RESUME, or stop.
+Determine the current ISO week with `date +%G-W%V` and read `${BORG_ROOT}/c4po/.claude/scheduled/state/c4po-backlog-burndown.json` (if present).
+- State file missing, or its `week` field is not the current ISO week → **FRESH**: run every phase below.
+- `week` equals the current ISO week and the plan file (`${BORG_ROOT}/c4po/.claude/scheduled/state/c4po-backlog-burndown-plan.md`) still has unchecked actionable items → **RESUME**: skip PRIORITIZE, CONSOLIDATE, NOTIFY PLAN, and RECORD STATE; go straight to BURN at the first unchecked item. A prior run this week already planned, emailed, and recorded state — this run only continues the burn.
+- `week` equals the current ISO week and the plan has no unchecked actionable items (or the plan file is missing) → stop and output nothing; the week's plan is spent.
 
 WINDOW — abort if fired outside the pre-reset window.
-The account's weekly usage reset is **Wednesday 10:59 AM local** (from `/status`); launchd fires this job Wednesday 6:59 AM. If the current local time is not Wednesday between 06:30 and 10:29 (launchd fires missed events on wake, so a sleeping Mac can delay the run), stop and output nothing — running after the reset would burn the fresh week's budget, which defeats the purpose. If the account's reset time ever changes, update this paragraph and the `weekly-wed-06-59` schedule in `.bin/install-scheduled-tasks.sh` together.
+The account's weekly usage reset is **Wednesday 10:59 AM local** (from `/status`); launchd fires this job Wednesday 00:59 and again Wednesday 06:09 (a few minutes past the first run's 5-hour session-limit boundary). If the current local time is not Wednesday between 00:30 and 10:29 (launchd fires missed events on wake, so a sleeping Mac can delay a run), stop and output nothing — running after the reset would burn the fresh week's budget, which defeats the purpose. If the account's reset time ever changes, update this paragraph and the `weekly-wed-00-59-06-09` schedule in `.bin/install-scheduled-tasks.sh` together.
 
 PRIORITIZE — reorder every backlog in place.
 Enumerate the backlogs: `${BORG_ROOT}/BACKLOG.md` (workspace) and every `${BORG_ROOT}/repos/*/BACKLOG.md` (check the filesystem — `repos/` is git-ignored, so its children never appear in workspace git status). Reorder each file's open items by priority, preserving that file's own format and conventions (the workspace file is a flat checkbox list — reorder it highest-priority-first; a repo file with priority tiers keeps its tiers, moving items between tiers only when clearly warranted). Priority rubric: user pain in active use > bugs > security/correctness > features > nice-to-haves; weigh what unblocks other items. Do not rewrite item content. Commit each reordered file in its own repo (workspace file in the theborg repo, repo files in their repos).
