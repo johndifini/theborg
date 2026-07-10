@@ -13,8 +13,9 @@ output of `git rev-parse --show-toplevel` (the `theborg` directory).
 
 Overrides for interactive invocation, by the prompt's named phases:
 
-1. GATE — skip entirely; do not read or write the state file, so this never
-   blocks or unblocks the scheduled run.
+1. GATE — skip entirely and treat the run as FRESH; do not read or write the
+   state file or the plan file, so this never blocks, unblocks, or resumes the
+   scheduled run.
 2. WINDOW — skip; run regardless of day and time.
 3. PRIORITIZE — as written (the reordering and commits are real).
 4. CONSOLIDATE — do NOT write the plan file. Present the consolidated,
