@@ -179,6 +179,27 @@ Assumption G — the LLM Wiki pattern is the best lightweight RAG for this setup
   may also need updating. Note that any structural change to cerebruh itself is
   made through cerebruh's own workflow, not here.
 
+Assumption H — the Claude session limit is a 5-hour window
+  Current assumption: interactive/headless usage is capped per rolling session
+  window of **5 hours** starting from the window's first message. The backlog
+  burndown's twin fire times are derived from it: Wed 00:59 and 06:09, spaced
+  window+10min apart so the second run starts just past the first run's
+  session-limit boundary, with the second placed at (weekly reset 10:59) −
+  window + 10min slack. If the window length changes, those fire times are
+  silently wrong — the second run either lands still-limited (window grew) or
+  wastes burnable time (window shrank).
+  Check: use WebSearch (anthropic.com, docs.claude.com, support.claude.com,
+  plus community reports; search terms like "Claude usage limits 5-hour
+  session window", plus the current year) to confirm the session window is
+  still 5 hours. Flag UPDATE if it changed — give the new length and the
+  recomputed fire times (second = reset − window + 10min; first = second −
+  window − 10min).
+  Where to update if flagged: the `weekly-wed-00-59-06-09` schedule id in
+  ${BORG_ROOT}/.bin/install-scheduled-tasks.sh (then re-run it with `--load`);
+  the header and WINDOW phase of
+  ${BORG_ROOT}/c4po/.claude/scheduled/c4po-backlog-burndown.prompt; the
+  burndown row in ${BORG_ROOT}/README.md; and this assumption's pinned value.
+
 STEP 3: Always pipe a report into
 `${BORG_ROOT}/.bin/notify-email.sh c4po "Borg assumptions audit — {YYYY-MM-DD} — {N} flagged"`
 (reads message body from stdin) — even when every assumption is STILL VALID
@@ -234,6 +255,11 @@ pointer above).
     {one-line reason if not STILL VALID — estimated corpus size and the
      alternative retrieval approach, if any, that now fits better}
     Where to update: {cerebruh/CLAUDE.md retrieval workflow; cerebruh routing in ${BORG_ROOT}/CLAUDE.md — changes to cerebruh made via its own workflow}
+
+  Assumption H (5-hour session limit): {STILL VALID|RECONSIDER|UPDATE}
+    {one-line reason if not STILL VALID — the new window length and the
+     recomputed burndown fire times}
+    Where to update: {weekly-wed-00-59-06-09 in .bin/install-scheduled-tasks.sh (+ --load); c4po-backlog-burndown.prompt header + WINDOW; README.md; this assumption's pinned value}
 
 Omit any assumption block that is STILL VALID with nothing to add. If every
 assumption is STILL VALID and every sub-wiki is within the raw source ceiling,
