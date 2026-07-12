@@ -25,7 +25,7 @@ Apply these overrides for interactive invocation, referenced by phase name:
    digest into this session (say "nothing cleared the bar" when that is the
    outcome). For cerebruh candidates, do NOT
    auto-stage into `cerebruh/ingest/`; instead show the proposed source file (path
-   + content) and ask before staging it. (Rule / CLAUDE.md / skill candidates
+   + content) and ask before staging it. (Rule / AGENTS.md / skill candidates
    remain propose-only, exactly as in the scheduled run.)
 4. Skip the **RECORD STATE** phase entirely — do not write the state file. An
    interactive run must not move the harvest-window boundary for the next

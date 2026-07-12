@@ -18,7 +18,7 @@ A self-improvement retrospective on this session. Not a decision log, not a summ
 
 ## The bar for saving anything
 
-Memory files, rule files, and CLAUDE.md files cost tokens on **every future session**. The bar is high. A candidate is worth saving only if it is **both**:
+Memory files, rule files, and AGENTS.md files cost tokens on **every future session**. The bar is high. A candidate is worth saving only if it is **both**:
 
 1. **Likely to recur** — the situation will come up again, not a one-off.
 2. **Something you'd plausibly get wrong again** without the nudge — i.e. your default behavior doesn't already cover it.
@@ -31,8 +31,8 @@ If a candidate fails either test, drop it. Writing nothing is the correct outcom
 2. **For each candidate, propose the smallest fix that closes the gap.** Usually one of:
    - A one-line addition to an Auto Memory file (user/project/reference) — for cross-session preferences and facts.
    - An instruction in a rules file (`<project>/.claude/rules/<rule>.md`). This keeps instructions modular and easier for teams to maintain. If practical, scope the rule to a specific file path.
-   - A sentence in a `CLAUDE.md` — for rules that should bind every future session in a specific directory. Prefer the narrowest scope (project subdirectory > project root > workspace root).
-   - **Shared knowledge into `cerebruh/`** — for durable, reusable knowledge (facts, research, domain references) that other agents across The Borg would benefit from, and that isn't a behavioral rule, a cross-session preference, or directory-scoped binding (so it doesn't fit CLAUDE.md, a rule, or memory). Never write `cerebruh/` wiki content (`raw/` or `wiki/`) directly — it is read-only. Instead, stage the knowledge as a new descriptively-named `.md` source file in `cerebruh/ingest/`, then tell the user to ingest it from the cerebruh folder (i.e. ask cerebruh to run its ingest workflow). Staging the file does **not** file it into the wiki; cerebruh's injection scan and human-curated ingest step do that.
+   - A sentence in a `AGENTS.md` — for rules that should bind every future session in a specific directory. Prefer the narrowest scope (project subdirectory > project root > workspace root).
+   - **Shared knowledge into `cerebruh/`** — for durable, reusable knowledge (facts, research, domain references) that other agents across The Borg would benefit from, and that isn't a behavioral rule, a cross-session preference, or directory-scoped binding (so it doesn't fit AGENTS.md, a rule, or memory). Never write `cerebruh/` wiki content (`raw/` or `wiki/`) directly — it is read-only. Instead, stage the knowledge as a new descriptively-named `.md` source file in `cerebruh/ingest/`, then tell the user to ingest it from the cerebruh folder (i.e. ask cerebruh to run its ingest workflow). Staging the file does **not** file it into the wiki; cerebruh's injection scan and human-curated ingest step do that.
    - **Nothing** — if the lesson isn't general enough, say so explicitly and move on.
 3. **Ask per-item before writing.** No auto-pick. Show the user:
    - What you observed (the gap)

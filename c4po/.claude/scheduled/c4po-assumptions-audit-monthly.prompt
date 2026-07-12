@@ -2,7 +2,7 @@ Monthly assumptions audit of the ClaudeOS workspace at ${BORG_ROOT}.
 
 This audit re-evaluates ephemeral best-practice assumptions — the thresholds and
 tooling choices that shift as Claude Code, models, and the harness evolve. Some
-are codified as lint rules (e.g. the CLAUDE.md size ceiling), some aren't. The
+are codified as lint rules (e.g. the AGENTS.md size ceiling), some aren't. The
 lint audit enforces conformance to whatever value is written; this audit asks
 whether that written value or choice is still right.
 
@@ -28,31 +28,30 @@ STEP 2: Re-evaluate each assumption below. For each, decide one of:
 Be honest. These are intentionally ephemeral; "STILL VALID" should be earned,
 not defaulted to.
 
-Assumption A — CLAUDE.md size ceiling
+Assumption A — canonical instruction-file size ceiling
   Canonical home: the ceiling is codified as a lint rule in
-  ${BORG_ROOT}/CLAUDE.md → Lint → Size. The lint audit enforces conformance to
+  ${BORG_ROOT}/AGENTS.md → Lint → Size. The lint audit enforces conformance to
   that number (and flags over-limit files); this audit re-evaluates whether the
-  number itself is still right and whether content should move out of CLAUDE.md.
+  number itself is still right and whether content should move out of AGENTS.md.
   Do NOT re-scan for over-limit files here — that is the lint audit's job.
   Re-evaluate in three steps:
-  1. Search the GENERAL web for the latest CLAUDE.md sizing recommendations,
-     weighted to the current Claude model and Claude Code version (search terms
-     like "Claude Code CLAUDE.md size best practice", plus the current year;
-     developer blogs, forums, GitHub, practitioner posts). Note where community
-     practice has landed and why.
-  2. Balance that against Anthropic's own latest recommendation (anthropic.com,
-     docs.claude.com, code.claude.com). Where community and Anthropic diverge,
-     prefer Anthropic's position but note the gap in one line.
-  3. Read every CLAUDE.md under ${BORG_ROOT} (exclude .git, node_modules, dist,
+  1. Search the GENERAL web for current sizing recommendations for both Codex
+     `AGENTS.md` and Claude Code `CLAUDE.md`, since the same canonical content is
+     loaded by both tools. Include the current year and weigh official guidance,
+     developer blogs, forums, GitHub, and practitioner reports.
+  2. Balance community practice against the latest official OpenAI Codex and
+     Anthropic Claude Code recommendations. Where they diverge, choose a ceiling
+     safe for both tools and note the gap in one line.
+  3. Read every AGENTS.md under ${BORG_ROOT} (exclude .git, node_modules, dist,
      build, and any *_bak_* backup files) and look for content that should be
-     moved OUT of CLAUDE.md into a skill or a scoped rule — durable procedures,
+     moved OUT of AGENTS.md into a skill or a scoped rule — durable procedures,
      reusable multi-step workflows, or domain knowledge that doesn't need to
-     load every session. CLAUDE.md should hold only always-on context.
+     load every session. AGENTS.md should hold only always-on context.
   Flag UPDATE if steps 1–2 show the codified ceiling is outdated (give the new
   number) and/or step 3 finds relocatable content (name the file and what
   should move where).
-  Where to update if flagged: the **Size** rule in ${BORG_ROOT}/CLAUDE.md for
-  the ceiling number; the specific CLAUDE.md file(s) named for content moves.
+  Where to update if flagged: the **Size** rule in ${BORG_ROOT}/AGENTS.md for
+  the ceiling number; the specific AGENTS.md file(s) named for content moves.
 
 Assumption B — launchd is the right scheduler
   Current choice: macOS launchd, with prompts driven by
@@ -83,7 +82,7 @@ Assumption C — Slash commands remain useful and unsuperseded
   scheduled commands) and the slash-command listing in ${BORG_ROOT}/README.md.
 
 Assumption D — cerebruh raw source ceiling (75k tokens per sub-wiki)
-  Current guideline (${BORG_ROOT}/cerebruh/CLAUDE.md): each
+  Current guideline (${BORG_ROOT}/cerebruh/AGENTS.md): each
   `cerebruh/wikis/<sub-wiki>/raw/` directory should hold less than about 75,000
   tokens of raw source documents; exceeding it triggers a proposed split.
   This ceiling is ephemeral — it tracks context-window size, model capability,
@@ -98,13 +97,13 @@ Assumption D — cerebruh raw source ceiling (75k tokens per sub-wiki)
   the current ceiling along with its estimated token count, so an over-limit
   sub-wiki can be proposed for a split.
   Where to update if flagged: the 75k-token ceiling lives in
-  ${BORG_ROOT}/cerebruh/CLAUDE.md (editable as lint scaffolding); over-limit
+  ${BORG_ROOT}/cerebruh/AGENTS.md (editable as lint scaffolding); over-limit
   sub-wikis are split through cerebruh's own ingest workflow, not here.
 
 Assumption E — "dreaming" is still a custom job, not a native feature
   Current choice: memory maintenance is implemented as two custom c4po jobs and
   their paired slash commands — `c4po-dream` / `/dream` (harvest durable lessons
-  from sessions into proposed rules, CLAUDE.md edits, skills, and cerebruh ingest
+  from sessions into proposed rules, AGENTS.md edits, skills, and cerebruh ingest
   candidates) and `c4po-consolidate-memory` / `/consolidate-memory` (tidy the Auto
   Memory stores). These exist because Claude Code and Claude Desktop have no
   built-in "dreaming" / memory-maintenance feature today; the only first-party
@@ -147,7 +146,7 @@ Assumption F — default Claude model pinned in ~/.claude/settings.json
 
 Assumption G — the LLM Wiki pattern is the best lightweight RAG for this setup
   Current choice: cerebruh implements Andrej Karpathy's "LLM Wiki" pattern
-  (${BORG_ROOT}/cerebruh/CLAUDE.md) — Claude-maintained interlinked markdown
+  (${BORG_ROOT}/cerebruh/AGENTS.md) — Claude-maintained interlinked markdown
   pages retrieved by reading `wikis/index.md`, then a sub-wiki's `wiki/index.md`,
   then the relevant pages into full context. There is no embedding/vector index;
   retrieval is index-guided full-context read. This suits small, curated
@@ -174,8 +173,8 @@ Assumption G — the LLM Wiki pattern is the best lightweight RAG for this setup
     data volume (name it and what would change).
   Where to update if flagged: the retrieval approach is codified in the
   Question-Answering workflow and folder structure of
-  ${BORG_ROOT}/cerebruh/CLAUDE.md (editable as lint scaffolding); the routing
-  policy in ${BORG_ROOT}/CLAUDE.md → "How to use the cerebruh knowledge base"
+  ${BORG_ROOT}/cerebruh/AGENTS.md (editable as lint scaffolding); the routing
+  policy in ${BORG_ROOT}/AGENTS.md → "How to use the cerebruh knowledge base"
   may also need updating. Note that any structural change to cerebruh itself is
   made through cerebruh's own workflow, not here.
 
@@ -218,7 +217,7 @@ pointer above).
       {path}: {what should move → which skill or rule}
       ...
     (omit the "Content to relocate" block if none)
-    Where to update: {e.g. Size rule in ${BORG_ROOT}/CLAUDE.md; <file(s)> for moves}
+    Where to update: {e.g. Size rule in ${BORG_ROOT}/AGENTS.md; <file(s)> for moves}
 
   Assumption B (launchd): {STILL VALID|RECONSIDER|UPDATE}
     {one-line reason if not STILL VALID}
@@ -238,7 +237,7 @@ pointer above).
       {sub-wiki}: ~{token_estimate} tokens
       ...
     (omit the "Over-limit sub-wikis" block if none)
-    Where to update: {75k ceiling in ${BORG_ROOT}/cerebruh/CLAUDE.md}
+    Where to update: {75k ceiling in ${BORG_ROOT}/cerebruh/AGENTS.md}
 
   Assumption E (native dreaming): {STILL VALID|RECONSIDER|UPDATE}
     {one-line reason if not STILL VALID — name the native feature and which
@@ -254,7 +253,7 @@ pointer above).
   Assumption G (LLM Wiki RAG fit): {STILL VALID|RECONSIDER|UPDATE}
     {one-line reason if not STILL VALID — estimated corpus size and the
      alternative retrieval approach, if any, that now fits better}
-    Where to update: {cerebruh/CLAUDE.md retrieval workflow; cerebruh routing in ${BORG_ROOT}/CLAUDE.md — changes to cerebruh made via its own workflow}
+    Where to update: {cerebruh/AGENTS.md retrieval workflow; cerebruh routing in ${BORG_ROOT}/AGENTS.md — changes to cerebruh made via its own workflow}
 
   Assumption H (5-hour session limit): {STILL VALID|RECONSIDER|UPDATE}
     {one-line reason if not STILL VALID — the new window length and the
@@ -264,7 +263,7 @@ pointer above).
 Omit any assumption block that is STILL VALID with nothing to add. If every
 assumption is STILL VALID and every sub-wiki is within the raw source ceiling,
 the body is a one-liner: `All assumptions STILL VALID — nothing to update.`
-(CLAUDE.md over-limit files are the lint audit's responsibility, not this
+(AGENTS.md over-limit files are the lint audit's responsibility, not this
 audit's.)
 
 STEP 4: Write

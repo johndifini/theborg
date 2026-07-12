@@ -1,6 +1,6 @@
 # MCP Server Registry
 
-Authoritative list of MCP servers approved for use in The Borg. Maintained by C4PO. See `../CLAUDE.md` → Lint → MCP servers for the governing rules.
+Authoritative list of MCP servers approved for use in The Borg. Maintained by C4PO. See `../AGENTS.md` → Lint → MCP servers for the governing rules.
 
 ## Approved servers
 
