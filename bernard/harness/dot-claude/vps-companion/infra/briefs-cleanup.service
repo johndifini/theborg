@@ -1,0 +1,6 @@
+[Unit]
+Description=Delete health-wiki briefs older than 30 days
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'find %h/health-wiki-workspace/briefs %h/briefs -type f \( -name "*.pdf" -o -name "*.html" \) -mtime +30 -delete 2>/dev/null; true'

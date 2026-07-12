@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.life-wiki.eval</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/zsh</string>
+    <string>-lc</string>
+    <string>/Users/lashawsalta/life-wiki/.claude/scripts/wiki-eval.sh</string>
+  </array>
+
+  <!-- Daily at 09:15 (after the 08:00 watchdog chain). Was 3x daily until
+       2026-07-02 — with 25/25 passing every run, the extra passes were pure
+       noise (curator decision). Regressions still surface same-day, and any
+       ingest session can run it on demand: bash .claude/scripts/wiki-eval.sh -->
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key><integer>9</integer>
+    <key>Minute</key><integer>15</integer>
+  </dict>
+
+  <key>StandardOutPath</key>
+  <string>/Users/lashawsalta/life-wiki/.claude/logs/wiki-eval-launchd.log</string>
+
+  <key>StandardErrorPath</key>
+  <string>/Users/lashawsalta/life-wiki/.claude/logs/wiki-eval.err</string>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+  </dict>
+</dict>
+</plist>
