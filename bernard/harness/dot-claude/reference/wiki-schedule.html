@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Life-Wiki — Scheduled Jobs</title>
+<style>
+  :root{
+    --bg:#0e1116; --panel:#161b22; --panel2:#1c232d; --line:#2a323d;
+    --ink:#e6edf3; --dim:#9aa7b4; --faint:#6b7682;
+    --accent:#58a6ff; --good:#3fb950; --warn:#d29922; --bad:#f85149;
+    --night:#3b3f6b; --dawn:#7a5230; --day:#1f6f4a; --noon:#2d5d86;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    padding:32px 20px 80px;}
+  .wrap{max-width:1040px;margin:0 auto}
+  h1{font-size:24px;margin:0 0 4px;letter-spacing:-.02em}
+  .sub{color:var(--dim);margin:0 0 28px;font-size:13px}
+  .sub code{background:var(--panel2);padding:1px 6px;border-radius:5px;font-size:12px}
+  h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);
+    margin:36px 0 14px;font-weight:600}
+
+  /* 24h timeline */
+  .clock{position:relative;background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;padding:0;overflow:hidden}
+  .clockbar{position:relative;height:64px;display:flex}
+  .seg{flex:1;display:flex;align-items:flex-end;justify-content:center;
+    font-size:10px;color:var(--faint);padding-bottom:4px;border-right:1px solid rgba(255,255,255,.04)}
+  .seg.night{background:linear-gradient(var(--night),transparent)}
+  .seg.dawn{background:linear-gradient(var(--dawn),transparent)}
+  .seg.day{background:linear-gradient(var(--day),transparent)}
+  .seg.noon{background:linear-gradient(var(--noon),transparent)}
+  .pins{position:relative;height:118px;border-top:1px solid var(--line)}
+  .pin{position:absolute;top:0;transform:translateX(-50%);text-align:center;width:120px}
+  .pin .dot{width:11px;height:11px;border-radius:50%;background:var(--accent);
+    margin:0 auto 5px;box-shadow:0 0 0 4px rgba(88,166,255,.15);border:2px solid var(--bg)}
+  .pin .stem{position:absolute;top:-1px;left:50%;width:1px;height:8px;background:var(--line);transform:translateY(-100%)}
+  .pin .t{font-size:11px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+  .pin .n{font-size:10.5px;color:var(--dim);line-height:1.25;margin-top:2px}
+  .pin.warn .dot{background:var(--warn);box-shadow:0 0 0 4px rgba(210,153,34,.15)}
+  .pin.off .dot{background:var(--faint);box-shadow:none;opacity:.6}
+  .pin.alt{top:60px}
+  .clocknote{padding:9px 14px;border-top:1px solid var(--line);color:var(--faint);font-size:11.5px}
+
+  /* weekly grid */
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  .gridwrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+  th,td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+  thead th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--faint);
+    font-weight:600;background:var(--panel2)}
+  .gridwrap td.job{white-space:normal;min-width:200px}
+  .gridwrap .time{font-variant-numeric:tabular-nums;color:var(--accent);font-weight:700;font-size:12.5px}
+  .gridwrap .jn{font-weight:600}
+  .gridwrap td.day{text-align:center;width:52px;color:var(--faint)}
+  .cell-on{color:var(--good);font-weight:700}
+  .cell-extra{color:var(--warn);font-weight:700}
+  .cell-off{color:var(--faint);opacity:.4}
+  tr.disabled td{opacity:.5}
+
+  /* detail table */
+  .det td,.det th{white-space:normal;vertical-align:top}
+  .det .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--dim)}
+  .badge{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:20px;
+    letter-spacing:.03em;text-transform:uppercase;white-space:nowrap}
+  .b-live{background:rgba(63,185,80,.15);color:var(--good)}
+  .b-warn{background:rgba(210,153,34,.15);color:var(--warn)}
+  .b-off{background:rgba(248,81,73,.15);color:var(--bad)}
+  .b-cron{background:rgba(88,166,255,.15);color:var(--accent)}
+  .freq{color:var(--dim);font-size:12px}
+
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin:12px 2px 0;font-size:12px;color:var(--dim)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+
+  footer{margin-top:40px;color:var(--faint);font-size:11.5px;border-top:1px solid var(--line);padding-top:16px}
+  footer code{background:var(--panel2);padding:1px 6px;border-radius:5px}
+  a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Life-Wiki — Scheduled Jobs</h1>
+  <p class="sub">Schedule reference — the <em>shape</em> of the day (job times, cadence, what each does), generated from installed launchd plists (<code>~/Library/LaunchAgents</code>) + <code>crontab</code> on <strong>2026-06-27</strong>. All times local. This page intentionally carries <strong>no live status</strong> (whether a job last succeeded/failed rots daily) — for that run <code>bash .claude/scripts/wiki-status.sh</code>. Regenerate this page only when the schedule itself changes.</p>
+
+  <h2>The daily rhythm — 24-hour clock</h2>
+  <div class="clock">
+    <div class="clockbar" id="clockbar"></div>
+    <div class="pins" id="pins"></div>
+    <div class="clocknote" id="clocknote"></div>
+  </div>
+
+  <h2>What runs each day of the week</h2>
+  <div class="gridwrap">
+    <table id="grid"></table>
+  </div>
+  <div class="legend">
+    <span><span class="sw" style="background:var(--good)"></span> runs that day</span>
+    <span><span class="sw" style="background:var(--warn)"></span> extra step (Mon only)</span>
+    <span><span class="sw" style="background:var(--faint)"></span> not running</span>
+  </div>
+
+  <h2>Job detail &amp; status</h2>
+  <div class="gridwrap">
+    <table class="det" id="detail"></table>
+  </div>
+
+  <footer id="foot"></footer>
+</div>
+
+<script>
+// ---- single source of truth -------------------------------------------------
+// time: "HH:MM" for fixed jobs, or null for interval/event jobs
+// days: 7 booleans Mon..Sun (true=runs). monExtra flags a Monday-only sub-step.
+const D7 = [true,true,true,true,true,true,true];
+const jobs = [
+  { time:"02:30", name:"Nightly leak scan", label:"com.life-wiki.scan",
+    script:"nightly-leak-scan.sh", status:"live",
+    days:D7, freq:"Daily",
+    what:"Deep 5-tier PHI/leak scan diffed against the triaged baseline. Writes the <code>leak-scan-status</code> gate that the mirror push reads — fail-closed.",
+    log:".claude/logs/leak-scan-launchd.log" },
+
+  { time:"03:15", name:"GBrain dream", label:"com.lashawsalta.gbrain-dream",
+    script:"gbrain dream", status:"live",
+    days:D7, freq:"Daily",
+    what:"Nightly entity sweep + citation reconciliation across the graph.",
+    log:".claude/logs/gbrain-dream.log" },
+
+  { time:"06:00", name:"Synthesis pass", label:"com.life-wiki.synthesis",
+    script:"daily-synthesis.sh", status:"live",
+    days:D7, freq:"Daily (snapshot-gated)",
+    what:"Delta-driven pattern mining into <code>holistic-health-synthesis.md</code>. Skips Claude entirely when the wiki hasn't changed.",
+    log:".claude/logs/daily-synthesis-launchd.log" },
+
+  { time:"07:00", name:"VPS mirror sync", label:"com.lashawsalta.wiki-mirror-sync",
+    script:"vps-mirror-sync.sh", status:"live",
+    days:D7, freq:"Daily + at login",
+    what:"One-way allowlist-scoped push of health/shared/journal-entries to Bernard (VPS). Gated by the fresh leak-scan status. Drains <b>two reverse channels</b>: the question inbox and Bernard's conversation log. Headless runs can intermittently fail on a Tailscale SSH re-auth boundary — check <code>wiki-status.sh</code> for whether the last run succeeded.",
+    log:".claude/logs/wiki-mirror-sync.log" },
+
+  { time:"08:00", name:"Harness health + self-improve", label:"com.lashawsalta.harness-health",
+    script:"harness-health.sh", status:"live",
+    days:D7, freq:"Daily", monExtra:true,
+    what:"Automation watchdog (dead daemons, log rotation, Tier-1/2 fixes) then the daily chain: ① build-backlinks (reverse graph edges + timeline spine), <b>build-daily-score</b> (daily symptom score from latest Guava export, deterministic), ⑤ calibration-capture, ② self-interrogate, <b>bernard-learn</b> (distills Bernard's pulled conversation log → inbox + usage profile), ③ build-hypothesis-register. <b>④ cross-model-review runs Mondays only.</b>",
+    log:".claude/logs/harness-health-launchd.log" },
+
+  { time:"09:00", name:"Daily transcribe (sanitizer)", label:"crontab",
+    script:"life-wiki-sanitizer/daily-transcribe.sh", status:"cron",
+    days:D7, freq:"Daily (cron)",
+    what:"Voice transcription + sanitization in the sanitizer repo (outside the wiki). Feeds files into <code>ingest/</code>.",
+    log:"(sanitizer repo)" },
+
+  { time:"09:15", name:"Wiki eval — daily", label:"com.life-wiki.eval",
+    script:"wiki-eval.sh", status:"live",
+    days:D7, freq:"Daily (was 3×/day until 2026-07-02)",
+    what:"Golden-question eval (wiki-query + graph-query + orphan-delta). NEW failures file to the question inbox tagged <code>[eval]</code>. <b>Now installed in launchd and running (last exit 0).</b>",
+    log:".claude/logs/wiki-eval-launchd.log" },
+
+  { time:"12:00", name:"Daily ingest check", label:"com.life-wiki.ingest",
+    script:"daily-ingest-check.sh", status:"live",
+    days:D7, freq:"Daily",
+    what:"Smart-tier check for pending files in <code>ingest/</code> and routes them.",
+    log:".claude/logs/daily-ingest-launchd.log" },
+
+];
+
+// interval / event-driven (no clock pin)
+const intervalJobs = [
+  { name:"GBrain sync", label:"com.lashawsalta.gbrain-sync", script:"gbrain-job.sh sync (sync → embed --stale → extract all; progress spam filtered)",
+    status:"live", freq:"Daily 03:00 + at login",
+    what:"Keeps the GBrain index current: import changed files, embed stale ones, re-extract link edges.",
+    log:".claude/logs/gbrain-sync.log" },
+];
+
+// disabled / commented
+const disabledJobs = [
+  { name:"Weekly Gmail ingest", label:"crontab (commented)", script:"weekly-gmail-ingest.sh",
+    status:"off", freq:"Mon 09:15 — DISABLED",
+    what:"Disabled 2026-06-12 pending OAuth setup. Commented out in crontab.",
+    log:"(disabled)" },
+];
+
+// ---- 24h clock --------------------------------------------------------------
+const bar = document.getElementById("clockbar");
+const band = h => h<6?"night":h<9?"dawn":h<16?"day":h<19?"noon":"night";
+for(let h=0;h<24;h+=2){const s=document.createElement("div");
+  s.className="seg "+band(h);s.textContent=String(h).padStart(2,"0");bar.appendChild(s);}
+
+const pins = document.getElementById("pins");
+const timed = jobs.filter(j=>j.time).sort((a,b)=>a.time.localeCompare(b.time));
+timed.forEach((j,i)=>{
+  const [H,M]=j.time.split(":").map(Number); const pct=((H*60+M)/1440)*100;
+  const p=document.createElement("div");
+  p.className="pin"+(j.status==="warn"?" warn":"")+(j.status==="off"?" off":"")+(i%2?" alt":"");
+  p.style.left=pct+"%";
+  p.innerHTML=`<div class="stem"></div><div class="dot"></div>
+    <div class="t">${j.time}</div><div class="n">${j.name}</div>`;
+  pins.appendChild(p);
+});
+document.getElementById("clocknote").innerHTML =
+  "<b>GBrain sync</b> daily at 03:00 (+ at login). Event: <b>mirror sync</b> &amp; <b>GBrain sync</b> also fire at login.";
+
+// ---- weekly grid ------------------------------------------------------------
+const DAYS=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+const grid=document.getElementById("grid");
+let gh="<thead><tr><th>Time</th><th>Job</th>"+DAYS.map(d=>`<th style="text-align:center">${d}</th>`).join("")+"</tr></thead><tbody>";
+timed.forEach(j=>{
+  const off = j.status==="off";
+  gh+=`<tr${off?' class="disabled"':''}><td class="time">${j.time}</td><td class="job"><span class="jn">${j.name}</span></td>`;
+  j.days.forEach((on,di)=>{
+    let mark="·", cls="cell-off";
+    if(on && !off){ mark="●"; cls="cell-on"; }
+    if(j.monExtra && di===0 && !off){ mark="●＋"; cls="cell-extra"; } // Monday gets ④
+    gh+=`<td class="day ${cls}">${mark}</td>`;
+  });
+  gh+="</tr>";
+});
+// continuous row
+gh+=`<tr><td class="time">03:00</td><td class="job"><span class="jn">GBrain sync</span> <span class="freq">(daily)</span></td>`+
+  DAYS.map(()=>`<td class="day cell-on">●</td>`).join("")+`</tr>`;
+gh+="</tbody>";
+grid.innerHTML=gh;
+
+// ---- detail table -----------------------------------------------------------
+const badge = s => ({live:'<span class="badge b-live">installed</span>',
+  off:'<span class="badge b-off">disabled</span>',
+  cron:'<span class="badge b-cron">cron</span>'}[s]||s);
+const det=document.getElementById("detail");
+let dh="<thead><tr><th>When</th><th>Job</th><th>Status</th><th>What it does</th><th>Script · Log</th></tr></thead><tbody>";
+const all=[...timed, ...intervalJobs, ...disabledJobs];
+all.forEach(j=>{
+  dh+=`<tr><td class="time">${j.time||j.freq}</td>
+    <td><span class="jn">${j.name}</span><br><span class="mono">${j.label}</span></td>
+    <td>${badge(j.status)}<br><span class="freq">${j.time?j.freq:''}</span></td>
+    <td>${j.what}</td>
+    <td class="mono">${j.script}<br>${j.log}</td></tr>`;
+});
+dh+="</tbody>";
+det.innerHTML=dh;
+
+document.getElementById("foot").innerHTML =
+  "Sources: 8 installed launchd plists + user crontab. &nbsp;•&nbsp; Local-only — never published off this machine. &nbsp;•&nbsp; To refresh after a schedule change, ask Claude to regenerate, or re-read the plists in <code>~/Library/LaunchAgents</code>." +
+  "<br><br><b>Event-driven enforcement (not scheduled):</b> git <code>pre-commit</code> (audio/PHI/sidecar gate) + <code>pre-push</code> (refuses all pushes — no off-machine egress) fire on every git op for every agent; Claude-Code hooks <code>guard-wiki.py</code> (raw/ingest + audio), <code>guard-git.py</code> (denies push/remote, asks on blanket staging), <code>session-start.sh</code>, <code>stop-check.sh</code>. &nbsp;•&nbsp; Live state any time: <code>bash .claude/scripts/wiki-status.sh</code>.";
+</script>
+</body>
+</html>

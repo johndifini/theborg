@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.life-wiki.ingest</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/zsh</string>
+    <string>-lc</string>
+    <string>/Users/lashawsalta/life-wiki/.claude/scripts/daily-ingest-check.sh</string>
+  </array>
+
+  <!-- Daily 12:00. Replaces the crontab entry (0 12 * * *): cron silently
+       skips jobs whose trigger lands while the Mac is asleep (no catch-up),
+       which is why the watchdog kept flagging daily-ingest as stale. launchd
+       runs a missed StartCalendarInterval job once on the next wake.
+       The script no-ops on an empty queue and notifies on its own.
+       On-demand: bash .claude/scripts/daily-ingest-check.sh -->
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>12</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+
+  <key>StandardOutPath</key>
+  <string>/Users/lashawsalta/life-wiki/.claude/logs/daily-ingest-launchd.log</string>
+
+  <key>StandardErrorPath</key>
+  <string>/Users/lashawsalta/life-wiki/.claude/logs/daily-ingest.err</string>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+  </dict>
+</dict>
+</plist>
