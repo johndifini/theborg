@@ -20,7 +20,3 @@ Never `git add -A` / `git add .`. Stage only the files you touched, `git status`
 ## 3. One writer at a time (operational)
 
 When an agent is mid-session, let it finish and commit, or commit yourself with explicit paths — don't do both at once. For deliberately parallel agents, isolate them in **git worktrees** (one checkout each, merge after) so they can't share an index at all.
-
----
-
-Inventory entry: `harness-map.md` Known-gaps #8 (closed 2026-06-15).
