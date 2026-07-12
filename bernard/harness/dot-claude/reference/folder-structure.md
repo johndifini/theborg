@@ -14,8 +14,7 @@ life-wiki/
 │   ├── scripts/             ← wiki-lint-structural.sh, gbrain wrapper
 │   └── reference/           ← this file + ingest-routing.md
 ├── ingest/                  ← flat holding pen; sanitizer drops all output here
-│   │                           each .md carries a paired .meta.json sidecar
-│   └── audio/               ← local-only audio binaries, never git-tracked (legacy)
+│                              each .md carries a paired .meta.json sidecar
 └── wikis/
     ├── index.md
     ├── sources.md

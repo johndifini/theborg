@@ -84,16 +84,3 @@
 
 - `wiki-lint-structural.sh` (pre-ingest gate) · `post-ingest-verify.sh` (batch tripwire, 230 PHI patterns) · `nightly-leak-scan.sh` (deep, gates mirror) · `/lint` (semantic, Claude only) · sanitizer unit tests (`tests/fixtures/`, synthetic only).
 - `wiki-eval.sh` (daily 09:15) — golden-question regression harness: `.claude/reference/eval-questions.tsv` (semantic wiki-query hits, graph-query edge presence, orphan-count delta). Deterministic bash, no model calls. New failures append to the question inbox tagged `[eval]` (deduped vs inbox+archive) → `/inbox-triage` fixes the graph → eval re-greens. Status: `.claude/logs/wiki-eval-status`; watchdog-checked.
-
----
-
-## Known gaps (tracked)
-
-1. ~~VPS watchdog~~ — **closed 2026-06-12:** Mac-side SSH check in `harness-health.sh` (failed-units + unreachability alerting; unit states logged). Optional tightening step in `vps-companion/harness-parity.md`.
-2. ~~Codex cheap-tier model name~~ — **closed 2026-06-12:** verified `gpt-5.4-mini`; profile at `~/.codex/wiki-cheap.config.toml`.
-3. **Backup/restore harness** — local-git-only policy has no automated encrypted off-site bundle or restore drill yet (curator decision: media + key handling).
-4. ~~Eval/regression harness~~ — **closed 2026-06-12:** `wiki-eval.sh` + golden set + inbox feedback loop (§11). Still open within it: a few Bernard-side questions (asking Bernard over WhatsApp is manual; consider sampling his answer quality during /inbox-triage).
-5. **AGENT-HANDOFF.md rotation** — file grows unboundedly; older session blocks should rotate to an archive.
-6. **Injection red-team fixtures** — the injection-scan rule has no synthetic test corpus proving it trips.
-7. **CLI version pinning** — claude/codex/gemini/openclaw auto-updates are an unvetted supply-chain surface under the data-flow rule.
-8. ~~Multi-writer / shared-git-index race~~ — **closed 2026-06-15:** (a) explicit-path-staging hard rule + verify-`HEAD` (CLAUDE.md top block); (b) shared advisory **wiki-write lock** (`lib/wiki-lock.sh` + `wiki-lock.sh` CLI, 12 unit tests in `lib/test_wiki-lock.sh`) — interactive agents hold it for write-heavy work; the 3 scheduled write jobs (`daily-synthesis`, `daily-ingest-check`, `build-backlinks --apply`) acquire-or-defer on it; `harness-health` sweeps a stale lock; (c) one-writer-at-a-time op rule + git-worktree isolation for deliberate parallelism. See CLAUDE.md "Concurrency and multi-agent safety". Residual: a raw `git commit` in another terminal still bypasses the lock — covered only by rule (a)/(c), not mechanically enforced.
