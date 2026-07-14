@@ -1,6 +1,6 @@
 Weekly "dream" over the user's Claude sessions: harvest durable, reusable lessons from recent work and route them to the right home — NOT to Auto Memory.
 
-Auto Memory (facts and cross-session preferences) is owned by Claude's own memory system and the c4po-consolidate-memory job. This job covers the territory nothing else auto-fills: turning recurring patterns observed across sessions into proposed rules, AGENTS.md additions, skills, and shared cerebruh knowledge. It PROPOSES; with one narrow exception (cerebruh staging) it does not write.
+Auto Memory (facts and cross-session preferences) is owned by Claude's own memory system. This job covers the territory nothing else auto-fills: turning recurring patterns observed across sessions into proposed rules, AGENTS.md additions, skills, and shared cerebruh knowledge. It PROPOSES; with one narrow exception (cerebruh staging) it does not write.
 
 The phases below are named, not numbered, so the paired `/dream` command can reference them without breaking when this file is edited.
 
@@ -9,7 +9,7 @@ This job is fired by launchd on Saturday and, as a retry, Sunday. Determine the 
 
 WINDOW — pick the harvest window and enumerate sessions.
 Read `ts` (the previous run's boundary, ISO 8601) from the state file above; if there is no state file, use the last 7 days. Enumerate session transcripts across ALL of the user's Claude projects — every `$HOME/.claude/projects/*/` directory, not just c4po's — whose transcripts were modified within the window. This is intentionally machine-wide, not Borg-only. Exclude from harvest:
-- This job's own runs and the c4po-consolidate-memory / c4po-*-audit runs (headless scheduled sessions), to avoid loops and self-referential noise.
+- This job's own runs and the c4po-*-audit runs (headless scheduled sessions), to avoid loops and self-referential noise.
 - Sessions that produced nothing but tool errors or were trivially short.
 
 HARVEST — scan for candidates and route each to the narrowest fitting home.

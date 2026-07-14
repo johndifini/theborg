@@ -1,6 +1,6 @@
 # Backlog
 
-- [ ] **Restore the consolidate-memory skill for the weekly memory job** (c4po, added 2026-07-13) — The built-in `anthropic-skills:consolidate-memory` skill is no longer resolvable on this machine (last worked 2026-07-07; gone after the Claude CLI 2.1.204→2.1.206 update on Jul 8–10). The weekly job (`c4po/.claude/scheduled/c4po-consolidate-memory.prompt`) and the `/consolidate-memory` command depend on it. Fix: reinstall/re-enable the skill or update the prompt to the skill's new name — check the CLI changelog. Until then weekly consolidation runs degraded (2026-W29 ran with a manual fallback; user emailed).
+- [x] **Restore the consolidate-memory skill for the weekly memory job** (c4po, added 2026-07-13, closed 2026-07-14) — Obsolete: the user decommissioned the `c4po-consolidate-memory` job entirely (launchd plist, `.prompt`, `/consolidate-memory` command, state file, and install-script row removed) instead of restoring the vanished built-in skill.
 
 - [ ] **Assess Google's Open Knowledge Format (OKF) impact on Cerebruh** (cerebruh, added 2026-07-10) — Research Google's recent OKF announcements, then analyze whether Cerebruh's LLM-Wiki logic or structure should change to adopt or interoperate with it: sub-wiki layout, page frontmatter/format, ingest workflow, and citation model in `cerebruh/CLAUDE.md` and `cerebruh/wikis/`. Email findings to John (johndifini@gmail.com). Relates to the prior "is the LLM Wiki pattern still the best lightweight RAG fit" audit (commit `4c825b2`).
 

@@ -101,11 +101,12 @@ Assumption D — cerebruh raw source ceiling (75k tokens per sub-wiki)
   sub-wikis are split through cerebruh's own ingest workflow, not here.
 
 Assumption E — "dreaming" is still a custom job, not a native feature
-  Current choice: memory maintenance is implemented as two custom c4po jobs and
-  their paired slash commands — `c4po-dream` / `/dream` (harvest durable lessons
+  Current choice: memory maintenance is implemented as one custom c4po job and
+  its paired slash command — `c4po-dream` / `/dream` (harvest durable lessons
   from sessions into proposed rules, AGENTS.md edits, skills, and cerebruh ingest
-  candidates) and `c4po-consolidate-memory` / `/consolidate-memory` (tidy the Auto
-  Memory stores). These exist because Claude Code and Claude Desktop have no
+  candidates). (A companion `c4po-consolidate-memory` job was decommissioned
+  2026-07-14 after its underlying built-in skill disappeared from the CLI.)
+  The dream job exists because Claude Code and Claude Desktop have no
   built-in "dreaming" / memory-maintenance feature today; the only first-party
   "dreams" capability lives in Claude Managed Agents, which this setup doesn't use.
   This assumption is ephemeral by design — Anthropic is expected to add native
@@ -113,15 +114,13 @@ Assumption E — "dreaming" is still a custom job, not a native feature
   docs.claude.com, code.claude.com, plus the general web/forums/GitHub; search terms
   like "Claude Code memory dream", "Claude Desktop memory consolidation",
   "Claude Code automatic memory maintenance", plus the current year) to check
-  whether a native feature now covers what these jobs do. Flag:
+  whether a native feature now covers what this job does. Flag:
   - RECONSIDER if a partial/preview native capability has appeared that overlaps
-    these jobs but doesn't fully replace them (note what it covers).
-  - UPDATE if a native feature now does the harvesting and/or consolidation, so the
-    custom job(s) and command(s) can be retired or migrated onto it (name which of
-    the two pairs it supersedes — they may be superseded independently).
-  Where to update if flagged: the prompt(s)
-  ${BORG_ROOT}/c4po/.claude/scheduled/c4po-dream.prompt and/or
-  c4po-consolidate-memory.prompt; the paired command(s) under
+    the job but doesn't fully replace it (note what it covers).
+  - UPDATE if a native feature now does the harvesting, so the custom job and
+    command can be retired or migrated onto it.
+  Where to update if flagged: the prompt
+  ${BORG_ROOT}/c4po/.claude/scheduled/c4po-dream.prompt; the paired command under
   ${BORG_ROOT}/c4po/.claude/commands/; the TASKS rows in
   ${BORG_ROOT}/.bin/install-scheduled-tasks.sh and the `com.theborg.*` plists; and
   the scheduled-jobs + slash-command listings in ${BORG_ROOT}/README.md.
@@ -240,9 +239,8 @@ pointer above).
     Where to update: {75k ceiling in ${BORG_ROOT}/cerebruh/AGENTS.md}
 
   Assumption E (native dreaming): {STILL VALID|RECONSIDER|UPDATE}
-    {one-line reason if not STILL VALID — name the native feature and which
-     pair(s) it supersedes: c4po-dream/`/dream`, c4po-consolidate-memory/
-     `/consolidate-memory`, or both}
+    {one-line reason if not STILL VALID — name the native feature that
+     supersedes c4po-dream/`/dream`}
     Where to update: {the superseded .prompt(s) + command(s); install-scheduled-tasks.sh TASKS rows + plists; README.md}
 
   Assumption F (default model): {STILL VALID|RECONSIDER|UPDATE}
