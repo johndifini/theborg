@@ -84,8 +84,45 @@ esac
 #
 # --session-id pins the run to $SESSION_ID so the notification can hand the user a
 # `claude --resume` command pointing at this exact session.
+# Agent slug (c4po | mrs-beast | warren-bot-fett) — labels failure emails and
+# is the first arg notify-email.sh expects.
+AGENT_NAME="$(basename "$AGENT_DIR")"
+
+# Run the task, capturing its exit code instead of letting `set -e` abort here:
+# on failure we still need to notify and to preserve the code for launchd. The
+# `end` marker moves outside the block so it always records, pass or fail
+# (previously a failed run left no end line in the log).
+STATUS=0
 {
   echo "===== $(date -u +%Y-%m-%dT%H:%M:%SZ) start $TASK_NAME (cwd=$AGENT_DIR, session=$SESSION_ID) ====="
   "$CLAUDE_BIN" -p "$PROMPT_CONTENT" --session-id "$SESSION_ID" --strict-mcp-config --effort "$EFFORT" ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"} < /dev/null
-  echo "===== $(date -u +%Y-%m-%dT%H:%M:%SZ) end $TASK_NAME ====="
-} >> "$LOG_FILE" 2>&1
+} >> "$LOG_FILE" 2>&1 || STATUS=$?
+echo "===== $(date -u +%Y-%m-%dT%H:%M:%SZ) end $TASK_NAME (exit $STATUS) =====" >> "$LOG_FILE" 2>&1
+
+# On any non-zero exit, email the user. A scheduled run is fired once by launchd
+# (no KeepAlive, no retry loop), so a failure means this run's work is dropped
+# until the next scheduled fire — including usage-limit misses, which do NOT
+# self-heal. Notify on every failure; the subject distinguishes a usage-limit
+# miss (re-runnable now once the cap resets) from a hard failure, without
+# suppressing either.
+if [[ $STATUS -ne 0 ]]; then
+  LOG_TAIL="$(tail -n 25 "$LOG_FILE" 2>/dev/null || true)"
+  if grep -qiE 'hit your (session|usage) limit|session limit|usage limit' <<<"$LOG_TAIL"; then
+    SUBJECT="[Borg/$AGENT_NAME] scheduled task hit usage limit: $TASK_NAME"
+  else
+    SUBJECT="[Borg/$AGENT_NAME] scheduled task FAILED: $TASK_NAME (exit $STATUS)"
+  fi
+  {
+    echo "Scheduled task '$TASK_NAME' exited $STATUS."
+    echo "  agent:   $AGENT_NAME"
+    echo "  session: $SESSION_ID"
+    echo "  log:     $LOG_FILE"
+    echo
+    echo "Last lines of the log:"
+    echo "$LOG_TAIL"
+  } | "$BORG_ROOT/.bin/notify-email.sh" "$AGENT_NAME" "$SUBJECT" \
+    || echo "notify-email.sh failed to send failure alert for $TASK_NAME" >> "$LOG_FILE" 2>&1
+fi
+
+# Re-exit with the task's own code so `launchctl list` reflects reality.
+exit $STATUS
