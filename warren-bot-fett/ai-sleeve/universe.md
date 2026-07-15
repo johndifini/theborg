@@ -9,8 +9,7 @@ Edit this file freely between runs. To temporarily exclude a name, move it to `s
 ```yaml
 basket_size: 17
 floor_pct: 2.0
-ticker_floors:
-  FLKR: 2.0   # Korea-ETF proxy for Samsung/SK Hynix — pin until they list US ADRs
+ticker_floors: {}   # FLKR proxy retired 2026-07-14 — SK Hynix now held directly via SKHY, which competes on market cap
 ```
 
 ## Categories
@@ -33,7 +32,7 @@ networking_and_systems:
   members: [ANET, DELL, NOK, CSCO, HPE]
 
 memory:
-  members: [MU, FLKR]
+  members: [MU, SKHY]
   min: 2
 
 storage:
@@ -76,7 +75,7 @@ ANTHROPIC # pending IPO — at listing, replace placeholder with real ticker, ad
 - **GLW** — fiber-optic glass for AI data center connectivity.
 - **SNDK / STX / WDC** — NAND and HDD storage demand from AI workloads.
 - **MU** — DRAM/HBM supplier for GPU memory; principal beneficiary of HBM3/HBM4 ramp. Forced in via `memory` constraint.
-- **FLKR** — Franklin FTSE South Korea ETF, held as a proxy for Samsung Electronics and SK Hynix (the HBM leaders) until they list US ADRs. Forced in via the `memory` min:2 constraint; ETF AUM ranks below the cap-ranked basket, so it relies on the constraint to enter and on its `ticker_floors` entry to pin a 2% weight. Replace with direct ADRs once available and drop this line. **No Samsung US ADR listing date as of 2026-06-24** — still speculative: investors/Wall Street are pushing a US listing to escape the "Korea discount" (debate intensified by SK Hynix's US-listing moves), but Samsung has stated no official position. A London-listed unsponsored GDR/ADR (SMSN) exists; no US exchange listing or timeline. **Per owner instruction (2026-06-24): continue holding FLKR as the proxy regardless of any SK Hynix US ADR listing — only Samsung's own US ADR becoming available retires this proxy.**
+- **SKHY** — SK Hynix, Nasdaq ADR (listed 2026-07-10; traded as SKHYV during the when-issued period, converting to SKHY ~2026-07-15). HBM market leader (HBM3E/HBM4) and lead memory supplier to NVIDIA; with MU this gives the sleeve direct HBM exposure. **Replaced the FLKR Korea-ETF proxy on 2026-07-14 per owner instruction** — MU + SK Hynix are deemed sufficient HBM exposure, so the ETF proxy (and its `ticker_floors` pin) is retired. Unlike FLKR, SKHY is a large-cap that competes into the basket on market cap; the `memory` min:2 remains as a safety guarantee. Reevaluate if HBM pricing/share erodes materially. **Samsung note:** Samsung Electronics is no longer represented in the sleeve — it has no US exchange listing (only the London-listed unsponsored GDR/ADR SMSN as of 2026-07-14). Per owner instruction, add Samsung to the universe if and when it lists a US ADR.
 - **BE** — fuel cells for on-site/distributed power at AI data centers; complements GEV (grid + turbines) when grid interconnection wait times are the binding constraint. Forced in via `power_generation` constraint.
 - **INTC** — x86 CPU franchise plus Intel Foundry buildout. Dual-listed in `chip_designers` and `foundry_semicap` to reflect IDM model. Reevaluate if foundry roadmap slips materially.
 - **Q** — Qnity Electronics, DuPont's electronics-materials spin-off (NYSE, S&P 500 from 2025-11-01). Semiconductor and interconnect materials — picks-and-shovels of chip fabrication, levered to AI-driven wafer demand. Reevaluate if semiconductor materials growth decouples from AI capex.
