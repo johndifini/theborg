@@ -1,7 +1,7 @@
 #!/bin/bash
 # Send an email notification as an agent, reading the message body from stdin.
 #
-# Mirrors notify-telegram.sh by design: outbound-only, no MCP server. Scheduled
+# Outbound-only by design: no MCP server. Scheduled
 # tasks run via run-scheduled-task.sh with --strict-mcp-config and < /dev/null,
 # so they have no Gmail MCP tool and must not boot one. This script sends over
 # Gmail SMTP via curl — no server, nothing to clobber.
