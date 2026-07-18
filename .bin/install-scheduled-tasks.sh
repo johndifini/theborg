@@ -34,7 +34,7 @@ TASKS=(
   "c4po|c4po-lint-audit-monthly|month-first5-09-00"
   "c4po|c4po-assumptions-audit-monthly|month-first5-09-00"
   "c4po|c4po-dream|weekly-sat-sun-22-00"
-  "c4po|c4po-backlog-burndown|weekly-wed-00-59-06-09"
+  "c4po|c4po-backlog-burndown|weekly-fri-21-09-sat-02-19"
   "mrs-beast|mrs-beast-social-media-drafts|weekly-sun-wed-16-00"
   "warren-bot-fett|warren-bot-fett-daily-market-scan|weekly-mon-fri-09-00"
   "warren-bot-fett|warren-bot-fett-ai-sleeve-monthly|month-first5-09-00"
@@ -79,15 +79,15 @@ schedule_xml() {
       for w in 6 0; do cal_entry "Weekday=$w" "Hour=22" "Minute=0"; done
       printf '    </array>\n'
       ;;
-    # Wednesday 00:59 and 06:09 — ~10h and ~4h50m before the account's weekly
-    # usage reset (Wed 10:59 AM). Two firings because the 5-hour session limit
-    # caps one run's burn: the second starts just past the first's session-limit
-    # boundary and resumes the same plan (the prompt's GATE handles resume; its
-    # WINDOW phase aborts late, post-reset firings).
-    weekly-wed-00-59-06-09)
+    # Friday 21:09 and Saturday 02:19 — ~10h and ~4h50m before the account's
+    # weekly Codex usage reset (Sat 7:09 AM local). Two firings because the
+    # 5-hour session limit caps one run's burn: the second starts just past the
+    # first's session-limit boundary and resumes the same plan (the prompt's
+    # GATE handles resume; its WINDOW phase aborts late, post-reset firings).
+    weekly-fri-21-09-sat-02-19)
       printf '    <key>StartCalendarInterval</key>\n    <array>\n'
-      cal_entry "Weekday=3" "Hour=0" "Minute=59"
-      cal_entry "Weekday=3" "Hour=6" "Minute=9"
+      cal_entry "Weekday=5" "Hour=21" "Minute=9"
+      cal_entry "Weekday=6" "Hour=2" "Minute=19"
       printf '    </array>\n'
       ;;
     *)

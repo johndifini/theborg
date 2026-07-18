@@ -21,10 +21,10 @@ LOG_FILE="$LOG_DIR/$TASK_NAME.log"
 mkdir -p "$LOG_DIR"
 
 # launchd starts jobs with a minimal PATH and does not source any shell
-# profile, so `claude` (and anything else installed via Homebrew, nvm, etc.)
-# won't be found. The user keeps PATH in ~/.zshenv — source it before
-# resolving CLAUDE_BIN. Errors are swallowed so a profile hiccup never
-# blocks the task; if claude still can't be resolved we'll fail loudly below.
+# profile, so `claude`/`codex` (and anything else installed via Homebrew, nvm,
+# etc.) won't be found. The user keeps PATH in ~/.zshenv — source it before
+# resolving the CLI binary. Errors are swallowed so a profile hiccup never
+# blocks the task; if the binary still can't be resolved we'll fail loudly below.
 if [[ -f "$HOME/.zshenv" ]]; then
   # shellcheck disable=SC1091
   set +u
@@ -32,10 +32,25 @@ if [[ -f "$HOME/.zshenv" ]]; then
   set -u
 fi
 
-CLAUDE_BIN="${CLAUDE_BIN:-claude}"
-if ! command -v "$CLAUDE_BIN" >/dev/null 2>&1; then
-  echo "claude binary not found on PATH after sourcing ~/.zshenv (PATH=$PATH)" >&2
-  exit 127
+# Per-task CLI. The backlog burndown burns the *OpenAI* weekly budget, so it
+# runs on Codex; every other task runs on Claude.
+CLI=claude
+case "$TASK_NAME" in
+  c4po-backlog-burndown) CLI=codex ;;
+esac
+
+if [[ "$CLI" == codex ]]; then
+  CODEX_BIN="${CODEX_BIN:-codex}"
+  if ! command -v "$CODEX_BIN" >/dev/null 2>&1; then
+    echo "codex binary not found on PATH after sourcing ~/.zshenv (PATH=$PATH)" >&2
+    exit 127
+  fi
+else
+  CLAUDE_BIN="${CLAUDE_BIN:-claude}"
+  if ! command -v "$CLAUDE_BIN" >/dev/null 2>&1; then
+    echo "claude binary not found on PATH after sourcing ~/.zshenv (PATH=$PATH)" >&2
+    exit 127
+  fi
 fi
 
 # BORG_ROOT: workspace root, auto-detected from this script's location
@@ -45,11 +60,20 @@ fi
 BORG_ROOT="${BORG_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 export BORG_ROOT
 
-# Pin a session id for this run so notifications (notify-email.sh) can tell the user
-# how to resume this exact headless session: `claude --resume $BORG_SESSION_ID`.
-# Lowercased — claude stores/looks up session ids in lowercase.
-SESSION_ID="$(uuidgen | tr '[:upper:]' '[:lower:]')"
-export BORG_SESSION_ID="$SESSION_ID"
+# Resume handle for notification footers (notify-email.sh).
+# - claude: pin a session id up front (`claude --resume $BORG_SESSION_ID`).
+#   Lowercased — claude stores/looks up session ids in lowercase.
+# - codex: no way to pre-pin an id (codex assigns one at launch), so export a
+#   generic resume command for emails sent mid-run; after the run we upgrade
+#   the failure email to the exact id parsed from the log. `codex resume --last`
+#   scopes to the cwd the footer cd's into, which only this task uses.
+SESSION_ID=""
+if [[ "$CLI" == codex ]]; then
+  export BORG_RESUME_CMD="codex resume --last"
+else
+  SESSION_ID="$(uuidgen | tr '[:upper:]' '[:lower:]')"
+  export BORG_SESSION_ID="$SESSION_ID"
+fi
 
 cd "$AGENT_DIR"
 
@@ -59,31 +83,44 @@ cd "$AGENT_DIR"
 PROMPT_CONTENT=$(<"$PROMPT_FILE")
 PROMPT_CONTENT=${PROMPT_CONTENT//\$\{BORG_ROOT\}/$BORG_ROOT}
 
-# Per-task effort. Every scheduled job runs at "high"; the weekly "dream" harvest
-# reasons over dozens of transcripts, so it gets "xhigh" to match an interactive Opus
-# run (a lower-effort headless pass under-harvests). Override per task in the case below.
+# Per-task effort (claude tasks only; codex tasks use the model/effort defaults
+# from ~/.codex/config.toml). Every claude job runs at "high"; the weekly "dream"
+# harvest reasons over dozens of transcripts, so it gets "xhigh" to match an
+# interactive Opus run (a lower-effort headless pass under-harvests).
 EFFORT=high
 case "$TASK_NAME" in
   c4po-dream) EFFORT=xhigh ;;
 esac
 
-# Per-task extra CLI args. The backlog burndown edits files across the whole
-# workspace (root BACKLOG.md, sibling agents, the git-ignored repos/*), not
-# just its agent dir — grant it the workspace root as an additional working
-# directory. Other tasks stay confined to their agent dir.
+# Per-task extra CLI args (claude and codex both accept --add-dir). The backlog
+# burndown edits files across the whole workspace (root BACKLOG.md, sibling
+# agents, the git-ignored repos/*), not just its agent dir — grant it the
+# workspace root as an additional working directory. Other tasks stay confined
+# to their agent dir.
 EXTRA_ARGS=()
 case "$TASK_NAME" in
   c4po-backlog-burndown) EXTRA_ARGS+=(--add-dir "$BORG_ROOT") ;;
 esac
 
+# claude flags:
 # --strict-mcp-config: a scheduled `claude -p` run must NOT spawn the telegram
 # channel's MCP server. server.ts kills whatever poller holds bot.pid, so a
 # scheduled run would silently clobber the agent's interactive session poller
 # and leave it deaf to Telegram. Scheduled tasks send outbound via
-# .bin/notify-email.sh instead.
-#
+# .bin/notify-email.sh instead. (No codex equivalent needed: codex loads MCP
+# servers only from ~/.codex/config.toml, which has no telegram server.)
 # --session-id pins the run to $SESSION_ID so the notification can hand the user a
 # `claude --resume` command pointing at this exact session.
+#
+# codex flags:
+# --sandbox workspace-write: codex defaults headless runs to a read-only
+# sandbox; the task must write (and --add-dir extends the writable roots).
+# -c sandbox_workspace_write.network_access=true: workspace-write blocks
+# network by default, which would break notify-email.sh's SMTP curl and any
+# child `codex exec` the task spawns (the child's API calls run under this
+# sandbox). Model and reasoning effort are deliberately NOT set — the defaults
+# come from ~/.codex/config.toml.
+#
 # Agent slug (c4po | mrs-beast | warren-bot-fett) — labels failure emails and
 # is the first arg notify-email.sh expects.
 AGENT_NAME="$(basename "$AGENT_DIR")"
@@ -94,10 +131,22 @@ AGENT_NAME="$(basename "$AGENT_DIR")"
 # (previously a failed run left no end line in the log).
 STATUS=0
 {
-  echo "===== $(date -u +%Y-%m-%dT%H:%M:%SZ) start $TASK_NAME (cwd=$AGENT_DIR, session=$SESSION_ID) ====="
-  "$CLAUDE_BIN" -p "$PROMPT_CONTENT" --session-id "$SESSION_ID" --strict-mcp-config --effort "$EFFORT" ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"} < /dev/null
+  echo "===== $(date -u +%Y-%m-%dT%H:%M:%SZ) start $TASK_NAME (cwd=$AGENT_DIR, cli=$CLI, session=${SESSION_ID:-codex-assigned}) ====="
+  if [[ "$CLI" == codex ]]; then
+    "$CODEX_BIN" exec --sandbox workspace-write -c sandbox_workspace_write.network_access=true ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"} "$PROMPT_CONTENT" < /dev/null
+  else
+    "$CLAUDE_BIN" -p "$PROMPT_CONTENT" --session-id "$SESSION_ID" --strict-mcp-config --effort "$EFFORT" ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"} < /dev/null
+  fi
 } >> "$LOG_FILE" 2>&1 || STATUS=$?
 echo "===== $(date -u +%Y-%m-%dT%H:%M:%SZ) end $TASK_NAME (exit $STATUS) =====" >> "$LOG_FILE" 2>&1
+
+# codex prints its self-assigned session id in the run header; now that the run
+# is over, upgrade the failure email's resume footer from `--last` to the exact
+# id. The log accumulates runs, so take the last match (this run's).
+if [[ "$CLI" == codex ]]; then
+  CODEX_SESSION="$(sed -n 's/^session id: //p' "$LOG_FILE" | tail -1)"
+  [[ -n "$CODEX_SESSION" ]] && export BORG_RESUME_CMD="codex resume $CODEX_SESSION"
+fi
 
 # On any non-zero exit, email the user. A scheduled run is fired once by launchd
 # (no KeepAlive, no retry loop), so a failure means this run's work is dropped
@@ -115,7 +164,7 @@ if [[ $STATUS -ne 0 ]]; then
   {
     echo "Scheduled task '$TASK_NAME' exited $STATUS."
     echo "  agent:   $AGENT_NAME"
-    echo "  session: $SESSION_ID"
+    echo "  session: ${SESSION_ID:-${CODEX_SESSION:-unknown}}"
     echo "  log:     $LOG_FILE"
     echo
     echo "Last lines of the log:"

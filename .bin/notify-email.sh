@@ -18,8 +18,10 @@
 #   EMAIL_SMTP_HOST  — optional; defaults to smtp.gmail.com
 #   EMAIL_SMTP_PORT  — optional; defaults to 587
 #
-# When $BORG_SESSION_ID is set (run-scheduled-task.sh exports it for scheduled
-# runs), a footer is appended telling the user how to resume that exact session.
+# Resume footer: when $BORG_RESUME_CMD is set (run-scheduled-task.sh exports it
+# for codex-driven runs, e.g. "codex resume <id>"), it is used verbatim; else
+# when $BORG_SESSION_ID is set (claude-driven runs), a `claude --resume` footer
+# is appended. Either tells the user how to continue the headless session.
 set -euo pipefail
 
 AGENT="${1:?usage: notify-email.sh <agent> [subject] < body}"
@@ -52,13 +54,14 @@ SMTP_PORT="${SMTP_PORT:-587}"
 BODY="$(cat)"
 [[ -n "$BODY" ]] || { echo "notify-email: empty message on stdin" >&2; exit 1; }
 
-# Resume footer — only for scheduled runs that pinned a session id.
-if [[ -n "${BORG_SESSION_ID:-}" ]]; then
+# Resume footer — only for scheduled runs that exported a resume handle.
+if [[ -n "${BORG_RESUME_CMD:-}" || -n "${BORG_SESSION_ID:-}" ]]; then
   AGENT_DIR="${BORG_ROOT:-$HOME/theborg}/$AGENT"
+  RESUME_CMD="${BORG_RESUME_CMD:-claude --resume ${BORG_SESSION_ID:-}}"
   BODY="$BODY
 
 — To continue this session, SSH into the Mac Studio and run:
-    cd $AGENT_DIR && claude --resume $BORG_SESSION_ID"
+    cd $AGENT_DIR && $RESUME_CMD"
 fi
 
 # SMTP wants CRLF line endings throughout the message.
