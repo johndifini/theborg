@@ -21,7 +21,7 @@ If you've cloned or forked this repo, run through this once:
 1. Install the pre-commit hook (one-time, per clone):
    `git config core.hooksPath .githooks`
 2. Install gitleaks: `brew install gitleaks` (or see https://github.com/gitleaks/gitleaks).
-3. Confirm these patterns are still gitignored: `warren-bot-fett/PORTFOLIO.md`, `**/logs/`, `**/.claude/settings.local.json`, `**/.claude/.credentials*`, `.env` / `.env.*`. The filled-in email creds live at `~/.claude/channels/email-shared/.env` (outside the repo) — keep them there; only the redacted `.bin/email-shared.env.example` template belongs in git.
+3. Confirm these patterns are still gitignored: `warren-bot-fett/PORTFOLIO.md`, `**/logs/`, `**/.claude/settings.local.json`, `**/.claude/.credentials*`, `.env` / `.env.*`. All secrets live in the single consolidated `.env` at the workspace root (chmod 600, gitignored) — verify with `git check-ignore .env`; only the redacted `.env.example` template belongs in git.
 4. Anything you drop into `cerebruh/ingest/` is gitignored by default — wiki publishing is opt-in only.
 5. If you un-ignore a wiki under `cerebruh/wikis/<topic>/`, do a PII pass first.
 6. Enable GitHub secret scanning and push protection on your fork (Settings → Code security).
@@ -35,7 +35,7 @@ Gitleaks' defaults catch API keys and tokens but miss most of the things that ma
 - Personal email addresses, phone numbers, home addresses (beyond what `mrs-beast/USER.md` already publishes by design).
 - `*.prompt` file content that names a real person's accounts or strategies.
 - Claude Code session history under `~/.claude/projects/` (lives outside the repo by default — keep it that way).
-- Gmail App Passwords / SMTP creds (`~/.claude/channels/email-shared/.env`). Only the redacted `.bin/email-shared.env.example` template belongs in git.
+- Gmail App Passwords / SMTP creds and any headless-auth tokens (the workspace root `.env`). Only the redacted `.env.example` template belongs in git.
 
 ## Defense in depth
 

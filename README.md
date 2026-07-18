@@ -24,7 +24,7 @@ This repo is my personal AI workspace, shared in case the patterns, structure, o
 
 Each agent runs background tasks via macOS launchd. Plists live in `~/Library/LaunchAgents/` under the `com.theborg.*` namespace. All jobs are driven by `.bin/run-scheduled-task.sh` and log to `<agent>/.claude/scheduled/logs/launchd.{out,err}`. The plists embed absolute paths and aren't committed verbatim — regenerate them from your checkout with `.bin/install-scheduled-tasks.sh` (which holds the schedule table as the single source of truth; add `--load` to (re)register them with launchd).
 
-Jobs notify the user by **email** via `.bin/notify-email.sh <agent> [subject]` (outbound Gmail SMTP; creds in `~/.claude/channels/email-shared/.env`). Every job passes a short, descriptive subject (e.g. `Borg security audit — 2026-07-03 — 0 finding(s)`) so the inbox is scannable without opening each message. `run-scheduled-task.sh` pins each run to a fixed `--session-id`, so the notification email includes a `claude --resume <id>` command to continue that exact session on the Mac Studio.
+Jobs notify the user by **email** via `.bin/notify-email.sh <agent> [subject]` (outbound Gmail SMTP; creds in the workspace root `.env`). Every job passes a short, descriptive subject (e.g. `Borg security audit — 2026-07-03 — 0 finding(s)`) so the inbox is scannable without opening each message. `run-scheduled-task.sh` pins each run to a fixed `--session-id`, so the notification email includes a `claude --resume <id>` command to continue that exact session on the Mac Studio.
 
 For more info about each job, see `<agent>/.claude/scheduled/<label>.prompt`.
 
@@ -32,7 +32,7 @@ For more info about each job, see `<agent>/.claude/scheduled/<label>.prompt`.
 
 | Label | Schedule | What it does |
 |---|---|---|
-| `c4po-security-audit` | Daily at 10:00 AM | Audits all agent settings files, hooks, permission rules, Telegram access lists, and MCP servers for security issues. Emails the result every run — findings with recommended fixes, or an all-clear if clean. |
+| `c4po-security-audit` | Daily at 10:00 AM | Audits all agent settings files, hooks, permission rules, secret-file hygiene (the root `.env`), and MCP servers for security issues. Emails the result every run — findings with recommended fixes, or an all-clear if clean. |
 | `c4po-lint-audit-monthly` | 1st–5th of each month at 9:00 AM¹ | Audits the entire workspace — recursing into subdirectories and the independent repos under `repos/*` (generic rules only there) — against the lint rules in the root AGENTS.md. Emails the result every run — violations grouped by rule section, or an all-clear if clean. Runs once per month (state tracked in `c4po/.claude/scheduled/state/`). |
 | `c4po-assumptions-audit-monthly` | 1st–5th of each month at 9:00 AM¹ | Re-evaluates ephemeral best-practice assumptions (AGENTS.md line ceiling, launchd as scheduler, slash-command relevance, cerebruh raw-source ceiling, whether native "dreaming" has superseded the custom dream job) against current OpenAI, Anthropic, and community guidance. Also scans AGENTS.md sizes against the current ceiling. Emails the result every run — anything flagged, or an all-clear if clean. Runs once per month (state tracked in `c4po/.claude/scheduled/state/`). |
 | `c4po-dream` | Sat at 10:00 PM (Sun retry)² | Harvests durable lessons from the user's Claude sessions machine-wide since its last run and routes them to the right home — proposed rules, AGENTS.md additions, and skills are emailed as a digest; durable shared knowledge is staged into `cerebruh/ingest/` for the user to ingest. Propose/stage-only — never writes Auto Memory or the cerebruh wiki. Emails every run — the digest, or a one-liner if nothing clears the bar. Runs once per week (state tracked in `c4po/.claude/scheduled/state/`). |
@@ -50,6 +50,12 @@ For more info about each job, see `<agent>/.claude/scheduled/<label>.prompt`.
 |---|---|---|
 | `warren-bot-fett-daily-market-scan` | Mon–Fri at 9:00 AM | Fetches market data (indices, yields, VIX), checks portfolio allocations against targets, and emails the result every run — a specific trade alert when a genuine buying opportunity exists, otherwise a brief no-action summary (one-liner on market holidays). |
 | `warren-bot-fett-ai-sleeve-monthly` | 1st–5th of each month at 9:00 AM¹ | Runs the AI Sleeve rebalance on the first trading day of the month: ranks candidates by market cap, enforces category minimums, computes floor-adjusted weights, and delivers a target-weights report via email. Writes `ai-sleeve/last-rebalance.json` for month-over-month diffs. |
+### waiq (repo-hosted)
+
+| Label | Schedule | What it does |
+|---|---|---|
+| `waiq-tts-watch` | Mon/Wed/Fri at 9:00 AM | Research-only TTS landscape watch for the WAIQ iOS app (Kokoro, MLX, Misaki, KokoroSwift, Apple TTS, alternate engines). Runs read-only (`--allowedTools WebSearch,WebFetch` — untrusted web content can't prompt-inject repo changes); the runner saves the briefing to `repos/waiq/.claude/scheduled/reports/` and emails it. Prompt lives in the waiq repo (`repos/waiq/.claude/scheduled/waiq-tts-watch.prompt`); as a repo-hosted task it has no companion slash command (see AGENTS.md → Lint → Scope). |
+
 ¹ Fired on days 1–5 as a retry window in case the machine was asleep on day 1. The prompt enforces once-per-month execution via a state file.
 ² Fired on the primary day plus the next day as a retry window in case the machine was asleep. The prompt enforces once-per-ISO-week execution via a state file.
 
@@ -57,7 +63,7 @@ For more info about each job, see `<agent>/.claude/scheduled/<label>.prompt`.
 
 Project-scoped slash commands live in `.claude/commands/` (workspace-wide) or `<agent>/.claude/commands/` (agent-scoped, only visible from that agent's directory).
 
-Every scheduled task has a matching interactive command (named after the task, minus the agent prefix). Each delegates to the same `.prompt` the launchd job runs — no duplicated logic — applying only the overrides needed for interactive use: skip once-per-month state gates and state/data-file writes, and report to the session instead of email.
+Every Borg-agent scheduled task has a matching interactive command (named after the task, minus the agent prefix); repo-hosted tasks like `waiq-tts-watch` are exempt (see AGENTS.md → Lint → Scope). Each delegates to the same `.prompt` the launchd job runs — no duplicated logic — applying only the overrides needed for interactive use: skip once-per-month state gates and state/data-file writes, and report to the session instead of email.
 
 | Command | Scope | What it does |
 |---|---|---|
@@ -92,6 +98,6 @@ Before you make this your own:
 
 1. Clone the repo.
 1. Install the pre-commit hook: `git config core.hooksPath .githooks`
-1. Set up email notifications: `cp .bin/email-shared.env.example ~/.claude/channels/email-shared/.env`, `chmod 600` it, then fill in a Gmail App Password (see the file's header).
+1. Set up email notifications: `cp .env.example .env`, `chmod 600 .env`, then fill in a Gmail App Password (see the file's header).
 1. Install the scheduled tasks: `.bin/install-scheduled-tasks.sh --load` — generates the launchd plists from your checkout path and registers them.
 1. Read [SECURITY.md](./SECURITY.md) before your first commit — There’s a short forker checklist in there that may save you from accidentally publishing secrets, personal notes, API keys, or other spicy artifacts.

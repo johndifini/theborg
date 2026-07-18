@@ -4,7 +4,9 @@ Run the /security-review skill against the current state of ~/theborg. Specifica
 - .claude/settings*.json files in each agent's workspace
 - hooks configured in those settings
 - exposed paths and permission rules
-- Telegram access lists at ~/.claude/channels/telegram-*/access.json
+- the consolidated secrets file at ~/theborg/.env: must be chmod 600 and
+  gitignored (`git check-ignore .env`), and no other filled-in .env / secret
+  file may exist elsewhere in the workspace
 - any new MCP servers added since last audit
 - the independent repos under ~/theborg/repos/ (git-ignored — enumerate the
   filesystem, not git status; e.g. repos/waiq): each repo's .claude/settings*.json

@@ -97,18 +97,34 @@ esac
 # agents, the git-ignored repos/*), not just its agent dir — grant it the
 # workspace root as an additional working directory. Other tasks stay confined
 # to their agent dir.
+#
+# waiq-tts-watch reads untrusted web content, so it runs read-only: only
+# WebSearch/WebFetch are allowed (no Write/Bash — a fetched page can't
+# prompt-inject changes into the repo). No --bare: bare mode skips the OAuth
+# resolution path, silently ignoring CLAUDE_CODE_OAUTH_TOKEN — the only
+# working headless auth here (verified 2026-07-18, CLI 2.1.212; see
+# anthropics/claude-code#38022).
 EXTRA_ARGS=()
 case "$TASK_NAME" in
   c4po-backlog-burndown) EXTRA_ARGS+=(--add-dir "$BORG_ROOT") ;;
+  waiq-tts-watch) EXTRA_ARGS+=(--permission-mode dontAsk \
+    --allowedTools "WebSearch,WebFetch" --model claude-sonnet-5 --max-turns 40) ;;
+esac
+
+# Per-task report file. Most tasks email their own results from inside the
+# session (their .prompt pipes to notify-email.sh). A read-only task can't —
+# it has no Bash — so the runner captures the model's stdout as a dated report
+# and emails it on success (failure emailing below covers the rest).
+REPORT_FILE=""
+case "$TASK_NAME" in
+  waiq-tts-watch) REPORT_FILE="$AGENT_DIR/.claude/scheduled/reports/$(date +%Y-%m-%d).md" ;;
 esac
 
 # claude flags:
-# --strict-mcp-config: a scheduled `claude -p` run must NOT spawn the telegram
-# channel's MCP server. server.ts kills whatever poller holds bot.pid, so a
-# scheduled run would silently clobber the agent's interactive session poller
-# and leave it deaf to Telegram. Scheduled tasks send outbound via
-# .bin/notify-email.sh instead. (No codex equivalent needed: codex loads MCP
-# servers only from ~/.codex/config.toml, which has no telegram server.)
+# --strict-mcp-config: a scheduled `claude -p` run must not boot any
+# session-configured MCP server — outbound goes via .bin/notify-email.sh
+# only. (No codex equivalent needed: codex loads MCP servers only from
+# ~/.codex/config.toml.)
 # --session-id pins the run to $SESSION_ID so the notification can hand the user a
 # `claude --resume` command pointing at this exact session.
 #
@@ -134,6 +150,10 @@ STATUS=0
   echo "===== $(date -u +%Y-%m-%dT%H:%M:%SZ) start $TASK_NAME (cwd=$AGENT_DIR, cli=$CLI, session=${SESSION_ID:-codex-assigned}) ====="
   if [[ "$CLI" == codex ]]; then
     "$CODEX_BIN" exec --sandbox workspace-write -c sandbox_workspace_write.network_access=true ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"} "$PROMPT_CONTENT" < /dev/null
+  elif [[ -n "$REPORT_FILE" ]]; then
+    # Report task: model stdout IS the report; stderr/markers stay in the log.
+    mkdir -p "$(dirname "$REPORT_FILE")"
+    "$CLAUDE_BIN" -p "$PROMPT_CONTENT" --session-id "$SESSION_ID" --strict-mcp-config --effort "$EFFORT" ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"} < /dev/null > "$REPORT_FILE"
   else
     "$CLAUDE_BIN" -p "$PROMPT_CONTENT" --session-id "$SESSION_ID" --strict-mcp-config --effort "$EFFORT" ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"} < /dev/null
   fi
@@ -171,6 +191,13 @@ if [[ $STATUS -ne 0 ]]; then
     echo "$LOG_TAIL"
   } | "$BORG_ROOT/.bin/notify-email.sh" "$AGENT_NAME" "$SUBJECT" \
     || echo "notify-email.sh failed to send failure alert for $TASK_NAME" >> "$LOG_FILE" 2>&1
+fi
+
+# Report tasks email their report on success (they are read-only sessions that
+# cannot pipe to notify-email.sh themselves; see REPORT_FILE above).
+if [[ $STATUS -eq 0 && -n "$REPORT_FILE" ]]; then
+  "$BORG_ROOT/.bin/notify-email.sh" "$AGENT_NAME" "[Borg/$AGENT_NAME] $TASK_NAME — $(date +%Y-%m-%d)" < "$REPORT_FILE" \
+    || echo "notify-email.sh failed to send report for $TASK_NAME" >> "$LOG_FILE" 2>&1
 fi
 
 # Re-exit with the task's own code so `launchctl list` reflects reality.

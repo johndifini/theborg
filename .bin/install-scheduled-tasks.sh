@@ -29,6 +29,7 @@ LAUNCH_AGENTS="$HOME/Library/LaunchAgents"
 # Task table: <agent>|<task-name>|<schedule-id>
 # task-name matches <agent>/.claude/scheduled/<task-name>.prompt and the launchd
 # label com.theborg.<task-name>. schedule-id is expanded by schedule_xml() below.
+# <agent> is a path relative to BORG_ROOT — repo-hosted agents use repos/<name>.
 TASKS=(
   "c4po|c4po-security-audit|daily-10-00"
   "c4po|c4po-lint-audit-monthly|month-first5-09-00"
@@ -38,6 +39,7 @@ TASKS=(
   "mrs-beast|mrs-beast-social-media-drafts|weekly-sun-wed-16-00"
   "warren-bot-fett|warren-bot-fett-daily-market-scan|weekly-mon-fri-09-00"
   "warren-bot-fett|warren-bot-fett-ai-sleeve-monthly|month-first5-09-00"
+  "repos/waiq|waiq-tts-watch|weekly-mon-wed-fri-09-00"
 )
 
 # Emit one <dict> calendar entry. Args: Key=Value among Day/Weekday/Hour/Minute.
@@ -72,6 +74,11 @@ schedule_xml() {
     weekly-mon-fri-09-00)
       printf '    <key>StartCalendarInterval</key>\n    <array>\n'
       for w in 1 2 3 4 5; do cal_entry "Weekday=$w" "Hour=9" "Minute=0"; done
+      printf '    </array>\n'
+      ;;
+    weekly-mon-wed-fri-09-00)
+      printf '    <key>StartCalendarInterval</key>\n    <array>\n'
+      for w in 1 3 5; do cal_entry "Weekday=$w" "Hour=9" "Minute=0"; done
       printf '    </array>\n'
       ;;
     weekly-sat-sun-22-00)

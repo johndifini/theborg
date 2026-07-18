@@ -10,7 +10,8 @@
 #   agent   — c4po | mrs-beast | warren-bot-fett (labels the From line + subject)
 #   subject — optional; defaults to "[Borg/<agent>] notification"
 #
-# Credentials come from ~/.claude/channels/email-shared/.env (chmod 600):
+# Credentials come from the workspace root .env — the Borg's single
+# consolidated env file ($BORG_ROOT/.env, chmod 600, gitignored):
 #   EMAIL_SMTP_USER  — Gmail address used to authenticate (e.g. selfaware97@gmail.com)
 #   EMAIL_SMTP_PASS  — a Gmail *App Password* (not the account password; needs 2FA)
 #   EMAIL_FROM       — From address (defaults to EMAIL_SMTP_USER)
@@ -27,7 +28,8 @@ set -euo pipefail
 AGENT="${1:?usage: notify-email.sh <agent> [subject] < body}"
 SUBJECT="${2:-[Borg/$AGENT] notification}"
 
-ENV_FILE="$HOME/.claude/channels/email-shared/.env"
+# Workspace root = parent of this script's .bin/ dir; BORG_ROOT overrides.
+ENV_FILE="${BORG_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}/.env"
 [[ -f "$ENV_FILE" ]] || { echo "notify-email: no env file at $ENV_FILE" >&2; exit 1; }
 
 # Parse KEY=VALUE rather than sourcing: a secret with a space or shell
@@ -57,6 +59,8 @@ BODY="$(cat)"
 # Resume footer — only for scheduled runs that exported a resume handle.
 if [[ -n "${BORG_RESUME_CMD:-}" || -n "${BORG_SESSION_ID:-}" ]]; then
   AGENT_DIR="${BORG_ROOT:-$HOME/theborg}/$AGENT"
+  # Repo-hosted agents (e.g. waiq) live under repos/, not at the root.
+  [[ -d "$AGENT_DIR" ]] || AGENT_DIR="${BORG_ROOT:-$HOME/theborg}/repos/$AGENT"
   RESUME_CMD="${BORG_RESUME_CMD:-claude --resume ${BORG_SESSION_ID:-}}"
   BODY="$BODY
 
