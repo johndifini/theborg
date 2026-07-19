@@ -4,6 +4,10 @@ Curated set of names for the AI sleeve, organized by theme. The monthly rebalanc
 
 Edit this file freely between runs. To temporarily exclude a name, move it to `soft_excludes` with a one-line note.
 
+## Charter — what belongs
+
+This sleeve targets picks-and-shovels of the AI compute buildout: suppliers of chips, memory, power, networking, datacenters, and the equipment/materials behind them. AI *adopters* — firms that merely deploy AI to widen their own margins (banks, insurers, consultancies, most application software) — are off-profile and admitted sparingly if at all: a name earns a slot by supplying the buildout, not by using AI. When an off-profile name is added on owner instruction, keep its category deliberately thin and give it no `min`, so it must re-earn its basket slot on market cap every month.
+
 ## Tunables
 
 ```yaml
