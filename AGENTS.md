@@ -56,7 +56,7 @@ Rules for AGENTS.md files in this workspace. These exist to keep agent context c
 
 - The lint audit walks every AGENTS.md in the workspace tree **and** recurses into each independent repo under `repos/*` (enumerate the filesystem — `repos/` is git-ignored, so its children never appear in workspace git status).
 - `repos/*` inherit the **generic** rules — Coverage, Size, Cross-references, Paths, Imports — with each repo's root AGENTS.md treated like the workspace root (no parent-directory mention required).
-- The **workspace-specific** rules — Repo design folders, README, MCP servers, Scheduled tasks — bind The Borg itself, not `repos/*`; a repo documents its own commands and automation in its own README. (MCP servers loaded from a repo's config are still covered by the registry rule via the daily security audit.)
+- The **workspace-specific** rules — Repo design folders, README, MCP servers, Slash commands, Scheduled tasks — bind The Borg itself, not `repos/*`; a repo documents its own commands and automation in its own README. (MCP servers loaded from a repo's config are still covered by the registry rule via the daily security audit.)
 
 ### Coverage
 
@@ -104,9 +104,15 @@ Rules for AGENTS.md files in this workspace. These exist to keep agent context c
 - A server not listed in `c4po/MCP.md` is unapproved — remove it or add an entry.
 - Prefer the narrowest scope that works.
 
+### Slash commands
+
+- Markdown files under the workspace or a live agent's `.claude/commands/` are the canonical command sources for both harnesses. Claude Code invokes them as `/name`; `.bin/sync-codex-prompts.sh` exposes them to Codex as `/prompts:name` because Codex reserves direct slash-command names.
+- After adding, renaming, or removing a command, run `.bin/sync-codex-prompts.sh`; `.bin/sync-codex-prompts.sh --check` must pass. Unique basenames keep their name; collisions are scope-prefixed. The bridge never overwrites an unrelated file in `~/.codex/prompts/`.
+- Command bodies must work in either harness. Harness-specific frontmatter may refine behavior but cannot be required for correctness; Codex ignores Claude-only metadata such as `model:` and `private:`.
+
 ### Scheduled tasks
 
-- Every scheduled task (a launchd job under the `com.theborg.*` namespace, driven by a `.prompt` file) has a corresponding interactive slash command in the owning agent's `.claude/commands/`.
+- Every scheduled task (a launchd job under the `com.theborg.*` namespace, driven by a `.prompt` file) has a corresponding canonical interactive slash command in the owning agent's `.claude/commands/`; the slash-command bridge makes the same source available to Codex.
 - That command **delegates to the same `.prompt` file** the launchd job runs — it must not duplicate the task logic. It applies only the overrides needed for interactive use: skip once-per-month state gates and any state/data-file writes, and report to the session instead of piping to `notify-email.sh`.
 - **Step references must line up.** When a command's overrides cite specific steps of its `.prompt` (e.g. "SKIP STEP 1", "STEP 3 — output to session"), every cited step number must exist in that `.prompt` and must still denote what the override targets: a skip-the-gate override must point at the step that checks/writes the state or data file; the report-to-session override must point at the step that pipes to `notify-email.sh`. If a `.prompt` is renumbered or restructured, update the command's references in the same change.
 - **Overrides must be complete.** Conversely, every side-effecting step in the `.prompt` has a matching override in the command: each state gate and each state/data-file write is skipped, and each `notify-email.sh` pipe is rerouted to the session. A side effect added to a `.prompt` without a corresponding override in its command is a violation.

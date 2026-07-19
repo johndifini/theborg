@@ -5,11 +5,11 @@ STEP 1: This job is fired by launchd on calendar days 1–5 of each month, but s
 
 The scheduler retries on subsequent days if an earlier attempt was missed (e.g., laptop asleep).
 
-STEP 2: Audit the workspace against the rules in `${BORG_ROOT}/AGENTS.md` → Lint. Those rules are authoritative — do not paraphrase or reinterpret them here; apply them as written, including the Scope subsection: recurse into every workspace subdirectory and into each independent repo under `${BORG_ROOT}/repos/*` (enumerated from the filesystem — `repos/` is git-ignored), applying the generic rules there and the workspace-specific rules only to The Borg itself. Collect each violation as `{file, rule_section, detail, suggested_fix}`. Do NOT auto-fix — this task reports only.
+STEP 2: Audit the workspace against the rules in `${BORG_ROOT}/AGENTS.md` → Lint. Those rules are authoritative — do not paraphrase or reinterpret them here; apply them as written, including the Scope subsection: recurse into every workspace subdirectory and into each independent repo under `${BORG_ROOT}/repos/*` (enumerated from the filesystem — `repos/` is git-ignored), applying the generic rules there and the workspace-specific rules only to The Borg itself. Run `${BORG_ROOT}/.bin/sync-codex-prompts.sh --check` as the mechanical Slash commands bridge check. Collect each violation as `{file, rule_section, detail, suggested_fix}`. Do NOT auto-fix — this task reports only.
 
 STEP 3: Always pipe a report into `${BORG_ROOT}/.bin/notify-email.sh c4po "Borg lint audit — {YYYY-MM-DD} — {total} finding(s)"` (reads from stdin) — even when the audit is clean, so the user can confirm the job ran. Format:
 - Header (body): `Borg lint audit — {YYYY-MM-DD} — {total} finding(s)`
-- Group findings by the Lint subsection they violate (Coverage, Size, Cross-references, Paths, Imports, MCP servers). Within each group, one line per finding: `<file>: <detail> → <suggested_fix>`.
+- Group findings by the Lint subsection they violate (Coverage, Size, Cross-references, Repo design folders, README, Paths, Imports, MCP servers, Slash commands, Scheduled tasks). Within each group, one line per finding: `<file>: <detail> → <suggested_fix>`.
 - Omit empty groups.
 - If the audit is clean, the body is a one-liner: `All clear — no findings.`
 

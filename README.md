@@ -61,14 +61,18 @@ For more info about each job, see `<agent>/.claude/scheduled/<label>.prompt`.
 
 ## Slash Commands
 
-Project-scoped slash commands live in `.claude/commands/` (workspace-wide) or `<agent>/.claude/commands/` (agent-scoped, only visible from that agent's directory).
+Project-scoped command sources live in `.claude/commands/` (workspace-wide) or `<agent>/.claude/commands/` (agent-scoped, only visible to Claude Code from that agent's directory). Claude Code invokes them as `/name`. Run `.bin/sync-codex-prompts.sh` to expose the same files in Codex's global prompt namespace as `/prompts:name`, then restart Codex. Codex's custom-prompt surface is deprecated in favor of skills, but it is currently the only way to preserve explicit slash-style invocation; the monthly assumptions audit rechecks that tradeoff.
+
+The bridge uses exact symlinks, keeps unique names, scope-prefixes collisions, and refuses to overwrite unrelated files in `~/.codex/prompts/`. Run `.bin/sync-codex-prompts.sh --check` to detect drift. Claude-only frontmatter is optional refinement: for example, the model aliases pin Claude Code but use the current model in Codex.
 
 Every Borg-agent scheduled task has a matching interactive command (named after the task, minus the agent prefix); repo-hosted tasks like `waiq-tts-watch` are exempt (see AGENTS.md → Lint → Scope). Each delegates to the same `.prompt` the launchd job runs — no duplicated logic — applying only the overrides needed for interactive use: skip once-per-month state gates and state/data-file writes, and report to the session instead of email.
 
 | Command | Scope | What it does |
 |---|---|---|
-| `/h` | workspace | Runs the given prompt on the latest Haiku model. |
-| `/s` | workspace | Runs the given prompt on the latest Sonnet model. |
+| `/f` | workspace | Runs the given prompt on Fable in Claude Code; Codex uses its current model. |
+| `/h` | workspace | Runs the given prompt on Haiku in Claude Code; Codex uses its current model. |
+| `/o` | workspace | Runs the given prompt on Opus in Claude Code; Codex uses its current model. |
+| `/s` | workspace | Runs the given prompt on Sonnet in Claude Code; Codex uses its current model. |
 | `/remember` | workspace | Save durable context to the current agent's Auto Memory file (`~/.claude/projects/<project>/memory/MEMORY.md`) so it persists across sessions. With no argument, writes a concise gist of the current conversation; with an argument, saves that specific item as a standing fact or rule. Shows the proposed addition for approval before writing unless the request is unambiguous. |
 | `/push` | workspace | Stages all changes (`git add -A`), commits with a concise message matching recent commit style (or the supplied argument as the message), and pushes to the current branch's remote. Reports the commit hash. |
 | `/backlog` | workspace | Adds items to the shared workspace backlog (`BACKLOG.md` at the workspace root, entries tagged by owning agent). With no argument, scans the current session for loose ends (deferred work, unfixed problems, abandoned ideas) and proposes them for approval; with an argument, backlogs that specific item, asking clarifying questions if the scope or context is unclear. |
@@ -98,6 +102,7 @@ Before you make this your own:
 
 1. Clone the repo.
 1. Install the pre-commit hook: `git config core.hooksPath .githooks`
+1. Install Codex command links: `.bin/sync-codex-prompts.sh`, then restart Codex.
 1. Set up email notifications: `cp .env.example .env`, `chmod 600 .env`, then fill in a Gmail App Password (see the file's header).
 1. Install the scheduled tasks: `.bin/install-scheduled-tasks.sh --load` — generates the launchd plists from your checkout path and registers them.
 1. Read [SECURITY.md](./SECURITY.md) before your first commit — There’s a short forker checklist in there that may save you from accidentally publishing secrets, personal notes, API keys, or other spicy artifacts.
