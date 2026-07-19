@@ -32,11 +32,12 @@ if [[ -f "$HOME/.zshenv" ]]; then
   set -u
 fi
 
-# Per-task CLI. The backlog burndown burns the *OpenAI* weekly budget, so it
-# runs on Codex; every other task runs on Claude.
+# Per-task CLI. The backlog burndown and the weekly dream harvest both run on
+# Codex (spending the OpenAI weekly budget), keeping them off Claude's shared
+# 5-hour/weekly limits; every other task runs on Claude.
 CLI=claude
 case "$TASK_NAME" in
-  c4po-backlog-burndown) CLI=codex ;;
+  c4po-backlog-burndown|c4po-dream) CLI=codex ;;
 esac
 
 if [[ "$CLI" == codex ]]; then
@@ -84,19 +85,16 @@ PROMPT_CONTENT=$(<"$PROMPT_FILE")
 PROMPT_CONTENT=${PROMPT_CONTENT//\$\{BORG_ROOT\}/$BORG_ROOT}
 
 # Per-task effort (claude tasks only; codex tasks use the model/effort defaults
-# from ~/.codex/config.toml). Every claude job runs at "high"; the weekly "dream"
-# harvest reasons over dozens of transcripts, so it gets "xhigh" to match an
-# interactive Opus run (a lower-effort headless pass under-harvests).
+# from ~/.codex/config.toml). Every claude job runs at "high".
 EFFORT=high
-case "$TASK_NAME" in
-  c4po-dream) EFFORT=xhigh ;;
-esac
 
 # Per-task extra CLI args (claude and codex both accept --add-dir). The backlog
 # burndown edits files across the whole workspace (root BACKLOG.md, sibling
-# agents, the git-ignored repos/*), not just its agent dir — grant it the
-# workspace root as an additional working directory. Other tasks stay confined
-# to their agent dir.
+# agents, the git-ignored repos/*); the dream harvest stages into the sibling
+# cerebruh/ingest/ and pipes to .bin/notify-email.sh. Neither stays inside its
+# own agent dir, so both get the workspace root as a writable root (needed for
+# codex's workspace-write sandbox, which otherwise confines writes to the cwd).
+# Other tasks stay confined to their agent dir.
 #
 # waiq-tts-watch reads untrusted web content, so it runs read-only: only
 # WebSearch/WebFetch are allowed (no Write/Bash — a fetched page can't
@@ -106,7 +104,7 @@ esac
 # anthropics/claude-code#38022).
 EXTRA_ARGS=()
 case "$TASK_NAME" in
-  c4po-backlog-burndown) EXTRA_ARGS+=(--add-dir "$BORG_ROOT") ;;
+  c4po-backlog-burndown|c4po-dream) EXTRA_ARGS+=(--add-dir "$BORG_ROOT") ;;
   waiq-tts-watch) EXTRA_ARGS+=(--permission-mode dontAsk \
     --allowedTools "WebSearch,WebFetch" --model claude-sonnet-5 --max-turns 40) ;;
 esac
