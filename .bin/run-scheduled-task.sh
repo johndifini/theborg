@@ -88,35 +88,50 @@ PROMPT_CONTENT=${PROMPT_CONTENT//\$\{BORG_ROOT\}/$BORG_ROOT}
 # from ~/.codex/config.toml). Every claude job runs at "high".
 EFFORT=high
 
+# Per-task model (claude tasks only; codex tasks use ~/.codex/config.toml).
+# Pinned HERE via --model, deliberately NOT inherited from the user-level `model`
+# field in ~/.claude/settings.json. That field is mutated by any interactive
+# `/model` toggle, and a drift there onto a credits-gated model (Fable 5) is what
+# hard-failed the security audit 2026-07-21 with "Fable 5 requires usage credits."
+# Pinning in the runner decouples scheduled jobs from the interactive default.
+# When a newer GA Opus ships, the monthly assumptions audit (Assumption F in
+# c4po/.claude/scheduled/c4po-assumptions-audit-monthly.prompt) flags this pin
+# for a bump — update the value below and that assumption's pinned value together.
+MODEL=claude-opus-4-8
+
 # Per-task extra CLI args (claude and codex both accept --add-dir). The backlog
 # burndown edits files across the whole workspace (root BACKLOG.md, sibling
 # agents, the git-ignored repos/*); the dream harvest stages into the sibling
 # cerebruh/ingest/ and pipes to .bin/notify-email.sh. Neither stays inside its
 # own agent dir, so both get the workspace root as a writable root (needed for
 # codex's workspace-write sandbox, which otherwise confines writes to the cwd).
-# Other tasks stay confined to their agent dir.
-#
-# waiq-tts-watch reads untrusted web content, so it runs read-only: only
-# WebSearch/WebFetch are allowed (no Write/Bash — a fetched page can't
-# prompt-inject changes into the repo). No --bare: bare mode skips the OAuth
-# resolution path, silently ignoring CLAUDE_CODE_OAUTH_TOKEN — the only
-# working headless auth here (verified 2026-07-18, CLI 2.1.212; see
-# anthropics/claude-code#38022).
+# Other tasks stay confined to their agent dir. Repo-hosted tasks set their own
+# EXTRA_ARGS via the .conf sidecar sourced below.
 EXTRA_ARGS=()
 case "$TASK_NAME" in
   c4po-backlog-burndown|c4po-dream) EXTRA_ARGS+=(--add-dir "$BORG_ROOT") ;;
-  waiq-tts-watch) EXTRA_ARGS+=(--permission-mode dontAsk \
-    --allowedTools "WebSearch,WebFetch" --model claude-sonnet-5 --max-turns 40) ;;
 esac
 
 # Per-task report file. Most tasks email their own results from inside the
 # session (their .prompt pipes to notify-email.sh). A read-only task can't —
 # it has no Bash — so the runner captures the model's stdout as a dated report
-# and emails it on success (failure emailing below covers the rest).
+# and emails it on success (failure emailing below covers the rest). A task opts
+# in by setting REPORT=1 in its .conf sidecar (sourced below).
 REPORT_FILE=""
-case "$TASK_NAME" in
-  waiq-tts-watch) REPORT_FILE="$AGENT_DIR/.claude/scheduled/reports/$(date +%Y-%m-%d).md" ;;
-esac
+
+# Optional per-task config sidecar. Repo-hosted tasks (under repos/*) keep their
+# runner settings in their own repo rather than hard-coding them here: drop a
+# <task>.conf beside the <task>.prompt. Sourced last, so it overrides the
+# defaults above. Recognized keys: MODEL, EFFORT, EXTRA_ARGS (a bash array), and
+# REPORT=1 (capture stdout as a dated report and email it). CLI was resolved
+# earlier and is not overridable here — repo-hosted tasks run on claude.
+CONF_FILE="$AGENT_DIR/.claude/scheduled/$TASK_NAME.conf"
+if [[ -f "$CONF_FILE" ]]; then
+  REPORT=0
+  # shellcheck disable=SC1090
+  source "$CONF_FILE"
+  [[ "${REPORT:-0}" == 1 ]] && REPORT_FILE="$AGENT_DIR/.claude/scheduled/reports/$(date +%Y-%m-%d).md"
+fi
 
 # claude flags:
 # --strict-mcp-config: a scheduled `claude -p` run must not boot any
@@ -151,9 +166,9 @@ STATUS=0
   elif [[ -n "$REPORT_FILE" ]]; then
     # Report task: model stdout IS the report; stderr/markers stay in the log.
     mkdir -p "$(dirname "$REPORT_FILE")"
-    "$CLAUDE_BIN" -p "$PROMPT_CONTENT" --session-id "$SESSION_ID" --strict-mcp-config --effort "$EFFORT" ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"} < /dev/null > "$REPORT_FILE"
+    "$CLAUDE_BIN" -p "$PROMPT_CONTENT" --session-id "$SESSION_ID" --strict-mcp-config --model "$MODEL" --effort "$EFFORT" ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"} < /dev/null > "$REPORT_FILE"
   else
-    "$CLAUDE_BIN" -p "$PROMPT_CONTENT" --session-id "$SESSION_ID" --strict-mcp-config --effort "$EFFORT" ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"} < /dev/null
+    "$CLAUDE_BIN" -p "$PROMPT_CONTENT" --session-id "$SESSION_ID" --strict-mcp-config --model "$MODEL" --effort "$EFFORT" ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"} < /dev/null
   fi
 } >> "$LOG_FILE" 2>&1 || STATUS=$?
 echo "===== $(date -u +%Y-%m-%dT%H:%M:%SZ) end $TASK_NAME (exit $STATUS) =====" >> "$LOG_FILE" 2>&1

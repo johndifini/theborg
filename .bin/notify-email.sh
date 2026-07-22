@@ -59,7 +59,7 @@ BODY="$(cat)"
 # Resume footer — only for scheduled runs that exported a resume handle.
 if [[ -n "${BORG_RESUME_CMD:-}" || -n "${BORG_SESSION_ID:-}" ]]; then
   AGENT_DIR="${BORG_ROOT:-$HOME/theborg}/$AGENT"
-  # Repo-hosted agents (e.g. waiq) live under repos/, not at the root.
+  # Repo-hosted agents live under repos/<name>, not at the workspace root.
   [[ -d "$AGENT_DIR" ]] || AGENT_DIR="${BORG_ROOT:-$HOME/theborg}/repos/$AGENT"
   RESUME_CMD="${BORG_RESUME_CMD:-claude --resume ${BORG_SESSION_ID:-}}"
   BODY="$BODY

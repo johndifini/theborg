@@ -127,23 +127,30 @@ Assumption E — "dreaming" is still a custom job, not a native feature
   ${BORG_ROOT}/.bin/install-scheduled-tasks.sh and the `com.theborg.*` plists; and
   the scheduled-jobs + slash-command listings in ${BORG_ROOT}/README.md.
 
-Assumption F — default Claude model pinned in ~/.claude/settings.json
-  Current choice: the user-level `model` field in `~/.claude/settings.json` is
-  pinned to `claude-opus-4-8` (Opus 4.8). This is the model every headless
-  `claude -p` scheduled run uses — the runner
-  (${BORG_ROOT}/.bin/run-scheduled-task.sh) passes no `--model` flag and no
-  ANTHROPIC_MODEL or project-settings override exists in the workspace.
+Assumption F — default Claude model pinned in the scheduled-task runner
+  Current choice: every headless `claude -p` scheduled run is pinned to
+  `claude-opus-4-8` (Opus 4.8) via the `MODEL` variable in the runner
+  (${BORG_ROOT}/.bin/run-scheduled-task.sh), which passes it as `--model`. The
+  pin lives in the runner — NOT the user-level `model` field in
+  `~/.claude/settings.json` — deliberately: that settings field is mutated by
+  any interactive `/model` toggle, and a drift there onto a credits-gated model
+  (Fable 5) hard-failed the security audit 2026-07-21. Repo-hosted tasks under
+  `repos/*` may override the model for their own run via the `MODEL` key in their
+  `.conf` sidecar (sourced by the runner) — that lives in the repo, not here, and
+  is out of scope for this pin.
   Verify two things:
-  1. The setting is intact: `~/.claude/settings.json` still has a `model`
-     field reading `claude-opus-4-8`. Flag RECONSIDER if it's missing or holds
-     a different value (something changed it outside this audit).
+  1. The pin is intact: `${BORG_ROOT}/.bin/run-scheduled-task.sh` still sets
+     `MODEL=claude-opus-4-8` as the default and passes `--model "$MODEL"` on the
+     `claude -p` invocations. Flag RECONSIDER if it's missing, no longer passed,
+     or holds a different default (something changed it outside this audit).
   2. The pin is still the right choice: use WebSearch (anthropic.com,
      docs.claude.com, code.claude.com) to check whether Anthropic has released
-     a newer generally-available model better suited as the workspace default.
-     Flag UPDATE with the replacement model id if so.
-  Where to update if flagged: the `model` field in `~/.claude/settings.json`
-  (user-level, outside the repo), and this assumption's pinned value so the
-  next audit verifies the new choice.
+     a newer generally-available model better suited as the workspace default
+     (e.g. a new Opus generation). Flag UPDATE with the replacement model id so
+     the jobs don't stay stuck on an outdated model.
+  Where to update if flagged: the `MODEL` default in
+  ${BORG_ROOT}/.bin/run-scheduled-task.sh, and this assumption's pinned value so
+  the next audit verifies the new choice.
 
 Assumption G — the LLM Wiki pattern is the best lightweight RAG for this setup
   Current choice: cerebruh implements Andrej Karpathy's "LLM Wiki" pattern
@@ -247,8 +254,8 @@ pointer above).
 
   Assumption F (default model): {STILL VALID|RECONSIDER|UPDATE}
     {one-line reason if not STILL VALID — the value actually found in
-     ~/.claude/settings.json and/or the replacement model id}
-    Where to update: {`model` field in ~/.claude/settings.json; this assumption's pinned value in the .prompt}
+     .bin/run-scheduled-task.sh and/or the replacement model id}
+    Where to update: {`MODEL` default in ${BORG_ROOT}/.bin/run-scheduled-task.sh; this assumption's pinned value in the .prompt}
 
   Assumption G (LLM Wiki RAG fit): {STILL VALID|RECONSIDER|UPDATE}
     {one-line reason if not STILL VALID — estimated corpus size and the

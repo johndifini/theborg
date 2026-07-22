@@ -39,8 +39,29 @@ TASKS=(
   "mrs-beast|mrs-beast-social-media-drafts|weekly-sun-wed-16-00"
   "warren-bot-fett|warren-bot-fett-daily-market-scan|weekly-mon-fri-09-00"
   "warren-bot-fett|warren-bot-fett-ai-sleeve-monthly|month-first5-09-00"
-  "repos/waiq|waiq-tts-watch|weekly-mon-wed-fri-09-00"
 )
+
+# Repo-hosted tasks: each independent repo under repos/ can register a scheduled
+# job with this framework without a row in the table above. It drops a
+# <task>.conf beside its <task>.prompt with a SCHEDULE= line; we discover those
+# from the filesystem (repos/ is git-ignored, so nothing repo-specific is
+# tracked in The Borg). The same .conf carries the runner's per-task overrides
+# (see run-scheduled-task.sh); here we read only SCHEDULE.
+shopt -s nullglob
+for conf in "$BORG_ROOT"/repos/*/.claude/scheduled/*.conf; do
+  task="$(basename "$conf" .conf)"
+  agent_dir="$(cd "$(dirname "$conf")/../.." && pwd)"   # repos/<name>
+  agent="${agent_dir#"$BORG_ROOT"/}"
+  SCHEDULE=""
+  # shellcheck disable=SC1090
+  source "$conf"
+  if [[ -z "$SCHEDULE" ]]; then
+    echo "warning: no SCHEDULE in $conf — skipping" >&2
+    continue
+  fi
+  TASKS+=("$agent|$task|$SCHEDULE")
+done
+shopt -u nullglob
 
 # Emit one <dict> calendar entry. Args: Key=Value among Day/Weekday/Hour/Minute.
 cal_entry() {

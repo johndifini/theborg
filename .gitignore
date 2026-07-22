@@ -41,6 +41,11 @@ Thumbs.db
 *_secret*
 **/.claude/settings.local.json
 **/.claude/.credentials*
+# Private rules — machine/infrastructure-specific guidance the agent should load
+# locally but never publish (e.g. host addresses, mount paths). Still loaded by
+# the harness (they end in .md); just kept out of this public repo. Same
+# `.local.` convention as settings.local.json above.
+**/.claude/rules/*.local.md
 
 # Allow shared Claude settings, scheduled jobs, etc. — only the
 # `*.local.json` variants and credential files are ignored above.

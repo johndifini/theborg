@@ -24,6 +24,8 @@ This repo is my personal AI workspace, shared in case the patterns, structure, o
 
 Each agent runs background tasks via macOS launchd. Plists live in `~/Library/LaunchAgents/` under the `com.theborg.*` namespace. All jobs are driven by `.bin/run-scheduled-task.sh` and log to `<agent>/.claude/scheduled/logs/launchd.{out,err}`. The plists embed absolute paths and aren't committed verbatim — regenerate them from your checkout with `.bin/install-scheduled-tasks.sh` (which holds the schedule table as the single source of truth; add `--load` to (re)register them with launchd).
 
+The independent repos under `repos/*` reuse this same framework without being tracked here: a repo registers a job by dropping a `<task>.conf` beside its `<task>.prompt` (a `SCHEDULE=` line plus any per-run overrides — model, extra CLI args, report mode), which the installer discovers from the filesystem and the runner sources at run time. Those repo-hosted jobs are documented in their own repo's README, not below.
+
 Jobs notify the user by **email** via `.bin/notify-email.sh <agent> [subject]` (outbound Gmail SMTP; creds in the workspace root `.env`). Every job passes a short, descriptive subject (e.g. `Borg security audit — 2026-07-03 — 0 finding(s)`) so the inbox is scannable without opening each message. `run-scheduled-task.sh` pins each run to a fixed `--session-id`, so the notification email includes a `claude --resume <id>` command to continue that exact session on the Mac Studio.
 
 For more info about each job, see `<agent>/.claude/scheduled/<label>.prompt`.
@@ -50,11 +52,6 @@ For more info about each job, see `<agent>/.claude/scheduled/<label>.prompt`.
 |---|---|---|
 | `warren-bot-fett-daily-market-scan` | Mon–Fri at 9:00 AM | Fetches market data (indices, yields, VIX), checks portfolio allocations against targets, and emails the result every run — a specific trade alert when a genuine buying opportunity exists, otherwise a brief no-action summary (one-liner on market holidays). |
 | `warren-bot-fett-ai-sleeve-monthly` | 1st–5th of each month at 9:00 AM¹ | Runs the AI Sleeve rebalance on the first trading day of the month: ranks candidates by market cap, enforces category minimums, computes floor-adjusted weights, and delivers a target-weights report via email. Writes `ai-sleeve/last-rebalance.json` for month-over-month diffs. |
-### waiq (repo-hosted)
-
-| Label | Schedule | What it does |
-|---|---|---|
-| `waiq-tts-watch` | Mon/Wed/Fri at 9:00 AM | Research-only TTS landscape watch for the WAIQ iOS app (Kokoro, MLX, Misaki, KokoroSwift, Apple TTS, alternate engines). Runs read-only (`--allowedTools WebSearch,WebFetch` — untrusted web content can't prompt-inject repo changes); the runner saves the briefing to `repos/waiq/.claude/scheduled/reports/` and emails it. Prompt lives in the waiq repo (`repos/waiq/.claude/scheduled/waiq-tts-watch.prompt`); as a repo-hosted task it has no companion slash command (see AGENTS.md → Lint → Scope). |
 
 ¹ Fired on days 1–5 as a retry window in case the machine was asleep on day 1. The prompt enforces once-per-month execution via a state file.
 ² Fired on the primary day plus the next day as a retry window in case the machine was asleep. The prompt enforces once-per-ISO-week execution via a state file.
@@ -65,7 +62,7 @@ Project-scoped command sources live in `.claude/commands/` (workspace-wide) or `
 
 The bridge uses exact symlinks, keeps unique names, scope-prefixes collisions, and refuses to overwrite unrelated files in `~/.codex/prompts/`. Run `.bin/sync-codex-prompts.sh --check` to detect drift. Claude-only frontmatter is optional refinement: for example, the model aliases pin Claude Code but use the current model in Codex.
 
-Every Borg-agent scheduled task has a matching interactive command (named after the task, minus the agent prefix); repo-hosted tasks like `waiq-tts-watch` are exempt (see AGENTS.md → Lint → Scope). Each delegates to the same `.prompt` the launchd job runs — no duplicated logic — applying only the overrides needed for interactive use: skip once-per-month state gates and state/data-file writes, and report to the session instead of email.
+Every Borg-agent scheduled task has a matching interactive command (named after the task, minus the agent prefix); repo-hosted tasks under `repos/*` are exempt (see AGENTS.md → Lint → Scope). Each delegates to the same `.prompt` the launchd job runs — no duplicated logic — applying only the overrides needed for interactive use: skip once-per-month state gates and state/data-file writes, and report to the session instead of email.
 
 | Command | Scope | What it does |
 |---|---|---|
