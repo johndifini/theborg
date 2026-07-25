@@ -65,9 +65,9 @@ export BORG_ROOT
 # - claude: pin a session id up front (`claude --resume $BORG_SESSION_ID`).
 #   Lowercased — claude stores/looks up session ids in lowercase.
 # - codex: no way to pre-pin an id (codex assigns one at launch), so export a
-#   generic resume command for emails sent mid-run; after the run we upgrade
-#   the failure email to the exact id parsed from the log. `codex resume --last`
-#   scopes to the cwd the footer cd's into, which only this task uses.
+#   generic fallback. Inside the run, notify-email.sh prefers Codex's exact
+#   $CODEX_THREAD_ID; after the run we also upgrade failure emails to the exact
+#   id parsed from the log. `codex resume --last` is only the last-resort path.
 SESSION_ID=""
 if [[ "$CLI" == codex ]]; then
   export BORG_RESUME_CMD="codex resume --last"

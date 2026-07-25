@@ -19,10 +19,10 @@
 #   EMAIL_SMTP_HOST  — optional; defaults to smtp.gmail.com
 #   EMAIL_SMTP_PORT  — optional; defaults to 587
 #
-# Resume footer: when $BORG_RESUME_CMD is set (run-scheduled-task.sh exports it
-# for codex-driven runs, e.g. "codex resume <id>"), it is used verbatim; else
-# when $BORG_SESSION_ID is set (claude-driven runs), a `claude --resume` footer
-# is appended. Either tells the user how to continue the headless session.
+# Resume footer: Codex exposes the exact current session as $CODEX_THREAD_ID;
+# prefer it over the runner's pre-launch `codex resume --last` fallback. For
+# Claude-driven runs, $BORG_SESSION_ID is pinned before launch. Either tells the
+# user how to continue the exact headless session.
 set -euo pipefail
 
 AGENT="${1:?usage: notify-email.sh <agent> [subject] < body}"
@@ -57,11 +57,15 @@ BODY="$(cat)"
 [[ -n "$BODY" ]] || { echo "notify-email: empty message on stdin" >&2; exit 1; }
 
 # Resume footer — only for scheduled runs that exported a resume handle.
-if [[ -n "${BORG_RESUME_CMD:-}" || -n "${BORG_SESSION_ID:-}" ]]; then
+if [[ -n "${CODEX_THREAD_ID:-}" || -n "${BORG_RESUME_CMD:-}" || -n "${BORG_SESSION_ID:-}" ]]; then
   AGENT_DIR="${BORG_ROOT:-$HOME/theborg}/$AGENT"
   # Repo-hosted agents live under repos/<name>, not at the workspace root.
   [[ -d "$AGENT_DIR" ]] || AGENT_DIR="${BORG_ROOT:-$HOME/theborg}/repos/$AGENT"
-  RESUME_CMD="${BORG_RESUME_CMD:-claude --resume ${BORG_SESSION_ID:-}}"
+  if [[ -n "${CODEX_THREAD_ID:-}" ]]; then
+    RESUME_CMD="codex resume $CODEX_THREAD_ID"
+  else
+    RESUME_CMD="${BORG_RESUME_CMD:-claude --resume ${BORG_SESSION_ID:-}}"
+  fi
   BODY="$BODY
 
 — To continue this session, SSH into the Mac Studio and run:

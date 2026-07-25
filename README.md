@@ -26,7 +26,7 @@ Each agent runs background tasks via macOS launchd. Plists live in `~/Library/La
 
 The independent repos under `repos/*` reuse this same framework without being tracked here: a repo registers a job by dropping a `<task>.conf` beside its `<task>.prompt` (a `SCHEDULE=` line plus any per-run overrides — model, extra CLI args, report mode), which the installer discovers from the filesystem and the runner sources at run time. Those repo-hosted jobs are documented in their own repo's README, not below.
 
-Jobs notify the user by **email** via `.bin/notify-email.sh <agent> [subject]` (outbound Gmail SMTP; creds in the workspace root `.env`). Every job passes a short, descriptive subject (e.g. `Borg security audit — 2026-07-03 — 0 finding(s)`) so the inbox is scannable without opening each message. `run-scheduled-task.sh` pins each run to a fixed `--session-id`, so the notification email includes a `claude --resume <id>` command to continue that exact session on the Mac Studio.
+Jobs notify the user by **email** via `.bin/notify-email.sh <agent> [subject]` (outbound Gmail SMTP; creds in the workspace root `.env`). Every job passes a short, descriptive subject (e.g. `Borg security audit — 2026-07-03 — 0 finding(s)`) so the inbox is scannable without opening each message. Claude jobs are pinned to a fixed `--session-id`; Codex jobs expose their assigned `CODEX_THREAD_ID` inside the run. Notification emails therefore include an exact `claude --resume <id>` or `codex resume <id>` command for continuing the headless session on the Mac Studio.
 
 For more info about each job, see `<agent>/.claude/scheduled/<label>.prompt`.
 
