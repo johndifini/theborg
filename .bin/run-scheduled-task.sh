@@ -162,7 +162,12 @@ STATUS=0
 {
   echo "===== $(date -u +%Y-%m-%dT%H:%M:%SZ) start $TASK_NAME (cwd=$AGENT_DIR, cli=$CLI, session=${SESSION_ID:-codex-assigned}) ====="
   if [[ "$CLI" == codex ]]; then
-    "$CODEX_BIN" exec --sandbox workspace-write -c sandbox_workspace_write.network_access=true ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"} "$PROMPT_CONTENT" < /dev/null
+    # The Codex desktop app injects these only for its current interactive
+    # thread. A launchd task must never inherit them: otherwise `codex exec`
+    # reconnects to that thread through its in-process app-server client rather
+    # than starting the fresh, isolated headless session the task requires.
+    env -u CODEX_REMOTE_PAYLOAD -u CODEX_THREAD_ID \
+      "$CODEX_BIN" exec --sandbox workspace-write -c sandbox_workspace_write.network_access=true ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"} "$PROMPT_CONTENT" < /dev/null
   elif [[ -n "$REPORT_FILE" ]]; then
     # Report task: model stdout IS the report; stderr/markers stay in the log.
     mkdir -p "$(dirname "$REPORT_FILE")"
