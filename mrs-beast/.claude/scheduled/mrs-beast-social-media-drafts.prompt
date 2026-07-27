@@ -1,43 +1,94 @@
-Scan the user's regular tech sources for the latest episodes/videos: AI Daily
-Brief, Hard Fork, AI and I, The Artificial Intelligence Show, This Week in
-Startups, Matt Wolfe, AI for Humans, Futurepedia.
+Draft ONE X (Twitter) post about the most interesting change the user has
+recently shipped to The Borg or the WAIQ app. One post — not three, not a
+menu of options. The user posts manually; this job only produces the draft.
 
-TRANSCRIPTS FIRST. For each item, get the transcript directly where possible:
-  - YouTube videos: fetch captions with yt-dlp, e.g.
-        yt-dlp --skip-download --write-auto-sub --write-sub --sub-lang en \
-               --sub-format vtt -o '%(id)s' '<video-url>'
-  - Otherwise, find the transcript via web search.
+The phases below are named, not numbered, so the paired `/social-media-drafts`
+command can reference them without breaking when this file is edited.
 
-FALLBACK. Only if a transcript can't be found, use the /last30days skill to
-search ALL sources, looking back just 4 days:
+GATHER — survey the last 7 days of shipped work.
+Two repositories, read-only. Never commit, push, or modify anything in either:
+  - The Borg — `${BORG_ROOT}` (public)
+  - WAIQ     — `${BORG_ROOT}/repos/waiq` (private — see the LINKS rules below)
+For each, list the window and then read into it:
+        git -C <repo> log --since='7 days ago' --stat
+        git -C <repo> show <sha>          # for the ones that look substantive
+A commit subject rarely carries the story. For the candidates, also read what
+the commit touched — ADRs, rules, skills, `.prompt` files, AGENTS.md — to
+recover *why* the change was made.
+Ignore: typo/lint/formatting-only commits, dependency bumps, backlog
+bookkeeping, and merge commits with no content of their own.
 
-        /last30days <topic> --days 4
+FILTER — do not repeat yourself.
+Read the topics log at
+`${BORG_ROOT}/mrs-beast/.claude/scheduled/state/mrs-beast-social-media-topics.md`
+(may not exist yet — treat a missing file as an empty log). Drop any candidate
+whose subject matter has already been covered by a previous run. A different
+commit touching the same idea still counts as covered.
 
-Prefer real transcript text over last30days evidence whenever a transcript was
-found; use last30days only to fill the gaps.
+SELECT — pick exactly one change.
+Interesting means: a non-obvious decision, a surprising failure mode, a
+technique another builder could steal, or a genuinely funny outcome. "Added a
+feature" is not interesting. If the week's most interesting change is one you
+can't make a stranger care about in a couple hundred characters, take the
+second-most interesting instead. Write a 1–2 line rationale — what the change is
+and why it's the pick.
 
-TOOLING HEALTH — do NOT fail silently. When last30days runs, inspect its footer
-(the emoji-tree per-source counts). If a source you expected (e.g. X or YouTube)
-shows 0 results or is absent, that means a backend did not run (expired Firefox
-burner cookies for X, missing node/yt-dlp on PATH, or an egress block). Draft
-from whatever DID return, and append a short "⚠️ Tooling health" line naming the
-empty source so the user can fix it. Never present an empty backend as "nothing
-compelling found."
+COMPOSE — write the post.
+Voice: friendly, funny, informative; punchy and platform-native; the user's
+voice (CTO, 24+ years, hands-on builder), not corporate. Lead with the insight
+or the surprise, not with "I shipped X." Avoid overtly political topics. No
+hashtag soup — at most one or two if they genuinely help.
 
-Draft X (Twitter) post options ONLY — do NOT include LinkedIn versions unless
-specifically asked.
+LINKS — hard rules, no exceptions:
+  - **The Borg is public** (`https://github.com/johndifini/theborg`). Include one
+    relevant GitHub link. Use the permanent forms:
+        commit — https://github.com/johndifini/theborg/commit/<full-sha>
+        file   — https://github.com/johndifini/theborg/blob/main/<repo-relative-path>
+    Verify the commit is actually published before linking it:
+        git -C ${BORG_ROOT} fetch --quiet origin
+        git -C ${BORG_ROOT} branch -r --contains <sha> | grep -q origin/main
+    An unpushed commit has no working URL — if the check fails, drop the link,
+    describe the change without it, and note in the email that the commit hasn't
+    been pushed yet.
+  - **WAIQ is private** (`github.com/johndifini/waiq`). A GitHub link to it is
+    NOT relevant and must never appear. Do not quote its source paths, file
+    names, internal identifiers, or commit SHAs either. Write about what the app
+    now does, not about its repository.
+  - Never put a local filesystem path, home directory, hostname, or machine name
+    in a draft. Public-post hygiene, same standard as the public repo.
 
-IMPORTANT: Provide your 3 BEST drafts only. No more than 3.
+VERIFY — before the draft goes out.
+Every factual claim in the post traces to a commit or a file you actually read.
+Any product, person, or handle you @mention or name is spelled as the
+authoritative source spells it — otherwise paraphrase and drop the handle. Do
+not present anything as a direct quote unless you read it verbatim.
 
-Instead of just summarizing episodes, identify key insights and takeaways.
-Include @mentions, quotes, and YouTube timestamps where possible. Style:
-friendly, funny, informative; punchy and platform-native.
+OUTPUT — deliver by email.
+Do NOT attempt to generate the image yourself: this job runs headless with no
+image-generation tool and no MCP servers, so the image is the user's step.
+Assemble the body in this order:
 
-Avoid overtly political topics (e.g. Anthropic vs Pentagon).
+  1. **Pick + why** — the SELECT rationale, plus which repo it came from.
+  2. **The post** — the ready-to-paste X draft, clearly delimited, with its
+     character count.
+  3. **Footer** — emit this block verbatim, then repeat the full post text
+     immediately beneath it so the two copy as one chunk:
 
-Use ===================================== as separators between options. If
-nothing compelling found (and all sources reported healthy), say so briefly.
+─────────────────────────────────────
+Post this in ChatGPT:
 
-Deliver the drafts by piping them into
-`${BORG_ROOT}/.bin/notify-email.sh mrs-beast "Social media drafts — {YYYY-MM-DD} — {N} draft(s)"`
-(reads the message from stdin, emails it to the user).
+Create a whimsical infographic for the following X post. Use #00ff2b and #ffa300 as the primary and secondary colors on a dark background. Other colors are ok too.
+
+Pipe the whole body into
+`${BORG_ROOT}/.bin/notify-email.sh mrs-beast "Social media draft — {YYYY-MM-DD} — {short topic label}"`
+(reads the message from stdin). Always send — including when nothing qualified.
+Do NOT fail silently: if both repos were quiet, or every candidate was already
+in the topics log, or a git command failed, say so in one or two lines and send
+that instead of a draft.
+
+RECORD STATE — log the topic.
+Only when a draft was actually sent, append one line to
+`${BORG_ROOT}/mrs-beast/.claude/scheduled/state/mrs-beast-social-media-topics.md`:
+        - YYYY-MM-DD — <repo> — <short topic label> — <sha or "n/a">
+`mkdir -p` the state directory first if it doesn't exist. Create the file with a
+`# Social media topics already posted about` heading if it's new.
