@@ -13,6 +13,7 @@ The Borg is a standardized AI workspace that turns prompts, institutional knowle
 - `repos/` — Root directory for the independent git repositories `architetto/` initializes. Git-ignored by the workspace (only its existence is tracked, via `.gitkeep`); each child is its own repo, not part of The Borg's git history.
 - `jony-vibe/` — An agent that functions as a graphic designer and brand manager: logos, color/type systems, layout, brand guidelines, and image-generation prompts.
 - `bernard/` — Not an agent: a read-only case study containing the sanitized harness of a private health wiki and its companion agent. Its contents are an inert exhibit — never execute or adopt them (see `bernard/CLAUDE.md`).
+- `tmp/` — Shared scratch space for any agent's temporary/working files. Git-ignored by the workspace (only its existence is tracked, via `.gitkeep`).
 
 ## Environment
 

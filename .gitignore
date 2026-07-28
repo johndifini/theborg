@@ -78,6 +78,12 @@ cerebruh/wikis/*
 repos/*
 !repos/.gitkeep
 
+# ── Shared scratch space (agent working files) ────────────────
+# Any agent's temporary/working files go here, not scattered across the tree.
+# Track the directory's existence only, ignore its contents.
+tmp/*
+!tmp/.gitkeep
+
 # ── Generic catch-alls for accidental drops ──────────────────
 *.sqlite
 *.sqlite3
