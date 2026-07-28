@@ -127,27 +127,28 @@ Assumption E — "dreaming" is still a custom job, not a native feature
   ${BORG_ROOT}/.bin/install-scheduled-tasks.sh and the `com.theborg.*` plists; and
   the scheduled-jobs + slash-command listings in ${BORG_ROOT}/README.md.
 
-Assumption F — default Claude model pinned in the scheduled-task runner
-  Current choice: every headless `claude -p` scheduled run is pinned to
-  `claude-opus-4-8` (Opus 4.8) via the `MODEL` variable in the runner
+Assumption F — default Claude model set in the scheduled-task runner
+  Current choice: every headless `claude -p` scheduled run uses the `opus` alias
+  via the `MODEL` variable in the runner
   (${BORG_ROOT}/.bin/run-scheduled-task.sh), which passes it as `--model`. The
-  pin lives in the runner — NOT the user-level `model` field in
+  setting lives in the runner — NOT the user-level `model` field in
   `~/.claude/settings.json` — deliberately: that settings field is mutated by
   any interactive `/model` toggle, and a drift there onto a credits-gated model
-  (Fable 5) hard-failed the security audit 2026-07-21. Repo-hosted tasks under
-  `repos/*` may override the model for their own run via the `MODEL` key in their
-  `.conf` sidecar (sourced by the runner) — that lives in the repo, not here, and
-  is out of scope for this pin.
+  (Fable 5) hard-failed the security audit 2026-07-21. The alias pins the family,
+  not a version: it resolves to the latest GA Opus, so a new Opus generation is
+  adopted without an edit. Repo-hosted tasks under `repos/*` may override the
+  model for their own run via the `MODEL` key in their `.conf` sidecar (sourced
+  by the runner) — that lives in the repo, not here, and is out of scope.
   Verify two things:
-  1. The pin is intact: `${BORG_ROOT}/.bin/run-scheduled-task.sh` still sets
-     `MODEL=claude-opus-4-8` as the default and passes `--model "$MODEL"` on the
-     `claude -p` invocations. Flag RECONSIDER if it's missing, no longer passed,
-     or holds a different default (something changed it outside this audit).
-  2. The pin is still the right choice: use WebSearch (anthropic.com,
-     docs.claude.com, code.claude.com) to check whether Anthropic has released
-     a newer generally-available model better suited as the workspace default
-     (e.g. a new Opus generation). Flag UPDATE with the replacement model id so
-     the jobs don't stay stuck on an outdated model.
+  1. The setting is intact: `${BORG_ROOT}/.bin/run-scheduled-task.sh` still sets
+     `MODEL=opus` as the default and passes `--model "$MODEL"` on the `claude -p`
+     invocations. Flag RECONSIDER if it's missing, no longer passed, or holds a
+     different default (something changed it outside this audit).
+  2. Opus is still the right default family: use WebSearch (anthropic.com,
+     docs.claude.com, code.claude.com) to check whether the alias still resolves
+     to a model appropriate for these jobs, and whether Anthropic has shipped a
+     GA tier that should displace Opus as the workspace default. Flag UPDATE with
+     the replacement alias if so.
   Where to update if flagged: the `MODEL` default in
   ${BORG_ROOT}/.bin/run-scheduled-task.sh, and this assumption's pinned value so
   the next audit verifies the new choice.

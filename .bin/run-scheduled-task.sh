@@ -89,15 +89,17 @@ PROMPT_CONTENT=${PROMPT_CONTENT//\$\{BORG_ROOT\}/$BORG_ROOT}
 EFFORT=high
 
 # Per-task model (claude tasks only; codex tasks use ~/.codex/config.toml).
-# Pinned HERE via --model, deliberately NOT inherited from the user-level `model`
+# Set HERE via --model, deliberately NOT inherited from the user-level `model`
 # field in ~/.claude/settings.json. That field is mutated by any interactive
 # `/model` toggle, and a drift there onto a credits-gated model (Fable 5) is what
 # hard-failed the security audit 2026-07-21 with "Fable 5 requires usage credits."
-# Pinning in the runner decouples scheduled jobs from the interactive default.
-# When a newer GA Opus ships, the monthly assumptions audit (Assumption F in
-# c4po/.claude/scheduled/c4po-assumptions-audit-monthly.prompt) flags this pin
-# for a bump — update the value below and that assumption's pinned value together.
-MODEL=claude-opus-4-8
+# Setting it in the runner decouples scheduled jobs from the interactive default.
+# The `opus` alias resolves to the latest GA Opus, so a new Opus generation is
+# picked up without an edit here — the family stays pinned, which is what keeps
+# Fable off these jobs. The monthly assumptions audit (Assumption F in
+# c4po/.claude/scheduled/c4po-assumptions-audit-monthly.prompt) still checks that
+# the alias is intact and that Opus remains the right default family.
+MODEL=opus
 
 # Per-task extra CLI args (claude and codex both accept --add-dir). The backlog
 # burndown edits files across the whole workspace (root BACKLOG.md, sibling
