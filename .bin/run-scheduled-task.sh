@@ -84,6 +84,31 @@ cd "$AGENT_DIR"
 PROMPT_CONTENT=$(<"$PROMPT_FILE")
 PROMPT_CONTENT=${PROMPT_CONTENT//\$\{BORG_ROOT\}/$BORG_ROOT}
 
+# Scheduled-run preamble. Every .prompt has a paired interactive slash command
+# (lint rule: Scheduled tasks) that delegates back to this same file but applies
+# overrides for session use — skip the once-per-period state gate, don't write
+# state, report to the session instead of emailing. Both harnesses surface those
+# commands to a headless run as invocable skills (claude: `.claude/commands/*`;
+# codex: the `/prompts:*` bridge), and the model will match one to the task it
+# was just handed and follow its overrides instead of these instructions.
+# That is a SILENT failure — the run exits 0 having sent no email and written no
+# state, so the runner's failure-email path never fires and the next scheduled
+# firing repeats the work. Observed on mrs-beast-ai-week-image-prompt 2026-07-22
+# and 2026-07-28. Prepended here rather than in each .prompt so new tasks are
+# covered automatically and the guard can't drift out of sync.
+PROMPT_CONTENT="You are a scheduled (headless) run of the task named \
+'$TASK_NAME'. Execute the instructions below directly and in full.
+
+Do NOT invoke any skill or slash command that wraps this same task — in
+particular the interactive companion whose name matches '$TASK_NAME'. That
+companion exists only for interactive use and its overrides (skip the state
+gate, skip writing state, report to the session instead of emailing) are WRONG
+here and would silently void this run. Perform every phase below yourself,
+including the state gate, the notify-email.sh delivery, and the state write.
+
+--- BEGIN TASK INSTRUCTIONS ---
+$PROMPT_CONTENT"
+
 # Per-task effort (claude tasks only; codex tasks use the model/effort defaults
 # from ~/.codex/config.toml). Every claude job runs at "high".
 EFFORT=high
