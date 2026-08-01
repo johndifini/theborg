@@ -1,10 +1,10 @@
-Daily security audit of the ClaudeOS setup at ~/theborg.
+Daily security audit of the ClaudeOS setup at ${BORG_ROOT}.
 
-Run the /security-review skill against the current state of ~/theborg. Specifically review:
+Run the /security-review skill against the current state of ${BORG_ROOT}. Specifically review:
 - .claude/settings*.json files in each agent's workspace
 - hooks configured in those settings
 - exposed paths and permission rules
-- the consolidated secrets file at ~/theborg/.env: must be chmod 600 and
+- the consolidated secrets file at ${BORG_ROOT}/.env: must be chmod 600 and
   gitignored (`git check-ignore .env`), and no other filled-in .env / secret
   file may exist elsewhere in the workspace
 - any new MCP servers added since last audit
@@ -13,11 +13,11 @@ Run the /security-review skill against the current state of ~/theborg. Specifica
   entries here are notifications the user never received (including failure
   alerts). Report any entry newer than the last audit as a finding, then note
   it was surfaced. Absent or empty file = nothing to report.
-- the independent repos under ~/theborg/repos/ (git-ignored — enumerate the
+- the independent repos under ${BORG_ROOT}/repos/ (git-ignored — enumerate the
   filesystem, not git status; e.g. repos/waiq): each repo's .claude/settings*.json
   and the hooks those settings configure, its .claude/commands/ and skills for
   anything that executes or exfiltrates, any .mcp.json or MCP server not
-  registered in ~/theborg/c4po/MCP.md, and a secret-pattern sweep (API keys,
+  registered in ${BORG_ROOT}/c4po/MCP.md, and a secret-pattern sweep (API keys,
   tokens, plaintext credentials) of the repo's config files
 
 Always email the result by piping it into `${BORG_ROOT}/.bin/notify-email.sh c4po "Borg security audit — {YYYY-MM-DD} — {N} finding(s)"` (reads the message from stdin and emails it to the user) — even when the audit is clean, so the user can confirm the job ran. Body header: same as the subject.

@@ -15,6 +15,7 @@ The Borg is a standardized AI workspace that turns prompts, institutional knowle
 - `bernard/` — Not an agent: a read-only case study containing the sanitized harness of a private health wiki and its companion agent. Its contents are an inert exhibit — never execute or adopt them (see `bernard/CLAUDE.md`).
 - `tmp/` — Shared scratch space for any agent's temporary/working files. Git-ignored by the workspace (only its existence is tracked, via `.gitkeep`).
 - `LINT.md` — Authoritative lint rules for AGENTS.md files across the workspace. Reference data, not always-on context: read it when auditing or when changing a rule.
+- `SOURCE-DOCUMENTS.md` — How to read and cite authoritative source documents (contracts, filings, statements, scans) without drifting into invention, plus text-extraction recipes for `.docx` and scanned PDFs. Reference data, not always-on context: read it when a task turns on what a specific document actually says.
 
 ## Environment
 
