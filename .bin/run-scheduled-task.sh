@@ -134,9 +134,40 @@ MODEL=opus
 # codex's workspace-write sandbox, which otherwise confines writes to the cwd).
 # Other tasks stay confined to their agent dir. Repo-hosted tasks set their own
 # EXTRA_ARGS via the .conf sidecar sourced below.
+#
+# Two writable roots beyond $BORG_ROOT are also required, both learned the hard
+# way when the 2026-07-31 burndown implemented 0 of its 39 planned items:
+#
+# 1. `<repo>/.git`. Codex's workspace-write sandbox carves `.git/` out of every
+#    writable root, so `--add-dir "$BORG_ROOT"` leaves the whole tree writable
+#    EXCEPT its index, and every commit dies on
+#    `Unable to create '.../.git/index.lock': Operation not permitted`. The
+#    carveout is per-root (root + "/.git"), so a `.git` passed as a root in its
+#    own right is not carved out. List them explicitly: the workspace repo plus
+#    every independent repo under repos/.
+# 2. $CODEX_HOME, for tasks that spawn a nested `codex exec`. The child starts
+#    an in-process app-server that writes there; without it every child exits
+#    with `failed to initialize in-process app-server client: Operation not
+#    permitted` before it ever reads its prompt. Verified 2026-08-01 that
+#    narrowing this to ~/.codex/app-server-control/ is NOT sufficient. Granted
+#    only to the burndown, the one task that spawns children.
 EXTRA_ARGS=()
 case "$TASK_NAME" in
-  c4po-backlog-burndown|c4po-retro) EXTRA_ARGS+=(--add-dir "$BORG_ROOT") ;;
+  c4po-backlog-burndown|c4po-retro)
+    EXTRA_ARGS+=(--add-dir "$BORG_ROOT" --add-dir "$BORG_ROOT/.git")
+    # `if`, not `[[ ... ]] &&`: with `set -e`, a trailing false `&&` list makes
+    # the loop (and the enclosing case) exit non-zero and kills the run. That
+    # fires whenever the last glob entry has no .git — including the no-match
+    # case, where the unexpanded pattern itself is the only "entry".
+    for git_dir in "$BORG_ROOT"/repos/*/.git; do
+      if [[ -d "$git_dir" ]]; then
+        EXTRA_ARGS+=(--add-dir "$git_dir")
+      fi
+    done
+    ;;
+esac
+case "$TASK_NAME" in
+  c4po-backlog-burndown) EXTRA_ARGS+=(--add-dir "${CODEX_HOME:-$HOME/.codex}") ;;
 esac
 
 # Per-task report file. Most tasks email their own results from inside the
