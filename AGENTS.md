@@ -47,7 +47,7 @@ Every agent answers tersely by default. Optimize for brevity:
 **Rules:**
 
 - `cerebruh/` is read-only for all agents with respect to **wiki content**. Never create, edit, or delete `raw/` sources or `wiki/` pages under `cerebruh/`. New knowledge enters the wiki only through cerebruh's own injection-scanned ingest workflow, run from within `cerebruh/`.
-- **Exception — lint scaffolding.** `AGENTS.md` files, their symlinks, and adjacent `CLAUDE.md` compatibility wrappers under `cerebruh/` are agent-context scaffolding, not wiki content, and may be created or edited from any directory to satisfy the lint rules in `LINT.md`. Sub-wiki `AGENTS.md` files normally symlink to `../../template/AGENTS.md`; never use this scaffolding to inject knowledge claims.
+- **Exception — agent-context scaffolding.** `AGENTS.md` files, their symlinks, adjacent `CLAUDE.md` compatibility wrappers, and root-level operating-procedure files split out of `cerebruh/AGENTS.md` to satisfy the size rule (`INGESTING.md`, `AUDITING.md`) are scaffolding, not wiki content, and may be created or edited from any directory to satisfy the lint rules in `LINT.md`. Sub-wiki `AGENTS.md` files normally symlink to `../../template/AGENTS.md`; never use this scaffolding to inject knowledge claims. The knowledge itself — `raw/` and `wiki/` — stays read-only regardless.
 - Stay within your own role. Reading shared knowledge does not change what each agent is responsible for.
 
 ## Lint
