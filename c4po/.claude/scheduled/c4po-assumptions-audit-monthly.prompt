@@ -30,7 +30,7 @@ not defaulted to.
 
 Assumption A — canonical instruction-file size ceiling
   Canonical home: the ceiling is codified as a lint rule in
-  ${BORG_ROOT}/AGENTS.md → Lint → Size. The lint audit enforces conformance to
+  ${BORG_ROOT}/LINT.md → Size. The lint audit enforces conformance to
   that number (and flags over-limit files); this audit re-evaluates whether the
   number itself is still right and whether content should move out of AGENTS.md.
   Do NOT re-scan for over-limit files here — that is the lint audit's job.
@@ -50,7 +50,7 @@ Assumption A — canonical instruction-file size ceiling
   Flag UPDATE if steps 1–2 show the codified ceiling is outdated (give the new
   number) and/or step 3 finds relocatable content (name the file and what
   should move where).
-  Where to update if flagged: the **Size** rule in ${BORG_ROOT}/AGENTS.md for
+  Where to update if flagged: the **Size** rule in ${BORG_ROOT}/LINT.md for
   the ceiling number; the specific AGENTS.md file(s) named for content moves.
 
 Assumption B — launchd is the right scheduler
@@ -266,7 +266,7 @@ pointer above).
       {path}: {what should move → which skill or rule}
       ...
     (omit the "Content to relocate" block if none)
-    Where to update: {e.g. Size rule in ${BORG_ROOT}/AGENTS.md; <file(s)> for moves}
+    Where to update: {e.g. Size rule in ${BORG_ROOT}/LINT.md; <file(s)> for moves}
 
   Assumption B (launchd): {STILL VALID|RECONSIDER|UPDATE}
     {one-line reason if not STILL VALID}
