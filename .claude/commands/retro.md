@@ -1,17 +1,33 @@
 ---
-description: End-of-session retrospective — ask "is there anything here worth saving?"
-argument-hint: "[optional: where I diverged from what you wanted]"
+description: Retrospective — "is there anything here worth saving?" This session by default; `/retro sessions` for the last week's transcripts.
+argument-hint: "[optional: where I diverged from what you wanted | 'sessions [window]']"
 ---
 
 # /retro
 
-A self-improvement retrospective on this session. Not a decision log, not a summary — a Scrum-style retro asking one question:
+A self-improvement retrospective. Not a decision log, not a summary — a Scrum-style retro asking one question:
 
 > **Is there anything here worth saving so the user can one-shot the prompt next time?**
 
+## Scope — this session, or many
+
+Two scopes, same question and same bar. Dispatch on the **first word** of `$ARGUMENTS`:
+
+- **`$ARGUMENTS` begins with the literal token `sessions`** → the multi-session retro,
+  described in [Multi-session scope](#multi-session-scope) below. Anything after that
+  token is the window (e.g. `sessions last 14 days`).
+- **Anything else, including empty** → this session. Follow the rest of this document.
+
+Match the token literally and only in first position. A free-text note that merely
+*mentions* sessions or a date range ("we spent the whole session on this", "like last
+week") is a correction note, not a scope switch — `/wrap` seeds `$ARGUMENTS` that way,
+and misreading it would silently kick off a multi-day transcript scan.
+
 ## Input
 
-`$ARGUMENTS` may contain a free-text note from the user describing where your default behavior diverged from what they actually wanted. Example: *"I recommended SSE, user went with polling because the infra team standardized on it."*
+Everything from here to [Multi-session scope](#multi-session-scope) is the single-session
+retro. `$ARGUMENTS` may contain a free-text note from the user describing where your
+default behavior diverged from what they actually wanted. Example: *"I recommended SSE, user went with polling because the infra team standardized on it."*
 
 - **If `$ARGUMENTS` is present:** focus the retro on that specific divergence. Still scan the rest of the session for other candidates, but treat the named gap as the primary one.
 - **If `$ARGUMENTS` is empty:** scan the session yourself for moments where the user corrected, overrode, rephrased, or pushed back on your default — and use judgment to identify candidates.
@@ -50,3 +66,31 @@ Start with a one-line verdict: either *"Nothing worth saving from this session."
 - **Why it clears the bar:** one sentence on recurrence + likelihood-of-recurrence-error
 
 Keep the whole output short. This is a retro, not a report.
+
+## Multi-session scope
+
+Reached only via `/retro sessions [window]`. Same logic as the launchd job
+`com.theborg.c4po-retro`, executed here in the session instead of on a schedule — no
+duplicated instructions.
+
+Read and follow the instructions in
+`<workspace-root>/c4po/.claude/scheduled/c4po-retro.prompt`. Treat every occurrence of
+`${BORG_ROOT}` in that file as the repo root — the output of
+`git rev-parse --show-toplevel` (the `theborg` directory).
+
+The prompt's phases are named (GATE, WINDOW, HARVEST, OUTPUT, RECORD STATE). Apply these
+overrides for interactive invocation, referenced by phase name:
+
+1. Skip the **GATE** phase entirely — do not check the weekly state file. An interactive
+   run should always execute, regardless of whether the scheduled job already ran this
+   week.
+2. In the **WINDOW** phase — do not read the state file for the boundary. Use the last 7
+   days, or the window named after the `sessions` token if one is given (e.g.
+   `/retro sessions last 14 days`).
+3. In the **OUTPUT** phase — do NOT pipe to `notify-email.sh`. Output the full digest into
+   this session (say "nothing cleared the bar" when that is the outcome). For cerebruh
+   candidates, do NOT auto-stage into `cerebruh/ingest/`; instead show the proposed source
+   file (path + content) and ask before staging it. (Rule / AGENTS.md / skill candidates
+   remain propose-only, exactly as in the scheduled run.)
+4. Skip the **RECORD STATE** phase entirely — do not write the state file. An interactive
+   run must not move the harvest-window boundary for the next scheduled run.

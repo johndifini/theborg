@@ -34,7 +34,7 @@ TASKS=(
   "c4po|c4po-security-audit|daily-10-00"
   "c4po|c4po-lint-audit-monthly|month-first5-09-00"
   "c4po|c4po-assumptions-audit-monthly|month-first5-09-00"
-  "c4po|c4po-dream|weekly-sat-sun-08-00"
+  "c4po|c4po-retro|weekly-sat-sun-08-00"
   "c4po|c4po-backlog-burndown|weekly-fri-21-09-sat-02-19"
   "mrs-beast|mrs-beast-social-media-drafts|weekly-sun-wed-16-00"
   "warren-bot-fett|warren-bot-fett-daily-market-scan|weekly-mon-fri-09-00"
@@ -103,7 +103,7 @@ schedule_xml() {
       printf '    </array>\n'
       ;;
     # Saturday 08:00 and Sunday 08:00 — just after the account's weekly Codex
-    # usage reset (Sat 7:09 AM local), so the dream harvest (now a codex job)
+    # usage reset (Sat 7:09 AM local), so the session retro (now a codex job)
     # starts the fresh week's budget. Sunday is the retry if Saturday's machine
     # was asleep; the prompt's ISO-week GATE skips it if Saturday already ran.
     weekly-sat-sun-08-00)

@@ -110,11 +110,15 @@ Assumption D — cerebruh raw source ceiling (75k tokens per sub-wiki)
 
 Assumption E — "dreaming" is still a custom job, not a native feature
   Current choice: memory maintenance is implemented as one custom c4po job and
-  its paired slash command — `c4po-dream` / `/dream` (harvest durable lessons
-  from sessions into proposed rules, AGENTS.md edits, skills, and cerebruh ingest
-  candidates). (A companion `c4po-consolidate-memory` job was decommissioned
-  2026-07-14 after its underlying built-in skill disappeared from the CLI.)
-  The dream job exists because Claude Code and Claude Desktop have no
+  the multi-session scope of a workspace slash command — `c4po-retro` /
+  `/retro sessions` (harvest durable lessons from sessions into proposed rules,
+  AGENTS.md edits, skills, and cerebruh ingest candidates). Renamed from
+  `c4po-dream` / `/dream` on 2026-08-01 to free the name ahead of Anthropic's
+  native `/dream`, and folded into the existing single-session `/retro` rather
+  than keeping a second command. (A companion `c4po-consolidate-memory` job was
+  decommissioned 2026-07-14 after its underlying built-in skill disappeared from
+  the CLI.)
+  The job exists because Claude Code and Claude Desktop have no
   built-in "dreaming" / memory-maintenance feature today; the only first-party
   "dreams" capability lives in Claude Managed Agents, which this setup doesn't use.
   This assumption is ephemeral by design — Anthropic is expected to add native
@@ -128,8 +132,10 @@ Assumption E — "dreaming" is still a custom job, not a native feature
   - UPDATE if a native feature now does the harvesting, so the custom job and
     command can be retired or migrated onto it.
   Where to update if flagged: the prompt
-  ${BORG_ROOT}/c4po/.claude/scheduled/c4po-dream.prompt; the paired command under
-  ${BORG_ROOT}/c4po/.claude/commands/; the TASKS rows in
+  ${BORG_ROOT}/c4po/.claude/scheduled/c4po-retro.prompt; the Multi-session scope
+  section of ${BORG_ROOT}/.claude/commands/retro.md (retiring the job means
+  removing that section and its dispatch, not the whole command — the
+  single-session retro stands on its own); the TASKS rows in
   ${BORG_ROOT}/.bin/install-scheduled-tasks.sh and the `com.theborg.*` plists; and
   the scheduled-jobs + slash-command listings in ${BORG_ROOT}/README.md.
 
@@ -290,8 +296,8 @@ pointer above).
 
   Assumption E (native dreaming): {STILL VALID|RECONSIDER|UPDATE}
     {one-line reason if not STILL VALID — name the native feature that
-     supersedes c4po-dream/`/dream`}
-    Where to update: {the superseded .prompt(s) + command(s); install-scheduled-tasks.sh TASKS rows + plists; README.md}
+     supersedes c4po-retro/`/retro sessions`}
+    Where to update: {the superseded .prompt(s) + the Multi-session scope section of .claude/commands/retro.md; install-scheduled-tasks.sh TASKS rows + plists; README.md}
 
   Assumption F (default model): {STILL VALID|RECONSIDER|UPDATE}
     {one-line reason if not STILL VALID — the value actually found in

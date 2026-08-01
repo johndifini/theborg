@@ -32,12 +32,12 @@ if [[ -f "$HOME/.zshenv" ]]; then
   set -u
 fi
 
-# Per-task CLI. The backlog burndown and the weekly dream harvest both run on
+# Per-task CLI. The backlog burndown and the weekly session retro both run on
 # Codex (spending the OpenAI weekly budget), keeping them off Claude's shared
 # 5-hour/weekly limits; every other task runs on Claude.
 CLI=claude
 case "$TASK_NAME" in
-  c4po-backlog-burndown|c4po-dream) CLI=codex ;;
+  c4po-backlog-burndown|c4po-retro) CLI=codex ;;
 esac
 
 if [[ "$CLI" == codex ]]; then
@@ -128,7 +128,7 @@ MODEL=opus
 
 # Per-task extra CLI args (claude and codex both accept --add-dir). The backlog
 # burndown edits files across the whole workspace (root BACKLOG.md, sibling
-# agents, the git-ignored repos/*); the dream harvest stages into the sibling
+# agents, the git-ignored repos/*); the session retro stages into the sibling
 # cerebruh/ingest/ and pipes to .bin/notify-email.sh. Neither stays inside its
 # own agent dir, so both get the workspace root as a writable root (needed for
 # codex's workspace-write sandbox, which otherwise confines writes to the cwd).
@@ -136,7 +136,7 @@ MODEL=opus
 # EXTRA_ARGS via the .conf sidecar sourced below.
 EXTRA_ARGS=()
 case "$TASK_NAME" in
-  c4po-backlog-burndown|c4po-dream) EXTRA_ARGS+=(--add-dir "$BORG_ROOT") ;;
+  c4po-backlog-burndown|c4po-retro) EXTRA_ARGS+=(--add-dir "$BORG_ROOT") ;;
 esac
 
 # Per-task report file. Most tasks email their own results from inside the
