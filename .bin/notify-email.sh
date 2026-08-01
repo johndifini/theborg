@@ -10,8 +10,15 @@
 #   agent   — c4po | mrs-beast | warren-bot-fett (labels the From line + subject)
 #   subject — optional; defaults to "[Borg/<agent>] notification"
 #
-# Credentials come from the workspace root .env — the Borg's single
-# consolidated env file ($BORG_ROOT/.env, chmod 600, gitignored):
+# Credentials come from the Borg's single consolidated env file (chmod 600).
+# It lives at ~/.borg-secrets/.env, OUTSIDE the workspace, because ~/theborg is
+# a Google Drive mirror root — a secret stored under it uploads to the cloud in
+# plaintext, and a Drive-side delete propagates down and removes it locally.
+# Resolution order: $BORG_ENV_FILE, then ~/.borg-secrets/.env, then the legacy
+# $BORG_ROOT/.env. The legacy path may be a symlink to the real file, but
+# nothing here depends on that symlink existing (it has been deleted once, by
+# a Drive-side cleanup, silently breaking every scheduled notification).
+# Keys:
 #   EMAIL_SMTP_USER  — Gmail address used to authenticate (e.g. selfaware97@gmail.com)
 #   EMAIL_SMTP_PASS  — a Gmail *App Password* (not the account password; needs 2FA)
 #   EMAIL_FROM       — From address (defaults to EMAIL_SMTP_USER)
@@ -29,8 +36,19 @@ AGENT="${1:?usage: notify-email.sh <agent> [subject] < body}"
 SUBJECT="${2:-[Borg/$AGENT] notification}"
 
 # Workspace root = parent of this script's .bin/ dir; BORG_ROOT overrides.
-ENV_FILE="${BORG_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}/.env"
-[[ -f "$ENV_FILE" ]] || { echo "notify-email: no env file at $ENV_FILE" >&2; exit 1; }
+BORG_ROOT_DIR="${BORG_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+
+# Find the env file (see header for why the workspace copy is not authoritative).
+ENV_FILE="${BORG_ENV_FILE:-}"
+if [[ -z "$ENV_FILE" ]]; then
+  for _cand in "$HOME/.borg-secrets/.env" "$BORG_ROOT_DIR/.env"; do
+    if [[ -f "$_cand" ]]; then ENV_FILE="$_cand"; break; fi
+  done
+fi
+[[ -n "$ENV_FILE" && -f "$ENV_FILE" ]] || {
+  echo "notify-email: no env file found (checked \$BORG_ENV_FILE, $HOME/.borg-secrets/.env, $BORG_ROOT_DIR/.env)" >&2
+  exit 1
+}
 
 # Parse KEY=VALUE rather than sourcing: a secret with a space or shell
 # metacharacter must never be executed as code. Comment/blank lines (no match)

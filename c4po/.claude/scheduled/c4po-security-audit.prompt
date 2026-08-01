@@ -8,6 +8,11 @@ Run the /security-review skill against the current state of ~/theborg. Specifica
   gitignored (`git check-ignore .env`), and no other filled-in .env / secret
   file may exist elsewhere in the workspace
 - any new MCP servers added since last audit
+- `${BORG_ROOT}/tmp/notify-failures.log` — the sentinel `run-scheduled-task.sh`
+  writes when `notify-email.sh` fails. Email is the only outbound channel, so
+  entries here are notifications the user never received (including failure
+  alerts). Report any entry newer than the last audit as a finding, then note
+  it was surfaced. Absent or empty file = nothing to report.
 - the independent repos under ~/theborg/repos/ (git-ignored — enumerate the
   filesystem, not git status; e.g. repos/waiq): each repo's .claude/settings*.json
   and the hooks those settings configure, its .claude/commands/ and skills for

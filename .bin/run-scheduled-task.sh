@@ -213,6 +213,26 @@ if [[ "$CLI" == codex ]]; then
   [[ -n "$CODEX_SESSION" ]] && export BORG_RESUME_CMD="codex resume $CODEX_SESSION"
 fi
 
+# notify-email.sh failing is a silent-outage class of bug: email is the ONLY
+# outbound channel, so a failure here means the user learns nothing — including
+# that a task failed. (This happened 2026-08-01: the workspace .env symlink was
+# removed by a Drive-side delete and every notification would have vanished into
+# a log line.) Escalate to every channel that does NOT depend on email: the task
+# log, the macOS unified log, a desktop notification, and a sentinel file a later
+# run or the daily security audit can surface. All guarded — a broken escalation
+# must never take down the run itself.
+notify_failed() {
+  local what="$1"
+  local msg="notify-email.sh FAILED to send $what for $TASK_NAME"
+  echo "$msg" >> "$LOG_FILE" 2>&1 || true
+  logger -t borg-notify "$msg" 2>/dev/null || true
+  mkdir -p "$BORG_ROOT/tmp" 2>/dev/null || true
+  printf '%s\t%s\t%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$TASK_NAME" "$what" \
+    >> "$BORG_ROOT/tmp/notify-failures.log" 2>/dev/null || true
+  osascript -e "display notification \"$msg\" with title \"Borg: notification channel is DOWN\"" \
+    >/dev/null 2>&1 || true
+}
+
 # On any non-zero exit, email the user. A scheduled run is fired once by launchd
 # (no KeepAlive, no retry loop), so a failure means this run's work is dropped
 # until the next scheduled fire — including usage-limit misses, which do NOT
@@ -235,14 +255,14 @@ if [[ $STATUS -ne 0 ]]; then
     echo "Last lines of the log:"
     echo "$LOG_TAIL"
   } | "$BORG_ROOT/.bin/notify-email.sh" "$AGENT_NAME" "$SUBJECT" \
-    || echo "notify-email.sh failed to send failure alert for $TASK_NAME" >> "$LOG_FILE" 2>&1
+    || notify_failed "failure alert"
 fi
 
 # Report tasks email their report on success (they are read-only sessions that
 # cannot pipe to notify-email.sh themselves; see REPORT_FILE above).
 if [[ $STATUS -eq 0 && -n "$REPORT_FILE" ]]; then
   "$BORG_ROOT/.bin/notify-email.sh" "$AGENT_NAME" "[Borg/$AGENT_NAME] $TASK_NAME — $(date +%Y-%m-%d)" < "$REPORT_FILE" \
-    || echo "notify-email.sh failed to send report for $TASK_NAME" >> "$LOG_FILE" 2>&1
+    || notify_failed "report"
 fi
 
 # Re-exit with the task's own code so `launchctl list` reflects reality.
