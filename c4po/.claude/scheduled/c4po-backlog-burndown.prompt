@@ -1,4 +1,4 @@
-Weekly backlog burndown: in the ~10 hours before the account's weekly Codex (ChatGPT plan) usage reset, spend the remaining credits implementing backlog items across The Borg. The job fires twice (Fri 21:09 and Sat 02:19) because Codex's rolling 5-hour session limit caps what one run can burn: the first run typically dies at the session limit, and the second starts with a fresh session window and resumes the same plan.
+Weekly backlog burndown: in the ~10 hours before the account's weekly Codex (ChatGPT plan) usage reset, spend the remaining credits implementing backlog items across The Borg. The job fires twice because Codex's rolling 5-hour session limit caps what one run can burn: the first run typically dies at the session limit, and the second starts with a fresh session window and resumes the same plan. The fire times themselves live in `.bin/install-scheduled-tasks.sh` and are deliberately not repeated here — a schedule copied into a prompt drifts silently the moment the job is rescheduled.
 
 This job runs headless via `codex exec` from `${BORG_ROOT}/c4po` with the workspace root added as a writable working directory (see `.bin/run-scheduled-task.sh`). It is EXPECTED to die mid-run when credits run out — every phase therefore leaves durable state (commits, checked boxes) before moving on, and the plan email goes out before implementation starts.
 
@@ -11,7 +11,17 @@ Determine the current ISO week with `date +%G-W%V` and read `${BORG_ROOT}/c4po/.
 - `week` equals the current ISO week and the plan has no unchecked actionable items (or the plan file is missing) → stop and output nothing; the week's plan is spent.
 
 WINDOW — abort if fired outside the pre-reset window.
-The account's weekly Codex usage reset is **Saturday 7:09 AM local** (from `/status` in Codex); launchd fires this job Friday 21:09 and again Saturday 02:19 (a few minutes past the first run's 5-hour session-limit boundary). The valid window spans midnight: if the current local time is not (Friday at or after 20:40) and not (Saturday before 06:40), stop and output nothing (launchd fires missed events on wake, so a sleeping Mac can delay a run) — running after the reset would burn the fresh week's budget, which defeats the purpose. If the account's reset time ever changes, update this paragraph and the `weekly-fri-21-09-sat-02-19` schedule in `.bin/install-scheduled-tasks.sh` together.
+Two facts drive this phase, and neither is a schedule:
+- **Weekly usage reset: Saturday 7:09 AM local.** An account fact, read from `/status` in Codex. This is the one timing value that belongs in this file.
+- **Rolling session limit: 5 hours.** A vendor fact, re-verified monthly by the assumptions audit (Assumption H).
+
+Derive the valid window from those two — do not pin fire times here, and do not read them from the scheduler at run time either; the bounds below hold regardless of when launchd actually fires:
+- earliest valid start = reset − (2 x session window) − 20min slack
+- latest valid start  = reset − 30min
+
+With today's values that is **Friday 20:49 through Saturday 06:39** (derived, not authoritative — recompute from the two facts above rather than trusting this line). The window spans midnight. If the current local time is outside it, stop and output nothing: launchd fires missed events on wake, so a sleeping Mac can delay a run past the reset, and running after the reset would burn the fresh week's budget, which defeats the purpose.
+
+Two session windows is the sizing rationale — the job is built to fill roughly two consecutive session windows before the reset, which is also why it fires twice. If the account's reset time changes, update the reset fact above and re-derive the schedule in `.bin/install-scheduled-tasks.sh` from it; the assumptions audit verifies the two stay consistent.
 
 PRIORITIZE — reorder every backlog in place.
 Enumerate the backlogs: `${BORG_ROOT}/BACKLOG.md` (workspace) and every `${BORG_ROOT}/repos/*/BACKLOG.md` (check the filesystem — `repos/` is git-ignored, so its children never appear in workspace git status). Reorder each file's open items by priority, preserving that file's own format and conventions (the workspace file is a flat checkbox list — reorder it highest-priority-first; a repo file with priority tiers keeps its tiers, moving items between tiers only when clearly warranted). Priority rubric: user pain in active use > bugs > security/correctness > features > nice-to-haves; weigh what unblocks other items. Do not rewrite item content. Commit each reordered file in its own repo (workspace file in the theborg repo, repo files in their repos).

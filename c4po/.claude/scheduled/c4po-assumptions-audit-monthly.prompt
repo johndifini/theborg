@@ -94,9 +94,15 @@ Assumption D — cerebruh raw source ceiling (75k tokens per sub-wiki)
   a different ceiling or a retrieval change makes the 75k number outdated, flag
   UPDATE with the new guidance.
   Then estimate the total raw-source token count of each sub-wiki: for every
-  `cerebruh/wikis/<sub-wiki>/raw/` directory, sum the sizes of its source files
-  and approximate tokens as bytes/4. List any sub-wiki whose estimate exceeds
-  the current ceiling along with its estimated token count, so an over-limit
+  `cerebruh/wikis/<sub-wiki>/raw/` directory, sum its source files and
+  approximate tokens as bytes/4 — but **only for text-native sources** (.md,
+  .txt, .html, .json). For PDFs, raw file size is not a token proxy: embedded
+  page images and fonts dominate the bytes and inflate the estimate several-fold
+  (measured 2.3x on this corpus in the 2026-08 audit). Extract the PDF's text
+  layer and use extracted-bytes/4 instead. If a PDF has no text layer (a pure
+  scan), say so and treat its token count as unknown rather than guessing from
+  file size. List any sub-wiki whose estimate exceeds the current ceiling along
+  with its estimated token count and which method produced it, so an over-limit
   sub-wiki can be proposed for a split.
   Where to update if flagged: the 75k-token ceiling lives in
   ${BORG_ROOT}/cerebruh/AGENTS.md (editable as lint scaffolding); over-limit
@@ -162,10 +168,19 @@ Assumption G — the LLM Wiki pattern is the best lightweight RAG for this setup
   corpora, but the right approach is ephemeral — it tracks corpus size, context
   window, and the maturity of lightweight retrieval tooling.
   Re-evaluate in two steps:
-  1. Estimate the workspace's data volume: sum the raw-source token counts
-     across all `cerebruh/wikis/<sub-wiki>/raw/` directories (reuse Assumption
-     D's bytes/4 estimate) and note the number of sub-wikis and pages. This is
-     the corpus the retrieval approach must serve.
+  1. Estimate the workspace's data volume, measuring what retrieval actually
+     loads. Raw sources are never read by the Question-Answering workflow, so
+     size the wiki side first and treat raw as background:
+     - Retrieval corpus: sum `cerebruh/wikis/<sub-wiki>/wiki/**.md` at bytes/4
+       (markdown, so bytes/4 is sound), and note the page count and mean page
+       size.
+     - Per-query fixed cost: the size of `wikis/index.md` plus the **largest**
+       sub-wiki `wiki/index.md`. Every query in that domain pays this before it
+       reads a single page, so it is the pattern's real pressure point — call it
+       out with the sub-wiki name.
+     - Background: total raw-source tokens across all `raw/` directories, reusing
+       Assumption D's per-format estimates (text-native bytes/4, PDFs via text
+       extraction).
   2. Use WebSearch to check whether a lightweight RAG approach has become a
      clearly better fit at this data volume (search terms like "lightweight RAG
      vs full context 2026", "LLM wiki pattern vs vector search", "Claude Code
@@ -187,26 +202,51 @@ Assumption G — the LLM Wiki pattern is the best lightweight RAG for this setup
   may also need updating. Note that any structural change to cerebruh itself is
   made through cerebruh's own workflow, not here.
 
-Assumption H — the Claude session limit is a 5-hour window
-  Current assumption: interactive/headless usage is capped per rolling session
-  window of **5 hours** starting from the window's first message. The backlog
-  burndown's twin fire times are derived from it: Wed 00:59 and 06:09, spaced
-  window+10min apart so the second run starts just past the first run's
-  session-limit boundary, with the second placed at (weekly reset 10:59) −
-  window + 10min slack. If the window length changes, those fire times are
-  silently wrong — the second run either lands still-limited (window grew) or
-  wastes burnable time (window shrank).
-  Check: use WebSearch (anthropic.com, docs.claude.com, support.claude.com,
-  plus community reports; search terms like "Claude usage limits 5-hour
-  session window", plus the current year) to confirm the session window is
-  still 5 hours. Flag UPDATE if it changed — give the new length and the
-  recomputed fire times (second = reset − window + 10min; first = second −
-  window − 10min).
-  Where to update if flagged: the `weekly-wed-00-59-06-09` schedule id in
-  ${BORG_ROOT}/.bin/install-scheduled-tasks.sh (then re-run it with `--load`);
-  the header and WINDOW phase of
-  ${BORG_ROOT}/c4po/.claude/scheduled/c4po-backlog-burndown.prompt; the
-  burndown row in ${BORG_ROOT}/README.md; and this assumption's pinned value.
+Assumption H — the rolling session-limit window is 5 hours
+  The only value pinned here is the **5-hour** rolling session window — usage is
+  capped per window starting from the window's first message. That is a vendor
+  fact and the actual subject of this assumption. It must hold for whichever
+  vendor drives the backlog burndown (today `codex exec` against a ChatGPT plan;
+  the 5-hour rolling limit applies to both Anthropic and OpenAI plans).
+
+  **Do not pin schedule ids, fire times, or reset times in this file.** They live
+  in the scheduler and drift out of sync the moment a job is rescheduled. Read
+  them at run time instead:
+  1. Schedule id + fire times — from ${BORG_ROOT}/.bin/install-scheduled-tasks.sh:
+     find the TASKS row whose task name is `c4po-backlog-burndown` to get its
+     schedule id, then read that id's `cal_entry` lines in the schedule case
+     block to get the two fire times. This is the source of truth.
+  2. Weekly usage reset — from the WINDOW phase of
+     ${BORG_ROOT}/c4po/.claude/scheduled/c4po-backlog-burndown.prompt. The reset
+     is an account fact (read from the vendor's `/status`), not a scheduler fact,
+     so it is legitimately recorded there.
+  If either read fails (task row absent, schedule id has no case branch, WINDOW
+  phase no longer states a reset), flag RECONSIDER and say which read failed —
+  a broken read means the burndown's timing can no longer be verified at all.
+
+  Check, in order:
+  1. Use WebSearch (anthropic.com, docs.claude.com, support.claude.com, and the
+     OpenAI/ChatGPT plan docs, plus community reports; search terms like "Claude
+     usage limits 5-hour session window" and "ChatGPT Codex usage limit rolling
+     window", plus the current year) to confirm the window is still 5 hours.
+  2. Verify the fire times you read satisfy the invariant under the confirmed
+     window length:
+       second fire = reset − window + 10min slack
+       first fire  = second fire − window − 10min
+     The twin firing exists because one run's burn is capped by the session
+     limit: the second must start just past the first's session-limit boundary
+     and still land before the reset.
+  Flag UPDATE if the window length changed (give the new length and the
+  recomputed fire times) OR if the scheduled fire times no longer satisfy the
+  invariant (give both the scheduled and the correct times). A drifted second
+  run either lands still-limited (window grew) or wastes burnable time (window
+  shrank).
+  Where to update if flagged: the burndown's schedule id in
+  ${BORG_ROOT}/.bin/install-scheduled-tasks.sh — quote the id you actually read,
+  do not assume a previous run's — then re-run it with `--load`; the WINDOW phase
+  of ${BORG_ROOT}/c4po/.claude/scheduled/c4po-backlog-burndown.prompt; and the
+  burndown row in ${BORG_ROOT}/README.md. Only a changed **window length** is
+  edited back into this file.
 
 STEP 3: Always pipe a report into
 `${BORG_ROOT}/.bin/notify-email.sh c4po "Borg assumptions audit — {YYYY-MM-DD} — {N} flagged"`
@@ -243,7 +283,7 @@ pointer above).
   Assumption D (raw source ceiling): {STILL VALID|RECONSIDER|UPDATE}
     {one-line reason if not STILL VALID}
     Over-limit sub-wikis:
-      {sub-wiki}: ~{token_estimate} tokens
+      {sub-wiki}: ~{token_estimate} tokens ({bytes/4|PDF text extraction|mixed})
       ...
     (omit the "Over-limit sub-wikis" block if none)
     Where to update: {75k ceiling in ${BORG_ROOT}/cerebruh/AGENTS.md}
@@ -259,14 +299,18 @@ pointer above).
     Where to update: {`MODEL` default in ${BORG_ROOT}/.bin/run-scheduled-task.sh; this assumption's pinned value in the .prompt}
 
   Assumption G (LLM Wiki RAG fit): {STILL VALID|RECONSIDER|UPDATE}
-    {one-line reason if not STILL VALID — estimated corpus size and the
+    Corpus: {P} pages / ~{T} tokens; per-query fixed cost ~{F} tokens
+    (largest index: {sub-wiki})
+    {one-line reason if not STILL VALID — the pressure point, and the
      alternative retrieval approach, if any, that now fits better}
     Where to update: {cerebruh/AGENTS.md retrieval workflow; cerebruh routing in ${BORG_ROOT}/AGENTS.md — changes to cerebruh made via its own workflow}
 
-  Assumption H (5-hour session limit): {STILL VALID|RECONSIDER|UPDATE}
-    {one-line reason if not STILL VALID — the new window length and the
-     recomputed burndown fire times}
-    Where to update: {weekly-wed-00-59-06-09 in .bin/install-scheduled-tasks.sh (+ --load); c4po-backlog-burndown.prompt header + WINDOW; README.md; this assumption's pinned value}
+  Assumption H (session-limit window): {STILL VALID|RECONSIDER|UPDATE}
+    Schedule read: {schedule id} fires {time 1} / {time 2}; reset {time}; window
+    {N}h -> invariant {holds|violated}
+    {one-line reason if not STILL VALID — the new window length and/or the
+     recomputed fire times}
+    Where to update: {the schedule id you read, in .bin/install-scheduled-tasks.sh (+ --load); c4po-backlog-burndown.prompt WINDOW; README.md; window length in this .prompt}
 
 Omit any assumption block that is STILL VALID with nothing to add. If every
 assumption is STILL VALID and every sub-wiki is within the raw source ceiling,
