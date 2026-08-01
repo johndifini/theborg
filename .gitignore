@@ -56,6 +56,13 @@ Thumbs.db
 #**/.obsidian/cache
 #**/.obsidian/plugins/*/data.json
 
+# ── vinny (privileged legal / contract material) ─────────────
+# Entire directory is confidential: executed agreements, opposing
+# counsel's drafts, and negotiation strategy. Nothing here is tracked —
+# not even a .gitkeep, since the matter's existence is itself sensitive.
+# Its AGENTS.md / CLAUDE.md are local-only agent context by design.
+vinny/
+
 # ── warren-bot-fett (financial / portfolio) ──────────────────
 warren-bot-fett/PORTFOLIO.md
 
