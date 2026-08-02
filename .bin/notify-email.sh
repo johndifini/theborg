@@ -1,5 +1,12 @@
 #!/bin/bash
-# Send an email notification as an agent, reading the message body from stdin.
+# Send a multipart plain-text + HTML notification, reading Markdown from stdin.
+#
+# HTML is the default for every caller. The bundled Python 3 renderer has no
+# third-party dependencies and supports the scheduled jobs' Markdown subset:
+# headings, ordered/unordered lists, pipe tables, links, emphasis, inline and
+# fenced/indented code, block quotes, rules, and paragraphs. It escapes raw
+# HTML; nested lists, images, footnotes, task lists, and other extensions remain
+# readable text. The original body is always the first (text/plain) alternative.
 #
 # Outbound-only by design: no MCP server. Scheduled model tasks run via
 # run-scheduled-task.sh with --strict-mcp-config and < /dev/null, while
@@ -29,7 +36,8 @@
 # Resume footer: Codex exposes the exact current session as $CODEX_THREAD_ID;
 # prefer it over the runner's pre-launch `codex resume --last` fallback. For
 # Claude-driven runs, $BORG_SESSION_ID is pinned before launch. Either tells the
-# user how to continue the exact headless session.
+# user how to continue the exact headless session. It remains unchanged in the
+# plain part and becomes a muted, separated footer with a code block in HTML.
 set -euo pipefail
 
 AGENT="${1:?usage: notify-email.sh <agent> [subject] < body}"
@@ -90,14 +98,20 @@ if [[ -n "${CODEX_THREAD_ID:-}" || -n "${BORG_RESUME_CMD:-}" || -n "${BORG_SESSI
     cd $AGENT_DIR && $RESUME_CMD"
 fi
 
-# SMTP wants CRLF line endings throughout the message.
-BODY_CRLF="${BODY//$'\n'/$'\r\n'}"
-DATE_HDR="$(date -R 2>/dev/null || date)"
+PYTHON_BIN="${BORG_PYTHON_BIN:-python3}"
+command -v "$PYTHON_BIN" >/dev/null 2>&1 || {
+  echo "notify-email: Python 3 not found (set \$BORG_PYTHON_BIN to override)" >&2
+  exit 127
+}
+RENDERER="$BORG_ROOT_DIR/.bin/render-notification-email.py"
+[[ -f "$RENDERER" ]] || { echo "notify-email: renderer not found: $RENDERER" >&2; exit 1; }
 
-MSG="$(printf 'From: Borg %s <%s>\r\nTo: %s\r\nSubject: %s\r\nDate: %s\r\nContent-Type: text/plain; charset=UTF-8\r\n\r\n%s\r\n' \
-  "$AGENT" "$EMAIL_FROM" "$EMAIL_TO" "$SUBJECT" "$DATE_HDR" "$BODY_CRLF")"
-
-printf '%s' "$MSG" | curl -fsS --ssl-reqd \
+printf '%s' "$BODY" | "$PYTHON_BIN" "$RENDERER" \
+  --agent "$AGENT" \
+  --from-address "$EMAIL_FROM" \
+  --to-address "$EMAIL_TO" \
+  --subject "$SUBJECT" \
+  | curl -fsS --ssl-reqd \
   "smtp://$SMTP_HOST:$SMTP_PORT" \
   --mail-from "$EMAIL_FROM" \
   --mail-rcpt "$EMAIL_TO" \
