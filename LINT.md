@@ -48,7 +48,7 @@ enforcement (see `c4po/AGENTS.md`).
 ### Slash commands
 - Markdown files under the workspace or a live agent's `.claude/commands/` are the canonical command sources for both harnesses. Claude Code invokes them as `/name`; `.bin/sync-codex-prompts.sh` adapts them into Codex skills invoked as `$name` (or selected through `/skills`).
 - After adding, renaming, or removing a command, run `.bin/sync-codex-prompts.sh`; `.bin/sync-codex-prompts.sh --check` must pass. Unique basenames keep their name; collisions are scope-prefixed. The bridge never overwrites an unrelated skill.
-- The bridge writes generated `<name>/SKILL.md` files under `~/.codex/skills/`, keeps a manifest with content hashes, and never overwrites unrelated or locally modified skills. It does not manage or remove legacy `~/.codex/prompts/` entries; those remain available for manual cleanup or rollback.
+- The bridge writes generated `<name>/SKILL.md` files under `~/.codex/skills/`, keeps a manifest with content hashes, and never overwrites unrelated or locally modified skills. It does not manage `~/.codex/prompts/` at all — that surface is gone in Codex 0.145.0, and the symlinks the old bridge left there were removed by hand on 2026-08-02.
 - Command bodies must work in either harness. Harness-specific frontmatter may refine behavior but cannot be required for correctness; the generated Codex skill keeps `description:` and adapts `$ARGUMENTS`, but omits Claude-only metadata such as `model:`, `argument-hint:`, and `private:`.
 - In Claude command frontmatter, `model:` uses a stable Claude Code alias (`haiku`, `sonnet`, `opus`, or `fable`), never a dated/full model ID. Command bodies must still work when another harness ignores that metadata.
 ### Public-repository hygiene
