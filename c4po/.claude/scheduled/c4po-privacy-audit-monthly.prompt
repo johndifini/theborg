@@ -1,0 +1,99 @@
+Monthly private-information audit of the ClaudeOS workspace at ${BORG_ROOT}.
+
+This is a public-repository hygiene check, not a credential audit. The daily
+`c4po-security-audit` owns API keys, tokens, passwords, `.env` files, secret
+files, and credential permissions. Do not duplicate those checks here.
+
+STEP 1: This job is fired by launchd on calendar days 1–5 of each month, but
+should only execute once per month. Stop and output nothing if
+`${BORG_ROOT}/c4po/.claude/scheduled/state/c4po-privacy-audit-monthly.json`
+exists and its `date` field is in the current calendar month.
+
+The scheduler retries on subsequent days if an earlier attempt was missed
+(e.g., laptop asleep).
+
+STEP 2: From `${BORG_ROOT}`, audit private identifying information in
+git-tracked files only. `git ls-files` is the complete and exclusive file
+universe. Do not inspect untracked or ignored files, do not broaden the scan
+with `find`, and do not infer that an ignored file is a finding. Read the
+tracked working-copy contents of those paths. Skip binary content after
+confirming the path came from `git ls-files`.
+
+Use a cheap candidate pass followed by contextual judgment; do not report a
+regex match without deciding that it identifies John, another real person, a
+real machine, or a real account. Look for:
+- real hostnames, machine names, LAN names, and Bonjour (`*.local`) names;
+- tailnet IPv4 addresses in `100.64.0.0/10`;
+- real usernames and public/private account handles;
+- absolute user-home paths such as `/Users/<name>`, `/home/<name>`, and
+  `C:\\Users\\<name>`;
+- real email addresses and phone numbers;
+- account, customer, member, subscriber, policy, portfolio, wallet, or similar
+  identifiers when their context connects them to a real person or account.
+
+Examples and obvious templates are not findings. In particular,
+`you@gmail.com` in `.env.example` and `selfaware97@gmail.com` in a comment in
+`.bin/notify-email.sh` are placeholders, not real addresses. Generic names in
+documentation, fixture data that is clearly fictional, commit hashes, dates,
+ordinary version numbers, and launchd labels are not account identifiers.
+
+Then perform a model judgment pass for personal medical or financial details.
+Keep this pass deliberately narrow: read only tracked `bones/AGENTS.md`,
+`bones/CLAUDE.md`, and every tracked file under `warren-bot-fett/`. Decide from
+meaning and context; do not reduce this class to keywords. Private diagnoses,
+treatments, patient facts, holdings, balances, account details, and individual
+financial circumstances are findings. Generic operating instructions,
+sanitized examples, public market facts, portfolio templates, allocation
+methodology, and model output with no private person/account connection are not.
+
+Allowlist — these exact known occurrences are acceptable; the reason is part
+of each entry. Do not treat an entire file as exempt, and report any other
+identifier in it:
+- `mrs-beast/USER.md`: the values `John`, `john-difini`, `JohnDiFini`, and
+  `johndifini` (including the listed profile/site URLs) are load-bearing because
+  mrs-beast writes public social copy as John.
+- `mrs-beast/.claude/scheduled/mrs-beast-social-media-drafts.prompt`: the
+  `johndifini` repository-owner occurrences are load-bearing because mrs-beast
+  links public social copy and its sources as John.
+
+Control-text exclusion, not a durable allowlist: while the source backlog item
+for this audit still exists, do not report the absolute John home path or other
+identifiers quoted solely inside that item's own description. They document the
+check itself and disappear when the parent session closes the item. This does
+not exempt other content in `BACKLOG.md`.
+
+Known limitations: this cannot catch an identifier class nobody thought to
+look for, and it cannot catch anything in an untracked or ignored file. Most
+genuinely sensitive workspace material is untracked or ignored by design.
+
+Collect each finding as `{file, line, class, matched_text, context,
+suggested_remediation}`. Remediation guidance must use the workspace's existing
+privacy conventions: move machine-specific instructions into a directory's
+gitignored `.claude/rules/*.local.md` or `.claude/settings.local.json`; keep
+secrets/local configuration in ignored `.env*`; keep portfolio data in the
+ignored `warren-bot-fett/PORTFOLIO.md`; and add a directory-level gitignore when
+an entire private area should remain untracked, as `vinny/` does. Do not suggest
+parameterizing tracked text with `${BORG_ROOT}`, `$USER`, or similar variables.
+
+STEP 3: If there is at least one finding, pipe a Markdown report into
+`${BORG_ROOT}/.bin/notify-email.sh c4po "Borg privacy audit — {YYYY-MM-DD} — {total} finding(s)"`
+(reads from stdin), then STOP. Touch no files, open no backlog item, and attempt
+no remediation. John decides whether each identifier is acceptable. Format:
+- Header: `Borg privacy audit — {YYYY-MM-DD} — {total} finding(s)`
+- One bullet per finding: `<file>:<line> — <class>: <matched_text> — <context>
+  → <suggested_remediation>`
+- End with the two known limitations from STEP 2.
+
+A finding may mention that the same string also appears in git history if that
+context is useful, but history is outside remediation scope. Never propose or
+perform a git history rewrite.
+
+STEP 4: If there are no findings, pipe this Markdown body into
+`${BORG_ROOT}/.bin/notify-email.sh c4po "Borg privacy audit — {YYYY-MM-DD} — 0 finding(s)"`:
+
+`All clear — no findings. The two documented mrs-beast identity occurrences are allowlisted.`
+
+STEP 5: After the clean report only, create the state directory if needed and
+write `${BORG_ROOT}/c4po/.claude/scheduled/state/c4po-privacy-audit-monthly.json`
+with `{"date": "YYYY-MM-DD", "findings": 0}` so the run is not repeated this
+month. A findings run must never reach this step.

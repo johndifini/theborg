@@ -35,6 +35,7 @@ TASKS=(
   "c4po|c4po-security-audit|daily-10-00|prompt"
   "c4po|c4po-lint-audit-monthly|month-first5-09-00|prompt"
   "c4po|c4po-assumptions-audit-monthly|month-first5-09-00|prompt"
+  "c4po|c4po-privacy-audit-monthly|month-first5-11-00|prompt"
   "c4po|c4po-retro|weekly-sat-sun-08-00|prompt"
   "c4po|c4po-backlog-burndown|weekly-fri-21-09-sat-02-19|prompt"
   "c4po|c4po-cli-update|weekly-sun-06-00|cli-update"
@@ -87,6 +88,11 @@ schedule_xml() {
     month-first5-09-00)
       printf '    <key>StartCalendarInterval</key>\n    <array>\n'
       for d in 1 2 3 4 5; do cal_entry "Day=$d" "Hour=9" "Minute=0"; done
+      printf '    </array>\n'
+      ;;
+    month-first5-11-00)
+      printf '    <key>StartCalendarInterval</key>\n    <array>\n'
+      for d in 1 2 3 4 5; do cal_entry "Day=$d" "Hour=11" "Minute=0"; done
       printf '    </array>\n'
       ;;
     weekly-sun-wed-16-00)
