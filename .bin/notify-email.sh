@@ -1,10 +1,10 @@
 #!/bin/bash
 # Send an email notification as an agent, reading the message body from stdin.
 #
-# Outbound-only by design: no MCP server. Scheduled
-# tasks run via run-scheduled-task.sh with --strict-mcp-config and < /dev/null,
-# so they have no Gmail MCP tool and must not boot one. This script sends over
-# Gmail SMTP via curl — no server, nothing to clobber.
+# Outbound-only by design: no MCP server. Scheduled model tasks run via
+# run-scheduled-task.sh with --strict-mcp-config and < /dev/null, while
+# deterministic shell maintenance invokes this directly. This script sends
+# over Gmail SMTP via curl — no server, nothing to clobber.
 #
 # Usage: notify-email.sh <agent> [subject] < body
 #   agent   — c4po | mrs-beast | warren-bot-fett (labels the From line + subject)

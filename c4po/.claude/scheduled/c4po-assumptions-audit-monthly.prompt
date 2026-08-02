@@ -54,8 +54,9 @@ Assumption A — canonical instruction-file size ceiling
   the ceiling number; the specific AGENTS.md file(s) named for content moves.
 
 Assumption B — launchd is the right scheduler
-  Current choice: macOS launchd, with prompts driven by
-  ${BORG_ROOT}/.bin/run-scheduled-task.sh.
+  Current choice: macOS launchd, with model prompts driven by
+  ${BORG_ROOT}/.bin/run-scheduled-task.sh and deterministic model-less
+  maintenance jobs using dedicated shell runners.
   Consider alternatives that may have matured: Claude Code's native scheduled
   tasks (the `schedule` skill, `/loop`, scheduled-tasks MCP, routine plugins),
   or other cron-like tools. Has any alternative become a clearly better fit
