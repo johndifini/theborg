@@ -46,9 +46,10 @@ enforcement (see `c4po/AGENTS.md`).
 - A server not listed in `c4po/MCP.md` is unapproved — remove it or add an entry.
 - Prefer the narrowest scope that works.
 ### Slash commands
-- Markdown files under the workspace or a live agent's `.claude/commands/` are the canonical command sources for both harnesses. Claude Code invokes them as `/name`; `.bin/sync-codex-prompts.sh` exposes them to Codex as `/prompts:name` because Codex reserves direct slash-command names.
-- After adding, renaming, or removing a command, run `.bin/sync-codex-prompts.sh`; `.bin/sync-codex-prompts.sh --check` must pass. Unique basenames keep their name; collisions are scope-prefixed. The bridge never overwrites an unrelated file in `~/.codex/prompts/`.
-- Command bodies must work in either harness. Harness-specific frontmatter may refine behavior but cannot be required for correctness; Codex ignores Claude-only metadata such as `model:` and `private:`.
+- Markdown files under the workspace or a live agent's `.claude/commands/` are the canonical command sources for both harnesses. Claude Code invokes them as `/name`; `.bin/sync-codex-prompts.sh` adapts them into Codex skills invoked as `$name` (or selected through `/skills`).
+- After adding, renaming, or removing a command, run `.bin/sync-codex-prompts.sh`; `.bin/sync-codex-prompts.sh --check` must pass. Unique basenames keep their name; collisions are scope-prefixed. The bridge never overwrites an unrelated skill.
+- The bridge writes generated `<name>/SKILL.md` files under `~/.codex/skills/`, keeps a manifest with content hashes, and never overwrites unrelated or locally modified skills. It does not manage or remove legacy `~/.codex/prompts/` entries; those remain available for manual cleanup or rollback.
+- Command bodies must work in either harness. Harness-specific frontmatter may refine behavior but cannot be required for correctness; the generated Codex skill keeps `description:` and adapts `$ARGUMENTS`, but omits Claude-only metadata such as `model:`, `argument-hint:`, and `private:`.
 - In Claude command frontmatter, `model:` uses a stable Claude Code alias (`haiku`, `sonnet`, `opus`, or `fable`), never a dated/full model ID. Command bodies must still work when another harness ignores that metadata.
 ### Public-repository hygiene
 - Treat every tracked file as public. Before committing, inspect added text for personal home-directory paths, hostnames, usernames, LAN/tailnet details, account identifiers, and private infrastructure instructions.

@@ -89,7 +89,7 @@ PROMPT_CONTENT=${PROMPT_CONTENT//\$\{BORG_ROOT\}/$BORG_ROOT}
 # overrides for session use — skip the once-per-period state gate, don't write
 # state, report to the session instead of emailing. Both harnesses surface those
 # commands to a headless run as invocable skills (claude: `.claude/commands/*`;
-# codex: the `/prompts:*` bridge), and the model will match one to the task it
+# codex: the `$name` skill bridge), and the model will match one to the task it
 # was just handed and follow its overrides instead of these instructions.
 # That is a SILENT failure — the run exits 0 having sent no email and written no
 # state, so the runner's failure-email path never fires and the next scheduled

@@ -69,15 +69,15 @@ Assumption B — launchd is the right scheduler
 Assumption C — Slash commands remain useful and unsuperseded
   Enumerate every live `*/.claude/commands/*.md` under ${BORG_ROOT}, excluding
   the inert bernard case study and generated/vendored directories. These files
-  are canonical for Claude Code; ${BORG_ROOT}/.bin/sync-codex-prompts.sh bridges
-  them into Codex's deprecated custom-prompt surface as `/prompts:name`.
+  are canonical for Claude Code; ${BORG_ROOT}/.bin/sync-codex-prompts.sh adapts
+  them into Codex skills invoked as `$name` or selected through `/skills`.
   For each command, decide whether it still earns its place or has been
   superseded by a built-in skill, plugin, or harness feature. Flag any
   individual command as RECONSIDER or UPDATE rather than the whole assumption,
   if some are fine and others aren't.
-  Also check whether Codex has replaced deprecated custom prompts with a
-  repository-shareable explicit command surface; if so, flag the bridge for
-  UPDATE. Do not recommend skills unless they preserve the workflows' explicit
+  Also check whether Codex has replaced or changed its skill authoring or
+  explicit-invocation surface; if so, flag the bridge for UPDATE. Do not
+  recommend another surface unless it preserves the workflows' explicit
   invocation semantics or that behavior change is justified.
   Where to update if flagged: the specific command file under
   `.claude/commands/`; if a command is retired, also its paired `.prompt` (for

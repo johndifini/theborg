@@ -61,9 +61,9 @@ For more info about each job, see `<agent>/.claude/scheduled/<label>.prompt`.
 
 ## Slash Commands
 
-Project-scoped command sources live in `.claude/commands/` (workspace-wide) or `<agent>/.claude/commands/` (agent-scoped, only visible to Claude Code from that agent's directory). Claude Code invokes them as `/name`. Run `.bin/sync-codex-prompts.sh` to expose the same files in Codex's global prompt namespace as `/prompts:name`, then restart Codex. Codex's custom-prompt surface is deprecated in favor of skills, but it is currently the only way to preserve explicit slash-style invocation; the monthly assumptions audit rechecks that tradeoff.
+Project-scoped command sources live in `.claude/commands/` (workspace-wide) or `<agent>/.claude/commands/` (agent-scoped, only visible to Claude Code from that agent's directory). Claude Code invokes them as `/name`. Run `.bin/sync-codex-prompts.sh` to adapt the same files into Codex skills, invoked as `$name` or selected through `/skills`.
 
-The bridge uses exact symlinks, keeps unique names, scope-prefixes collisions, and refuses to overwrite unrelated files in `~/.codex/prompts/`. Run `.bin/sync-codex-prompts.sh --check` to detect drift. Claude-only frontmatter is optional refinement: for example, the model aliases pin Claude Code but use the current model in Codex.
+The bridge generates `<name>/SKILL.md` under `~/.codex/skills/`, keeps unique names, scope-prefixes collisions, and refuses to overwrite unrelated or locally modified skills. It preserves each command's description and adapts `$ARGUMENTS`, while dropping Claude-only frontmatter such as `model:` and `argument-hint:`. It does not manage or remove legacy `~/.codex/prompts/` entries; those remain available for manual cleanup or rollback. Run `.bin/sync-codex-prompts.sh --check` to detect drift.
 
 Every Borg-agent scheduled task has a matching interactive command (named after the task, minus the agent prefix); repo-hosted tasks under `repos/*` are exempt (see `LINT.md` → Scope). Each delegates to the same `.prompt` the launchd job runs — no duplicated logic — applying only the overrides needed for interactive use: skip once-per-month state gates and state/data-file writes, and report to the session instead of email.
 
@@ -103,7 +103,7 @@ Before you make this your own:
 
 1. Clone the repo.
 1. Install the pre-commit hook: `git config core.hooksPath .githooks`
-1. Install Codex command links: `.bin/sync-codex-prompts.sh`, then restart Codex.
+1. Install Codex command skills: `.bin/sync-codex-prompts.sh`.
 1. Set up email notifications: `cp .env.example .env`, `chmod 600 .env`, then fill in a Gmail App Password (see the file's header).
 1. Install the scheduled tasks: `.bin/install-scheduled-tasks.sh --load` — generates the launchd plists from your checkout path and registers them.
 1. Read [SECURITY.md](./SECURITY.md) before your first commit — There’s a short forker checklist in there that may save you from accidentally publishing secrets, personal notes, API keys, or other spicy artifacts.
