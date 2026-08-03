@@ -68,9 +68,12 @@ warren-bot-fett/PORTFOLIO.md
 
 # ── mrs-beast (personal social identity) ─────────────────────
 mrs-beast/.claude/commands/ai-week-image-prompt.md
-mrs-beast/.claude/scheduled/mrs-beast-ai-week-image-prompt.prompt
+mrs-beast/.claude/scheduled/*-image-prompt.prompt
 mrs-beast/.claude/scheduled/last30days-raw/
-mrs-beast/.bin/install-personal-tasks.sh
+
+# Private scheduled-task tables contain local job identities that must never
+# enter the public repository.
+.private/scheduled-tasks/*.tasks
 
 # ── cerebruh (second-brain content) ──────────────────────────
 # Track structure + templates + the index, ignore actual notes.

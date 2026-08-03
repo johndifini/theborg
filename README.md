@@ -25,7 +25,7 @@ This repo is my personal AI workspace, shared in case the patterns, structure, o
 
 ## Scheduled Jobs
 
-Each agent runs background tasks via macOS launchd. Plists live in `~/Library/LaunchAgents/` under the `com.theborg.*` namespace. Model jobs are driven by `.bin/run-scheduled-task.sh`; the model-less CLI updater runs its deterministic `.bin/run-cli-update.sh` directly. Jobs log launchd output to `<agent>/.claude/scheduled/logs/launchd.{out,err}`. The plists embed absolute paths and aren't committed verbatim — regenerate them from your checkout with `.bin/install-scheduled-tasks.sh` (which holds the schedule table as the single source of truth; add `--load` to (re)register them with launchd).
+Each agent runs background tasks via macOS launchd. Plists live in `~/Library/LaunchAgents/` under the `com.theborg.*` namespace. Model jobs are driven by `.bin/run-scheduled-task.sh`; the model-less CLI updater runs its deterministic `.bin/run-cli-update.sh` directly. Jobs log launchd output to `<agent>/.claude/scheduled/logs/launchd.{out,err}`. The plists embed absolute paths and aren't committed verbatim — regenerate them from the registered task schedules with the single `.bin/install-scheduled-tasks.sh` generator (add `--load` to (re)register them with launchd).
 
 The independent repos under `repos/*` reuse this same framework without being tracked here: a repo registers a job by dropping a `<task>.conf` beside its `<task>.prompt` (a `SCHEDULE=` line plus any per-run overrides — model, extra CLI args, report mode), which the installer discovers from the filesystem and the runner sources at run time. Those repo-hosted jobs are documented in their own repo's README, not below.
 

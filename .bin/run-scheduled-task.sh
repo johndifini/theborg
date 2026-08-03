@@ -93,7 +93,7 @@ PROMPT_CONTENT=${PROMPT_CONTENT//\$\{BORG_ROOT\}/$BORG_ROOT}
 # was just handed and follow its overrides instead of these instructions.
 # That is a SILENT failure — the run exits 0 having sent no email and written no
 # state, so the runner's failure-email path never fires and the next scheduled
-# firing repeats the work. Observed on mrs-beast-ai-week-image-prompt 2026-07-22
+# firing repeats the work. Observed on a multi-day private task on 2026-07-22
 # and 2026-07-28. Prepended here rather than in each .prompt so new tasks are
 # covered automatically and the guard can't drift out of sync.
 PROMPT_CONTENT="You are a scheduled (headless) run of the task named \

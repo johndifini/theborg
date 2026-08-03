@@ -64,6 +64,16 @@ for conf in "$BORG_ROOT"/repos/*/.claude/scheduled/*.conf; do
   fi
   TASKS+=("$agent|$task|$SCHEDULE|prompt")
 done
+
+# Private task tables use the main table's row format but live in a gitignored
+# glob so local-only job names never enter the public repository. Keeping those
+# rows as data lets this installer remain the sole plist generator.
+for table in "$BORG_ROOT"/.private/scheduled-tasks/*.tasks; do
+  while IFS= read -r row || [[ -n "$row" ]]; do
+    [[ -z "$row" || "$row" == \#* ]] && continue
+    TASKS+=("$row")
+  done < "$table"
+done
 shopt -u nullglob
 
 # Emit one <dict> calendar entry. Args: Key=Value among Day/Weekday/Hour/Minute.
@@ -98,6 +108,11 @@ schedule_xml() {
     weekly-sun-wed-16-00)
       printf '    <key>StartCalendarInterval</key>\n    <array>\n'
       for w in 0 1 2 3; do cal_entry "Weekday=$w" "Hour=16" "Minute=0"; done
+      printf '    </array>\n'
+      ;;
+    weekly-tue-wed-17-30)
+      printf '    <key>StartCalendarInterval</key>\n    <array>\n'
+      for w in 2 3; do cal_entry "Weekday=$w" "Hour=17" "Minute=30"; done
       printf '    </array>\n'
       ;;
     weekly-mon-fri-09-00)
@@ -217,3 +232,22 @@ for row in "${TASKS[@]}"; do
       ;;
   esac
 done
+
+# Surface loaded com.theborg jobs that no current table would regenerate.
+# Reconciliation is deliberately advisory: installation never unloads or
+# removes an unaccounted-for job.
+loaded_jobs="$(launchctl list 2>/dev/null || true)"
+while read -r _pid _status label; do
+  [[ "$label" == com.theborg.* ]] || continue
+  accounted_for=false
+  for row in "${TASKS[@]}"; do
+    IFS='|' read -r _agent task _sched _kind <<< "$row"
+    if [[ "$label" == "com.theborg.$task" ]]; then
+      accounted_for=true
+      break
+    fi
+  done
+  if [[ "$accounted_for" == false ]]; then
+    echo "warning: loaded job has no task-table row: $label" >&2
+  fi
+done <<< "$loaded_jobs"
