@@ -67,7 +67,7 @@ vinny/
 warren-bot-fett/PORTFOLIO.md
 
 # ── mrs-beast (personal social identity) ─────────────────────
-mrs-beast/.claude/commands/ai-week-image-prompt.md
+mrs-beast/.claude/commands/*-image-prompt.md
 mrs-beast/.claude/scheduled/*-image-prompt.prompt
 mrs-beast/.claude/scheduled/last30days-raw/
 
