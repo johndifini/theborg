@@ -149,8 +149,11 @@ MODEL=opus
 #    an in-process app-server that writes there; without it every child exits
 #    with `failed to initialize in-process app-server client: Operation not
 #    permitted` before it ever reads its prompt. Verified 2026-08-01 that
-#    narrowing this to ~/.codex/app-server-control/ is NOT sufficient. Granted
-#    only to the burndown, the one task that spawns children.
+#    narrowing this to ~/.codex/app-server-control/ is NOT sufficient. The
+#    nested child deliberately uses --dangerously-bypass-approvals-and-sandbox:
+#    it cannot initialize a second macOS Seatbelt sandbox, and it remains inside
+#    this outer process tree's workspace-write boundary. Granted only to the
+#    burndown, the one task that spawns children.
 EXTRA_ARGS=()
 case "$TASK_NAME" in
   c4po-backlog-burndown|c4po-retro)
