@@ -6,7 +6,7 @@ set -uo pipefail
 
 parse_doctor_output() {
   local input_file="$1" known_file="$2" new_file="$3"
-  local finding reported_count=0 actual_count=0 saw_summary=0
+  local finding reported_count=0 actual_count=0 saw_summary=0 saw_clean_result=0
 
   : > "$known_file"
   : > "$new_file"
@@ -15,6 +15,11 @@ parse_doctor_output() {
     reported_count=$((reported_count + count))
     saw_summary=1
   done < <(sed -nE 's/^([0-9]+) (warning|error)s? found$/\1 \2/p' "$input_file")
+
+  # Claude Code 2.1.226 stopped printing a numeric warning summary when doctor
+  # is clean. It now emits this explicit success sentinel, even when a separate
+  # feature advisory (for example Remote Control auth scope) follows it.
+  grep -qxF 'No installation issues found.' "$input_file" && saw_clean_result=1
 
   while IFS= read -r finding; do
     actual_count=$((actual_count + 1))
@@ -25,14 +30,21 @@ parse_doctor_output() {
        [[ "$finding" == *"User interaction is not allowed."* ]] &&
        [[ "$finding" == *"add-generic-password: returned -25308)"* ]]; then
       echo "$finding" >> "$known_file"
+    elif [[ "$finding" == "- Sign-in is missing the user:profile scope" ]]; then
+      # A Remote Control capability advisory, not an installation-health issue.
+      echo "$finding" >> "$known_file"
     else
       echo "$finding" >> "$new_file"
     fi
   done < <(grep -E '^- ' "$input_file" || true)
 
   # A changed doctor format must fail visibly instead of silently reporting clean.
-  if [[ $saw_summary -eq 0 && $actual_count -gt 0 ]]; then
+  if [[ $saw_summary -eq 0 && $saw_clean_result -eq 0 && $actual_count -gt 0 ]]; then
     echo "doctor parser found findings without a warning/error summary" >&2
+    return 1
+  fi
+  if [[ $saw_summary -eq 0 && $saw_clean_result -eq 0 && $actual_count -eq 0 ]]; then
+    echo "doctor parser found neither a health summary nor a clean result" >&2
     return 1
   fi
   if [[ $saw_summary -eq 1 && $reported_count -ne $actual_count ]]; then
