@@ -26,6 +26,6 @@ Then: Funnel setup + config patch + WhatsApp QR (deploy.sh prints the steps).
 ## Mac-side counterpart
 
 - `.claude/scripts/vps-mirror-sync.sh` — one-way scoped mirror + inbox pull-back
-- `.claude/scripts/com.lashawsalta.wiki-mirror-sync.plist` — daily 07:00 + once at login; load with:
-  `cp .claude/scripts/com.lashawsalta.wiki-mirror-sync.plist ~/Library/LaunchAgents/ && launchctl load ~/Library/LaunchAgents/com.lashawsalta.wiki-mirror-sync.plist`
+- `.claude/scripts/com.example.wiki-mirror-sync.plist` — daily 07:00 + once at login; load with:
+  `cp .claude/scripts/com.example.wiki-mirror-sync.plist ~/Library/LaunchAgents/ && launchctl load ~/Library/LaunchAgents/com.example.wiki-mirror-sync.plist`
 - On-demand sync any time: `bash .claude/scripts/vps-mirror-sync.sh`

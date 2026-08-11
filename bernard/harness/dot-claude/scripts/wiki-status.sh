@@ -8,7 +8,7 @@
 # Sections: watchdog verdict · scheduled-job health · mirror/leak gate · queues ·
 # git state (what parallel sessions left) · live writers · structural lint.
 set -uo pipefail
-WIKI="/Users/lashawsalta/life-wiki"; cd "$WIKI" || exit 1
+WIKI="/Users/localuser/life-wiki"; cd "$WIKI" || exit 1
 L="$WIKI/.claude/logs"
 now=$(date +%s)
 age_h() { [ -e "$1" ] && echo $(( (now - $(stat -f %m "$1")) / 3600 )) || echo "?"; }
@@ -43,13 +43,13 @@ echo "▶ SCHEDULED JOBS    loaded?        last ran        expect"
 # name | launchd label | freshness file (rel to logs) | max-age-hours
 jobs=(
   "leak scan (02:30)|com.life-wiki.scan|leak-scan-status|26"
-  "gbrain dream (03:15)|com.lashawsalta.gbrain-dream|gbrain-dream.log|26"
+  "gbrain dream (03:15)|com.example.gbrain-dream|gbrain-dream.log|26"
   "synthesis (06:00)|com.life-wiki.synthesis|daily-synthesis.log|26"
-  "mirror sync (07:00)|com.lashawsalta.wiki-mirror-sync|wiki-mirror-sync.log|26"
-  "harness-health (08:00)|com.lashawsalta.harness-health|harness-health.log|26"
+  "mirror sync (07:00)|com.example.wiki-mirror-sync|wiki-mirror-sync.log|26"
+  "harness-health (08:00)|com.example.harness-health|harness-health.log|26"
   "daily ingest (12:00)|com.life-wiki.ingest|daily-ingest.log|26"
   "wiki eval (09:15)|com.life-wiki.eval|wiki-eval.log|36"
-  "gbrain sync (daily 3am)|com.lashawsalta.gbrain-sync|gbrain-sync.log|26"
+  "gbrain sync (daily 3am)|com.example.gbrain-sync|gbrain-sync.log|26"
 )
 for row in "${jobs[@]}"; do
   IFS='|' read -r nm label f max <<< "$row"

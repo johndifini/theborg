@@ -121,7 +121,7 @@ const jobs = [
     what:"Deep 5-tier PHI/leak scan diffed against the triaged baseline. Writes the <code>leak-scan-status</code> gate that the mirror push reads — fail-closed.",
     log:".claude/logs/leak-scan-launchd.log" },
 
-  { time:"03:15", name:"GBrain dream", label:"com.lashawsalta.gbrain-dream",
+  { time:"03:15", name:"GBrain dream", label:"com.example.gbrain-dream",
     script:"gbrain dream", status:"live",
     days:D7, freq:"Daily",
     what:"Nightly entity sweep + citation reconciliation across the graph.",
@@ -133,13 +133,13 @@ const jobs = [
     what:"Delta-driven pattern mining into <code>holistic-health-synthesis.md</code>. Skips Claude entirely when the wiki hasn't changed.",
     log:".claude/logs/daily-synthesis-launchd.log" },
 
-  { time:"07:00", name:"VPS mirror sync", label:"com.lashawsalta.wiki-mirror-sync",
+  { time:"07:00", name:"VPS mirror sync", label:"com.example.wiki-mirror-sync",
     script:"vps-mirror-sync.sh", status:"live",
     days:D7, freq:"Daily + at login",
     what:"One-way allowlist-scoped push of health/shared/journal-entries to Bernard (VPS). Gated by the fresh leak-scan status. Drains <b>two reverse channels</b>: the question inbox and Bernard's conversation log. Headless runs can intermittently fail on a Tailscale SSH re-auth boundary — check <code>wiki-status.sh</code> for whether the last run succeeded.",
     log:".claude/logs/wiki-mirror-sync.log" },
 
-  { time:"08:00", name:"Harness health + self-improve", label:"com.lashawsalta.harness-health",
+  { time:"08:00", name:"Harness health + self-improve", label:"com.example.harness-health",
     script:"harness-health.sh", status:"live",
     days:D7, freq:"Daily", monExtra:true,
     what:"Automation watchdog (dead daemons, log rotation, Tier-1/2 fixes) then the daily chain: ① build-backlinks (reverse graph edges + timeline spine), <b>build-daily-score</b> (daily symptom score from latest Guava export, deterministic), ⑤ calibration-capture, ② self-interrogate, <b>bernard-learn</b> (distills Bernard's pulled conversation log → inbox + usage profile), ③ build-hypothesis-register. <b>④ cross-model-review runs Mondays only.</b>",
@@ -167,7 +167,7 @@ const jobs = [
 
 // interval / event-driven (no clock pin)
 const intervalJobs = [
-  { name:"GBrain sync", label:"com.lashawsalta.gbrain-sync", script:"gbrain-job.sh sync (sync → embed --stale → extract all; progress spam filtered)",
+  { name:"GBrain sync", label:"com.example.gbrain-sync", script:"gbrain-job.sh sync (sync → embed --stale → extract all; progress spam filtered)",
     status:"live", freq:"Daily 03:00 + at login",
     what:"Keeps the GBrain index current: import changed files, embed stale ones, re-extract link edges.",
     log:".claude/logs/gbrain-sync.log" },

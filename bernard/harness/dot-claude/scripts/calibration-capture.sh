@@ -12,7 +12,7 @@
 # Manual: bash .claude/scripts/calibration-capture.sh [--apply]
 set -uo pipefail
 
-WIKI="/Users/lashawsalta/life-wiki"
+WIKI="/Users/localuser/life-wiki"
 PY="$WIKI/.claude/scripts/lib/calibration_capture.py"
 ARCHIVE="${CAL_ARCHIVE:-$WIKI/.claude/inbox/inbox-archive.md}"
 PROFILE="${CAL_PROFILE:-$WIKI/.claude/logs/calibration-profile.tsv}"

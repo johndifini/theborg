@@ -10,7 +10,7 @@
 # Default = dry-run. --apply writes. Manual: bash .claude/scripts/build-hypothesis-register.sh --apply
 set -uo pipefail
 
-WIKI="/Users/lashawsalta/life-wiki"
+WIKI="/Users/localuser/life-wiki"
 PY="$WIKI/.claude/scripts/lib/hypothesis_register.py"
 OUT="$WIKI/wikis/health/wiki/working-hypotheses.md"
 mkdir -p "$WIKI/.claude/logs"

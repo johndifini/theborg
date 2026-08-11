@@ -21,7 +21,7 @@
 # when a graph golden-row is failing. Manual: bash .claude/scripts/build-graph-links.sh
 set -uo pipefail
 
-WIKI="/Users/lashawsalta/life-wiki"
+WIKI="/Users/localuser/life-wiki"
 FM_PY="$WIKI/.claude/scripts/backfill-entity-frontmatter.py"
 EL_PY="$WIKI/.claude/scripts/backfill-entity-links.py"
 GBRAIN="${BGL_GBRAIN:-$WIKI/.claude/scripts/gbrain}"

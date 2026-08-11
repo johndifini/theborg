@@ -189,9 +189,11 @@ Everything here passed the wiki's own PHI tripwire (the ~400-pattern generator r
 against real targets) plus manual review. Removed outright: logs, the question
 inbox, machine-local settings, the golden-question set and leak-scan baseline (both
 encode real clinical details), and one explainer HTML built from real graph data.
-Genericized in place: the VPS hostname/user, and every doctor/condition/medication
-name used as an example in templates, skills, and unit-test fixtures — the *shape*
-is identical, the clinical fingerprint is gone.
+Genericized in place: phone-number allowlists; Mac and VPS hostnames, usernames,
+home paths, and user-derived service labels; and every doctor/condition/medication
+name used as an example in templates, skills, and unit-test fixtures. Real channel
+identifiers and machine-local configuration stay outside git; the *shape* is
+identical, but the personal and clinical fingerprints are gone.
 
 That list is itself the lesson: if you share your own harness, the PHI isn't only in
 the data — it hides in test fixtures, doc examples, filenames in code comments, and

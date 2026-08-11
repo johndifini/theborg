@@ -4,7 +4,8 @@
 # It does NOT re-enable the scan — resume is deliberately manual per John's choice.
 set -euo pipefail
 
-BORG_ROOT="/Users/john/theborg"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BORG_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 LABEL="com.theborg.warren-bot-fett-market-scan-resume-reminder"
 PLIST="$HOME/Library/LaunchAgents/$LABEL.plist"
 UID_N="$(id -u)"

@@ -25,7 +25,7 @@
 # only external surface updates. Scanner output is digit-masked (safe to log).
 set -uo pipefail
 
-WIKI="/Users/lashawsalta/life-wiki"
+WIKI="/Users/localuser/life-wiki"
 SAN="$HOME/Devops/life-wiki-sanitizer"
 LOGDIR="$WIKI/.claude/logs"
 STATUS="$LOGDIR/leak-scan-status"

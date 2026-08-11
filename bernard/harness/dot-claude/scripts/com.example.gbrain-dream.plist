@@ -3,13 +3,13 @@
 <plist version="1.0">
 <dict>
   <key>Label</key>
-  <string>com.lashawsalta.gbrain-dream</string>
+  <string>com.example.gbrain-dream</string>
 
   <key>ProgramArguments</key>
   <array>
     <string>/bin/zsh</string>
     <string>-lc</string>
-    <string>bash /Users/lashawsalta/life-wiki/.claude/scripts/gbrain-job.sh dream</string>
+    <string>bash /Users/localuser/life-wiki/.claude/scripts/gbrain-job.sh dream</string>
   </array>
   <!-- gbrain-job.sh writes the newest-first dated run log to gbrain-dream.log
        and filters progress-ticker spam. The paths below catch stray output. -->
@@ -23,15 +23,15 @@
   </dict>
 
   <key>StandardOutPath</key>
-  <string>/Users/lashawsalta/life-wiki/.claude/logs/gbrain-dream-launchd.log</string>
+  <string>/Users/localuser/life-wiki/.claude/logs/gbrain-dream-launchd.log</string>
 
   <key>StandardErrorPath</key>
-  <string>/Users/lashawsalta/life-wiki/.claude/logs/gbrain-dream-launchd.err</string>
+  <string>/Users/localuser/life-wiki/.claude/logs/gbrain-dream-launchd.err</string>
 
   <key>EnvironmentVariables</key>
   <dict>
     <key>PATH</key>
-    <string>/opt/homebrew/bin:/Users/lashawsalta/.bun/bin:/usr/local/bin:/usr/bin:/bin</string>
+    <string>/opt/homebrew/bin:/Users/localuser/.bun/bin:/usr/local/bin:/usr/bin:/bin</string>
   </dict>
 </dict>
 </plist>

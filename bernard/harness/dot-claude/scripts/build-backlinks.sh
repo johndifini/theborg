@@ -12,7 +12,7 @@
 # Scheduled idea: daily, after daily-ingest. Manual: bash .claude/scripts/build-backlinks.sh --apply
 set -uo pipefail
 
-WIKI="/Users/lashawsalta/life-wiki"
+WIKI="/Users/localuser/life-wiki"
 LOGDIR="$WIKI/.claude/logs"
 PY="$WIKI/.claude/scripts/lib/backlink_timeline.py"
 TIMELINE="$WIKI/wikis/health/wiki/timeline.md"

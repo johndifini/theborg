@@ -19,7 +19,7 @@
 # Usage: bash cross-model-review.sh ["claim text"] [--apply]
 set -uo pipefail
 
-WIKI="/Users/lashawsalta/life-wiki"
+WIKI="/Users/localuser/life-wiki"
 # Newest-first run logging via lib/wikilog.sh — unless a test/caller overrides
 # CM_LOG, in which case log straight to that file (append) so stubs stay simple.
 if [[ -n "${CM_LOG:-}" ]]; then

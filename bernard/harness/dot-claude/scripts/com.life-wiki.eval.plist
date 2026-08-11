@@ -9,7 +9,7 @@
   <array>
     <string>/bin/zsh</string>
     <string>-lc</string>
-    <string>/Users/lashawsalta/life-wiki/.claude/scripts/wiki-eval.sh</string>
+    <string>/Users/localuser/life-wiki/.claude/scripts/wiki-eval.sh</string>
   </array>
 
   <!-- Daily at 09:15 (after the 08:00 watchdog chain). Was 3x daily until
@@ -23,10 +23,10 @@
   </dict>
 
   <key>StandardOutPath</key>
-  <string>/Users/lashawsalta/life-wiki/.claude/logs/wiki-eval-launchd.log</string>
+  <string>/Users/localuser/life-wiki/.claude/logs/wiki-eval-launchd.log</string>
 
   <key>StandardErrorPath</key>
-  <string>/Users/lashawsalta/life-wiki/.claude/logs/wiki-eval.err</string>
+  <string>/Users/localuser/life-wiki/.claude/logs/wiki-eval.err</string>
 
   <key>EnvironmentVariables</key>
   <dict>

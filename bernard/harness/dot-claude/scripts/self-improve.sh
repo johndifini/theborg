@@ -17,7 +17,7 @@
 # Default (no flags) = apply ①⑤②③, no ④, no mirror push.
 set -uo pipefail
 
-WIKI="/Users/lashawsalta/life-wiki"
+WIKI="/Users/localuser/life-wiki"
 S="$WIKI/.claude/scripts"
 mkdir -p "$WIKI/.claude/logs"
 source "$WIKI/.claude/scripts/lib/wikilog.sh"

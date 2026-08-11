@@ -15,7 +15,7 @@ import re
 import sys
 from pathlib import Path
 
-WIKI_ROOT = Path("/Users/lashawsalta/life-wiki/wikis")
+WIKI_ROOT = Path("/Users/localuser/life-wiki/wikis")
 
 ENTITY_FIELDS = {
     "providers": "wikis/health/shared/providers",
