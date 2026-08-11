@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "gbrain": {
-      "command": "/Users/lashawsalta/life-wiki/.claude/scripts/gbrain",
+      "command": "/Users/localuser/life-wiki/.claude/scripts/gbrain",
       "args": ["serve"]
     }
   },

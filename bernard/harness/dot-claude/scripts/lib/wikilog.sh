@@ -19,7 +19,7 @@
 # handles both formats. Overlapping runs of the same job are excluded by each
 # job's own single-flight lock; distinct jobs never share a log file.
 
-WIKILOG_DIR="${WIKILOG_DIR:-/Users/lashawsalta/life-wiki/.claude/logs}"
+WIKILOG_DIR="${WIKILOG_DIR:-/Users/localuser/life-wiki/.claude/logs}"
 
 wikilog_open() {
   WIKILOG_JOB="$1"

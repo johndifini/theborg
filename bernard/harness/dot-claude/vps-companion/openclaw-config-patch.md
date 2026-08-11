@@ -26,10 +26,14 @@ whatsapp: {
   enabled: true,
   dmPolicy: "allowlist",
   groupPolicy: "allowlist",                       // was "disabled"; enables groups
-  allowFrom:      ["19723521352", "16513417421"], // patient + family member, E.164 (no '+')
-  groupAllowFrom: ["19723521352", "16513417421"], // SENDER allowlist for group msgs (see note)
+  allowFrom:      ["{{PATIENT_PHONE_E164}}", "{{FAMILY_PHONE_E164}}"], // patient + family member, E.164 (no '+')
+  groupAllowFrom: ["{{PATIENT_PHONE_E164}}", "{{FAMILY_PHONE_E164}}"], // SENDER allowlist for group msgs (see note)
 }
 ```
+
+`{{PATIENT_PHONE_E164}}` and `{{FAMILY_PHONE_E164}}` are documentation-only
+placeholders. Substitute the real E.164 values only in the ignored, machine-local
+OpenClaw configuration; never commit the rendered config or the real numbers.
 
 Linking: the gateway will print a QR on first start with WhatsApp enabled
 (`openclaw channels login whatsapp` on some builds). Link a **dedicated number**
@@ -113,7 +117,7 @@ sandbox: {
   mode: "all",
   scope: "agent",                 // one persistent container per agent
   workspaceAccess: "rw",
-  workspaceRoot: "/home/lashaws/health-wiki-workspace",
+  workspaceRoot: "/home/vpsuser/health-wiki-workspace",
   docker: {
     image: "wikicare-sandbox:py313",   // python:3.13-slim + /usr/bin/python3 symlinks
                                        // (host venv expects /usr/bin/python3.13)
@@ -124,11 +128,11 @@ sandbox: {
     tmpfs: ["/tmp"],
     pidsLimit: 256,
     memory: "1g",
-    env: { HOME: "/home/lashaws", MPLCONFIGDIR: "/tmp/mpl",
-           PATH: "/home/lashaws/health-wiki-workspace/.venv/bin:/usr/local/bin:/usr/bin:/bin" },
+    env: { HOME: "/home/vpsuser", MPLCONFIGDIR: "/tmp/mpl",
+           PATH: "/home/vpsuser/health-wiki-workspace/.venv/bin:/usr/local/bin:/usr/bin:/bin" },
     binds: [
-      "/home/lashaws/health-wiki-mirror:/home/lashaws/health-wiki-mirror:ro",   // hard-enforced read-only
-      "/home/lashaws/health-wiki-workspace:/home/lashaws/health-wiki-workspace:rw" // same paths in+out of container → MEDIA paths resolve on host
+      "/home/vpsuser/health-wiki-mirror:/home/vpsuser/health-wiki-mirror:ro",   // hard-enforced read-only
+      "/home/vpsuser/health-wiki-workspace:/home/vpsuser/health-wiki-workspace:rw" // same paths in+out of container → MEDIA paths resolve on host
     ],
     dangerouslyAllowExternalBindSources: true,  // required for the two binds above; both are ours
   },

@@ -6,13 +6,13 @@
 #   Tier 2  diagnose  headless `claude -p` with a read/launchctl-scoped allowlist
 #   fallback notify   macOS notification naming what needs the curator
 #
-# Scheduled by com.lashawsalta.harness-health (daily 08:00 — after the 07:00
+# Scheduled by com.example.harness-health (daily 08:00 — after the 07:00
 # mirror run). Manual run: bash .claude/scripts/harness-health.sh
 # Every run ends in exactly one of: "all green" (silent), "fixed: ..." or
 # "needs you: ..." (both notify).
 set -uo pipefail
 
-WIKI="/Users/lashawsalta/life-wiki"
+WIKI="/Users/localuser/life-wiki"
 LOGDIR="$WIKI/.claude/logs"
 AGENT_LOG="$LOGDIR/harness-health-agent.log"
 CLAUDE_BIN="/opt/homebrew/bin/claude"
@@ -120,9 +120,9 @@ if [[ "$(date +%u)" == "1" ]]; then
   printf '%s\n' "$CM_OUT" | grep -qE 'DIVERGE|AGREE' && log "cross-model: $CM_OUT"
 fi
 
-check "gbrain-sync (daily 03:00)" "$LOGDIR/gbrain-sync.log"     93600  "com.lashawsalta.gbrain-sync"
-check "gbrain-dream (nightly)"   "$LOGDIR/gbrain-dream.log"     93600  "com.lashawsalta.gbrain-dream"
-check "wiki-mirror-sync (daily)" "$LOGDIR/wiki-mirror-sync.log" 90000  "com.lashawsalta.wiki-mirror-sync"
+check "gbrain-sync (daily 03:00)" "$LOGDIR/gbrain-sync.log"     93600  "com.example.gbrain-sync"
+check "gbrain-dream (nightly)"   "$LOGDIR/gbrain-dream.log"     93600  "com.example.gbrain-dream"
+check "wiki-mirror-sync (daily)" "$LOGDIR/wiki-mirror-sync.log" 90000  "com.example.wiki-mirror-sync"
 check "nightly-leak-scan"        "$LOGDIR/leak-scan-status"     172800 "com.life-wiki.scan"
 check "daily-ingest (12:00)"     "$LOGDIR/daily-ingest.log"     172800 "com.life-wiki.ingest"
 check "daily-synthesis (06:00)"  "$LOGDIR/daily-synthesis.log"  172800 "com.life-wiki.synthesis"

@@ -9,7 +9,7 @@
   <array>
     <string>/bin/zsh</string>
     <string>-lc</string>
-    <string>/Users/lashawsalta/life-wiki/.claude/scripts/daily-synthesis.sh</string>
+    <string>/Users/localuser/life-wiki/.claude/scripts/daily-synthesis.sh</string>
   </array>
 
   <!-- Daily 06:00 — after gbrain dream (03:15) and the leak scan (02:30).
@@ -26,10 +26,10 @@
   </dict>
 
   <key>StandardOutPath</key>
-  <string>/Users/lashawsalta/life-wiki/.claude/logs/daily-synthesis-launchd.log</string>
+  <string>/Users/localuser/life-wiki/.claude/logs/daily-synthesis-launchd.log</string>
 
   <key>StandardErrorPath</key>
-  <string>/Users/lashawsalta/life-wiki/.claude/logs/daily-synthesis.err</string>
+  <string>/Users/localuser/life-wiki/.claude/logs/daily-synthesis.err</string>
 
   <key>EnvironmentVariables</key>
   <dict>

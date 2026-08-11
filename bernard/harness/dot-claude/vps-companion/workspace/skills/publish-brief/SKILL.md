@@ -52,7 +52,7 @@ in /tmp are fine; only attachment outputs must be under `briefs/`.)
    To include a chart, generate the PNG first and reference it on its own
    line — it renders at full page width:
    ```markdown
-   ![Top symptoms — May 2026](/home/lashaws/health-wiki-workspace/briefs/<chart>.png)
+   ![Top symptoms — May 2026](/home/vpsuser/health-wiki-workspace/briefs/<chart>.png)
    ```
 2. Run:
    ```bash
@@ -66,7 +66,7 @@ Reply with one warm sentence of context, then the attachment reference on
 its own line (PNG or PDF):
 
 ```
-MEDIA: /home/lashaws/health-wiki-workspace/briefs/<printed-filename>
+MEDIA: /home/vpsuser/health-wiki-workspace/briefs/<printed-filename>
 ```
 
 ## Notes

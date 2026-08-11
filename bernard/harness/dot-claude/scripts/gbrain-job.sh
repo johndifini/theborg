@@ -6,12 +6,12 @@
 # [extract.*] N/M (xx%) progress spam (hundreds of KB/day of .err growth) is
 # filtered out — summary, "done", and error lines are kept.
 #
-# Wired by com.lashawsalta.gbrain-{sync,dream}.plist. Manual:
+# Wired by com.example.gbrain-{sync,dream}.plist. Manual:
 #   bash .claude/scripts/gbrain-job.sh sync
 set -uo pipefail
 
 JOB="${1:?usage: gbrain-job.sh sync|dream}"
-WIKI="/Users/lashawsalta/life-wiki"
+WIKI="/Users/localuser/life-wiki"
 GB="$WIKI/.claude/scripts/gbrain"
 
 source "$WIKI/.claude/scripts/lib/wikilog.sh"

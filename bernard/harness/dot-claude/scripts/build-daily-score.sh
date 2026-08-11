@@ -8,7 +8,7 @@
 # Manual: bash .claude/scripts/build-daily-score.sh --apply
 set -uo pipefail
 
-WIKI="/Users/lashawsalta/life-wiki"
+WIKI="/Users/localuser/life-wiki"
 LOGDIR="$WIKI/.claude/logs"
 PY="$WIKI/.claude/scripts/lib/daily_score.py"
 CHARTS_PY="$WIKI/.claude/scripts/lib/render_score_charts.py"

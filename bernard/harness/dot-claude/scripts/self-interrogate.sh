@@ -11,7 +11,7 @@
 # Scheduled idea: daily after build-backlinks. Manual: bash .claude/scripts/self-interrogate.sh
 set -uo pipefail
 
-WIKI="/Users/lashawsalta/life-wiki"
+WIKI="/Users/localuser/life-wiki"
 PY="$WIKI/.claude/scripts/lib/self_interrogate.py"
 INBOX="$WIKI/.claude/inbox/wiki-question-inbox.md"
 ARCHIVE="$WIKI/.claude/inbox/inbox-archive.md"

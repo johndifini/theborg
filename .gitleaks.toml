@@ -24,3 +24,49 @@ id          = "google-docs-url"
 description = "Google Docs/Sheets/Drive share URL (anyone-with-link == secret)"
 regex       = '''https?://(?:docs|drive)\.google\.com/[^\s'"<>)]+'''
 tags        = ["url", "google", "share-link"]
+
+# Quoted E.164-like values catch channel allowlists while avoiding ordinary
+# counters, timestamps, and test numbers that are not stored as strings.
+[[rules]]
+id          = "quoted-e164-phone-number"
+description = "Quoted E.164-like phone number"
+regex       = '''["']\+?[1-9][0-9]{9,14}["']'''
+tags        = ["pii", "phone"]
+
+# Absolute home paths disclose stable local account identifiers. The named
+# values below are the documented placeholders used by public examples here.
+[[rules]]
+id          = "macos-user-home-path"
+description = "Machine-specific macOS home path"
+regex       = '''/Users/[A-Za-z0-9._-]+(?:/|["'])'''
+tags        = ["pii", "machine", "path"]
+
+  [rules.allowlist]
+  regexTarget = "match"
+  regexes = ['''/Users/(?:localuser|exampleuser|youruser|user)(?:/|["'])''']
+
+[[rules]]
+id          = "linux-user-home-path"
+description = "Machine-specific Linux home path"
+regex       = '''/home/[A-Za-z0-9._-]+(?:/|["'])'''
+tags        = ["pii", "machine", "path"]
+
+  [rules.allowlist]
+  regexTarget = "match"
+  regexes = ['''/home/(?:vpsuser|exampleuser|youruser)(?:/|["'])''']
+
+[[rules]]
+id          = "macos-personal-hostname"
+description = "Likely personal macOS hostname"
+regex       = '''[A-Za-z0-9._-]+-MacBook-(?:Pro|Air)'''
+tags        = ["pii", "machine", "hostname"]
+
+[[rules]]
+id          = "user-derived-launchd-label"
+description = "Likely user-derived launchd service label in the public exhibit"
+regex       = '''com\.[A-Za-z0-9_-]+\.(?:gbrain-(?:sync|dream)|wiki-mirror-sync|harness-health)'''
+tags        = ["pii", "machine", "service-label"]
+
+  [rules.allowlist]
+  regexTarget = "match"
+  regexes = ['''com\.example\.''']
