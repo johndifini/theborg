@@ -52,11 +52,11 @@
 | When | Job | Mechanism |
 |---|---|---|
 | 02:30 | `nightly-leak-scan.sh` | launchd `com.life-wiki.scan` — 5-tier scan vs triaged baseline; writes mirror-gate status |
-| 03:15 | `gbrain dream` | launchd `com.lashawsalta.gbrain-dream` |
-| daily 03:00 | gbrain sync | launchd `com.lashawsalta.gbrain-sync` |
+| 03:15 | `gbrain dream` | launchd `com.example.gbrain-dream` |
+| daily 03:00 | gbrain sync | launchd `com.example.gbrain-sync` |
 | 06:00 | `daily-synthesis.sh` | launchd `com.life-wiki.synthesis` — snapshot-gated, opus |
-| 07:00 + login | `vps-mirror-sync.sh` | launchd `com.lashawsalta.wiki-mirror-sync` — push mirror + pull/drain question inbox |
-| 08:00 | `harness-health.sh` | launchd `com.lashawsalta.harness-health` — the watchdog (§7) |
+| 07:00 + login | `vps-mirror-sync.sh` | launchd `com.example.wiki-mirror-sync` — push mirror + pull/drain question inbox |
+| 08:00 | `harness-health.sh` | launchd `com.example.harness-health` — the watchdog (§7) |
 | 09:00 | `daily-transcribe.sh` | cron (sanitizer repo) |
 | 09:15 (daily since 2026-07-02; was 3×/day) | `wiki-eval.sh` | launchd `com.life-wiki.eval` — golden-question eval (§11); failures feed the question inbox |
 | 12:00 | `daily-ingest-check.sh` | cron — lint-gated auto-ingest, smart tier (no pin) |

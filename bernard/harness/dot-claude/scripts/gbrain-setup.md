@@ -20,11 +20,11 @@ To put `gbrain` on PATH for your shell:
 
 ```bash
 # Either symlink it (one-time):
-ln -s /Users/lashawsalta/life-wiki/.claude/scripts/gbrain ~/.local/bin/gbrain
+ln -s /Users/localuser/life-wiki/.claude/scripts/gbrain ~/.local/bin/gbrain
 # (ensure ~/.local/bin is in PATH)
 
 # Or alias it in ~/.zshrc:
-alias gbrain="/Users/lashawsalta/life-wiki/.claude/scripts/gbrain"
+alias gbrain="/Users/localuser/life-wiki/.claude/scripts/gbrain"
 ```
 
 ## What's already done (2026-05-23)
@@ -41,7 +41,7 @@ alias gbrain="/Users/lashawsalta/life-wiki/.claude/scripts/gbrain"
 The sandbox stopped allowing further `bun run` of gbrain code mid-session. Run these to finish:
 
 ```bash
-# Replace 'gbrain' below with /Users/lashawsalta/life-wiki/.claude/scripts/gbrain if not on PATH.
+# Replace 'gbrain' below with /Users/localuser/life-wiki/.claude/scripts/gbrain if not on PATH.
 
 # 1. Build the typed-link graph from existing wikilinks
 gbrain extract links --source db --dry-run | head -40    # preview first
@@ -51,10 +51,10 @@ gbrain stats                                              # confirm links > 0
 
 # 2. Activate live sync + nightly dream cycle
 mkdir -p ~/Library/LaunchAgents
-cp /Users/lashawsalta/life-wiki/.claude/scripts/com.lashawsalta.gbrain-sync.plist  ~/Library/LaunchAgents/
-cp /Users/lashawsalta/life-wiki/.claude/scripts/com.lashawsalta.gbrain-dream.plist ~/Library/LaunchAgents/
-launchctl load ~/Library/LaunchAgents/com.lashawsalta.gbrain-sync.plist
-launchctl load ~/Library/LaunchAgents/com.lashawsalta.gbrain-dream.plist
+cp /Users/localuser/life-wiki/.claude/scripts/com.example.gbrain-sync.plist  ~/Library/LaunchAgents/
+cp /Users/localuser/life-wiki/.claude/scripts/com.example.gbrain-dream.plist ~/Library/LaunchAgents/
+launchctl load ~/Library/LaunchAgents/com.example.gbrain-sync.plist
+launchctl load ~/Library/LaunchAgents/com.example.gbrain-dream.plist
 launchctl list | grep gbrain
 
 # 3. First real query
@@ -91,10 +91,10 @@ gbrain autopilot --install
 
 ```bash
 mkdir -p ~/Library/LaunchAgents
-cp .claude/scripts/com.lashawsalta.gbrain-sync.plist  ~/Library/LaunchAgents/
-cp .claude/scripts/com.lashawsalta.gbrain-dream.plist ~/Library/LaunchAgents/
-launchctl load ~/Library/LaunchAgents/com.lashawsalta.gbrain-sync.plist
-launchctl load ~/Library/LaunchAgents/com.lashawsalta.gbrain-dream.plist
+cp .claude/scripts/com.example.gbrain-sync.plist  ~/Library/LaunchAgents/
+cp .claude/scripts/com.example.gbrain-dream.plist ~/Library/LaunchAgents/
+launchctl load ~/Library/LaunchAgents/com.example.gbrain-sync.plist
+launchctl load ~/Library/LaunchAgents/com.example.gbrain-dream.plist
 
 # Verify:
 launchctl list | grep gbrain

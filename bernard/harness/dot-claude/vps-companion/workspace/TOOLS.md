@@ -100,7 +100,7 @@ Send any attachment by putting this on its own line in your reply (one warm
 sentence of context above it):
 
 ```
-MEDIA: /home/lashaws/health-wiki-workspace/briefs/<printed-filename>
+MEDIA: /home/vpsuser/health-wiki-workspace/briefs/<printed-filename>
 ```
 
 **Your shell runs in a sandbox container. `/tmp` is container-local — the

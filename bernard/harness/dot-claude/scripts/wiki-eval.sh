@@ -16,7 +16,7 @@
 # handled by retries.
 set -uo pipefail
 
-WIKI="/Users/lashawsalta/life-wiki"
+WIKI="/Users/localuser/life-wiki"
 LOGDIR="$WIKI/.claude/logs"
 STATUS="$LOGDIR/wiki-eval-status"
 QFILE="$WIKI/.claude/reference/eval-questions.tsv"

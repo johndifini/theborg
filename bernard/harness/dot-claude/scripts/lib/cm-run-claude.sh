@@ -3,7 +3,7 @@
 # stdin, runs read-only headless Claude in the wiki, emits the model's text.
 # Anthropic-only: sanctioned egress (model API inherent to running the agent).
 set -uo pipefail
-WIKI="/Users/lashawsalta/life-wiki"
+WIKI="/Users/localuser/life-wiki"
 CLAUDE_BIN="${CLAUDE_BIN:-/opt/homebrew/bin/claude}"
 STANCE="Assess the claim even-handedly on the wiki evidence."
 PROMPT="$STANCE

@@ -85,7 +85,7 @@
   <p>The single reference for what runs, where it lives, when it fires, and how it's secured — across the wiki, the sanitizer, and the VPS companion.</p>
   <p style="margin-top:12px">
     <span class="tag">generated 2026-06-12</span>
-    <span class="tag">host: Lashaws-MacBook-Pro · Darwin 25.5</span>
+    <span class="tag">host: Example-Mac · Darwin 25.5</span>
     <span class="tag">3 surfaces · 8 jobs · 10 security layers</span>
   </p>
   <p class="legend" style="margin-top:10px">Diagrams render via Mermaid (loaded once from jsdelivr CDN). Every diagram is mirrored by a table or list below it, so the document is fully usable even offline. No wiki content leaves the machine — diagram definitions are inline and rendered in your browser.</p>
@@ -226,12 +226,12 @@ flowchart TB
   <table>
     <tr><th>Job</th><th>Mechanism</th><th>When</th><th>Does</th><th>Log</th></tr>
     <tr><td><code>com.life-wiki.scan</code></td><td>launchd</td><td><b>02:30</b> daily</td><td>Deep 5-tier leak scan → status file → gates the mirror</td><td><code>leak-scan.log</code></td></tr>
-    <tr><td><code>com.lashawsalta.gbrain-dream</code></td><td>launchd</td><td><b>03:15</b> daily</td><td><code>gbrain dream</code> — entity sweep + citation reconciliation</td><td><code>gbrain-dream.log</code></td></tr>
-    <tr><td><code>com.lashawsalta.wiki-mirror-sync</code></td><td>launchd</td><td><b>07:00</b> daily + at login</td><td>Scoped rsync to VPS (gated) + inbox pull-and-drain</td><td><code>wiki-mirror-sync.log</code></td></tr>
-    <tr><td><code>com.lashawsalta.harness-health</code></td><td>launchd</td><td><b>08:00</b> daily</td><td>Watchdog over all jobs; self-heals or notifies</td><td><code>harness-health.log</code></td></tr>
+    <tr><td><code>com.example.gbrain-dream</code></td><td>launchd</td><td><b>03:15</b> daily</td><td><code>gbrain dream</code> — entity sweep + citation reconciliation</td><td><code>gbrain-dream.log</code></td></tr>
+    <tr><td><code>com.example.wiki-mirror-sync</code></td><td>launchd</td><td><b>07:00</b> daily + at login</td><td>Scoped rsync to VPS (gated) + inbox pull-and-drain</td><td><code>wiki-mirror-sync.log</code></td></tr>
+    <tr><td><code>com.example.harness-health</code></td><td>launchd</td><td><b>08:00</b> daily</td><td>Watchdog over all jobs; self-heals or notifies</td><td><code>harness-health.log</code></td></tr>
     <tr><td><code>daily-transcribe.sh</code></td><td>cron</td><td><b>09:00</b> daily</td><td>Sanitizer: Whisper transcribe voice memos → sanitize → ingest/</td><td>sanitizer <code>logs/daily-*.log</code></td></tr>
     <tr><td><code>daily-ingest-check.sh</code></td><td>cron</td><td><b>12:00</b> daily</td><td>Lint → if clean, headless Claude drains ingest/</td><td><code>daily-ingest.log</code></td></tr>
-    <tr><td><code>com.lashawsalta.gbrain-sync</code></td><td>launchd</td><td><b>daily 03:00</b> + at boot</td><td><code>gbrain sync --repo</code> → <code>embed --stale</code> → <code>extract all</code></td><td><code>gbrain-sync.log</code></td></tr>
+    <tr><td><code>com.example.gbrain-sync</code></td><td>launchd</td><td><b>daily 03:00</b> + at boot</td><td><code>gbrain sync --repo</code> → <code>embed --stale</code> → <code>extract all</code></td><td><code>gbrain-sync.log</code></td></tr>
     <tr><td><code>weekly-gmail-ingest.sh</code></td><td>cron <span class="pill warnp">DISABLED</span></td><td>commented out</td><td>Gmail <code>wiki/*</code> label ingest — pending OAuth setup</td><td>—</td></tr>
   </table>
 

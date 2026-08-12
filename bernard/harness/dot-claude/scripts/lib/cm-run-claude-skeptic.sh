@@ -4,7 +4,7 @@
 # claim. Independent perspective catches what a single fair pass rationalizes away,
 # without any cross-vendor PHI egress.
 set -uo pipefail
-WIKI="/Users/lashawsalta/life-wiki"
+WIKI="/Users/localuser/life-wiki"
 CLAUDE_BIN="${CLAUDE_BIN:-/opt/homebrew/bin/claude}"
 STANCE="You are a SKEPTICAL reviewer. Actively try to REFUTE the claim. Hunt for \
 missing evidence, alternative explanations, and contradicting wiki entries. Default \

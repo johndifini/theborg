@@ -3,13 +3,13 @@
 <plist version="1.0">
 <dict>
   <key>Label</key>
-  <string>com.lashawsalta.gbrain-sync</string>
+  <string>com.example.gbrain-sync</string>
 
   <key>ProgramArguments</key>
   <array>
     <string>/bin/zsh</string>
     <string>-lc</string>
-    <string>bash /Users/lashawsalta/life-wiki/.claude/scripts/gbrain-job.sh sync</string>
+    <string>bash /Users/localuser/life-wiki/.claude/scripts/gbrain-job.sh sync</string>
   </array>
   <!-- gbrain-job.sh writes the newest-first dated run log to gbrain-sync.log
        and filters the [extract.*] progress-ticker spam. The paths below only
@@ -27,15 +27,15 @@
   <true/>
 
   <key>StandardOutPath</key>
-  <string>/Users/lashawsalta/life-wiki/.claude/logs/gbrain-sync-launchd.log</string>
+  <string>/Users/localuser/life-wiki/.claude/logs/gbrain-sync-launchd.log</string>
 
   <key>StandardErrorPath</key>
-  <string>/Users/lashawsalta/life-wiki/.claude/logs/gbrain-sync-launchd.err</string>
+  <string>/Users/localuser/life-wiki/.claude/logs/gbrain-sync-launchd.err</string>
 
   <key>EnvironmentVariables</key>
   <dict>
     <key>PATH</key>
-    <string>/opt/homebrew/bin:/Users/lashawsalta/.bun/bin:/usr/local/bin:/usr/bin:/bin</string>
+    <string>/opt/homebrew/bin:/Users/localuser/.bun/bin:/usr/local/bin:/usr/bin:/bin</string>
   </dict>
 </dict>
 </plist>

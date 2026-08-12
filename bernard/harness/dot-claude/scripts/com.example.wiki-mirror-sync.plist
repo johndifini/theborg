@@ -3,13 +3,13 @@
 <plist version="1.0">
 <dict>
   <key>Label</key>
-  <string>com.lashawsalta.wiki-mirror-sync</string>
+  <string>com.example.wiki-mirror-sync</string>
 
   <key>ProgramArguments</key>
   <array>
     <string>/bin/zsh</string>
     <string>-lc</string>
-    <string>/Users/lashawsalta/life-wiki/.claude/scripts/vps-mirror-sync.sh</string>
+    <string>/Users/localuser/life-wiki/.claude/scripts/vps-mirror-sync.sh</string>
   </array>
 
   <!-- Daily at 07:00 (runs on next wake if the Mac was asleep/off), plus once
@@ -29,10 +29,10 @@
        (via lib/wikilog.sh) — so manual runs are finally logged too. This path
        only catches stray stdout. -->
   <key>StandardOutPath</key>
-  <string>/Users/lashawsalta/life-wiki/.claude/logs/wiki-mirror-sync-launchd.log</string>
+  <string>/Users/localuser/life-wiki/.claude/logs/wiki-mirror-sync-launchd.log</string>
 
   <key>StandardErrorPath</key>
-  <string>/Users/lashawsalta/life-wiki/.claude/logs/wiki-mirror-sync.err</string>
+  <string>/Users/localuser/life-wiki/.claude/logs/wiki-mirror-sync.err</string>
 
   <key>EnvironmentVariables</key>
   <dict>

@@ -19,7 +19,7 @@ import re
 import sys
 from pathlib import Path
 
-WIKI_ROOT = Path("/Users/lashawsalta/life-wiki/wikis")
+WIKI_ROOT = Path("/Users/localuser/life-wiki/wikis")
 ENTRY_DIRS = [
     WIKI_ROOT / "journal" / "wiki" / "entries",
     WIKI_ROOT / "health" / "clinical" / "wiki" / "appointments",

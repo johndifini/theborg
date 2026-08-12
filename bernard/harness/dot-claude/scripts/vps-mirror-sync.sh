@@ -9,7 +9,7 @@
 set -euo pipefail
 
 REMOTE="${REMOTE:-youruser@your-vps}"
-WIKI_ROOT="${WIKI_ROOT:-/Users/lashawsalta/life-wiki}"
+WIKI_ROOT="${WIKI_ROOT:-/Users/localuser/life-wiki}"
 MIRROR_DIR="health-wiki-mirror"                                  # under $HOME on the VPS
 INBOX_REMOTE="health-wiki-workspace/wiki-question-inbox.md"      # under $HOME on the VPS
 INBOX_LOCAL="$WIKI_ROOT/.claude/inbox/wiki-question-inbox.md"

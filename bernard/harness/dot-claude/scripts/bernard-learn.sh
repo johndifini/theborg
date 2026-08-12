@@ -15,7 +15,7 @@
 # Manual: bash .claude/scripts/bernard-learn.sh
 set -uo pipefail
 
-WIKI="/Users/lashawsalta/life-wiki"
+WIKI="/Users/localuser/life-wiki"
 PY="$WIKI/.claude/scripts/lib/bernard_learn.py"
 # Paths are env-overridable (defaults are the real ones) so the job is testable
 # into a sandbox without touching the live inbox/wiki — same convention as

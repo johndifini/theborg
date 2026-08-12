@@ -2,7 +2,7 @@
 # Stub-model tests for cross-model-review.sh orchestration (no real models).
 # Runners are single executable paths (the real-world contract), one per verdict.
 set -uo pipefail
-WIKI="/Users/lashawsalta/life-wiki"
+WIKI="/Users/localuser/life-wiki"
 SCRIPT="$WIKI/.claude/scripts/cross-model-review.sh"
 fails=0
 SB=$(mktemp -d)

@@ -15,7 +15,7 @@
 # issues so synthesis never builds on a structurally broken graph.
 set -uo pipefail
 
-HOME_DIR="/Users/lashawsalta"
+HOME_DIR="/Users/localuser"
 WIKI_DIR="$HOME_DIR/life-wiki"
 CLAUDE_BIN="/opt/homebrew/bin/claude"
 LINT_SCRIPT="$WIKI_DIR/.claude/scripts/wiki-lint-structural.sh"
