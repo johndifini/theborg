@@ -19,8 +19,9 @@ Overrides for interactive invocation, by the prompt's named phases:
 2. WINDOW — skip; run regardless of day and time.
 3. PRIORITIZE — as written (the reordering and commits are real).
 4. CONSOLIDATE — do NOT write the plan file. Present the consolidated,
-   prioritized plan in this session instead, and track check-offs/skips
-   in-session for the rest of the run.
+   prioritized plan in this session instead — including the per-backlog
+   coverage lines, which are how the user sees that every backlog was
+   merged — and track check-offs/skips in-session for the rest of the run.
 5. NOTIFY PLAN — do NOT pipe to `notify-email.sh`; the plan presented in this
    session replaces the email.
 6. RECORD STATE — skip; never write the state file.
