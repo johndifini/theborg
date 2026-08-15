@@ -22,6 +22,7 @@ The Borg is a standardized AI workspace that turns prompts, institutional knowle
 - An agent here may be driven by **Codex**, the **Claude Code terminal CLI**, or the **Claude Desktop app** (macOS) — don't assume which. `AGENTS.md` is the canonical instruction file; each adjacent `CLAUDE.md` imports it for Claude compatibility.
 - Terminal-only affordances exist in the CLI but **not** in Desktop: `/exit`, `/quit`, `Ctrl+D`, and `Ctrl+C` end a session in the CLI, while Desktop has none of them (start a new chat or close the conversation instead). Headless `claude -p` is CLI-only and does not run in Desktop. Ending a session is zero-token either way — tokens are spent only when a message triggers a model turn.
 - Recurring/scheduled work runs as launchd jobs (`com.theborg.*` namespace). Model tasks use `.prompt` files via `.bin/run-scheduled-task.sh`; deterministic model-less maintenance may use a dedicated checked-in shell runner. These fire whether or not any app is open. Never create scheduled work with the Claude Desktop scheduled-tasks MCP or the `/schedule` skill (those run only while the Desktop app is open); route new job setup through `c4po/`.
+- All agents and subagents use the workspace-root `tmp/` for temporary or working artifacts, regardless of their current directory. Never create `<agent>/tmp/` or another nested scratch directory. Durable confidential material belongs under the owning agent's gitignored `.private/` directory, not in `tmp/`.
 
 ## Communication style
 

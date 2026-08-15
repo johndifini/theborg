@@ -94,6 +94,10 @@ repos/*
 tmp/*
 !tmp/.gitkeep
 
+# Defense in depth: agent-local scratch directories violate the shared-tmp rule,
+# but ignore their contents if one is accidentally created so they cannot leak.
+/*/tmp/
+
 # ── Generic catch-alls for accidental drops ──────────────────
 *.sqlite
 *.sqlite3

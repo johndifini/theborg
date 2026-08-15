@@ -55,6 +55,7 @@ enforcement (see `c4po/AGENTS.md`).
 ### Public-repository hygiene
 - Treat every tracked file as public. Before committing, inspect added text for personal home-directory paths, hostnames, usernames, LAN/tailnet details, account identifiers, and private infrastructure instructions.
 - Use checkout-relative placeholders such as `<workspace-root>` in tracked documentation and prompts. Keep machine-specific instructions in gitignored `*.local.md` or `settings.local.json` files.
+- Temporary and working artifacts from every agent and subagent go only in the workspace-root `tmp/`. Flag any nested `<top-level-directory>/tmp/` found on disk; the root `.gitignore` must also ignore `/*/tmp/` as defense in depth. Durable confidential material belongs in the owning agent's `.private/` directory, never in `tmp/`.
 - Keep repo-specific automation inside its owning `repos/*` repository; The Borg may document or invoke it without duplicating its private implementation.
 ### Scheduled tasks
 - **Model-less maintenance jobs are exempt from the `.prompt`↔slash-command pairing.** A `com.theborg.*` job qualifies only when it runs a checked-in deterministic shell script directly, invokes no model, and has no state-gate or report-routing behavior that needs an interactive override. It must be documented in `README.md`, including its runner and output/failure behavior. Do not create a fake `.prompt` or pointless slash command merely to satisfy the pairing rule.
