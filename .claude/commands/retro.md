@@ -86,9 +86,12 @@ overrides for interactive invocation, referenced by phase name:
    week.
 2. In the **WINDOW** phase — do not read the state file for the boundary. Use the last 7
    days, or the window named after the `sessions` token if one is given (e.g.
-   `/retro sessions last 14 days`).
+   `/retro sessions last 14 days`). Still produce the prompt's full per-harness
+   raw/excluded/eligible manifest and cross-harness deduplication; this override changes
+   only the time boundary.
 3. In the **OUTPUT** phase — do NOT pipe to `notify-email.sh`. Output the full digest into
-   this session (say "nothing cleared the bar" when that is the outcome). For cerebruh
+   this session, including the non-sensitive scan manifest (say "nothing cleared the bar"
+   when that is the outcome). For cerebruh
    candidates, do NOT auto-stage into `cerebruh/ingest/`; instead show the proposed source
    file (path + content) and ask before staging it. (Rule / AGENTS.md / skill candidates
    remain propose-only, exactly as in the scheduled run.)
