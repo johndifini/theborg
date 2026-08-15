@@ -77,6 +77,14 @@ Project-scoped command sources live in `.claude/commands/` (workspace-wide) or `
 
 The bridge generates `<name>/SKILL.md` under `~/.codex/skills/`, keeps unique names, scope-prefixes collisions, and refuses to overwrite unrelated or locally modified skills. It preserves each command's description and adapts `$ARGUMENTS`, while dropping Claude-only frontmatter such as `model:` and `argument-hint:`. It does not manage `~/.codex/prompts/` at all — that surface is gone in Codex 0.145.0, and the 19 symlinks the old bridge left there were removed by hand on 2026-08-02. Run `.bin/sync-codex-prompts.sh --check` to detect drift.
 
+## Scoped Rules
+
+Situational guidance that shouldn't load every session lives in `<scope>/.claude/rules/*.md` — Claude Code loads those files itself, scoped to the directory they sit in. Codex has no equivalent loader, but it scans `.agents/skills` from the working directory up to the repository root, which reproduces the same scoping. Run `.bin/sync-codex-rule-skills.sh` to publish each rule as `<scope>/.agents/skills/<name>/SKILL.md`, and `--check` to detect drift; the monthly lint audit runs the check.
+
+The generated `SKILL.md` is a stub: the rule's `name:`, its `description:`, and an instruction to read the canonical `.claude/rules/` file. The rule text lives in exactly one place and is never copied. Symlinking the stub instead would be simpler but does not work — Codex 0.147.0 follows a symlinked skill *folder* while silently ignoring a folder whose `SKILL.md` is a symlink.
+
+A skill loads only when the model selects it on its description, whereas Claude loads an unscoped rule every session. A rule that must fire every time therefore also carries a one-line summary in the governing `AGENTS.md` — and, for rules that sit above a `repos/*` boundary, in that repo's `AGENTS.md` too, since a Codex session inside an independent repo never reads the workspace root.
+
 Every prompt-driven Borg-agent scheduled task has a matching interactive command (named after the task, minus the agent prefix); repo-hosted tasks under `repos/*` and deterministic model-less shell jobs are exempt (see `LINT.md` → Scope and Scheduled tasks). Each paired command delegates to the same `.prompt` the launchd job runs — no duplicated logic — applying only the overrides needed for interactive use: skip once-per-month state gates and state/data-file writes, and report to the session instead of email.
 
 | Command | Scope | What it does |
@@ -117,6 +125,7 @@ Before you make this your own:
 1. Clone the repo.
 1. Install the pre-commit hook: `git config core.hooksPath .githooks`
 1. Install Codex command skills: `.bin/sync-codex-prompts.sh`.
+1. Publish the scoped rules to Codex: `.bin/sync-codex-rule-skills.sh` (tracked output, so this only matters if a rule changed).
 1. Set up email notifications: `cp .env.example .env`, `chmod 600 .env`, then fill in a Gmail App Password (see the file's header).
 1. Install the scheduled tasks: `.bin/install-scheduled-tasks.sh --load` — generates the launchd plists from your checkout path and registers them.
 1. Read [SECURITY.md](./SECURITY.md) before your first commit — There’s a short forker checklist in there that may save you from accidentally publishing secrets, personal notes, API keys, or other spicy artifacts.

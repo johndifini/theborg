@@ -1,5 +1,6 @@
 ---
-description: Diagnose and repair last30days X browser-cookie failures
+name: last30days-x-cookie-health
+description: When last30days returns zero X results or X authentication errors: diagnose the Firefox cookie path rather than writing AUTH_TOKEN/CT0 or replacing the backend.
 ---
 # Keep last30days X authentication browser-backed
 

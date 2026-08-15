@@ -1,5 +1,6 @@
 ---
-description: Compute Yahoo chart daily returns from adjacent valid closes
+name: yahoo-chart-daily-return
+description: When computing a daily return from Yahoo Finance chart data: divide adjacent valid closes; meta.chartPreviousClose turns a multi-day move into a false daily move.
 ---
 # Do not use chartPreviousClose as yesterday's close on multi-day queries
 

@@ -1,5 +1,6 @@
 ---
-description: Re-read a BACKLOG.md immediately before writing it; never write one from a copy read earlier in the session
+name: backlog-write-safety
+description: Before writing or editing any BACKLOG.md: re-read it from disk first, make the narrowest edit, and verify counts — never write from a copy read earlier in the session.
 paths:
   - "**/BACKLOG.md"
 ---
@@ -38,5 +39,9 @@ The burndown carries a stricter version of this as STANDING RULE 2 in
 `c4po/.claude/scheduled/c4po-backlog-burndown.prompt`, because it is the one job
 that rewrites whole backlogs by design. This rule covers everyone else.
 
-**Harness note:** this file is Claude-only — Codex does not read
-`.claude/rules/`. A Codex session editing a backlog is not bound by it.
+**Harness note:** Claude loads this file automatically from `.claude/rules/`.
+Codex reaches it through the generated skill stub at
+`.agents/skills/backlog-write-safety/SKILL.md`, but only when the model selects
+that skill — which is why the root `AGENTS.md` also carries a one-line version.
+Neither surface crosses into an independent repo under `repos/`, so each such
+repo carries its own line (see `repos/waiq/AGENTS.md`).

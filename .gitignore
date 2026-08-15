@@ -46,6 +46,10 @@ Thumbs.db
 # the harness (they end in .md); just kept out of this public repo. Same
 # `.local.` convention as settings.local.json above.
 **/.claude/rules/*.local.md
+# …and the generated Codex skill stub for such a rule, which repeats the rule's
+# description and would publish the same machine detail. Stub dirs for local
+# rules carry the same `.local` suffix so this one glob covers every future case.
+**/.agents/skills/*.local/
 
 # Per-agent confidential context and Claude Code's local instruction loader.
 # Public synthetic templates use `.private.example/` and remain tracked. This

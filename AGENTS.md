@@ -56,6 +56,22 @@ Every agent answers tersely by default. Optimize for brevity:
 - **Exception — agent-context scaffolding.** `AGENTS.md` files, their symlinks, adjacent `CLAUDE.md` compatibility wrappers, and root-level operating-procedure files split out of `cerebruh/AGENTS.md` to satisfy the size rule (`INGESTING.md`, `AUDITING.md`) are scaffolding, not wiki content, and may be created or edited from any directory to satisfy the lint rules in `LINT.md`. Sub-wiki `AGENTS.md` files normally symlink to `../../template/AGENTS.md`; never use this scaffolding to inject knowledge claims. The knowledge itself — `raw/` and `wiki/` — stays read-only regardless.
 - Stay within your own role. Reading shared knowledge does not change what each agent is responsible for.
 
+## Scoped rules
+
+Durable, situational guidance lives in `<scope>/.claude/rules/*.md`, not in this
+file. Claude loads those automatically. Codex reaches the same files through
+generated stubs at `<scope>/.agents/skills/<name>/SKILL.md`, which it discovers
+from the working directory up to the repository root — so a rule's directory is
+its scope in both harnesses. Run `.bin/sync-codex-rule-skills.sh` after adding or
+renaming a rule; never duplicate a rule's text into a skill or an `AGENTS.md`.
+
+A skill only loads when the model picks it, so a rule that must fire every time
+also needs a line here. Today there is one:
+
+- **Re-read any `BACKLOG.md` from disk immediately before writing it.** Never
+  write one from a copy read earlier in the session, and make the narrowest edit
+  that does the job (`.claude/rules/backlog-write-safety.md`).
+
 ## Lint
 
 Lint rules for AGENTS.md files across this workspace live in `LINT.md` — they are
