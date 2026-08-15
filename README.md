@@ -58,11 +58,18 @@ For model-job details, see `<agent>/.claude/scheduled/<label>.prompt`; the CLI u
 
 | Label | Schedule | What it does |
 |---|---|---|
-| `warren-bot-fett-daily-market-scan` | Mon–Fri at 9:00 AM | Fetches market data (indices, yields, VIX), checks portfolio allocations against targets, and emails the result every run — a specific trade alert when a genuine buying opportunity exists, otherwise a brief no-action summary (one-liner on market holidays). |
+| `warren-bot-fett-daily-market-scan` | Mon–Fri at 9:00 AM — **paused since 2026-08-06**³ | Fetches market data (indices, yields, VIX), checks portfolio allocations against targets, and emails the result every run — a specific trade alert when a genuine buying opportunity exists, otherwise a brief no-action summary (one-liner on market holidays). |
 | `warren-bot-fett-ai-sleeve-monthly` | 1st–5th of each month at 9:00 AM¹ | Runs the AI Sleeve rebalance on the first trading day of the month: ranks candidates by market cap, enforces category minimums, computes floor-adjusted weights, and delivers a target-weights report via email. Writes `ai-sleeve/last-rebalance.json` for month-over-month diffs. |
 
 ¹ Fired on days 1–5 as a retry window in case the machine was asleep on day 1. The prompt enforces once-per-month execution via a state file.
+
 ² Fired on the primary day plus the next day as a retry window in case the machine was asleep. The prompt enforces once-per-ISO-week execution via a state file.
+
+³ Paused for a ~4-month account rebalance via `launchctl disable`, so the row stays in the installer's task table and its plist stays current, but `--load` skips the bootstrap instead of failing. A private one-shot job fires 2026-12-06 to ask whether to resume; re-enabling is deliberately manual:
+```
+launchctl enable gui/$(id -u)/com.theborg.warren-bot-fett-daily-market-scan
+.bin/install-scheduled-tasks.sh --load
+```
 
 ## Slash Commands
 

@@ -25,12 +25,16 @@ esac
 BORG_ROOT="${BORG_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 LAUNCH_AGENTS="$HOME/Library/LaunchAgents"
 
-# Task table: <agent>|<task-name>|<schedule-id>|<kind>
+# Task table: <agent>|<task-name>|<schedule-id>|<kind>[|<target>]
 # task-name becomes the launchd label com.theborg.<task-name>. schedule-id is
-# expanded by schedule_xml() below. kind is "prompt" (the normal model runner)
-# or "cli-update" (the model-less maintenance runner). Model-less shell jobs
-# deliberately have no fake .prompt or slash-command companion; LINT.md records
-# that narrow exemption. <agent> is relative to BORG_ROOT.
+# expanded by schedule_xml() below. kind is one of:
+#   prompt      the normal model runner, driving <agent>/.claude/scheduled/<task>.prompt
+#   cli-update  the model-less maintenance runner (.bin/run-cli-update.sh)
+#   script      any other model-less shell job; <target> is the script path
+#               relative to BORG_ROOT and is required for this kind
+# Model-less shell jobs deliberately have no fake .prompt or slash-command
+# companion; LINT.md records that narrow exemption. <agent> is relative to
+# BORG_ROOT.
 TASKS=(
   "c4po|c4po-security-audit|daily-10-00|prompt"
   "c4po|c4po-lint-audit-monthly|month-first5-09-00|prompt"
@@ -40,6 +44,11 @@ TASKS=(
   "c4po|c4po-backlog-burndown|weekly-fri-21-09-sat-02-19|prompt"
   "c4po|c4po-cli-update|weekly-sun-06-00|cli-update"
   "mrs-beast|mrs-beast-social-media-drafts|weekly-sun-wed-16-00|prompt"
+  # Paused 2026-08-06 for a ~4-month account rebalance: the label is `launchctl
+  # disable`d in the gui domain, so --load writes its plist but skips the
+  # bootstrap (see the disabled check below) rather than failing with EIO. The
+  # row stays so the job remains in the tracked inventory; the one-shot reminder
+  # below fires 2026-12-06 to ask whether to re-enable it.
   "warren-bot-fett|warren-bot-fett-daily-market-scan|weekly-mon-fri-09-00|prompt"
   "warren-bot-fett|warren-bot-fett-ai-sleeve-monthly|month-first5-09-00|prompt"
 )
@@ -125,6 +134,13 @@ schedule_xml() {
       for w in 1 3 5; do cal_entry "Weekday=$w" "Hour=9" "Minute=0"; done
       printf '    </array>\n'
       ;;
+    # One-shot: a fully-qualified date fires once and then never matches again
+    # (launchd has no "run once" flag, so the job stays loaded until something
+    # boots it out — one-shot scripts are expected to remove themselves).
+    once-2026-12-06-09-00)
+      printf '    <key>StartCalendarInterval</key>\n'
+      cal_entry "Month=12" "Day=6" "Hour=9" "Minute=0"
+      ;;
     weekly-sun-06-00)
       printf '    <key>StartCalendarInterval</key>\n    <dict>\n'
       printf '        <key>Weekday</key>\n        <integer>0</integer>\n'
@@ -159,7 +175,7 @@ schedule_xml() {
 
 # Emit a complete plist for one task.
 plist_xml() {
-  local agent="$1" task="$2" sched="$3" kind="$4"
+  local agent="$1" task="$2" sched="$3" kind="$4" target="${5:-}"
   local agent_dir="$BORG_ROOT/$agent"
   local logdir="$agent_dir/.claude/scheduled/logs"
   local arguments
@@ -173,6 +189,10 @@ plist_xml() {
     cli-update)
       arguments="        <string>/bin/bash</string>
         <string>$BORG_ROOT/.bin/run-cli-update.sh</string>"
+      ;;
+    script)
+      arguments="        <string>/bin/bash</string>
+        <string>$BORG_ROOT/$target</string>"
       ;;
     *) echo "unknown task kind: $kind" >&2; return 1 ;;
   esac
@@ -200,8 +220,26 @@ XML
 
 [[ "$MODE" == "print" ]] || mkdir -p "$LAUNCH_AGENTS"
 
+# Labels that `launchctl disable` has switched off in this user's gui domain.
+# Bootstrapping one of those fails with "5: Input/output error", which is
+# indistinguishable at the exit code from a real breakage — so we read the
+# disabled database once up front and skip those deliberately instead. Snapshot
+# it before the loop: nothing below changes it, and it is one subprocess.
+UID_N="$(id -u)"
+disabled_labels=""
+[[ "$MODE" == "load" ]] && disabled_labels="$(launchctl print-disabled "gui/$UID_N" 2>/dev/null || true)"
+
+is_disabled() {
+  [[ "$disabled_labels" == *"\"$1\" => disabled"* ]]
+}
+
+# Rows whose bootstrap failed, reported together at the end. A failure must not
+# abort the loop: under `set -e` one bad row silently skipped every task after
+# it in the table, which is how three live jobs went unregistered unnoticed.
+bootstrap_failures=()
+
 for row in "${TASKS[@]}"; do
-  IFS='|' read -r agent task sched kind <<< "$row"
+  IFS='|' read -r agent task sched kind target <<< "$row"
   case "$kind" in
     prompt)
       source_file="$BORG_ROOT/$agent/.claude/scheduled/$task.prompt"
@@ -211,23 +249,42 @@ for row in "${TASKS[@]}"; do
       source_file="$BORG_ROOT/.bin/run-cli-update.sh"
       [[ -f "$source_file" ]] || echo "warning: runner not found for $task: $source_file" >&2
       ;;
+    script)
+      if [[ -z "$target" ]]; then
+        echo "error: kind 'script' needs a target path: $row" >&2; exit 1
+      fi
+      source_file="$BORG_ROOT/$target"
+      [[ -f "$source_file" ]] || echo "warning: script not found for $task: $source_file" >&2
+      ;;
     *) echo "unknown task kind: $kind" >&2; exit 1 ;;
   esac
   dest="$LAUNCH_AGENTS/com.theborg.$task.plist"
+  label="com.theborg.$task"
 
   case "$MODE" in
     print)
       echo "# ===== $dest ====="
-      plist_xml "$agent" "$task" "$sched" "$kind"
+      plist_xml "$agent" "$task" "$sched" "$kind" "$target"
       echo
       ;;
     write|load)
-      plist_xml "$agent" "$task" "$sched" "$kind" > "$dest"
+      plist_xml "$agent" "$task" "$sched" "$kind" "$target" > "$dest"
       echo "wrote $dest"
       if [[ "$MODE" == "load" ]]; then
-        launchctl bootout "gui/$(id -u)/com.theborg.$task" 2>/dev/null || true
-        launchctl bootstrap "gui/$(id -u)" "$dest"
-        echo "loaded com.theborg.$task"
+        if is_disabled "$label"; then
+          # Deliberately paused via `launchctl disable`; the plist above is kept
+          # current so re-enabling is just `launchctl enable` + bootstrap.
+          echo "note: $label is disabled in launchd — skipping bootstrap"
+        else
+          launchctl bootout "gui/$UID_N/$label" 2>/dev/null || true
+          if launchctl bootstrap "gui/$UID_N" "$dest"; then
+            echo "loaded $label"
+          else
+            status=$?
+            echo "error: bootstrap failed for $label (exit $status)" >&2
+            bootstrap_failures+=("$label")
+          fi
+        fi
       fi
       ;;
   esac
@@ -241,7 +298,7 @@ while read -r _pid _status label; do
   [[ "$label" == com.theborg.* ]] || continue
   accounted_for=false
   for row in "${TASKS[@]}"; do
-    IFS='|' read -r _agent task _sched _kind <<< "$row"
+    IFS='|' read -r _agent task _sched _kind _target <<< "$row"
     if [[ "$label" == "com.theborg.$task" ]]; then
       accounted_for=true
       break
@@ -251,3 +308,12 @@ while read -r _pid _status label; do
     echo "warning: loaded job has no task-table row: $label" >&2
   fi
 done <<< "$loaded_jobs"
+
+# Every row was attempted; now fail the run as a whole if any bootstrap did not
+# take, so a partial install can't pass for a clean one in a scheduled context.
+if (( ${#bootstrap_failures[@]} > 0 )); then
+  echo >&2
+  echo "error: ${#bootstrap_failures[@]} job(s) failed to bootstrap:" >&2
+  printf '  %s\n' "${bootstrap_failures[@]}" >&2
+  exit 1
+fi
