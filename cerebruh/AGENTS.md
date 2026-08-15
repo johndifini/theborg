@@ -49,8 +49,8 @@ Main content goes here. Use clear headings and short paragraphs.
 Link to related concepts throughout the text.
 
 ## Related pages
-- [text](relative-path/file1)
-- [text](relative-path/file2)
+- [text](relative-path/file1.md)
+- [text](relative-path/file2.md)
 ```
 
 ## Citation rules
@@ -85,5 +85,7 @@ never from inside a sub-wiki — the contradiction and orphan checks need the wh
 - Never modify files in the `ingest/` or `wikis/<sub-wiki>/raw/` folders
 - Always update `wikis/index.md`, `wikis/<sub-wiki>/wiki/index.md`, and `wikis/<sub-wiki>/wiki/log.md` after changes
 - Keep page names lowercase with hyphens (e.g., `machine-learning.md`)
+- Include the `.md` extension in every relative link to a Markdown file, and run
+  `ruby check-index-links.rb` after changing any `index.md`.
 - Write in clear, plain language
 - When uncertain about how to categorize something, ask the user

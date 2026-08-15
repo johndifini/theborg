@@ -34,8 +34,8 @@ Main content goes here. Use clear headings and short paragraphs.
 Link to related concepts throughout the text.
 
 ## Related pages
-- [text](relative-path/file1)
-- [text](relative-path/file2)
+- [text](relative-path/file1.md)
+- [text](relative-path/file2.md)
 ```
 
 ## Citation rules

@@ -30,8 +30,12 @@ When the user adds a new source to `ingest/` and asks you to ingest it:
     1. When you create a new sub-wiki, symlink its `AGENTS.md` to `../../template/AGENTS.md` and add a `CLAUDE.md` file containing exactly `@AGENTS.md`.
 1. Create a summary page in `wikis/<sub-wiki>/wiki/` named after the source
 1. Create or update concept pages for each major idea or entity
-1. Add links to connect related pages using a relative path markdown link format, `[text](relative-path/file)`
+1. Add links to connect related pages using a relative Markdown link with the file
+   extension included: `[text](relative-path/file.md)`. Never omit `.md` from links to
+   Markdown files.
 1. Update `wikis/<sub-wiki>/wiki/index.md` with new pages and one-line descriptions
+1. Run `ruby check-index-links.rb` from `cerebruh/` and do not finish the ingest until
+   every local link in every `index.md` resolves exactly as written.
 1. Move the ingested source documents to `wikis/<sub-wiki>/raw/`
 1. Append an entry to `wikis/<sub-wiki>/wiki/log.md`. Use a TSV format with the following fields:
     1. timestamp
