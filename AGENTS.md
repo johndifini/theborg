@@ -9,6 +9,9 @@ The Borg is a standardized AI workspace that turns prompts, institutional knowle
 - `mrs-beast/` — An agent that functions as a social media manager
 - `warren-bot-fett/` — An agent that functions as an investment portfolio manager
 - `bones/` — An agent that functions as a family medical assistant
+- `norm/` — An agent that functions as a personal accounting and tax assistant: organizes records, supports planning and compliance, and prepares CPA-reviewable work.
+- `ari/` — An agent that functions as a personal job recruiter: identifies suitable opportunities, tailors application materials, and supports interview and offer decisions.
+- `vinny/` — An agent that functions as a personal legal-document and deal-negotiation assistant: reads agreements, tracks negotiation state, and prepares counsel-reviewable working material.
 - `architetto/` — An agent that functions as a software architect: bootstraps greenfield repositories (stack, automated-testing framework, repo structure, database) and hands each off with the decisions recorded.
 - `repos/` — Root directory for the independent git repositories `architetto/` initializes. Git-ignored by the workspace (only its existence is tracked, via `.gitkeep`); each child is its own repo, not part of The Borg's git history.
 - `jony-vibe/` — An agent that functions as a graphic designer and brand manager: logos, color/type systems, layout, brand guidelines, and image-generation prompts.

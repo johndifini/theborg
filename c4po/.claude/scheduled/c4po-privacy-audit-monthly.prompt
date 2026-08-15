@@ -37,14 +37,15 @@ Examples and obvious templates are not findings. In particular,
 documentation, fixture data that is clearly fictional, commit hashes, dates,
 ordinary version numbers, and launchd labels are not account identifiers.
 
-Then perform a model judgment pass for personal medical or financial details.
-Keep this pass deliberately narrow: read only tracked `bones/AGENTS.md`,
-`bones/CLAUDE.md`, and every tracked file under `warren-bot-fett/`. Decide from
-meaning and context; do not reduce this class to keywords. Private diagnoses,
-treatments, patient facts, holdings, balances, account details, and individual
-financial circumstances are findings. Generic operating instructions,
-sanitized examples, public market facts, portfolio templates, allocation
-methodology, and model output with no private person/account connection are not.
+Then perform a model judgment pass for private domain facts. Keep this pass
+deliberately narrow: read only tracked `bones/AGENTS.md`, `bones/CLAUDE.md`, and
+every tracked file under `warren-bot-fett/`, `norm/`, `ari/`, and `vinny/`.
+Decide from meaning and context; do not reduce this class to keywords. Private
+medical facts, holdings, balances, tax circumstances, career history,
+compensation, application state, agreement facts, and negotiation strategy are
+findings. Generic operating instructions, wholly synthetic examples, public
+market facts, templates, methodology, and model output with no private
+person/account connection are not.
 
 Allowlist — these exact known occurrences are acceptable; the reason is part
 of each entry. Do not treat an entire file as exempt, and report any other
@@ -70,9 +71,9 @@ Collect each finding as `{file, line, class, matched_text, context,
 suggested_remediation}`. Remediation guidance must use the workspace's existing
 privacy conventions: move machine-specific instructions into a directory's
 gitignored `.claude/rules/*.local.md` or `.claude/settings.local.json`; keep
-secrets/local configuration in ignored `.env*`; keep portfolio data in the
-ignored `warren-bot-fett/PORTFOLIO.md`; and add a directory-level gitignore when
-an entire private area should remain untracked, as `vinny/` does. Do not suggest
+secrets/local configuration in ignored `.env*`; keep confidential agent data
+under that agent's ignored `.private/` directory; and publish only synthetic
+templates under `.private.example/`. Do not suggest
 parameterizing tracked text with `${BORG_ROOT}`, `$USER`, or similar variables.
 
 STEP 3: If there is at least one finding, pipe a Markdown report into

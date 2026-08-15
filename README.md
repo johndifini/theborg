@@ -15,6 +15,9 @@ This repo is my personal AI workspace, shared in case the patterns, structure, o
 - `mrs-beast/` — The social media manager agent. Helps with posts, ideas, drafts, and occasionally making me sound more clever than I am.
 - `warren-bot-fett/` — The investment portfolio manager agent. Tracks portfolio ideas, market context, and other financially flavored stuff.
 - `bones/` — The family medical assistant agent. Tracks health context, surfaces medical information, and helps the family stay on top of care decisions.
+- `norm/` — The personal accounting and tax agent. Organizes financial records, supports tax planning and compliance, and prepares work for licensed-professional review.
+- `ari/` — The personal job recruiter agent. Finds suitable roles, tailors applications, prepares interviews, and helps evaluate offers.
+- `vinny/` — The personal legal-document and deal-negotiation agent. Reads agreements, tracks negotiation state, and prepares working material for counsel review.
 - `architetto/` — The software architect agent. Bootstraps greenfield repos — picking the stack, automated-testing framework, repo structure, and database — then hands them off with the decisions written down.
 - `repos/` — Where `architetto` parks the repos it initializes. Each is its own independent git repo; the workspace git-ignores the contents (structure only, via `.gitkeep`) so product code stays out of The Borg's history.
 - `jony-vibe/` — The graphic design and branding agent. Handles logos, color/type systems, layout, brand guidelines, and image-generation prompts.

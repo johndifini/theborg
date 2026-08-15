@@ -47,6 +47,13 @@ Thumbs.db
 # `.local.` convention as settings.local.json above.
 **/.claude/rules/*.local.md
 
+# Per-agent confidential context and Claude Code's local instruction loader.
+# Public synthetic templates use `.private.example/` and remain tracked. This
+# also covers the private scheduled-task tables at `.private/scheduled-tasks/`,
+# whose local job identities must never enter the public repository.
+**/.private/
+**/CLAUDE.local.md
+
 # Allow shared Claude settings, scheduled jobs, etc. — only the
 # `*.local.json` variants and credential files are ignored above.
 
@@ -57,11 +64,9 @@ Thumbs.db
 #**/.obsidian/plugins/*/data.json
 
 # ── vinny (privileged legal / contract material) ─────────────
-# Entire directory is confidential: executed agreements, opposing
-# counsel's drafts, and negotiation strategy. Nothing here is tracked —
-# not even a .gitkeep, since the matter's existence is itself sensitive.
-# Its AGENTS.md / CLAUDE.md are local-only agent context by design.
-vinny/
+# No rule needed: the generic scaffold is tracked like any other agent's, and
+# every matter document, draft, and strategy note lives under `vinny/.private/`,
+# already ignored by the `**/.private/` rule above.
 
 # ── warren-bot-fett (financial / portfolio) ──────────────────
 warren-bot-fett/PORTFOLIO.md
@@ -70,10 +75,6 @@ warren-bot-fett/PORTFOLIO.md
 mrs-beast/.claude/commands/*-image-prompt.md
 mrs-beast/.claude/scheduled/*-image-prompt.prompt
 mrs-beast/.claude/scheduled/last30days-raw/
-
-# Private scheduled-task tables contain local job identities that must never
-# enter the public repository.
-.private/scheduled-tasks/*.tasks
 
 # ── cerebruh (second-brain content) ──────────────────────────
 # Track structure + templates + the index, ignore actual notes.

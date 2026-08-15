@@ -21,7 +21,7 @@ If you've cloned or forked this repo, run through this once:
 1. Install the pre-commit hook (one-time, per clone):
    `git config core.hooksPath .githooks`
 2. Install gitleaks: `brew install gitleaks` (or see https://github.com/gitleaks/gitleaks).
-3. Confirm these patterns are still gitignored: `warren-bot-fett/PORTFOLIO.md`, `**/logs/`, `**/.claude/settings.local.json`, `**/.claude/.credentials*`, `.env` / `.env.*`. All secrets live in the single consolidated `.env` at the workspace root (chmod 600, gitignored) — verify with `git check-ignore .env`; only the redacted `.env.example` template belongs in git.
+3. Confirm these patterns are still gitignored: `**/.private/`, `**/CLAUDE.local.md`, `warren-bot-fett/PORTFOLIO.md`, `**/logs/`, `**/.claude/settings.local.json`, `**/.claude/.credentials*`, `.env` / `.env.*`. Only wholly synthetic private-context templates belong under tracked `.private.example/` directories. All secrets live in the single consolidated `.env` at the workspace root (chmod 600, gitignored) — verify with `git check-ignore .env`; only the redacted `.env.example` template belongs in git.
 4. Anything you drop into `cerebruh/ingest/` is gitignored by default — wiki publishing is opt-in only.
 5. If you un-ignore a wiki under `cerebruh/wikis/<topic>/`, do a PII pass first.
 6. Enable GitHub secret scanning and push protection on your fork (Settings → Code security).
