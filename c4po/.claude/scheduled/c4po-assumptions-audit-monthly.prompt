@@ -213,8 +213,9 @@ Assumption H — the rolling session-limit window is 5 hours
   The only value pinned here is the **5-hour** rolling session window — usage is
   capped per window starting from the window's first message. That is a vendor
   fact and the actual subject of this assumption. It must hold for whichever
-  vendor drives the backlog burndown (today `codex exec` against a ChatGPT plan;
-  the 5-hour rolling limit applies to both Anthropic and OpenAI plans).
+  vendor drives the backlog burndown (since 2026-08-15, `claude -p` against the
+  user's Claude plan; before that, `codex exec` against a ChatGPT plan — the
+  5-hour rolling limit applied to both).
 
   **Do not pin schedule ids, fire times, or reset times in this file.** They live
   in the scheduler and drift out of sync the moment a job is rescheduled. Read
@@ -225,17 +226,17 @@ Assumption H — the rolling session-limit window is 5 hours
      block to get the two fire times. This is the source of truth.
   2. Weekly usage reset — from the WINDOW phase of
      ${BORG_ROOT}/c4po/.claude/scheduled/c4po-backlog-burndown.prompt. The reset
-     is an account fact (read from the vendor's `/status`), not a scheduler fact,
-     so it is legitimately recorded there.
+     is an account fact (read from `/usage` in an interactive Claude Code
+     session), not a scheduler fact, so it is legitimately recorded there.
   If either read fails (task row absent, schedule id has no case branch, WINDOW
   phase no longer states a reset), flag RECONSIDER and say which read failed —
   a broken read means the burndown's timing can no longer be verified at all.
 
   Check, in order:
-  1. Use WebSearch (anthropic.com, docs.claude.com, support.claude.com, and the
-     OpenAI/ChatGPT plan docs, plus community reports; search terms like "Claude
-     usage limits 5-hour session window" and "ChatGPT Codex usage limit rolling
-     window", plus the current year) to confirm the window is still 5 hours.
+  1. Use WebSearch (anthropic.com, docs.claude.com, support.claude.com, plus
+     community reports; search terms like "Claude usage limits 5-hour session
+     window" and "Claude weekly usage limit reset", plus the current year) to
+     confirm the window is still 5 hours.
   2. Verify the fire times you read satisfy the invariant under the confirmed
      window length:
        second fire = reset − window + 10min slack

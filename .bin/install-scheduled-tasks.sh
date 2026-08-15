@@ -40,8 +40,8 @@ TASKS=(
   "c4po|c4po-lint-audit-monthly|month-first5-09-00|prompt"
   "c4po|c4po-assumptions-audit-monthly|month-first5-09-00|prompt"
   "c4po|c4po-privacy-audit-monthly|month-first5-11-00|prompt"
-  "c4po|c4po-retro|weekly-sat-sun-08-00|prompt"
-  "c4po|c4po-backlog-burndown|weekly-fri-21-09-sat-02-19|prompt"
+  "c4po|c4po-retro|weekly-wed-thu-12-00|prompt"
+  "c4po|c4po-backlog-burndown|weekly-wed-01-00-06-10|prompt"
   "c4po|c4po-cli-update|weekly-sun-06-00|cli-update"
   "mrs-beast|mrs-beast-social-media-drafts|weekly-sun-wed-16-00|prompt"
   # Paused 2026-08-06 for a ~4-month account rebalance: the label is `launchctl
@@ -148,24 +148,29 @@ schedule_xml() {
       printf '        <key>Minute</key>\n        <integer>0</integer>\n'
       printf '    </dict>\n'
       ;;
-    # Saturday 08:00 and Sunday 08:00 — just after the account's weekly Codex
-    # usage reset (Sat 7:09 AM local), so the session retro (now a codex job)
-    # starts the fresh week's budget. Sunday is the retry if Saturday's machine
-    # was asleep; the prompt's ISO-week GATE skips it if Saturday already ran.
-    weekly-sat-sun-08-00)
+    # Wednesday 12:00 and Thursday 12:00 — just after the account's weekly
+    # Claude usage reset (Wed 11:00 AM local), so the session retro starts the
+    # fresh week's budget. Thursday is the retry if Wednesday's machine was
+    # asleep; the prompt's ISO-week GATE skips it if Wednesday already ran.
+    # Noon rather than 11:05 leaves the burndown's second run (below) room to
+    # finish burning the outgoing week before the retro starts the new one.
+    weekly-wed-thu-12-00)
       printf '    <key>StartCalendarInterval</key>\n    <array>\n'
-      for w in 6 0; do cal_entry "Weekday=$w" "Hour=8" "Minute=0"; done
+      for w in 3 4; do cal_entry "Weekday=$w" "Hour=12" "Minute=0"; done
       printf '    </array>\n'
       ;;
-    # Friday 21:09 and Saturday 02:19 — ~10h and ~4h50m before the account's
-    # weekly Codex usage reset (Sat 7:09 AM local). Two firings because the
+    # Wednesday 01:00 and Wednesday 06:10 — ~10h and ~4h50m before the account's
+    # weekly Claude usage reset (Wed 11:00 AM local). Two firings because the
     # 5-hour session limit caps one run's burn: the second starts just past the
     # first's session-limit boundary and resumes the same plan (the prompt's
     # GATE handles resume; its WINDOW phase aborts late, post-reset firings).
-    weekly-fri-21-09-sat-02-19)
+    # Derived from the burndown prompt's invariant, not chosen by hand:
+    #   second fire = reset - window + 10min  = 11:00 - 5:00 + 0:10 = 06:10
+    #   first fire  = second - window - 10min = 06:10 - 5:10        = 01:00
+    weekly-wed-01-00-06-10)
       printf '    <key>StartCalendarInterval</key>\n    <array>\n'
-      cal_entry "Weekday=5" "Hour=21" "Minute=9"
-      cal_entry "Weekday=6" "Hour=2" "Minute=19"
+      cal_entry "Weekday=3" "Hour=1" "Minute=0"
+      cal_entry "Weekday=3" "Hour=6" "Minute=10"
       printf '    </array>\n'
       ;;
     *)

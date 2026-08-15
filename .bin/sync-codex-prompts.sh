@@ -42,9 +42,21 @@ while IFS= read -r source; do
   esac
   safe_scope="$(printf '%s' "$scope" | tr '/ _' '---' | tr '[:upper:]' '[:lower:]' | tr -cd 'a-z0-9-')"
   printf '%s\t%s\t%s\n' "$name" "$safe_scope" "$source" >> "$INVENTORY"
+# The .claude/worktrees prune below matters: that directory holds ephemeral git
+# worktrees created by agent sessions (Claude Code's EnterWorktree, the
+# background-task chips). Each is a full checkout, so without the prune the scan
+# finds a second copy of every command in the tree. The duplicates generate junk
+# claude-worktrees-NAME-* skills and, worse, colliding with the real commands
+# demotes those to scope-prefixed workspace-* names -- so the backlog skill
+# silently becomes workspace-backlog for as long as the worktree exists.
+# Observed 2026-08-15, when a concurrent session's worktree took the bridge from
+# 20 skills to 39. Keep comments OUT of the process substitution below: bash
+# parses backticks inside it even in a comment, and a stray pair fails the whole
+# command at expansion time while `bash -n` still passes.
 done < <(
   find "$BORG_ROOT" \
     \( -path "$BORG_ROOT/.git" -o -path "$BORG_ROOT/bernard" \
+       -o -path '*/.claude/worktrees' \
        -o -path '*/.git' -o -path '*/node_modules' -o -path '*/dist' -o -path '*/build' \) -prune \
     -o -type f -path '*/.claude/commands/*.md' -print | LC_ALL=C sort
 )

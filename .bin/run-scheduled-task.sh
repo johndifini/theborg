@@ -21,10 +21,10 @@ LOG_FILE="$LOG_DIR/$TASK_NAME.log"
 mkdir -p "$LOG_DIR"
 
 # launchd starts jobs with a minimal PATH and does not source any shell
-# profile, so `claude`/`codex` (and anything else installed via Homebrew, nvm,
-# etc.) won't be found. The user keeps PATH in ~/.zshenv — source it before
-# resolving the CLI binary. Errors are swallowed so a profile hiccup never
-# blocks the task; if the binary still can't be resolved we'll fail loudly below.
+# profile, so `claude` (and anything else installed via Homebrew, nvm, etc.)
+# won't be found. The user keeps PATH in ~/.zshenv — source it before resolving
+# the CLI binary. Errors are swallowed so a profile hiccup never blocks the
+# task; if the binary still can't be resolved we'll fail loudly below.
 if [[ -f "$HOME/.zshenv" ]]; then
   # shellcheck disable=SC1091
   set +u
@@ -32,26 +32,16 @@ if [[ -f "$HOME/.zshenv" ]]; then
   set -u
 fi
 
-# Per-task CLI. The backlog burndown and the weekly session retro both run on
-# Codex (spending the OpenAI weekly budget), keeping them off Claude's shared
-# 5-hour/weekly limits; every other task runs on Claude.
-CLI=claude
-case "$TASK_NAME" in
-  c4po-backlog-burndown|c4po-retro) CLI=codex ;;
-esac
-
-if [[ "$CLI" == codex ]]; then
-  CODEX_BIN="${CODEX_BIN:-codex}"
-  if ! command -v "$CODEX_BIN" >/dev/null 2>&1; then
-    echo "codex binary not found on PATH after sourcing ~/.zshenv (PATH=$PATH)" >&2
-    exit 127
-  fi
-else
-  CLAUDE_BIN="${CLAUDE_BIN:-claude}"
-  if ! command -v "$CLAUDE_BIN" >/dev/null 2>&1; then
-    echo "claude binary not found on PATH after sourcing ~/.zshenv (PATH=$PATH)" >&2
-    exit 127
-  fi
+# Every scheduled task runs on Claude. Until 2026-08-15 the backlog burndown and
+# the weekly session retro ran on `codex exec` instead, to spend the OpenAI
+# weekly budget and keep them off Claude's shared limits; that split was retired
+# when the user consolidated all scheduled work onto Claude. Codex remains in
+# use interactively (the `$name` skill bridge) and is still maintained by
+# c4po-cli-update — it just no longer drives any scheduled job.
+CLAUDE_BIN="${CLAUDE_BIN:-claude}"
+if ! command -v "$CLAUDE_BIN" >/dev/null 2>&1; then
+  echo "claude binary not found on PATH after sourcing ~/.zshenv (PATH=$PATH)" >&2
+  exit 127
 fi
 
 # BORG_ROOT: workspace root, auto-detected from this script's location
@@ -61,20 +51,11 @@ fi
 BORG_ROOT="${BORG_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 export BORG_ROOT
 
-# Resume handle for notification footers (notify-email.sh).
-# - claude: pin a session id up front (`claude --resume $BORG_SESSION_ID`).
-#   Lowercased — claude stores/looks up session ids in lowercase.
-# - codex: no way to pre-pin an id (codex assigns one at launch), so export a
-#   generic fallback. Inside the run, notify-email.sh prefers Codex's exact
-#   $CODEX_THREAD_ID; after the run we also upgrade failure emails to the exact
-#   id parsed from the log. `codex resume --last` is only the last-resort path.
-SESSION_ID=""
-if [[ "$CLI" == codex ]]; then
-  export BORG_RESUME_CMD="codex resume --last"
-else
-  SESSION_ID="$(uuidgen | tr '[:upper:]' '[:lower:]')"
-  export BORG_SESSION_ID="$SESSION_ID"
-fi
+# Resume handle for notification footers (notify-email.sh): pin a session id up
+# front so the email can hand the user `claude --resume $BORG_SESSION_ID`.
+# Lowercased — claude stores/looks up session ids in lowercase.
+SESSION_ID="$(uuidgen | tr '[:upper:]' '[:lower:]')"
+export BORG_SESSION_ID="$SESSION_ID"
 
 cd "$AGENT_DIR"
 
@@ -87,10 +68,10 @@ PROMPT_CONTENT=${PROMPT_CONTENT//\$\{BORG_ROOT\}/$BORG_ROOT}
 # Scheduled-run preamble. Every .prompt has a paired interactive slash command
 # (lint rule: Scheduled tasks) that delegates back to this same file but applies
 # overrides for session use — skip the once-per-period state gate, don't write
-# state, report to the session instead of emailing. Both harnesses surface those
-# commands to a headless run as invocable skills (claude: `.claude/commands/*`;
-# codex: the `$name` skill bridge), and the model will match one to the task it
-# was just handed and follow its overrides instead of these instructions.
+# state, report to the session instead of emailing. Claude surfaces those
+# commands to a headless run as invocable skills (`.claude/commands/*`), and the
+# model will match one to the task it was just handed and follow its overrides
+# instead of these instructions.
 # That is a SILENT failure — the run exits 0 having sent no email and written no
 # state, so the runner's failure-email path never fires and the next scheduled
 # firing repeats the work. Observed on a multi-day private task on 2026-07-22
@@ -109,11 +90,11 @@ including the state gate, the notify-email.sh delivery, and the state write.
 --- BEGIN TASK INSTRUCTIONS ---
 $PROMPT_CONTENT"
 
-# Per-task effort (claude tasks only; codex tasks use the model/effort defaults
-# from ~/.codex/config.toml). Every claude job runs at "high".
+# Per-task effort. Every job runs at "high" unless its .conf sidecar says
+# otherwise.
 EFFORT=high
 
-# Per-task model (claude tasks only; codex tasks use ~/.codex/config.toml).
+# Per-task model.
 # Set HERE via --model, deliberately NOT inherited from the user-level `model`
 # field in ~/.claude/settings.json. That field is mutated by any interactive
 # `/model` toggle, and a drift there onto a credits-gated model (Fable 5) is what
@@ -126,51 +107,47 @@ EFFORT=high
 # the alias is intact and that Opus remains the right default family.
 MODEL=opus
 
-# Per-task extra CLI args (claude and codex both accept --add-dir). The backlog
-# burndown edits files across the whole workspace (root BACKLOG.md, sibling
-# agents, the git-ignored repos/*); the session retro stages into the sibling
-# cerebruh/ingest/ and pipes to .bin/notify-email.sh. Neither stays inside its
-# own agent dir, so both get the workspace root as a writable root (needed for
-# codex's workspace-write sandbox, which otherwise confines writes to the cwd).
-# Other tasks stay confined to their agent dir. Repo-hosted tasks set their own
-# EXTRA_ARGS via the .conf sidecar sourced below.
+# Per-task extra CLI args. The backlog burndown edits files across the whole
+# workspace (root BACKLOG.md, sibling agents, the git-ignored repos/*); the
+# session retro stages into the sibling cerebruh/ingest/ and pipes to
+# .bin/notify-email.sh. Neither stays inside its own agent dir, so both get the
+# workspace root via --add-dir. Other tasks stay confined to their agent dir.
+# Repo-hosted tasks set their own EXTRA_ARGS via the .conf sidecar sourced below.
 #
-# Two writable roots beyond $BORG_ROOT are also required, both learned the hard
-# way when the 2026-07-31 burndown implemented 0 of its 39 planned items:
+# No `<repo>/.git` grants are needed. That was a Codex requirement: its
+# workspace-write Seatbelt sandbox carved `.git/` out of every writable root, so
+# every commit died on `Unable to create '.../.git/index.lock'`, and the fix was
+# to pass each `.git` as a root in its own right (learned when the 2026-07-31
+# burndown implemented 0 of its 39 planned items). Claude's --add-dir grants
+# tool access rather than defining a Seatbelt boundary and has no such carveout,
+# so an --add-dir on a repo root already covers committing inside it. The
+# $CODEX_HOME grant is gone for the same reason: burndown children are now
+# `claude -p` subprocesses, which need no app-server state directory.
 #
-# 1. `<repo>/.git`. Codex's workspace-write sandbox carves `.git/` out of every
-#    writable root, so `--add-dir "$BORG_ROOT"` leaves the whole tree writable
-#    EXCEPT its index, and every commit dies on
-#    `Unable to create '.../.git/index.lock': Operation not permitted`. The
-#    carveout is per-root (root + "/.git"), so a `.git` passed as a root in its
-#    own right is not carved out. List them explicitly: the workspace repo plus
-#    every independent repo under repos/.
-# 2. $CODEX_HOME, for tasks that spawn a nested `codex exec`. The child starts
-#    an in-process app-server that writes there; without it every child exits
-#    with `failed to initialize in-process app-server client: Operation not
-#    permitted` before it ever reads its prompt. Verified 2026-08-01 that
-#    narrowing this to ~/.codex/app-server-control/ is NOT sufficient. The
-#    nested child deliberately uses --dangerously-bypass-approvals-and-sandbox:
-#    it cannot initialize a second macOS Seatbelt sandbox, and it remains inside
-#    this outer process tree's workspace-write boundary. Granted only to the
-#    burndown, the one task that spawns children.
+# The burndown additionally runs in bypassPermissions. It must write and commit
+# across several repositories unattended, and a mid-BURN permission denial is
+# precisely the silent failure the task's phase design exists to prevent — the
+# run would exit 0 having implemented nothing. This matches the effective
+# posture its Codex children already had (they ran
+# --dangerously-bypass-approvals-and-sandbox), but note what is NOT carried
+# over: under Codex the whole process tree sat inside an OS-enforced
+# workspace-write Seatbelt boundary, and nothing replaces that here. Claude
+# Code has its own Seatbelt-backed Bash sandbox, but adopting it needs the
+# outbound SMTP path in .bin/notify-email.sh verified against the sandbox's
+# HTTP-proxy network layer first — email is the only notification channel, so a
+# silent break there is unacceptable. Tracked in BACKLOG.md.
+#
+# The retro deliberately does NOT get bypassPermissions. It runs under the
+# inherited `auto` mode like every other Claude job, because it is the one task
+# that touches cerebruh/ and the Edit deny rules in c4po/.claude/settings.local.json
+# are what mechanically enforce "wiki content is read-only" — bypassPermissions
+# would skip them and leave only the prompt's instruction.
 EXTRA_ARGS=()
 case "$TASK_NAME" in
-  c4po-backlog-burndown|c4po-retro)
-    EXTRA_ARGS+=(--add-dir "$BORG_ROOT" --add-dir "$BORG_ROOT/.git")
-    # `if`, not `[[ ... ]] &&`: with `set -e`, a trailing false `&&` list makes
-    # the loop (and the enclosing case) exit non-zero and kills the run. That
-    # fires whenever the last glob entry has no .git — including the no-match
-    # case, where the unexpanded pattern itself is the only "entry".
-    for git_dir in "$BORG_ROOT"/repos/*/.git; do
-      if [[ -d "$git_dir" ]]; then
-        EXTRA_ARGS+=(--add-dir "$git_dir")
-      fi
-    done
-    ;;
+  c4po-backlog-burndown|c4po-retro) EXTRA_ARGS+=(--add-dir "$BORG_ROOT") ;;
 esac
 case "$TASK_NAME" in
-  c4po-backlog-burndown) EXTRA_ARGS+=(--add-dir "${CODEX_HOME:-$HOME/.codex}") ;;
+  c4po-backlog-burndown) EXTRA_ARGS+=(--permission-mode bypassPermissions) ;;
 esac
 
 # Per-task report file. Most tasks email their own results from inside the
@@ -184,8 +161,8 @@ REPORT_FILE=""
 # runner settings in their own repo rather than hard-coding them here: drop a
 # <task>.conf beside the <task>.prompt. Sourced last, so it overrides the
 # defaults above. Recognized keys: MODEL, EFFORT, EXTRA_ARGS (a bash array), and
-# REPORT=1 (capture stdout as a dated report and email it). CLI was resolved
-# earlier and is not overridable here — repo-hosted tasks run on claude.
+# REPORT=1 (capture stdout as a dated report and email it). There is no harness
+# key — every task runs on claude.
 CONF_FILE="$AGENT_DIR/.claude/scheduled/$TASK_NAME.conf"
 if [[ -f "$CONF_FILE" ]]; then
   REPORT=0
@@ -196,20 +173,17 @@ fi
 
 # claude flags:
 # --strict-mcp-config: a scheduled `claude -p` run must not boot any
-# session-configured MCP server — outbound goes via .bin/notify-email.sh
-# only. (No codex equivalent needed: codex loads MCP servers only from
-# ~/.codex/config.toml.)
+# session-configured MCP server — outbound goes via .bin/notify-email.sh only.
 # --session-id pins the run to $SESSION_ID so the notification can hand the user a
 # `claude --resume` command pointing at this exact session.
 #
-# codex flags:
-# --sandbox workspace-write: codex defaults headless runs to a read-only
-# sandbox; the task must write (and --add-dir extends the writable roots).
-# -c sandbox_workspace_write.network_access=true: workspace-write blocks
-# network by default, which would break notify-email.sh's SMTP curl and any
-# child `codex exec` the task spawns (the child's API calls run under this
-# sandbox). Model and reasoning effort are deliberately NOT set — the defaults
-# come from ~/.codex/config.toml.
+# Historical note — the retired codex path (removed 2026-08-15 when all
+# scheduled work moved to Claude). It ran `codex exec --sandbox workspace-write`
+# with `-c sandbox_workspace_write.network_access=true`, an OS-enforced Seatbelt
+# boundary around the whole process tree with network re-enabled for
+# notify-email.sh's SMTP curl. Nothing in the Claude path reproduces that
+# OS-level boundary yet; see the EXTRA_ARGS comment above and the BACKLOG.md
+# item on adopting Claude Code's own Bash sandbox.
 #
 # Agent slug (c4po | mrs-beast | warren-bot-fett) — labels failure emails and
 # is the first arg notify-email.sh expects.
@@ -221,15 +195,8 @@ AGENT_NAME="$(basename "$AGENT_DIR")"
 # (previously a failed run left no end line in the log).
 STATUS=0
 {
-  echo "===== $(date -u +%Y-%m-%dT%H:%M:%SZ) start $TASK_NAME (cwd=$AGENT_DIR, cli=$CLI, session=${SESSION_ID:-codex-assigned}) ====="
-  if [[ "$CLI" == codex ]]; then
-    # The Codex desktop app injects these only for its current interactive
-    # thread. A launchd task must never inherit them: otherwise `codex exec`
-    # reconnects to that thread through its in-process app-server client rather
-    # than starting the fresh, isolated headless session the task requires.
-    env -u CODEX_REMOTE_PAYLOAD -u CODEX_THREAD_ID \
-      "$CODEX_BIN" exec --sandbox workspace-write -c sandbox_workspace_write.network_access=true ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"} "$PROMPT_CONTENT" < /dev/null
-  elif [[ -n "$REPORT_FILE" ]]; then
+  echo "===== $(date -u +%Y-%m-%dT%H:%M:%SZ) start $TASK_NAME (cwd=$AGENT_DIR, cli=claude, session=$SESSION_ID) ====="
+  if [[ -n "$REPORT_FILE" ]]; then
     # Report task: model stdout IS the report; stderr/markers stay in the log.
     mkdir -p "$(dirname "$REPORT_FILE")"
     "$CLAUDE_BIN" -p "$PROMPT_CONTENT" --session-id "$SESSION_ID" --strict-mcp-config --model "$MODEL" --effort "$EFFORT" ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"} < /dev/null > "$REPORT_FILE"
@@ -238,14 +205,6 @@ STATUS=0
   fi
 } >> "$LOG_FILE" 2>&1 || STATUS=$?
 echo "===== $(date -u +%Y-%m-%dT%H:%M:%SZ) end $TASK_NAME (exit $STATUS) =====" >> "$LOG_FILE" 2>&1
-
-# codex prints its self-assigned session id in the run header; now that the run
-# is over, upgrade the failure email's resume footer from `--last` to the exact
-# id. The log accumulates runs, so take the last match (this run's).
-if [[ "$CLI" == codex ]]; then
-  CODEX_SESSION="$(sed -n 's/^session id: //p' "$LOG_FILE" | tail -1)"
-  [[ -n "$CODEX_SESSION" ]] && export BORG_RESUME_CMD="codex resume $CODEX_SESSION"
-fi
 
 # notify-email.sh failing is a silent-outage class of bug: email is the ONLY
 # outbound channel, so a failure here means the user learns nothing — including
@@ -283,7 +242,7 @@ if [[ $STATUS -ne 0 ]]; then
   {
     echo "Scheduled task '$TASK_NAME' exited $STATUS."
     echo "  agent:   $AGENT_NAME"
-    echo "  session: ${SESSION_ID:-${CODEX_SESSION:-unknown}}"
+    echo "  session: $SESSION_ID"
     echo "  log:     $LOG_FILE"
     echo
     echo "Last lines of the log:"

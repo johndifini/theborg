@@ -28,6 +28,10 @@ Overrides for interactive invocation, by the prompt's named phases:
 7. BURN — as written (source BACKLOG.md check-offs and commits are real),
    except: confirm with the user before starting the first item (they may
    want only the prioritization), and stop when the user says stop rather
-   than running until credits are exhausted.
+   than running until the weekly budget is exhausted. Child sessions here
+   inherit this session's permission mode; do not add
+   `--permission-mode bypassPermissions` to a child spawned interactively —
+   that flag belongs to the unattended scheduled run, where no one can
+   answer a prompt.
 8. WRAP — do NOT email; report the summary (completed / skipped / needs-user,
    with commit hashes) to this session.
