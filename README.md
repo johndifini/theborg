@@ -8,6 +8,8 @@ Yes, it is yet another ClaudeOS-style setup.
 
 This repo is my personal AI workspace, shared in case the patterns, structure, or terrible naming choices are useful to someone else.
 
+**Want to run it yourself? → [QUICKSTART.md](./QUICKSTART.md)** — macOS setup in about ten minutes, including how to install only the scheduled tasks you actually want.
+
 ## Directory Structure
 
 - `cerebruh/` — The shared second-brain wiki template. Personal knowledge, reusable context, and other things Future Me will definitely forget.
@@ -30,9 +32,13 @@ This repo is my personal AI workspace, shared in case the patterns, structure, o
 
 Each agent runs background tasks via macOS launchd. Plists live in `~/Library/LaunchAgents/` under the `com.theborg.*` namespace. Model jobs are driven by `.bin/run-scheduled-task.sh`; the model-less CLI updater runs its deterministic `.bin/run-cli-update.sh` directly. Jobs log launchd output to `<agent>/.claude/scheduled/logs/launchd.{out,err}`. The plists embed absolute paths and aren't committed verbatim — regenerate them from the registered task schedules with the single `.bin/install-scheduled-tasks.sh` generator (add `--load` to (re)register them with launchd).
 
-The independent repos under `repos/*` reuse this same framework without being tracked here: a repo registers a job by dropping a `<task>.conf` beside its `<task>.prompt` (a `SCHEDULE=` line plus any per-run overrides — model, extra CLI args, report mode), which the installer discovers from the filesystem and the runner sources at run time. Those repo-hosted jobs are documented in their own repo's README, not below.
+**Scheduled jobs are harness-agnostic.** Each one runs on Claude Code or on Codex, and the choice is per-job rather than baked into the runner. Resolution is last-wins: the built-in default `claude`, overridden by `BORG_HARNESS` in `~/.zshenv` (the workspace-wide default), overridden by `HARNESS=claude|codex` in a task's `.conf` sidecar. `.bin/run-scheduled-task.sh` supplies whatever each harness needs to write unattended — `--permission-mode bypassPermissions` on Claude, a workspace-write sandbox with explicit `.git` writable roots on Codex — so a job can be moved between harnesses by editing one line and nothing else. A job whose chosen CLI is missing fails loudly with exit 127 rather than quietly running on the other one.
 
-Jobs notify the user by **email** via `.bin/notify-email.sh <agent> [subject]` (outbound Gmail SMTP; creds in the workspace root `.env`). Stdin is Markdown; notifications are `multipart/alternative` with the original plain text first and dependency-free rendered HTML second. Every job passes a short, descriptive subject (e.g. `Borg security audit — 2026-07-03 — 0 finding(s)`) so the inbox is scannable without opening each message. Every model-driven job runs on Claude and is pinned to a fixed `--session-id`, so its notification email includes an exact `claude --resume <id>` command for continuing the headless session on the Mac Studio; model-less maintenance reports need no resume footer. (`notify-email.sh` still prefers a `CODEX_THREAD_ID` when one is set, which only happens when a human pipes to it from a Codex session.)
+Jobs that spend a weekly budget resolve the reset at run time via `.bin/weekly-reset.sh` rather than having it baked into a schedule — it is an account fact that differs per user. On Codex it is derived from real account data (`resets_at` in the newest session rollout, a rolling window that legitimately drifts); on Claude nothing exposes it, so it comes from `BORG_CLAUDE_RESET` in `~/.zshenv` and is audited monthly by Assumption H. An unknown reset never blocks a job — it runs and reports the gap.
+
+The independent repos under `repos/*` reuse this same framework without being tracked here: a repo registers a job by dropping a `<task>.conf` beside its `<task>.prompt` (a `SCHEDULE=` line plus any per-run overrides — harness, model, extra CLI args, report mode), which the installer discovers from the filesystem and the runner sources at run time. Those repo-hosted jobs are documented in their own repo's README, not below.
+
+Jobs notify the user by **email** via `.bin/notify-email.sh <agent> [subject]` (outbound Gmail SMTP; creds in the workspace root `.env`). Stdin is Markdown; notifications are `multipart/alternative` with the original plain text first and dependency-free rendered HTML second. Every job passes a short, descriptive subject (e.g. `Borg security audit — 2026-07-03 — 0 finding(s)`) so the inbox is scannable without opening each message. A model-driven job on Claude is pinned to a fixed `--session-id`, so its notification email includes an exact `claude --resume <id>` command for continuing the headless session; a job on Codex cannot pre-pin an id, so its footer carries `codex resume <id>` parsed from the run log (falling back to `codex resume --last`). Model-less maintenance reports need no resume footer.
 
 For model-job details, see `<agent>/.claude/scheduled/<label>.prompt`; the CLI updater is defined in `.bin/run-cli-update.sh`.
 
@@ -120,12 +126,9 @@ Feedback, ideas, and “hey, this could be cleaner” notes are very welcome.
 
 ## Forking it
 
-Before you make this your own:
+Setup lives in **[QUICKSTART.md](./QUICKSTART.md)** — prerequisites, `BORG_ROOT`, cloning, the Claude OAuth token, email notifications, the pre-commit hook, and installing scheduled tasks selectively. It's the only setup list; this section deliberately doesn't repeat it.
 
-1. Clone the repo.
-1. Install the pre-commit hook: `git config core.hooksPath .githooks`
-1. Install Codex command skills: `.bin/sync-codex-prompts.sh`.
-1. Publish the scoped rules to Codex: `.bin/sync-codex-rule-skills.sh` (tracked output, so this only matters if a rule changed).
-1. Set up email notifications: `cp .env.example .env`, `chmod 600 .env`, then fill in a Gmail App Password (see the file's header).
-1. Install the scheduled tasks: `.bin/install-scheduled-tasks.sh --load` — generates the launchd plists from your checkout path and registers them.
-1. Read [SECURITY.md](./SECURITY.md) before your first commit — There’s a short forker checklist in there that may save you from accidentally publishing secrets, personal notes, API keys, or other spicy artifacts.
+Two things worth knowing before you start:
+
+- Read [SECURITY.md](./SECURITY.md) before your first commit. There's a short forker checklist in there that may save you from accidentally publishing secrets, personal notes, API keys, or other spicy artifacts.
+- You don't have to take the whole thing. Delete the agents you don't want and install only the scheduled tasks you'll actually read the email from.

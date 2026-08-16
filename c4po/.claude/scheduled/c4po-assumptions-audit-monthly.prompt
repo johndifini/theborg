@@ -213,9 +213,9 @@ Assumption H — the rolling session-limit window is 5 hours
   The only value pinned here is the **5-hour** rolling session window — usage is
   capped per window starting from the window's first message. That is a vendor
   fact and the actual subject of this assumption. It must hold for whichever
-  vendor drives the backlog burndown (since 2026-08-15, `claude -p` against the
-  user's Claude plan; before that, `codex exec` against a ChatGPT plan — the
-  5-hour rolling limit applied to both).
+  harness drives the backlog burndown: the job runs on claude or codex depending
+  on `$BORG_HARNESS` and its `.conf` sidecar, and the 5-hour rolling limit has
+  applied to both.
 
   **Do not pin schedule ids, fire times, or reset times in this file.** They live
   in the scheduler and drift out of sync the moment a job is rescheduled. Read
@@ -224,37 +224,65 @@ Assumption H — the rolling session-limit window is 5 hours
      find the TASKS row whose task name is `c4po-backlog-burndown` to get its
      schedule id, then read that id's `cal_entry` lines in the schedule case
      block to get the two fire times. This is the source of truth.
-  2. Weekly usage reset — from the WINDOW phase of
-     ${BORG_ROOT}/c4po/.claude/scheduled/c4po-backlog-burndown.prompt. The reset
-     is an account fact (read from `/usage` in an interactive Claude Code
-     session), not a scheduler fact, so it is legitimately recorded there.
-  If either read fails (task row absent, schedule id has no case branch, WINDOW
-  phase no longer states a reset), flag RECONSIDER and say which read failed —
-  a broken read means the burndown's timing can no longer be verified at all.
+  2. Weekly usage reset — run `${BORG_ROOT}/.bin/weekly-reset.sh`, once per
+     harness (`--harness claude` and `--harness codex`). It reports the next
+     reset as KEY=VALUE lines; `known=no` with a `reason` means it could not be
+     determined for that harness. The reset is an ACCOUNT fact that differs per
+     user, so it is never written down in any prompt — including this one.
+  If read 1 fails (task row absent, schedule id has no case branch), flag
+  RECONSIDER and say so — a broken read means the burndown's timing can no
+  longer be verified at all. Read 2 returning `known=no` is NOT a failed read;
+  handle it under check 3 below.
 
   Check, in order:
   1. Use WebSearch (anthropic.com, docs.claude.com, support.claude.com, plus
      community reports; search terms like "Claude usage limits 5-hour session
      window" and "Claude weekly usage limit reset", plus the current year) to
      confirm the window is still 5 hours.
-  2. Verify the fire times you read satisfy the invariant under the confirmed
-     window length:
+  2. Verify the fire times you read still let the job start inside its own
+     WINDOW, using the reset from read 2 and the confirmed window length:
+       earliest valid start = reset − (2 x window) − 20min
+       latest valid start   = reset − 30min
+     The launchd times are a coarse approximation and are allowed to be — the
+     WINDOW phase enforces the precise bound at run time. What matters is that
+     at least one fire time still lands inside the valid range; if none does,
+     the job aborts every week and burns nothing. Also check the twin-firing
+     invariant, which is why there are two:
        second fire = reset − window + 10min slack
        first fire  = second fire − window − 10min
-     The twin firing exists because one run's burn is capped by the session
-     limit: the second must start just past the first's session-limit boundary
-     and still land before the reset.
+     The second must start just past the first's session-limit boundary and
+     still land before the reset.
+  3. Cross-check the reset itself, which is the one value nothing else can
+     verify. For the CODEX harness `weekly-reset.sh` derives it from real
+     account data (`resets_at` in the newest session rollout), so treat it as
+     ground truth. For the CLAUDE harness there is no derivable source — no
+     usage subcommand, no persisted reset on disk, `/usage` interactive-only —
+     so the value is whatever the user exported as `$BORG_CLAUDE_RESET`, and it
+     is stale-able. Report:
+       - `known=no` on the harness the burndown actually runs on → flag
+         RECONSIDER and quote the `reason`. The job still runs (WINDOW fails
+         open by design) but it is running blind, and on claude the fix is for
+         the user to read `/usage` in an interactive session and export
+         `BORG_CLAUDE_RESET` from `~/.zshenv`.
+       - `known=yes` on claude → state the configured value and its age if
+         determinable, and remind the user it is self-reported. A value more
+         than ~6 months old is worth re-reading from `/usage`; say so rather
+         than asserting it is wrong.
+       - codex `known=yes` → note that the codex weekly window is ROLLING, so
+         its reset legitimately moves week to week. Do not flag drift there as
+         an error; it is the expected behavior and the reason the value is read
+         fresh at run time instead of cached.
   Flag UPDATE if the window length changed (give the new length and the
-  recomputed fire times) OR if the scheduled fire times no longer satisfy the
-  invariant (give both the scheduled and the correct times). A drifted second
+  recomputed fire times) OR if no scheduled fire time lands inside the valid
+  range (give both the scheduled and the correct times). A drifted second
   run either lands still-limited (window grew) or wastes burnable time (window
   shrank).
   Where to update if flagged: the burndown's schedule id in
   ${BORG_ROOT}/.bin/install-scheduled-tasks.sh — quote the id you actually read,
-  do not assume a previous run's — then re-run it with `--load`; the WINDOW phase
-  of ${BORG_ROOT}/c4po/.claude/scheduled/c4po-backlog-burndown.prompt; and the
-  burndown row in ${BORG_ROOT}/README.md. Only a changed **window length** is
-  edited back into this file.
+  do not assume a previous run's — then re-run it with `--load`; and the burndown
+  row in ${BORG_ROOT}/README.md. A stale or missing claude reset is fixed in the
+  user's `~/.zshenv` (`BORG_CLAUDE_RESET`), not in any tracked file. Only a
+  changed **window length** is edited back into this file.
 
 STEP 3: Always pipe a report into
 `${BORG_ROOT}/.bin/notify-email.sh c4po "Borg assumptions audit — {YYYY-MM-DD} — {N} flagged"`
@@ -314,11 +342,13 @@ pointer above).
     Where to update: {cerebruh/AGENTS.md retrieval workflow; cerebruh routing in ${BORG_ROOT}/AGENTS.md — changes to cerebruh made via its own workflow}
 
   Assumption H (session-limit window): {STILL VALID|RECONSIDER|UPDATE}
-    Schedule read: {schedule id} fires {time 1} / {time 2}; reset {time}; window
-    {N}h -> invariant {holds|violated}
-    {one-line reason if not STILL VALID — the new window length and/or the
-     recomputed fire times}
-    Where to update: {the schedule id you read, in .bin/install-scheduled-tasks.sh (+ --load); c4po-backlog-burndown.prompt WINDOW; README.md; window length in this .prompt}
+    Schedule read: {schedule id} fires {time 1} / {time 2}; window {N}h
+    Reset read: claude {reset_local|UNKNOWN: reason}; codex {reset_local|UNKNOWN: reason}
+    Burndown harness: {claude|codex} -> fires inside WINDOW: {yes|no}; twin
+    invariant {holds|violated}
+    {one-line reason if not STILL VALID — the new window length, the recomputed
+     fire times, and/or which harness has no usable reset}
+    Where to update: {the schedule id you read, in .bin/install-scheduled-tasks.sh (+ --load); README.md; window length in this .prompt; BORG_CLAUDE_RESET in ~/.zshenv if the claude reset is unknown or stale}
 
 Omit any assumption block that is STILL VALID with nothing to add. If every
 assumption is STILL VALID and every sub-wiki is within the raw source ceiling,

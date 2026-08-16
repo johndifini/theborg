@@ -148,25 +148,37 @@ schedule_xml() {
       printf '        <key>Minute</key>\n        <integer>0</integer>\n'
       printf '    </dict>\n'
       ;;
-    # Wednesday 12:00 and Thursday 12:00 — just after the account's weekly
-    # Claude usage reset (Wed 11:00 AM local), so the session retro starts the
-    # fresh week's budget. Thursday is the retry if Wednesday's machine was
-    # asleep; the prompt's ISO-week GATE skips it if Wednesday already ran.
-    # Noon rather than 11:05 leaves the burndown's second run (below) room to
-    # finish burning the outgoing week before the retro starts the new one.
+    # Wednesday 12:00 and Thursday 12:00 — just after this account's weekly
+    # usage reset, so the session retro starts on the fresh week's budget.
+    # Thursday is the retry if Wednesday's machine was asleep; the prompt's
+    # ISO-week GATE skips it if Wednesday already ran. Noon rather than just
+    # after the reset leaves the burndown's second run (below) room to finish
+    # burning the outgoing week before the retro starts the new one.
+    #
+    # The reset hour is an ACCOUNT fact and differs per user — a forker whose
+    # week rolls over on a different day should change this id rather than
+    # assume it fits. Nothing derives it from here; `.bin/weekly-reset.sh` is
+    # the run-time source of truth.
     weekly-wed-thu-12-00)
       printf '    <key>StartCalendarInterval</key>\n    <array>\n'
       for w in 3 4; do cal_entry "Weekday=$w" "Hour=12" "Minute=0"; done
       printf '    </array>\n'
       ;;
-    # Wednesday 01:00 and Wednesday 06:10 — ~10h and ~4h50m before the account's
-    # weekly Claude usage reset (Wed 11:00 AM local). Two firings because the
-    # 5-hour session limit caps one run's burn: the second starts just past the
-    # first's session-limit boundary and resumes the same plan (the prompt's
-    # GATE handles resume; its WINDOW phase aborts late, post-reset firings).
-    # Derived from the burndown prompt's invariant, not chosen by hand:
+    # Wednesday 01:00 and Wednesday 06:10 — ~10h and ~4h50m before this
+    # account's weekly usage reset. Two firings because the 5-hour session limit
+    # caps one run's burn: the second starts just past the first's session-limit
+    # boundary and resumes the same plan (the prompt's GATE handles resume).
+    # Derived from the burndown's invariant, not chosen by hand — worked here
+    # against an 11:00 reset:
     #   second fire = reset - window + 10min  = 11:00 - 5:00 + 0:10 = 06:10
     #   first fire  = second - window - 10min = 06:10 - 5:10        = 01:00
+    #
+    # These times are a COARSE APPROXIMATION and are allowed to be. The reset is
+    # an account fact that differs per user (and on codex it drifts week to
+    # week), so no fixed launchd time can track it. The burndown's WINDOW phase
+    # reads the real reset via `.bin/weekly-reset.sh` at fire time and declines
+    # to run outside its valid window; Assumption H checks monthly that at least
+    # one of these times still lands inside it.
     weekly-wed-01-00-06-10)
       printf '    <key>StartCalendarInterval</key>\n    <array>\n'
       cal_entry "Weekday=3" "Hour=1" "Minute=0"

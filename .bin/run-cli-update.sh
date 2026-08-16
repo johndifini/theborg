@@ -4,6 +4,11 @@
 # session, state gate, or useful interactive slash-command equivalent.
 set -uo pipefail
 
+# Distinct exit code meaning "this CLI is not installed here", so a missing
+# harness is skipped rather than counted as an update failure. Chosen out of the
+# way of any real `<cli> update` exit code.
+readonly CLI_ABSENT=64
+
 parse_doctor_output() {
   local input_file="$1" known_file="$2" new_file="$3"
   local finding reported_count=0 actual_count=0 saw_summary=0 saw_clean_result=0
@@ -74,8 +79,13 @@ update_one() {
 
   binary="$(command -v "$command_name" 2>/dev/null)"
   if [[ -z "$binary" ]]; then
+    # Not an error. The Borg is harness-agnostic: a fork may run Claude only,
+    # Codex only, or both, and a CLI the user never installed is not a fault to
+    # email about every Sunday. main() detects what's configured and only calls
+    # this for those, so reaching here means the binary vanished between the
+    # detection and now — worth a log line, not a failed job.
     echo "$name binary not found on PATH after sourcing ~/.zshenv (PATH=$PATH)" >> "$output_file"
-    return 127
+    return "$CLI_ABSENT"
   fi
 
   before="$("$binary" --version 2>&1)" || before="version check failed: $before"
@@ -129,34 +139,70 @@ main() {
   started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
   echo "===== $started_at start $TASK_NAME =====" > "$RUN_OUTPUT"
-  update_one "Codex CLI" "${CODEX_BIN:-codex}" "$RUN_OUTPUT" || status=1
-  # Claude's native install already self-updates on use; this explicit update is
-  # belt-and-braces. Run it even if Codex failed so one failure cannot starve the other.
-  update_one "Claude Code CLI" "${CLAUDE_BIN:-claude}" "$RUN_OUTPUT" || status=1
 
-  run_doctor "${CLAUDE_BIN:-claude}" "$DOCTOR_OUTPUT" || doctor_status=$?
-  if [[ $doctor_status -eq 0 ]]; then
-    parse_doctor_output "$DOCTOR_OUTPUT" "$KNOWN_FINDINGS" "$NEW_FINDINGS" || parser_status=$?
-  fi
+  # Detect which CLIs this machine actually has before updating anything. The
+  # Borg supports Claude-only, Codex-only, and both; updating a CLI the user
+  # never installed used to return 127 and fail the whole job every week, which
+  # trains people to ignore the one email that reports real breakage.
+  local claude_present=0 codex_present=0 updated=0
+  if command -v "${CLAUDE_BIN:-claude}" >/dev/null 2>&1; then claude_present=1; fi
+  if command -v "${CODEX_BIN:-codex}" >/dev/null 2>&1; then codex_present=1; fi
 
   {
     echo
-    echo "--- Claude Code doctor (raw output) ---"
-    cat "$DOCTOR_OUTPUT"
-    echo "doctor exit: $doctor_status"
-    echo "doctor parser exit: $parser_status"
+    echo "--- configured CLIs ---"
+    echo "claude: $([[ $claude_present -eq 1 ]] && echo present || echo "not installed — skipping")"
+    echo "codex:  $([[ $codex_present -eq 1 ]] && echo present || echo "not installed — skipping")"
   } >> "$RUN_OUTPUT"
 
-  if [[ $doctor_status -ne 0 || $parser_status -ne 0 ]]; then
+  # No harness at all is a real problem: every model-driven scheduled job would
+  # exit 127. Report it as a failure rather than a quiet clean run.
+  if [[ $claude_present -eq 0 && $codex_present -eq 0 ]]; then
+    echo "no supported CLI found on PATH (looked for claude and codex)" >> "$RUN_OUTPUT"
     status=1
-    doctor_summary="Claude doctor: FAILED to run or parse (exit $doctor_status; parser $parser_status)."
+  fi
+
+  if [[ $codex_present -eq 1 ]]; then
+    update_one "Codex CLI" "${CODEX_BIN:-codex}" "$RUN_OUTPUT" || status=1
+    updated=$((updated + 1))
+  fi
+  # Claude's native install already self-updates on use; this explicit update is
+  # belt-and-braces. Run it even if Codex failed so one failure cannot starve the other.
+  if [[ $claude_present -eq 1 ]]; then
+    update_one "Claude Code CLI" "${CLAUDE_BIN:-claude}" "$RUN_OUTPUT" || status=1
+    updated=$((updated + 1))
+  fi
+
+  # `doctor` is a Claude Code subcommand with no Codex equivalent, so a
+  # Codex-only machine skips it and says so instead of reporting a parse failure.
+  if [[ $claude_present -eq 0 ]]; then
+    doctor_summary="Claude doctor: skipped — claude is not installed on this machine."
+    echo "$doctor_summary" >> "$RUN_OUTPUT"
   else
-    known_count="$(line_count "$KNOWN_FINDINGS")"
-    new_count="$(line_count "$NEW_FINDINGS")"
-    if [[ $new_count -eq 0 ]]; then
-      doctor_summary="Claude doctor: no new findings; $known_count known headless finding(s) suppressed (full report in log)."
+    run_doctor "${CLAUDE_BIN:-claude}" "$DOCTOR_OUTPUT" || doctor_status=$?
+    if [[ $doctor_status -eq 0 ]]; then
+      parse_doctor_output "$DOCTOR_OUTPUT" "$KNOWN_FINDINGS" "$NEW_FINDINGS" || parser_status=$?
+    fi
+
+    {
+      echo
+      echo "--- Claude Code doctor (raw output) ---"
+      cat "$DOCTOR_OUTPUT"
+      echo "doctor exit: $doctor_status"
+      echo "doctor parser exit: $parser_status"
+    } >> "$RUN_OUTPUT"
+
+    if [[ $doctor_status -ne 0 || $parser_status -ne 0 ]]; then
+      status=1
+      doctor_summary="Claude doctor: FAILED to run or parse (exit $doctor_status; parser $parser_status)."
     else
-      doctor_summary="Claude doctor: $new_count NEW/CHANGED finding(s); $known_count known headless finding(s)."
+      known_count="$(line_count "$KNOWN_FINDINGS")"
+      new_count="$(line_count "$NEW_FINDINGS")"
+      if [[ $new_count -eq 0 ]]; then
+        doctor_summary="Claude doctor: no new findings; $known_count known headless finding(s) suppressed (full report in log)."
+      else
+        doctor_summary="Claude doctor: $new_count NEW/CHANGED finding(s); $known_count known headless finding(s)."
+      fi
     fi
   fi
 
