@@ -27,10 +27,12 @@ Before your first commit, also read [SECURITY.md](./SECURITY.md). There's a shor
 The commands below assume your home directory. `BORG_ROOT` points every script and prompt at the workspace root:
 
 ```bash
-echo 'export BORG_ROOT="${HOME:?}/theborg"' >> ${HOME:?}/.zshenv
+echo 'export BORG_ROOT="${BORG_ROOT:-${HOME:?}/theborg}"' >> ${HOME:?}/.zshenv
 ```
 
 **Strictly speaking this variable is optional.** Every script auto-detects the workspace root from its own location in `.bin/`, so nothing breaks without it. Set it anyway: it makes `cd $BORG_ROOT` work from anywhere, and it's the documented override if you ever keep the checkout somewhere other than `~/theborg`.
+
+**Use the `${BORG_ROOT:-...}` form exactly as written**, not a bare assignment. Scheduled jobs source this file for `PATH`, so a plain `export BORG_ROOT=...` would overwrite a value the caller passed in deliberately — silently redirecting a job aimed at another checkout back at `~/theborg`. The profile is the fallback for launchd, which sources no profile at all; it is not an override.
 
 Open a new terminal tab so the variable takes effect, or run `source ~/.zshenv` in the current one.
 

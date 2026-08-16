@@ -26,6 +26,11 @@ mkdir -p "$LOG_DIR"
 # resolving the CLI binary. Errors are swallowed so a profile hiccup never
 # blocks the task; if the binary still can't be resolved we'll fail loudly
 # below.
+#
+# The profile is user-owned and outside this repo, so it may still contain an
+# unconditional `export BORG_ROOT=...`. Capture the caller's value first and
+# re-assert it below rather than trusting the profile to be well-behaved.
+_caller_root="${BORG_ROOT:-}"
 if [[ -f "$HOME/.zshenv" ]]; then
   # shellcheck disable=SC1091
   set +u
@@ -37,6 +42,13 @@ fi
 # (.bin/ sits at the workspace root). Override by exporting BORG_ROOT
 # before invocation. Prompts reference paths as ${BORG_ROOT}/... and the
 # runner substitutes the literal token below.
+#
+# Precedence is caller > profile > autodetect. An explicit BORG_ROOT is the
+# documented escape hatch for a checkout that is not at ~/theborg, and it is
+# how a test run redirects this script at a scratch tree — letting the profile
+# win here once aimed a test back at the real workspace and sent real email.
+[[ -n "$_caller_root" ]] && BORG_ROOT="$_caller_root"
+unset _caller_root
 BORG_ROOT="${BORG_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 export BORG_ROOT
 

@@ -114,6 +114,7 @@ run_doctor() {
 }
 
 main() {
+  local _caller_root="${BORG_ROOT:-}"
   BORG_ROOT="${BORG_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
   TASK_NAME="c4po-cli-update"
   LOG_DIR="$BORG_ROOT/c4po/.claude/scheduled/logs"
@@ -127,6 +128,11 @@ main() {
     source "$HOME/.zshenv" 2>/dev/null || true
     set -u
   fi
+
+  # Precedence is caller > profile > autodetect. The profile is user-owned and
+  # outside this repo, so it may still carry an unconditional
+  # `export BORG_ROOT=...` that would clobber an explicitly-passed value.
+  [[ -n "$_caller_root" ]] && BORG_ROOT="$_caller_root"
 
   RUN_OUTPUT="$(mktemp "${TMPDIR:-/tmp}/borg-cli-update.XXXXXX")" || exit 1
   DOCTOR_OUTPUT="$(mktemp "${TMPDIR:-/tmp}/borg-cli-doctor.XXXXXX")" || exit 1
