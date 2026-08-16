@@ -76,6 +76,26 @@ under that agent's ignored `.private/` directory; and publish only synthetic
 templates under `.private.example/`. Do not suggest
 parameterizing tracked text with `${BORG_ROOT}`, `$USER`, or similar variables.
 
+Every remediation must carry a cross-reference check. After removing an
+identifier from a tracked file, re-check every reference that pointed at it —
+a section number, form name, defined term, or "see above" that resolved only
+via the removed text. Redaction routinely leaves a dangling pointer, and the
+result is confidently wrong rather than obviously broken: the sentence still
+reads, the citation still looks authoritative, and it now names nothing.
+Observed 2026-08-16, when genericizing a state name left a tracked prompt
+citing form numbers that existed nowhere in the private file it cited.
+
+Two scanning failures to design around, both observed the same day on the same
+file. A scan for `employer` missed a leak because the file named the companies
+inline and never used the word; a substring scan for a company name then hit
+`edgecolor` in unrelated plotting code. Denylists fail in BOTH directions, so
+do not try to fix a miss by lengthening the pattern list. Read a file's stated
+privacy rule and check whether that rule enumerates categories narrowly enough
+to be obeyed while still leaking — the 2026-08-16 file forbade "private
+financial figures" and so complied with itself while naming two employers.
+A rule naming one category invites a reviewer to scan for exactly that
+category and stop; report that framing as the finding, not just the string.
+
 STEP 3: If there is at least one finding, pipe a Markdown report into
 `${BORG_ROOT}/.bin/notify-email.sh c4po "Borg privacy audit — {YYYY-MM-DD} — {total} finding(s)"`
 (reads from stdin), then STOP. Touch no files, open no backlog item, and attempt
