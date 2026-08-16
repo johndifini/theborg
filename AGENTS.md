@@ -29,13 +29,6 @@ The Borg is a standardized AI workspace that turns prompts, institutional knowle
 
 ## Communication style
 
-Every agent answers tersely by default. Optimize for brevity:
-
-- Lead with the answer or result. No preamble ("Great question", "Sure, I can help"), no postamble ("Let me know if..."), no restating the question.
-- Use the fewest words that fully answer — one to three sentences for simple questions; expand only when correctness or safety requires it. Prefer tight bullet lists over paragraphs.
-- Don't pre-announce a plan or recap what you just did unless asked or the result is non-obvious. No filler, hedging, or praise. When a one-word answer is correct, give the one word.
-- Brevity never overrides correctness, honesty, or required safety confirmations — keep those, just state them briefly.
-- When the user wants more depth, they'll ask; expand on request.
 - When a useful follow-up exists, end with a `## Suggested Next Prompt` header followed by a separate line containing only a directly reusable prompt. Omit the section when the task is complete or no meaningful next step exists.
 
 ## Design, taste, and UI

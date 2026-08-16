@@ -58,8 +58,14 @@ Thumbs.db
 **/.private/
 **/CLAUDE.local.md
 
-# Allow shared Claude settings, scheduled jobs, etc. — only the
-# `*.local.json` variants and credential files are ignored above.
+# Claude Code agent worktrees — checkouts the harness creates in-tree for
+# parallel agent work. Each is a full working copy of the repo and would show up
+# as a large untracked directory; the branch is the durable artifact, not the
+# checkout, so nothing is lost by ignoring these.
+**/.claude/worktrees/
+
+# Allow shared Claude settings, scheduled jobs, etc. — only the `*.local.json`
+# variants, credential files, and generated worktrees are ignored above.
 
 # ── Obsidian workspace state (per-machine) ───────────────────
 .obsidian/
