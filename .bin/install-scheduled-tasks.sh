@@ -134,12 +134,17 @@ schedule_xml() {
       for w in 1 3 5; do cal_entry "Weekday=$w" "Hour=9" "Minute=0"; done
       printf '    </array>\n'
       ;;
-    # One-shot: a fully-qualified date fires once and then never matches again
-    # (launchd has no "run once" flag, so the job stays loaded until something
-    # boots it out — one-shot scripts are expected to remove themselves).
+    # One-shot: launchd has no "run once" flag and StartCalendarInterval has no
+    # year component, so a Month+Day entry fires on that date every year and the
+    # job stays loaded until something boots it out. One-shot tasks are expected
+    # to remove themselves — plist, task row, and their own files — on the run.
     once-2026-12-06-09-00)
       printf '    <key>StartCalendarInterval</key>\n'
       cal_entry "Month=12" "Day=6" "Hour=9" "Minute=0"
+      ;;
+    once-2026-12-07-09-00)
+      printf '    <key>StartCalendarInterval</key>\n'
+      cal_entry "Month=12" "Day=7" "Hour=9" "Minute=0"
       ;;
     weekly-sun-06-00)
       printf '    <key>StartCalendarInterval</key>\n    <dict>\n'

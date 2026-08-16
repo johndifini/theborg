@@ -1,0 +1,85 @@
+One-shot December re-verification of 2026 estimated-tax safe harbor for the workspace at ${BORG_ROOT}.
+
+THIS FILE IS TRACKED AND THE REPOSITORY IS PUBLIC. It carries method only. Every fact about
+the taxpayers — names, employers, jurisdictions, filing status, institutions, account
+details, dollar figures, and the identity of the transaction — lives in the workpaper under
+`${BORG_ROOT}/norm/.private/` and must stay there. Do not copy any of it into this file, the
+paired slash command, a commit message, or any other tracked path. When editing this file,
+re-read this paragraph first.
+
+Context: an August 2026 analysis concluded that projected payroll withholding plus the
+scheduled estimated-tax vouchers would satisfy the 110% prior-year safe harbor for both the
+federal and the state return. That conclusion rested on *projected* withholding for the
+remaining pay periods. This job re-verifies it against actuals while there is still one pay
+period left to adjust, and fixes the Q4 payment due 01/15/2027.
+
+All figures, sources, parties, and prior conclusions live in
+`${BORG_ROOT}/norm/.private/2026-q3-estimated-tax-workpaper.md`. Read it first — it is the
+authoritative basis for this task and is not loaded into session context.
+
+STEP 1: Read the workpaper. Note in particular: the §1 sources and the parties and employers
+recorded there, the §3 safe harbor targets, the §4 withholding projection and the per-period
+rates it assumed, the §6 installment tables and the caveat recorded there, and the §8 open
+items.
+
+STEP 2: Collect actuals. Ask the user for the most recent 2026 pay stubs for both spouses —
+§1 and §4 of the workpaper identify each employer and pay cadence — and for confirmation of
+which 2026 estimated-tax vouchers have actually been paid, federal and state, with amounts
+and dates. Do not assume the August answers still hold; the state position in particular was
+corrected once already. If stubs are not supplied, say so plainly and report what cannot be
+verified rather than projecting from stale inputs.
+
+Save any new stubs into `${BORG_ROOT}/norm/.private/` as
+`paystub-YYYY-MM-DD-<name>.pdf`, dated by check/pay date, `chmod 600` — matching the
+convention recorded in §1 of the workpaper. Do not leave them in `${BORG_ROOT}/tmp/`.
+
+STEP 3: Recompute, using the same method as the workpaper:
+- Full-year withholding for each spouse = actual YTD + (remaining pay periods × current
+  per-period rate). Use the current period rate, not the YTD average, when YTD includes
+  supplemental withholding on a bonus.
+- Compare total projected credits (withholding + estimates paid) against the §3 targets.
+- Run the per-installment test, crediting withholding ratably across all four installments
+  (IRC §6654(g)) and estimates on their actual payment dates. Report the margin at each
+  due date, not just the annual total.
+- State the exact Q4 payment due 01/15/2027 on the federal voucher and on the state
+  equivalent (both form numbers are in §6 of the workpaper), and whether any change to
+  payroll withholding on the final December check is still needed or worthwhile.
+
+STEP 4: Check the 15% long-term-capital-gain headroom recorded in §7 of the workpaper.
+Ask the user for 2026 realized capital gains to date. If projected taxable income now
+approaches the 20% threshold for the taxpayers' filing status, flag it and quantify the
+cost, since loss harvesting before December 31 is the only remaining lever. Verify the
+threshold against current IRS guidance rather than trusting the figure in the workpaper.
+
+STEP 5: Pipe a report into
+`${BORG_ROOT}/.bin/notify-email.sh norm "Norm — 2026 Q4 estimated tax re-check — {YYYY-MM-DD}"`
+(reads from stdin). Send it even when nothing needs to change, so the user can confirm the
+job ran. Format:
+- One-line verdict first: either `On track — pay {federal} / {state} by 01/15/2027` or
+  `Action needed — {what, by when}`.
+- The per-installment table from STEP 3.
+- The capital-gain headroom finding from STEP 4.
+- Any open items from §8 of the workpaper that are still unresolved.
+Specifics belong in the email — it goes only to the user's own address — but never in a
+tracked file.
+
+STEP 6: Update `${BORG_ROOT}/norm/.private/2026-q3-estimated-tax-workpaper.md` with the
+December actuals: revise §4, §5 and §6, update the conclusion block at the top, and add a
+dated line recording that this re-check ran. Preserve the source-attribution discipline the
+workpaper already uses — mark what was read from a document versus what is projected.
+
+STEP 7: Remove this one-shot job so it cannot fire again. launchd's
+StartCalendarInterval has no year component, so `Month=12 Day=7` would otherwise match
+again on 2026-12-07 + 1 year. In order:
+1. `launchctl bootout gui/$(id -u)/com.theborg.norm-q4-withholding-recheck` (ignore errors)
+2. `rm -f "$HOME/Library/LaunchAgents/com.theborg.norm-q4-withholding-recheck.plist"`
+3. Delete the task's row from `${BORG_ROOT}/.private/scheduled-tasks/personal.tasks`
+4. Delete `${BORG_ROOT}/norm/.claude/scheduled/norm-q4-withholding-recheck.prompt`,
+   `${BORG_ROOT}/norm/.claude/commands/q4-withholding-recheck.md`, and the
+   `once-2026-12-07-09-00` case from `${BORG_ROOT}/.bin/install-scheduled-tasks.sh`
+Confirm the removal in the STEP 5 email body (append a final line) so a silent failure to
+self-remove is visible.
+
+Boundaries: this is preparation for CPA review, not a filing determination. The character of
+the equity payout — capital vs. ordinary, §83(b), §1061, NIIT, and multi-state sourcing —
+remains a licensed preparer's call. Say so in the report.
