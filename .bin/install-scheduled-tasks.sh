@@ -53,6 +53,14 @@ TASKS=(
   "warren-bot-fett|warren-bot-fett-ai-sleeve-monthly|month-first5-09-00|prompt"
 )
 
+# Where each row came from, index-aligned with TASKS. Only used to make a bad
+# schedule id actionable: a row from a gitignored private table or a repos/
+# .conf can outlive the schedule_xml() case it names, because the row is
+# untracked and the case is branch-tracked. Naming the source file tells you
+# whether to fix a typo or to check out the branch that defines the schedule.
+TASK_ORIGINS=()
+for _row in "${TASKS[@]}"; do TASK_ORIGINS+=("the TASKS table in this script"); done
+
 # Repo-hosted tasks: each independent repo under repos/ can register a scheduled
 # job with this framework without a row in the table above. It drops a
 # <task>.conf beside its <task>.prompt with a SCHEDULE= line; we discover those
@@ -72,6 +80,7 @@ for conf in "$BORG_ROOT"/repos/*/.claude/scheduled/*.conf; do
     continue
   fi
   TASKS+=("$agent|$task|$SCHEDULE|prompt")
+  TASK_ORIGINS+=("$conf")
 done
 
 # Private task tables use the main table's row format but live in a gitignored
@@ -81,6 +90,7 @@ for table in "$BORG_ROOT"/.private/scheduled-tasks/*.tasks; do
   while IFS= read -r row || [[ -n "$row" ]]; do
     [[ -z "$row" || "$row" == \#* ]] && continue
     TASKS+=("$row")
+    TASK_ORIGINS+=("$table")
   done < "$table"
 done
 shopt -u nullglob
@@ -218,6 +228,12 @@ plist_xml() {
       ;;
     *) echo "unknown task kind: $kind" >&2; return 1 ;;
   esac
+  # Capture the schedule block before emitting. Interpolating
+  # $(schedule_xml ...) straight into the heredoc below discards its exit
+  # status, so an unknown id produced a plist with no StartCalendarInterval at
+  # all -- a job that installs cleanly and can never fire.
+  local schedule
+  schedule="$(schedule_xml "$sched")" || return 1
   cat <<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -229,7 +245,7 @@ plist_xml() {
     <array>
 $arguments
     </array>
-$(schedule_xml "$sched")    <key>RunAtLoad</key>
+$schedule    <key>RunAtLoad</key>
     <false/>
     <key>StandardOutPath</key>
     <string>$logdir/launchd.out</string>
@@ -239,6 +255,30 @@ $(schedule_xml "$sched")    <key>RunAtLoad</key>
 </plist>
 XML
 }
+
+# Preflight: resolve every row's schedule id before writing anything. Failing
+# here rather than mid-loop means one bad row cannot leave a half-installed set
+# behind, and it turns the branch-desync case into a named diagnostic instead
+# of a bare "unknown schedule id".
+unresolved_schedules=()
+for i in "${!TASKS[@]}"; do
+  IFS='|' read -r _agent task sched _kind _target <<< "${TASKS[$i]}"
+  if ! schedule_xml "$sched" >/dev/null 2>&1; then
+    echo "error: task '$task' uses schedule id '$sched', which this script does not define" >&2
+    echo "       row source: ${TASK_ORIGINS[$i]}" >&2
+    if [[ "${TASK_ORIGINS[$i]}" != "the TASKS table in this script" ]]; then
+      echo "       that row is untracked but schedule_xml() is branch-tracked, so this is" >&2
+      echo "       either a typo in the row or a checkout that predates the schedule case" >&2
+    fi
+    unresolved_schedules+=("$task ($sched)")
+  fi
+done
+if (( ${#unresolved_schedules[@]} > 0 )); then
+  echo >&2
+  echo "error: ${#unresolved_schedules[@]} task(s) name an undefined schedule id; nothing was written:" >&2
+  printf '  %s\n' "${unresolved_schedules[@]}" >&2
+  exit 1
+fi
 
 [[ "$MODE" == "print" ]] || mkdir -p "$LAUNCH_AGENTS"
 
@@ -260,10 +300,21 @@ is_disabled() {
 # it in the table, which is how three live jobs went unregistered unnoticed.
 bootstrap_failures=()
 
+# Rows whose plist could not be generated. The preflight above already catches
+# every undefined schedule id, so this is defense in depth for any future
+# generator failure -- reported the same way, and never silently.
+render_failures=()
+
 for row in "${TASKS[@]}"; do
   IFS='|' read -r agent task sched kind target <<< "$row"
   case "$kind" in
     prompt)
+      # Deliberately a warning, not an error, unlike an undefined schedule id.
+      # A missing .prompt still yields a structurally valid plist whose failure
+      # is loud at fire time (the runner exits non-zero into launchd.err),
+      # and it is the expected steady state for a fired one-shot, which deletes
+      # its own prompt and leaves its row stale by design. An undefined
+      # schedule id is the opposite: valid-looking plist, silent forever.
       source_file="$BORG_ROOT/$agent/.claude/scheduled/$task.prompt"
       [[ -f "$source_file" ]] || echo "warning: prompt not found for $task: $source_file" >&2
       ;;
@@ -283,14 +334,24 @@ for row in "${TASKS[@]}"; do
   dest="$LAUNCH_AGENTS/com.theborg.$task.plist"
   label="com.theborg.$task"
 
+  # Render first, write second. `plist_xml ... > "$dest"` truncates the
+  # destination before the generator runs, so a generator failure would replace
+  # a working plist with a broken one; building the document in a variable
+  # leaves the installed plist untouched when generation fails.
+  if ! rendered="$(plist_xml "$agent" "$task" "$sched" "$kind" "$target")"; then
+    echo "error: could not generate a plist for $task; leaving $dest as-is" >&2
+    render_failures+=("$task")
+    continue
+  fi
+
   case "$MODE" in
     print)
       echo "# ===== $dest ====="
-      plist_xml "$agent" "$task" "$sched" "$kind" "$target"
+      printf '%s\n' "$rendered"
       echo
       ;;
     write|load)
-      plist_xml "$agent" "$task" "$sched" "$kind" "$target" > "$dest"
+      printf '%s\n' "$rendered" > "$dest"
       echo "wrote $dest"
       if [[ "$MODE" == "load" ]]; then
         if is_disabled "$label"; then
@@ -333,9 +394,17 @@ done <<< "$loaded_jobs"
 
 # Every row was attempted; now fail the run as a whole if any bootstrap did not
 # take, so a partial install can't pass for a clean one in a scheduled context.
+failed=0
+if (( ${#render_failures[@]} > 0 )); then
+  echo >&2
+  echo "error: ${#render_failures[@]} task(s) could not be generated:" >&2
+  printf '  %s\n' "${render_failures[@]}" >&2
+  failed=1
+fi
 if (( ${#bootstrap_failures[@]} > 0 )); then
   echo >&2
   echo "error: ${#bootstrap_failures[@]} job(s) failed to bootstrap:" >&2
   printf '  %s\n' "${bootstrap_failures[@]}" >&2
-  exit 1
+  failed=1
 fi
+(( failed == 0 )) || exit 1
