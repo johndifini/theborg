@@ -242,27 +242,40 @@ if [[ "$HARNESS" == codex ]]; then
     c4po-backlog-burndown) EXTRA_ARGS+=(--add-dir "${CODEX_HOME:-$HOME/.codex}") ;;
   esac
 else
-  # The burndown runs in bypassPermissions. It must write and commit across
-  # several repositories unattended, and a mid-BURN permission denial is
-  # precisely the silent failure the task's phase design exists to prevent — the
-  # run would exit 0 having implemented nothing. This matches the effective
-  # posture its Codex children have (they run
-  # --dangerously-bypass-approvals-and-sandbox), but note what is NOT carried
-  # over: under Codex the whole process tree sits inside an OS-enforced
-  # workspace-write Seatbelt boundary, and nothing replaces that on the Claude
-  # path. Claude Code has its own Seatbelt-backed Bash sandbox, but adopting it
-  # needs the outbound SMTP path in .bin/notify-email.sh verified against the
-  # sandbox's HTTP-proxy network layer first — email is the only notification
-  # channel, so a silent break there is unacceptable. Tracked in BACKLOG.md.
+  # The Claude burndown gets a dedicated sandbox policy rather than the
+  # user-wide settings used by every other job. The tracked JSON contains a
+  # literal ${BORG_ROOT}; render it into an inline --settings value here so a
+  # checkout override remains portable. Validate before launch because print
+  # mode silently ignores a settings file that fails validation — an ignored
+  # file would turn this security boundary into a comment.
   #
-  # The retro deliberately does NOT get bypassPermissions. It runs under the
-  # inherited `auto` mode like every other Claude job, because it is the one task
-  # that touches cerebruh/ and the Edit deny rules in
-  # c4po/.claude/settings.local.json are what mechanically enforce "wiki content
-  # is read-only" — bypassPermissions would skip them and leave only the
-  # prompt's instruction.
+  # The sandbox's allowWrite root covers the workspace and every independent
+  # repo below it; its denyWrite entries keep cerebruh wiki content read-only.
+  # failIfUnavailable and allowUnsandboxedCommands=false make the boundary a
+  # hard gate. acceptEdits keeps file-tool writes unattended while preserving
+  # explicit deny rules, and sandboxed Bash auto-runs without per-command
+  # prompts. A real 2026-08-21 probe proved notify-email.sh can send through the
+  # sandbox's allowlisted Gmail SMTP path; a second probe committed in a scratch
+  # repo and confirmed that a sibling write outside $BORG_ROOT is blocked.
+  #
+  # The retro keeps the inherited `auto` mode like every other Claude job. It is
+  # the one task that touches cerebruh/, so c4po's Edit deny rules remain its
+  # mechanical write guard; the burndown now has those rules plus OS enforcement.
   case "$TASK_NAME" in
-    c4po-backlog-burndown) EXTRA_ARGS+=(--permission-mode bypassPermissions) ;;
+    c4po-backlog-burndown)
+      BURNDOWN_SETTINGS_FILE="$BORG_ROOT/c4po/.claude/scheduled/c4po-backlog-burndown.settings.json"
+      [[ -f "$BURNDOWN_SETTINGS_FILE" ]] || {
+        echo "burndown sandbox settings not found: $BURNDOWN_SETTINGS_FILE" >&2
+        exit 66
+      }
+      BURNDOWN_SETTINGS=$(<"$BURNDOWN_SETTINGS_FILE")
+      BURNDOWN_SETTINGS=${BURNDOWN_SETTINGS//\$\{BORG_ROOT\}/$BORG_ROOT}
+      python3 -c 'import json, sys; json.loads(sys.argv[1])' "$BURNDOWN_SETTINGS" || {
+        echo "invalid burndown sandbox settings: $BURNDOWN_SETTINGS_FILE" >&2
+        exit 65
+      }
+      EXTRA_ARGS+=(--settings "$BURNDOWN_SETTINGS" --permission-mode acceptEdits)
+      ;;
   esac
 fi
 
@@ -287,14 +300,17 @@ fi
 # harness-neutral — the flags live here, in one place, next to the harness that
 # needs them. A prompt that spawns children should append only its prompt string.
 #
-# The codex child deliberately bypasses approvals and sandboxing: it cannot
-# initialize a second macOS Seatbelt sandbox inside the parent's, and it remains
-# confined by the parent process tree's workspace-write boundary regardless.
+# A child deliberately bypasses its own CLI permission layer. It is spawned by
+# the parent's sandboxed Bash, so it and every subprocess it creates inherit the
+# parent's OS-enforced boundary; initializing a second nested sandbox is neither
+# needed nor relied upon. A real nested-Claude probe succeeded through the
+# allowlisted Anthropic API path. Claude children disable session persistence so
+# they do not need write access to ~/.claude outside the boundary.
 export BORG_HARNESS="$HARNESS"
 if [[ "$HARNESS" == codex ]]; then
   export BORG_CHILD_CMD="$HARNESS_BIN exec --dangerously-bypass-approvals-and-sandbox"
 else
-  export BORG_CHILD_CMD="$HARNESS_BIN -p --model $MODEL --effort $EFFORT --permission-mode bypassPermissions --strict-mcp-config"
+  export BORG_CHILD_CMD="$HARNESS_BIN -p --model $MODEL --effort $EFFORT --permission-mode bypassPermissions --strict-mcp-config --no-session-persistence"
 fi
 
 # claude flags:

@@ -1,0 +1,28 @@
+{
+  "sandbox": {
+    "enabled": true,
+    "failIfUnavailable": true,
+    "autoAllowBashIfSandboxed": true,
+    "allowUnsandboxedCommands": false,
+    "network": {
+      "allowedDomains": [
+        "api.anthropic.com",
+        "smtp.gmail.com"
+      ],
+      "allowManagedDomainsOnly": true
+    },
+    "filesystem": {
+      "allowWrite": [
+        "${BORG_ROOT}"
+      ],
+      "denyWrite": [
+        "${BORG_ROOT}/cerebruh/wikis",
+        "${BORG_ROOT}/cerebruh/template",
+        "${BORG_ROOT}/cerebruh/.obsidian",
+        "${BORG_ROOT}/cerebruh/.claude",
+        "${BORG_ROOT}/cerebruh/CLAUDE.md",
+        "${BORG_ROOT}/cerebruh/CLAUDE.md_bak_20260523_073104"
+      ]
+    }
+  }
+}
