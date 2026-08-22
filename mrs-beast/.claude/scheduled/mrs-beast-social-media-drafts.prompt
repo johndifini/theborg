@@ -16,6 +16,12 @@ For each, list the window and then read into it:
 A commit subject rarely carries the story. For the candidates, also read what
 the commit touched — ADRs, rules, skills, `.prompt` files, AGENTS.md — to
 recover *why* the change was made.
+Classify whether each candidate delivered a complete artifact another builder
+could inspect, reuse, or adapt. Examples include a new or substantially upgraded
+slash command, scheduled job, rule, skill, shell script, configuration, output
+style, template, workflow, or similarly coherent unit. A substantial upgrade
+materially changes what an existing artifact enables or how reliably it works;
+a small fix does not.
 Ignore: typo/lint/formatting-only commits, dependency bumps, backlog
 bookkeeping, and merge commits with no content of their own.
 
@@ -27,21 +33,36 @@ whose subject matter has already been covered by a previous run. A different
 commit touching the same idea still counts as covered.
 
 SELECT — pick exactly one change.
-Interesting means: a non-obvious decision, a surprising failure mode, a
-technique another builder could steal, or a genuinely funny outcome. "Added a
-feature" is not interesting. First, choose the best qualifying The Borg
-candidate, even if a private-app candidate seems more interesting. Only when no
-The Borg candidate qualifies after FILTER may a private-app change be chosen,
-and then only if it can support a generic post under the LINKS privacy rules. If
-the best candidate cannot make a stranger care in a couple hundred characters,
-take the next qualifying candidate from the same priority tier. Write a 1–2 line
-rationale — what the change is and why it's the pick.
+Rank complete, reusable artifacts above isolated fixes or implementation
+incidents. This is the strongest ranking signal, not a hard filter: an exceptional
+non-artifact story may still win, but only when it is clearly more useful or
+compelling than the available artifacts. Count both new artifacts and substantial
+upgrades to existing ones. Among otherwise comparable candidates, prefer the one
+with the clearest practical payoff and the easiest path for another builder to
+inspect, reuse, or adapt.
+
+Interesting still matters: look for a non-obvious decision, a technique another
+builder could steal, a surprising failure mode, or a genuinely funny outcome,
+but use those as the story around the artifact rather than automatically making
+the failure itself the subject. "Added a feature" is not interesting without the
+problem it solves and the transferable idea behind it. First, choose the best
+qualifying The Borg candidate, even if a private-app candidate seems more
+interesting. Only when no The Borg candidate qualifies after FILTER may a
+private-app change be chosen, and then only if it can support a generic post
+under the LINKS privacy rules. If the best candidate cannot make a stranger care
+in a couple hundred characters, take the next qualifying candidate from the same
+priority tier. Write a 1–2 line rationale naming the artifact, what it enables,
+and why it outranked the alternatives.
 
 COMPOSE — write the post.
 Voice: friendly, funny, informative; punchy and platform-native; the user's
 voice (CTO, 24+ years, hands-on builder), not corporate. Lead with the insight
-or the surprise, not with "I shipped X." Avoid overtly political topics. No
-hashtag soup — at most one or two if they genuinely help.
+or practical payoff, not with "I shipped X." Make the artifact the subject:
+explain what it enables and give the reader enough of the method to see how they
+could reuse or adapt it. A bug, failure mode, or implementation lesson may
+support that story, but should not displace the artifact unless SELECT found no
+stronger artifact-led candidate. Avoid overtly political topics. No hashtag soup
+— at most one or two if they genuinely help.
 
 LINKS — hard rules, no exceptions, including private-app disclosure:
   - **The Borg is public** (`https://github.com/johndifini/theborg`). Include one
