@@ -77,30 +77,9 @@ cd "$AGENT_DIR"
 PROMPT_CONTENT=$(<"$PROMPT_FILE")
 PROMPT_CONTENT=${PROMPT_CONTENT//\$\{BORG_ROOT\}/$BORG_ROOT}
 
-# Scheduled-run preamble. Every .prompt has a paired interactive slash command
-# (lint rule: Scheduled tasks) that delegates back to this same file but applies
-# overrides for session use — skip the once-per-period state gate, don't write
-# state, report to the session instead of emailing. Both harnesses surface those
-# commands to a headless run as invocable skills (claude: `.claude/commands/*`;
-# codex: the `$name` skill bridge), and the model will match one to the task it
-# was just handed and follow its overrides instead of these instructions.
-# That is a SILENT failure — the run exits 0 having sent no email and written no
-# state, so the runner's failure-email path never fires and the next scheduled
-# firing repeats the work. Observed on a multi-day private task on 2026-07-22
-# and 2026-07-28. Prepended here rather than in each .prompt so new tasks are
-# covered automatically and the guard can't drift out of sync.
-PROMPT_CONTENT="You are a scheduled (headless) run of the task named \
-'$TASK_NAME'. Execute the instructions below directly and in full.
-
-Do NOT invoke any skill or slash command that wraps this same task — in
-particular the interactive companion whose name matches '$TASK_NAME'. That
-companion exists only for interactive use and its overrides (skip the state
-gate, skip writing state, report to the session instead of emailing) are WRONG
-here and would silently void this run. Perform every phase below yourself,
-including the state gate, the notify-email.sh delivery, and the state write.
-
---- BEGIN TASK INSTRUCTIONS ---
-$PROMPT_CONTENT"
+# $PROMPT_CONTENT now holds the raw .prompt text. The scheduled-run preamble is
+# wrapped around it further down, AFTER the .conf sidecar is sourced, because
+# its closing sentence depends on REPORT. See "Scheduled-run preamble" below.
 
 # Per-task effort (claude only; codex tasks take model and reasoning effort from
 # ~/.codex/config.toml). Every claude job runs at "high" unless its .conf
@@ -160,6 +139,53 @@ if [[ -f "$CONF_FILE" ]]; then
   source "$CONF_FILE"
   [[ "${REPORT:-0}" == 1 ]] && REPORT_FILE="$AGENT_DIR/.claude/scheduled/reports/$(date +%Y-%m-%d).md"
 fi
+
+# Scheduled-run preamble. Every .prompt has a paired interactive slash command
+# (lint rule: Scheduled tasks) that delegates back to this same file but applies
+# overrides for session use — skip the once-per-period state gate, don't write
+# state, report to the session instead of emailing. Both harnesses surface those
+# commands to a headless run as invocable skills (claude: `.claude/commands/*`;
+# codex: the `$name` skill bridge), and the model will match one to the task it
+# was just handed and follow its overrides instead of these instructions.
+# That is a SILENT failure — the run exits 0 having sent no email and written no
+# state, so the runner's failure-email path never fires and the next scheduled
+# firing repeats the work. Observed on a multi-day private task on 2026-07-22
+# and 2026-07-28. Prepended here rather than in each .prompt so new tasks are
+# covered automatically and the guard can't drift out of sync.
+#
+# Built HERE, below the sidecar, because the closing duties sentence is FALSE
+# for a REPORT=1 task. Those run read-only (typically
+# --allowedTools "WebSearch,WebFetch", no Bash) so a fetched page cannot inject
+# actions into the repo — which means no state gate, no reachable
+# notify-email.sh, and no state write; the runner emails their stdout instead.
+# Telling them otherwise made all five waiq-tts-watch runs in the week of
+# 2026-08-19 burn turns sweeping the filesystem for notify-email.sh before
+# reasoning past their own instructions; one spawned a subagent to look for it.
+# Keep this construction below the sidecar: moving it back above silently
+# reintroduces the mismatch for every read-only task at once.
+# See .claude/rules/readonly-scheduled-tasks.md.
+if [[ -n "$REPORT_FILE" ]]; then
+  PREAMBLE_DUTIES="Perform every phase below yourself. This run is READ-ONLY: it \
+has no Bash, no state gate, and no way to email itself. The runner captures your \
+stdout and emails it on success, so do not look for notify-email.sh, do not write \
+state, and do not treat their absence as a reason to stop or to search the \
+filesystem for them."
+else
+  PREAMBLE_DUTIES="Perform every phase below yourself, including the state gate, \
+the notify-email.sh delivery, and the state write."
+fi
+
+PROMPT_CONTENT="You are a scheduled (headless) run of the task named \
+'$TASK_NAME'. Execute the instructions below directly and in full.
+
+Do NOT invoke any skill or slash command that wraps this same task — in
+particular the interactive companion whose name matches '$TASK_NAME'. That
+companion exists only for interactive use and its overrides (skip the state
+gate, skip writing state, report to the session instead of emailing) are WRONG
+here and would silently void this run. $PREAMBLE_DUTIES
+
+--- BEGIN TASK INSTRUCTIONS ---
+$PROMPT_CONTENT"
 
 # HARNESS is now final (default -> $BORG_HARNESS -> .conf). Validate it again:
 # the first check caught a bad workspace default, this one catches a bad .conf.
