@@ -58,12 +58,18 @@ from the working directory up to the repository root — so a rule's directory i
 its scope in both harnesses. Run `.bin/sync-codex-rule-skills.sh` after adding or
 renaming a rule; never duplicate a rule's text into a skill or an `AGENTS.md`.
 
-A skill only loads when the model picks it, so a rule that must fire every time
-also needs a line here. Today there is one:
+A skill only loads when the model picks it, and a `paths:`-scoped rule fires when
+a matching file is **read** — not when one is created. A rule that must fire on
+work that starts with a `Write` therefore also needs a line here. Today there are
+two:
 
 - **Re-read any `BACKLOG.md` from disk immediately before writing it.** Never
   write one from a copy read earlier in the session, and make the narrowest edit
   that does the job (`.claude/rules/backlog-write-safety.md`).
+- **Everything under `<agent>/.claude/scheduled/` and `<agent>/.claude/commands/`
+  is tracked in a public repo.** Those files carry method; the private values
+  they operate on stay in `<agent>/.private/` and are cited by reference
+  (`.claude/rules/tracked-agent-files-are-public.md`).
 
 ## Lint
 
