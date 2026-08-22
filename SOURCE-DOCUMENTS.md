@@ -47,6 +47,75 @@ text = re.sub(r'<[^>]+>', '', xml)
 For redlines, pull the `<w:ins>` / `<w:del>` blocks separately and read
 `word/comments.xml`.
 
+### PDFs with a text layer
+
+Most PDFs have one. `pdftotext` is **not** installed; neither is `pypdf`. Do not
+build a venv for this — macOS ships PDFKit and `swiftc` is available. Write the
+extractor once into the session scratchpad:
+
+```swift
+// pdftext.swift — usage: ./pdftext <file.pdf> [firstPage] [lastPage]
+import Foundation
+import PDFKit
+let a = CommandLine.arguments
+guard a.count > 1, let doc = PDFDocument(url: URL(fileURLWithPath: a[1])) else {
+    FileHandle.standardError.write("cannot open\n".data(using: .utf8)!); exit(1)
+}
+let first = a.count > 2 ? Int(a[2])! : 1
+let last  = a.count > 3 ? min(Int(a[3])!, doc.pageCount) : doc.pageCount
+FileHandle.standardError.write("pages=\(doc.pageCount)\n".data(using: .utf8)!)
+for i in (first - 1)..<last {
+    print("=== PAGE \(i + 1) ===")
+    print(doc.page(at: i)?.string ?? "(no text layer)")
+}
+```
+
+`swiftc -O pdftext.swift -o pdftext`, then `./pdftext <file> 1 8`.
+
+`(no text layer)` on a page is the signal to switch to the scan workflow below
+for that page. A page that emits text but reads as gibberish is a bad embedded
+font — render it and read the image instead.
+
+Strip NULs before grepping the output (`tr -d '\000' < out.txt > clean.txt`).
+Tax and legal forms routinely contain them, and `grep` will then report "binary
+file matches" and show you nothing.
+
+**Rendering a page as an image** — for a signature block, a form box, or a page
+whose text layer is unreliable — is the same framework. Prefer this over the
+`/DCTDecode` object regex below, which is only needed when a document has no
+text layer at all:
+
+```swift
+// pdfimg.swift — usage: ./pdfimg <file.pdf> <first> <last> [scale]
+import Foundation
+import PDFKit
+import AppKit
+let a = CommandLine.arguments
+guard a.count > 3, let doc = PDFDocument(url: URL(fileURLWithPath: a[1])) else { exit(1) }
+let first = Int(a[2])!, last = min(Int(a[3])!, doc.pageCount)
+let scale: CGFloat = a.count > 4 ? CGFloat(Double(a[4])!) : 1.6
+for i in (first - 1)..<last {
+    guard let page = doc.page(at: i) else { continue }
+    let r = page.bounds(for: .mediaBox)
+    let sz = NSSize(width: r.width * scale, height: r.height * scale)
+    let img = NSImage(size: sz)
+    img.lockFocus()
+    NSColor.white.setFill(); NSRect(origin: .zero, size: sz).fill()
+    let ctx = NSGraphicsContext.current!.cgContext
+    ctx.scaleBy(x: scale, y: scale)
+    ctx.translateBy(x: -r.origin.x, y: -r.origin.y)
+    page.draw(with: .mediaBox, to: ctx)
+    img.unlockFocus()
+    let rep = NSBitmapImageRep(data: img.tiffRepresentation!)!
+    try! rep.representation(using: .png, properties: [:])!
+        .write(to: URL(fileURLWithPath: "page_\(i + 1).png"))
+}
+```
+
+A rendered page of a personal document can carry an SSN or an account number.
+Write them to the session scratchpad, never to `tmp/`, and delete them when
+you are done reading.
+
 ### Scanned PDFs and photographed documents
 
 These have no text layer. **Prefer a text-layer counterpart when one exists**, but
