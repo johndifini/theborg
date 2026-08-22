@@ -1,6 +1,7 @@
-Draft ONE X (Twitter) post about the most interesting change the user has
-recently shipped to The Borg or the WAIQ app. One post — not three, not a
-menu of options. The user posts manually; this job only produces the draft.
+Draft ONE X (Twitter) post about an interesting change the user has recently
+shipped. Prioritize The Borg unconditionally; use the private app only as the
+fallback defined in SELECT. One post — not three, not a menu of options. The
+user posts manually; this job only produces the draft.
 
 The phases below are named, not numbered, so the paired `/social-media-drafts`
 command can reference them without breaking when this file is edited.
@@ -8,7 +9,7 @@ command can reference them without breaking when this file is edited.
 GATHER — survey the last 7 days of shipped work.
 Two repositories, read-only. Never commit, push, or modify anything in either:
   - The Borg — `${BORG_ROOT}` (public)
-  - WAIQ     — `${BORG_ROOT}/repos/waiq` (private — see the LINKS rules below)
+  - Private app — `${BORG_ROOT}/repos/waiq` (see the LINKS rules below)
 For each, list the window and then read into it:
         git -C <repo> log --since='7 days ago' --stat
         git -C <repo> show <sha>          # for the ones that look substantive
@@ -28,10 +29,13 @@ commit touching the same idea still counts as covered.
 SELECT — pick exactly one change.
 Interesting means: a non-obvious decision, a surprising failure mode, a
 technique another builder could steal, or a genuinely funny outcome. "Added a
-feature" is not interesting. If the week's most interesting change is one you
-can't make a stranger care about in a couple hundred characters, take the
-second-most interesting instead. Write a 1–2 line rationale — what the change is
-and why it's the pick.
+feature" is not interesting. First, choose the best qualifying The Borg
+candidate, even if a private-app candidate seems more interesting. Only when no
+The Borg candidate qualifies after FILTER may a private-app change be chosen,
+and then only if it can support a generic post under the LINKS privacy rules. If
+the best candidate cannot make a stranger care in a couple hundred characters,
+take the next qualifying candidate from the same priority tier. Write a 1–2 line
+rationale — what the change is and why it's the pick.
 
 COMPOSE — write the post.
 Voice: friendly, funny, informative; punchy and platform-native; the user's
@@ -39,7 +43,7 @@ voice (CTO, 24+ years, hands-on builder), not corporate. Lead with the insight
 or the surprise, not with "I shipped X." Avoid overtly political topics. No
 hashtag soup — at most one or two if they genuinely help.
 
-LINKS — hard rules, no exceptions:
+LINKS — hard rules, no exceptions, including private-app disclosure:
   - **The Borg is public** (`https://github.com/johndifini/theborg`). Include one
     relevant GitHub link. Use the permanent forms:
         commit — https://github.com/johndifini/theborg/commit/<full-sha>
@@ -50,15 +54,23 @@ LINKS — hard rules, no exceptions:
     An unpushed commit has no working URL — if the check fails, drop the link,
     describe the change without it, and note in the email that the commit hasn't
     been pushed yet.
-  - **WAIQ is private** (`github.com/johndifini/waiq`). A GitHub link to it is
-    NOT relevant and must never appear. Do not quote its source paths, file
-    names, internal identifiers, or commit SHAs either. Write about what the app
-    now does, not about its repository.
+  - **The private app is unreleased.** A fallback post may call it only "an
+    unreleased mobile app I'm building." Never use its name. Do not reveal or
+    imply what it does, its product domain, intended users, features, or
+    capabilities. The post must stand on a generic, transferable engineering
+    lesson such as a technique, tradeoff, workflow, or failure mode.
+  - Never link to the private repository or quote its source paths, file names,
+    internal identifiers, or commit SHAs. If the lesson cannot be explained
+    accurately after removing all product-specific details, reject the
+    candidate rather than drafting it.
   - Never put a local filesystem path, home directory, hostname, or machine name
     in a draft. Public-post hygiene, same standard as the public repo.
 
 VERIFY — before the draft goes out.
 Every factual claim in the post traces to a commit or a file you actually read.
+For a private-app fallback, do a separate disclosure pass: confirm that the
+draft contains only the permitted description, "an unreleased mobile app I'm
+building," and reveals nothing about the product itself.
 Any product, person, or handle you @mention or name is spelled as the
 authoritative source spells it — otherwise paraphrase and drop the handle. Do
 not present anything as a direct quote unless you read it verbatim.
