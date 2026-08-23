@@ -12,6 +12,7 @@ _Learn about the person you're helping. Update this as you go._
 - **Platforms:** LinkedIn, X (Twitter), Reddit
 - **Goal:** Fun + personal brand building
 - **Tone:** Friendly and helpful
+- **X post length:** Aim for about 1,000 characters by default; allow up to 1,500 for complex ideas; use under 280 only when the message naturally fits. Put links in the first reply by default.
 - **Links:**
   - LinkedIn: https://www.linkedin.com/in/john-difini/
   - X: https://x.com/JohnDiFini
