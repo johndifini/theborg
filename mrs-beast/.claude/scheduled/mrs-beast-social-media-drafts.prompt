@@ -54,7 +54,7 @@ in a couple hundred characters, take the next qualifying candidate from the same
 priority tier. Write a 1–2 line rationale naming the artifact, what it enables,
 and why it outranked the alternatives.
 
-COMPOSE — write the post.
+COMPOSE — write the post and its image prompt.
 Voice: friendly, funny, informative; punchy and platform-native; the user's
 voice (CTO, 24+ years, hands-on builder), not corporate. Lead with the insight
 or practical payoff, not with "I shipped X." Make the artifact the subject:
@@ -63,6 +63,28 @@ could reuse or adapt it. A bug, failure mode, or implementation lesson may
 support that story, but should not displace the artifact unless SELECT found no
 stronger artifact-led candidate. Avoid overtly political topics. No hashtag soup
 — at most one or two if they genuinely help.
+
+Then produce ONE ready-to-paste text-to-image prompt for a whimsical infographic
+that complements the post rather than repeating all of it. Aim for the clarity
+and restraint of a polished visual explainer, with a touch of playful character.
+Hard constraints to bake into the prompt text:
+  - Communicate one central idea with a strong visual hierarchy and no more than
+    3–5 supporting elements. Prefer one coherent composition over a grid of dense
+    panels. The image should remain understandable at mobile-feed size.
+  - Words are allowed, but keep them to a short headline and essential labels —
+    no paragraphs or sentences of explanation. Spell every piece of rendered
+    text verbatim in the prompt. Put the detail in the X post, not the image.
+  - Use #00ff2b as the primary accent and #ffa300 as the secondary accent on a
+    near-black or charcoal background. Other colors are allowed sparingly when
+    they improve meaning, hierarchy, or contrast.
+  - Choose the aspect ratio that best serves the concept and X engagement. Favor
+    a mobile-first 4:5 portrait or 1:1 square composition; use 16:9 landscape only
+    when a horizontal sequence or comparison clearly benefits from the width.
+    State the chosen aspect ratio explicitly in the prompt.
+  - Specify concrete, renderable subject matter, layout, iconography or
+    characters, mood, lighting, palette, and style. Keep it simple and sleek,
+    not photorealistic, corporate, or information-dense. Use a person or company
+    likeness only when it is central to the story and has been verified.
 
 LINKS — hard rules, no exceptions, including private-app disclosure:
   - **The Borg is public** (`https://github.com/johndifini/theborg`). Include one
@@ -104,13 +126,16 @@ Assemble the body in this order:
   1. **Pick + why** — the SELECT rationale, plus which repo it came from.
   2. **The post** — the ready-to-paste X draft, clearly delimited, with its
      character count.
-  3. **Footer** — emit this block verbatim, then repeat the full post text
-     immediately beneath it so the two copy as one chunk:
+  3. **Image prompt** — match this presentation exactly, substituting the
+     complete ready-to-paste prompt produced in COMPOSE for the placeholder:
 
-─────────────────────────────────────
-Post this in ChatGPT:
+## Image prompt
 
-Create a whimsical infographic for the following X post. Use #00ff2b and #ffa300 as the primary and secondary colors on a dark background. Other colors are ok too.
+Paste this into ChatGPT or Gemini as-is:
+
+```text
+<complete image prompt>
+```
 
 Pipe the whole body into
 `${BORG_ROOT}/.bin/notify-email.sh mrs-beast "Social media draft — {YYYY-MM-DD} — {short topic label}"`
