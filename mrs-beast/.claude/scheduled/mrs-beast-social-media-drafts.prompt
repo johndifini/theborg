@@ -1,7 +1,8 @@
-Draft ONE X (Twitter) post about an interesting change the user has recently
-shipped. Prioritize The Borg unconditionally; use the private app only as the
-fallback defined in SELECT. One post — not three, not a menu of options. The
-user posts manually; this job only produces the draft.
+Draft ONE X (Twitter) post and ONE follow-up reply about an interesting change
+the user has recently shipped. Prioritize The Borg unconditionally; use the
+private app only as the fallback defined in SELECT. One main post plus its
+follow-up — not three options, not a menu. The user posts manually; this job
+only produces the drafts.
 
 The phases below are named, not numbered, so the paired `/social-media-drafts`
 command can reference them without breaking when this file is edited.
@@ -18,10 +19,14 @@ the commit touched — ADRs, rules, skills, `.prompt` files, AGENTS.md — to
 recover *why* the change was made.
 Classify whether each candidate delivered a complete artifact another builder
 could inspect, reuse, or adapt. Examples include a new or substantially upgraded
-slash command, scheduled job, rule, skill, shell script, configuration, output
-style, template, workflow, or similarly coherent unit. A substantial upgrade
-materially changes what an existing artifact enables or how reliably it works;
-a small fix does not.
+agent, slash command, scheduled job, rule, skill, shell script, configuration,
+output style, template, workflow, or similarly coherent unit. Treat a new agent
+as an artifact when the shipped files establish a coherent role and operating
+contract that another builder could inspect or adapt; read its AGENTS.md and the
+commands, rules, workflows, or other scaffolding introduced with it rather than
+judging it from the directory name alone. A substantial upgrade materially
+changes what an existing artifact enables or how reliably it works; a small fix
+does not.
 Ignore: typo/lint/formatting-only commits, dependency bumps, backlog
 bookkeeping, and merge commits with no content of their own.
 
@@ -54,7 +59,7 @@ in a couple hundred characters, take the next qualifying candidate from the same
 priority tier. Write a 1–2 line rationale naming the artifact, what it enables,
 and why it outranked the alternatives.
 
-COMPOSE — write the post and its image prompt.
+COMPOSE — write the post, follow-up, and image prompt.
 Voice: friendly, funny, informative; punchy and platform-native; the user's
 voice (CTO, 24+ years, hands-on builder), not corporate. Lead with the insight
 or practical payoff, not with "I shipped X." Make the artifact the subject:
@@ -63,6 +68,11 @@ could reuse or adapt it. A bug, failure mode, or implementation lesson may
 support that story, but should not displace the artifact unless SELECT found no
 stronger artifact-led candidate. Avoid overtly political topics. No hashtag soup
 — at most one or two if they genuinely help.
+
+Then write ONE ready-to-post follow-up reply that gives readers a useful path to
+more information. Keep it concise, say what they will find at the destination,
+and include the verified public URL selected under LINKS. Do not merely repeat
+the main post or drop a context-free link.
 
 Then produce ONE ready-to-paste text-to-image prompt for a whimsical infographic
 that complements the post rather than repeating all of it. Aim for the clarity
@@ -86,17 +96,20 @@ Hard constraints to bake into the prompt text:
     not photorealistic, corporate, or information-dense. Use a person or company
     likeness only when it is central to the story and has been verified.
 
-LINKS — hard rules, no exceptions, including private-app disclosure:
-  - **The Borg is public** (`https://github.com/johndifini/theborg`). Include one
-    relevant GitHub link. Use the permanent forms:
+LINKS — choose the follow-up's learn-more URL; hard rules, no exceptions,
+including private-app disclosure:
+  - **The Borg is public** (`https://github.com/johndifini/theborg`). Put one
+    relevant GitHub link in the follow-up post, not the main post. Use the
+    permanent forms:
         commit — https://github.com/johndifini/theborg/commit/<full-sha>
         file   — https://github.com/johndifini/theborg/blob/main/<repo-relative-path>
     Verify the commit is actually published before linking it:
         git -C ${BORG_ROOT} fetch --quiet origin
         git -C ${BORG_ROOT} branch -r --contains <sha> | grep -q origin/main
-    An unpushed commit has no working URL — if the check fails, drop the link,
-    describe the change without it, and note in the email that the commit hasn't
-    been pushed yet.
+    An unpushed commit has no working URL. If the check fails, reject that URL;
+    use another verified, relevant public Borg URL or take the next qualifying
+    candidate. If no candidate has a safe public learn-more URL, send the
+    no-draft explanation required by OUTPUT.
   - **The private app is unreleased.** A fallback post may call it only "an
     unreleased mobile app I'm building." Never use its name. Do not reveal or
     imply what it does, its product domain, intended users, features, or
@@ -106,11 +119,18 @@ LINKS — hard rules, no exceptions, including private-app disclosure:
     internal identifiers, or commit SHAs. If the lesson cannot be explained
     accurately after removing all product-specific details, reject the
     candidate rather than drafting it.
+  - A private-app fallback qualifies only when there is a relevant public,
+    authoritative learn-more page for the generic technique. Read and verify
+    that page before using its canonical URL in the follow-up. If there is no
+    such page, reject the candidate.
   - Never put a local filesystem path, home directory, hostname, or machine name
     in a draft. Public-post hygiene, same standard as the public repo.
 
 VERIFY — before the draft goes out.
-Every factual claim in the post traces to a commit or a file you actually read.
+Every factual claim in the main post or follow-up traces to a commit, file, or
+public authoritative page you actually read.
+The follow-up URL works, leads to the claimed information, and complies with
+LINKS. Count the main post and follow-up separately.
 For a private-app fallback, do a separate disclosure pass: confirm that the
 draft contains only the permitted description, "an unreleased mobile app I'm
 building," and reveals nothing about the product itself.
@@ -126,7 +146,9 @@ Assemble the body in this order:
   1. **Pick + why** — the SELECT rationale, plus which repo it came from.
   2. **The post** — the ready-to-paste X draft, clearly delimited, with its
      character count.
-  3. **Image prompt** — match this presentation exactly, substituting the
+  3. **Follow-up post** — the ready-to-paste reply, clearly delimited, with its
+     character count and verified learn-more URL.
+  4. **Image prompt** — match this presentation exactly, substituting the
      complete ready-to-paste prompt produced in COMPOSE for the placeholder:
 
 ## Image prompt

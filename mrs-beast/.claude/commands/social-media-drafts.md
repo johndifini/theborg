@@ -20,8 +20,8 @@ referenced by phase name:
    the best available candidate anyway rather than sending an empty run. An
    interactive run is on-demand and should produce something.
 2. In the **OUTPUT** phase — do NOT pipe to `notify-email.sh`. Output the full
-   body (pick + why, the post, the verbatim ChatGPT footer with the post
-   repeated beneath it) directly into this session.
+   body (pick + why, the post, the follow-up post, and the image prompt) directly
+   into this session.
 3. Skip the **RECORD STATE** phase entirely — do not create or append to the
    topics log. An interactive run must not mark a topic as spent for the next
    scheduled run.
