@@ -7,6 +7,30 @@ Run the /security-review skill against the current state of ${BORG_ROOT}. Specif
 - the consolidated secrets file at ${BORG_ROOT}/.env: must be chmod 600 and
   gitignored (`git check-ignore .env`), and no other filled-in .env / secret
   file may exist elsewhere in the workspace
+- LEAKED CREDENTIALS ON DISK — run `${BORG_ROOT}/.bin/credential-sweep.sh` and
+  report on its exit code. Do NOT hand-roll this sweep or substitute an ad-hoc
+  `grep`; the script exists precisely because improvising it failed. On
+  2026-08-23 four consecutive audits reported "zero live token values on disk"
+  while 25 files under Xcode's default DerivedData held live credentials — the
+  swept paths had been carried in each run's working memory and had quietly
+  drifted to the wrong directory. The script discovers cache roots at run time,
+  pins /usr/bin/grep, matches the real values read from the secret stores rather
+  than provider prefixes, and self-tests before trusting a clean result.
+  Interpret its exit code literally:
+    0 = clean. Report the root count it swept, so scope drift is visible in the
+        report rather than invisible.
+    1 = credentials found. CRITICAL. It prints variable name, file path, and
+        mode; any file marked WORLD-READABLE is the most urgent. Report the
+        exposing variable NAME and never the value — this report is emailed.
+    2 = the sweep could not be trusted (canary missed, empty pattern set, or a
+        grep that errored). This is NOT a clean result and must never be
+        reported as one. Escalate as a finding in its own right: the audit was
+        blind for this run.
+  If a credential is found, also check whether it reached anywhere durable
+  before recommending rotation urgency: pickaxe AND all-object scan of every
+  repo's history (reachable plus unreachable/dangling objects, which catches
+  committed-then-rewritten), and whether the path sits under the Google Drive
+  mirror root (read the mirror's own roots; do not assume the mirror's scope).
 - any new MCP servers added since last audit
 - `${BORG_ROOT}/tmp/notify-failures.log` — the sentinel `run-scheduled-task.sh`
   writes when `notify-email.sh` fails. Email is the only outbound channel, so
@@ -17,9 +41,28 @@ Run the /security-review skill against the current state of ${BORG_ROOT}. Specif
   filesystem, not git status; e.g. repos/waiq): each repo's .claude/settings*.json
   and the hooks those settings configure, its .claude/commands/ and skills for
   anything that executes or exfiltrates, any .mcp.json or MCP server not
-  registered in ${BORG_ROOT}/c4po/MCP.md, and a secret-pattern sweep (API keys,
-  tokens, plaintext credentials) of the repo's config files
+  registered in ${BORG_ROOT}/c4po/MCP.md, and a secret-pattern sweep of the
+  repo's config files. The workspace-wide credential sweep above already covers
+  these repos by value; this pass is the complementary one — unknown-shaped
+  secrets in config that no env file would list. Triage keyword matches
+  individually before reporting: dictionaries and text corpora legitimately
+  contain the words "secret" and "token".
+- Before classifying repeats, read the prior state file. Preserve any
+  `accepted_risks` entries and treat them as resolved, not findings, unless the
+  current facts materially exceed the scope the user accepted. Carry the
+  entries forward when writing the new state.
 
 Always email the result by piping it into `${BORG_ROOT}/.bin/notify-email.sh c4po "Borg security audit — {YYYY-MM-DD} — {N} finding(s)"` (reads the message from stdin and emails it to the user) — even when the audit is clean, so the user can confirm the job ran. Body header: same as the subject.
 - If anything critical is found (auth weakness, dangerous permission, broken access policy, suspicious MCP server, leaked secret), include each finding and a recommended fix.
 - If clean, the body is a one-liner: `All clear — no findings.`
+
+Tooling constraints that have silently voided a run before — treat as hard rules:
+- Pin every sweep to `/usr/bin/grep`. The interactive `grep` here is a ugrep shim
+  that honours `--ignore-files` and can skip gitignored paths, which is exactly
+  where secrets live.
+- `timeout` does not exist on macOS. `timeout N grep ... | head` exits 127 and
+  prints nothing, which is indistinguishable from a clean result. Never pipe a
+  sweep through `head` either: the pipeline reports head's status, not grep's.
+  Redirect to a file and inspect grep's own exit code.
+- A full credential sweep takes several minutes across all roots. Let it finish;
+  a truncated sweep that reports clean is worse than no sweep.
