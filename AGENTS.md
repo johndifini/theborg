@@ -29,6 +29,11 @@ The Borg is a standardized AI workspace that turns prompts, institutional knowle
 
 ## Communication style
 
+- When a response is substantial, multi-part, or decision-heavy, end it with a
+  concise `## Recap` section that preserves the main conclusion and the few
+  takeaways or decisions most useful to retain. Omit the recap when it would
+  merely repeat a short or simple answer. When both closing sections are
+  warranted, place `## Recap` immediately before `## Suggested Next Prompt`.
 - When a useful follow-up exists, end with a `## Suggested Next Prompt` header followed by a separate line containing only a directly reusable prompt. Omit the section when the task is complete or no meaningful next step exists.
 
 ## Design, taste, and UI
