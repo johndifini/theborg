@@ -1,0 +1,280 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://theborg.invalid/MEMORY-INVENTORY.schema.json",
+  "title": "The Borg long-term memory inventory",
+  "description": "Governance metadata for every durable memory artifact in The Borg. Declared intent only: the scanner in .bin/build-memory-inventory.py computes hashes, sizes, links, and review state into a separate gitignored snapshot and never writes back here. Validated by `.bin/build-memory-inventory.py validate`, which supports the keyword subset used below and rejects any schema keyword it does not implement.",
+  "type": "object",
+  "required": ["version", "artifacts"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "description": "Registry format version. Bump only for a breaking shape change.",
+      "const": 1
+    },
+    "defaults": {
+      "description": "Per-artifact-class defaults. A default supplies a field only when the individual record omits it; records always win. Keys are artifact types. Defaults are a concision device, never a substitute for per-artifact identity, rationale, or review history.",
+      "type": "object",
+      "propertyNames": { "$ref": "#/$defs/artifactType" },
+      "additionalProperties": { "$ref": "#/$defs/classDefaults" }
+    },
+    "artifacts": {
+      "description": "One record per artifact, keyed by stable path-independent id. Generated mirrors and bridges get their own records; they are inventoried individually and reviewed for drift against `canonical_ref`.",
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "$ref": "#/$defs/artifactId" },
+      "additionalProperties": { "$ref": "#/$defs/artifact" }
+    }
+  },
+  "$defs": {
+    "artifactId": {
+      "description": "Stable, path-independent identifier. Lowercase kebab-case so ids survive relocation without churn.",
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 80,
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+    },
+    "artifactType": {
+      "description": "Artifact class from the taxonomy. Determines the semantic audit unit and the default review cadence.",
+      "enum": [
+        "always_on_instruction",
+        "compatibility_wrapper",
+        "scoped_rule",
+        "generated_rule_bridge",
+        "procedural_skill",
+        "command",
+        "generated_command_bridge",
+        "scheduled_prompt",
+        "knowledge_page",
+        "knowledge_source",
+        "private_memory",
+        "policy_registry",
+        "retrieval_index",
+        "design_decision"
+      ]
+    },
+    "visibility": {
+      "description": "public: record and path may live in the tracked registry. private: record must live only in a gitignored per-agent overlay. redacted: the artifact exists publicly but its record carries facts that may only be reported as aggregates.",
+      "enum": ["public", "private", "redacted"]
+    },
+    "canonicality": {
+      "description": "canonical: the authoritative text. generated: produced by tooling from `canonical_ref`. mirror: a hand-maintained or symlinked copy of `canonical_ref`. source: an ingested raw source that a knowledge_page cites.",
+      "enum": ["canonical", "generated", "mirror", "source"]
+    },
+    "loadMode": {
+      "description": "How the artifact enters a model's context, and therefore what it costs. `always` is fixed context cost; every other value is conditional.",
+      "enum": [
+        "always",
+        "path_triggered",
+        "explicit",
+        "scheduled",
+        "retrieved",
+        "source_only",
+        "never_loaded"
+      ]
+    },
+    "risk": {
+      "description": "Consequence of this memory being stale or wrong, not its confidentiality. A `critical` artifact may override its class review cadence with a shorter one.",
+      "enum": ["low", "medium", "high", "critical"]
+    },
+    "remediationPolicy": {
+      "description": "Permission tier for changes the audit proposes to this artifact. auto_safe is reachable only from interactive --apply and only for deterministic, reversible, content-preserving changes to generated artifacts or computed state. Deletion, archival, and destructive consolidation are approval_required regardless of what is written here.",
+      "enum": ["auto_safe", "propose_patch", "approval_required", "prohibited"]
+    },
+    "pathRoot": {
+      "description": "Base the `path` resolves against. Generated Codex command bridges live under CODEX_HOME and agent Auto Memory lives under HOME, so paths are not all workspace-relative.",
+      "enum": ["borg_root", "home", "codex_home"]
+    },
+    "relativePath": {
+      "description": "Path relative to `path_root`. No leading slash and no `..` so a record can never point outside its declared root.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300,
+      "pattern": "^(?!/)(?!.*(^|/)\\.\\.(/|$)).+$"
+    },
+    "cadence": {
+      "description": "A named interval, or an event trigger written as `on_<event>` for artifacts reviewed on a condition rather than a clock.",
+      "anyOf": [
+        {
+          "enum": [
+            "each_audit",
+            "each_run",
+            "monthly",
+            "quarterly",
+            "semiannual",
+            "annual",
+            "rolling_annual"
+          ]
+        },
+        { "type": "string", "pattern": "^on_[a-z0-9_]+$" }
+      ]
+    },
+    "reviewMethod": {
+      "description": "Atomic review methods. The design's illustrative compound token `semantic_and_best_practice` is written here as the array [semantic, best_practice] so the audit can select candidates by method without parsing compound names.",
+      "enum": [
+        "mechanical",
+        "semantic",
+        "best_practice",
+        "source_verification",
+        "usage",
+        "drift_only"
+      ]
+    },
+    "provenanceKind": {
+      "description": "What justified adopting the artifact.",
+      "enum": [
+        "workspace_decision",
+        "design_document",
+        "incident",
+        "upstream_feature",
+        "requirement",
+        "external_source",
+        "user_request"
+      ]
+    },
+    "sentence": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 400
+    },
+    "shortName": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 80,
+      "pattern": "^[a-z0-9][a-z0-9/._-]*$"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "classDefaults": {
+      "description": "Flattened defaults for one artifact class, per the design's `defaults.scoped_rule` example. Only fields that are genuinely uniform across a class belong here; rationale, provenance, success signals, and retirement triggers are never defaultable because they are the per-artifact justification.",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "owner": { "$ref": "#/$defs/shortName" },
+        "scope": { "$ref": "#/$defs/shortName" },
+        "visibility": { "$ref": "#/$defs/visibility" },
+        "canonicality": { "$ref": "#/$defs/canonicality" },
+        "load_mode": { "$ref": "#/$defs/loadMode" },
+        "consumers": { "$ref": "#/$defs/consumers" },
+        "risk": { "$ref": "#/$defs/risk" },
+        "review_cadence": { "$ref": "#/$defs/cadence" },
+        "review_method": { "$ref": "#/$defs/reviewMethods" },
+        "remediation_policy": { "$ref": "#/$defs/remediationPolicy" }
+      }
+    },
+    "consumers": {
+      "description": "Harnesses, agents, jobs, or workflows that actually load this artifact. Drives orphan detection and the fixed-context estimate.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/shortName" }
+    },
+    "reviewMethods": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/reviewMethod" }
+    },
+    "artifact": {
+      "description": "One durable memory artifact. Validated after class defaults are merged in, so a field satisfied by a default is not reported missing.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "type",
+        "owner",
+        "scope",
+        "visibility",
+        "canonicality",
+        "rationale",
+        "introduced",
+        "provenance",
+        "load_mode",
+        "consumers",
+        "risk",
+        "review",
+        "success_signals",
+        "retirement_triggers",
+        "remediation_policy",
+        "related"
+      ],
+      "properties": {
+        "id": {
+          "description": "Optional restatement of the map key. When present it must match the key exactly; the validator enforces this.",
+          "$ref": "#/$defs/artifactId"
+        },
+        "path": { "$ref": "#/$defs/relativePath" },
+        "path_root": { "$ref": "#/$defs/pathRoot" },
+        "type": { "$ref": "#/$defs/artifactType" },
+        "owner": { "$ref": "#/$defs/shortName" },
+        "scope": { "$ref": "#/$defs/shortName" },
+        "visibility": { "$ref": "#/$defs/visibility" },
+        "canonicality": { "$ref": "#/$defs/canonicality" },
+        "canonical_ref": {
+          "description": "Id of the artifact this one is generated from or mirrors. Required for `generated` and `mirror`; forbidden otherwise.",
+          "$ref": "#/$defs/artifactId"
+        },
+        "rationale": {
+          "description": "Why the artifact exists and what failure it prevents. Not a description of its contents.",
+          "$ref": "#/$defs/sentence"
+        },
+        "introduced": { "$ref": "#/$defs/date" },
+        "provenance": {
+          "description": "The decision, source, incident, requirement, or upstream feature that justified adding it.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "reference"],
+            "properties": {
+              "kind": { "$ref": "#/$defs/provenanceKind" },
+              "reference": {
+                "type": "string",
+                "minLength": 3,
+                "maxLength": 300
+              }
+            }
+          }
+        },
+        "load_mode": { "$ref": "#/$defs/loadMode" },
+        "consumers": { "$ref": "#/$defs/consumers" },
+        "risk": { "$ref": "#/$defs/risk" },
+        "review": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["cadence", "method", "last_reviewed"],
+          "properties": {
+            "cadence": { "$ref": "#/$defs/cadence" },
+            "method": { "$ref": "#/$defs/reviewMethods" },
+            "last_reviewed": {
+              "description": "Date of the last completed substantive review. `null` means never reviewed, which is a legitimate state for a newly registered artifact and makes it a deep-review candidate. A failed or partial review must not advance this.",
+              "anyOf": [{ "type": "null" }, { "$ref": "#/$defs/date" }]
+            }
+          }
+        },
+        "success_signals": {
+          "description": "Observable evidence that the artifact earns its place.",
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/sentence" }
+        },
+        "retirement_triggers": {
+          "description": "Concrete conditions that would justify relocation, consolidation, archival, or removal.",
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/sentence" }
+        },
+        "remediation_policy": { "$ref": "#/$defs/remediationPolicy" },
+        "related": {
+          "description": "Ids of known dependencies, overlaps, replacements, or superseded items. May be empty. Every id must resolve; a public record may not reference a private one.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/artifactId" }
+        }
+      }
+    }
+  }
+}

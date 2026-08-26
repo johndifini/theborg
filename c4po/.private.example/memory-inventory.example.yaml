@@ -1,0 +1,55 @@
+# Private memory-inventory overlay — SYNTHETIC EXAMPLE
+#
+# Copy to `.private/memory-inventory.yaml` and replace the synthetic values
+# locally. `.private/` is git-ignored; this example directory is public and must
+# remain synthetic — no real path, rationale, or artifact name belongs here.
+#
+# An overlay exists for artifacts whose *path or rationale is itself sensitive*,
+# not merely for artifacts that contain sensitive content. It is validated with
+# the same schema as the tracked registry and is never merged into any tracked
+# output (design principle 5):
+#
+#   python3 .bin/build-memory-inventory.py validate \
+#       --overlay c4po/.private/memory-inventory.yaml
+#
+# Overlay-specific rules the validator enforces:
+#   * every record must be `visibility: private` or `redacted`;
+#   * a tracked record may not name an overlay id in `canonical_ref` or
+#     `related`, so a private artifact cannot be inferred from the public file;
+#   * without `--show-private`, errors are reported with ids and paths redacted,
+#     which is the mode any scheduled or emailed run uses.
+#
+# The overlay carries no `defaults:` block of its own by convention — defaults
+# live in the tracked registry so a private file never becomes the only place a
+# class-wide policy is written down.
+
+version: 1
+
+artifacts:
+
+  example-private-memory:
+    path: .private/example-durable-note.md
+    type: private_memory
+    owner: c4po
+    scope: c4po
+    visibility: private
+    canonicality: canonical
+    rationale: "Synthetic placeholder showing the shape of a private record: a durable note whose very filename would disclose the subject it tracks, so it is inventoried here rather than in the tracked registry."
+    introduced: 2026-08-26
+    provenance:
+      - kind: user_request
+        reference: "Example provenance reference."
+    load_mode: explicit
+    consumers: [claude-code]
+    risk: medium
+    review:
+      cadence: quarterly
+      method: [mechanical, semantic]
+      last_reviewed: null
+    success_signals:
+      - "The note is still consulted, and nothing in it has migrated into a tracked file."
+    retirement_triggers:
+      - "The situation the note tracks is resolved and the note stops being consulted."
+      - "Its content stops being sensitive and can move to the tracked registry."
+    remediation_policy: approval_required
+    related: []

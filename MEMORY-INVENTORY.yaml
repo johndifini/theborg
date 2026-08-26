@@ -1,0 +1,352 @@
+# The Borg — long-term memory inventory (tracked, public)
+#
+# Canonical source for governance metadata about durable memory artifacts:
+# why each exists, who owns it, how it enters context, when it is reviewed, and
+# what the audit is allowed to do to it. It stores intent and pointers, never
+# copies of the instructions or knowledge themselves.
+#
+# Architecture: c4po/LONG-TERM-MEMORY-INVENTORY-DESIGN.md
+# Schema:       MEMORY-INVENTORY.schema.json
+# Validate:     python3 .bin/build-memory-inventory.py validate
+#
+# Migration status: step 1 of the design's migration sequence. This file holds a
+# deliberately small representative set — one artifact of each shape the schema
+# has to survive — so the schema is exercised before discovery (step 2) bulk-
+# loads several hundred records. It is NOT yet a complete inventory, so the
+# LINT.md coverage rule stays unwritten until step 4, per the design's
+# instruction not to run a knowingly red audit during migration.
+#
+# `review.last_reviewed: null` throughout is literal, not a placeholder: no
+# artifact has yet had a substantive review under this scheme, which correctly
+# makes every one of them a deep-review candidate on the first audit run.
+#
+# Computed facts — hashes, byte counts, token estimates, link graphs, drift
+# against canonical sources, observed use — belong in the gitignored snapshot at
+# c4po/.claude/scheduled/state/memory-inventory.json and are never written here.
+#
+# Private artifacts are absent by construction. Their records live in gitignored
+# <agent>/.private/memory-inventory.yaml overlays; see
+# c4po/.private.example/memory-inventory.yaml for the shape.
+
+version: 1
+
+# Per-class defaults. A default fills a field only when the record omits it.
+# Only genuinely class-uniform fields belong here; rationale, provenance,
+# success signals, and retirement triggers are per-artifact by definition.
+defaults:
+
+  scoped_rule:
+    owner: workspace
+    visibility: public
+    canonicality: canonical
+    load_mode: path_triggered
+    review_cadence: quarterly
+    review_method: [semantic, usage]
+    remediation_policy: propose_patch
+
+  generated_rule_bridge:
+    owner: workspace
+    visibility: public
+    canonicality: generated
+    load_mode: explicit
+    consumers: [codex]
+    risk: low
+    review_cadence: each_audit
+    review_method: [drift_only]
+    remediation_policy: auto_safe
+
+  generated_command_bridge:
+    owner: workspace
+    visibility: public
+    canonicality: generated
+    load_mode: explicit
+    consumers: [codex]
+    risk: low
+    review_cadence: each_audit
+    review_method: [drift_only]
+    remediation_policy: auto_safe
+
+  knowledge_page:
+    owner: cerebruh
+    visibility: public
+    canonicality: canonical
+    load_mode: retrieved
+    consumers: [claude-code, codex, claude-desktop]
+    risk: low
+    review_cadence: rolling_annual
+    review_method: [semantic, source_verification]
+    remediation_policy: approval_required
+
+  knowledge_source:
+    owner: cerebruh
+    visibility: public
+    canonicality: source
+    load_mode: source_only
+    consumers: [cerebruh-ingest]
+    risk: low
+    review_cadence: monthly
+    review_method: [mechanical, source_verification]
+    remediation_policy: prohibited
+
+artifacts:
+
+  # ── always-on instructions ───────────────────────────────────────────────
+
+  root-agent-instructions:
+    path: AGENTS.md
+    type: always_on_instruction
+    owner: workspace
+    scope: workspace
+    visibility: public
+    canonicality: canonical
+    rationale: "The only text guaranteed loaded in every session in every directory: agent roster and routing, the read-only Cerebruh contract, scratch/private file placement, and the two scoped rules that must fire on a Write rather than a Read."
+    introduced: 2026-07-12
+    provenance:
+      - kind: workspace_decision
+        reference: "Workspace bootstrap; earliest tracked revision is commit-dated 2026-07-12."
+      - kind: requirement
+        reference: "LINT.md Coverage — AGENTS.md is required at every context boundary, starting at the workspace root."
+    load_mode: always
+    consumers: [claude-code, codex, claude-desktop]
+    risk: high
+    review:
+      cadence: monthly
+      method: [semantic, best_practice]
+      last_reviewed: null
+    success_signals:
+      - "Agents route out-of-domain work to the owning sibling agent instead of doing it themselves."
+      - "No agent creates a nested tmp/ directory or writes Cerebruh wiki content."
+      - "The file stays under the LINT.md size ceiling without losing a routing rule."
+    retirement_triggers:
+      - "A harness-native policy layer supersedes file-based always-on instructions in both Claude Code and Codex."
+      - "The workspace collapses to a single agent, making the roster and routing sections dead weight."
+    remediation_policy: approval_required
+    related:
+      - shared-checkout-git-safety-rule
+      - audit-assumptions-command
+
+  # ── scoped rule and its generated Codex bridge ───────────────────────────
+
+  shared-checkout-git-safety-rule:
+    path: .claude/rules/shared-checkout-git-safety.md
+    type: scoped_rule
+    scope: workspace
+    rationale: "Two concurrent-session git failures on 2026-08-16 — a tree-wide stash that swept a sibling's uncommitted work, and a fast-forward claim that its own commit invalidated — were caught by chance, not by a control. This rule is that control."
+    introduced: 2026-08-16
+    provenance:
+      - kind: incident
+        reference: "2026-08-16 shared-checkout near-misses, recorded in the rule body itself."
+    consumers: [claude-code, codex]
+    risk: high
+    review:
+      cadence: on_shared_checkout_git_failure
+      method: [semantic, usage]
+      last_reviewed: null
+    success_signals:
+      - "No session runs git stash, reset --hard, or clean to answer a read-only question."
+      - "Branch relationships are re-derived in the same turn they are acted on."
+    retirement_triggers:
+      - "Sessions stop sharing one working directory — each gets an isolated checkout or worktree by default."
+      - "The harness itself refuses tree-wide destructive git commands, making the prose redundant."
+    remediation_policy: propose_patch
+    related:
+      - shared-checkout-git-safety-codex-bridge
+      - root-agent-instructions
+
+  shared-checkout-git-safety-codex-bridge:
+    path: .agents/skills/shared-checkout-git-safety/SKILL.md
+    type: generated_rule_bridge
+    scope: workspace
+    canonical_ref: shared-checkout-git-safety-rule
+    rationale: "Codex does not read .claude/rules/, so without this generated stub the git-safety rule would bind Claude Code sessions and silently not bind Codex sessions sharing the same checkout."
+    introduced: 2026-08-16
+    provenance:
+      - kind: upstream_feature
+        reference: "Codex discovers .agents/skills/*/SKILL.md from the working directory up to the repo root."
+      - kind: workspace_decision
+        reference: "AGENTS.md Scoped rules — generate stubs with .bin/sync-codex-rule-skills.sh, never duplicate a rule's text."
+    review:
+      cadence: each_audit
+      method: [drift_only]
+      last_reviewed: null
+    success_signals:
+      - "Its frontmatter description still matches the canonical rule, and its relative path still resolves."
+      - ".bin/sync-codex-rule-skills.sh --check reports no drift."
+    retirement_triggers:
+      - "Codex reads .claude/rules/ natively, making the bridge redundant."
+      - "The canonical rule is retired, at which point this file must be removed with it."
+    remediation_policy: auto_safe
+    related:
+      - shared-checkout-git-safety-rule
+
+  # ── command, its generated Codex bridge, and the prompt it delegates to ──
+
+  audit-assumptions-command:
+    path: c4po/.claude/commands/audit-assumptions.md
+    type: command
+    owner: c4po
+    scope: c4po
+    visibility: public
+    canonicality: canonical
+    rationale: "Gives the monthly assumptions audit an interactive entry point that reuses the scheduled prompt verbatim, so the audit logic exists once instead of drifting between a job and a command."
+    introduced: 2026-05-27
+    provenance:
+      - kind: workspace_decision
+        reference: "c4po/AGENTS.md Lint enforcement — the canonical audit logic lives in the scheduled prompt; the command runs the same logic interactively."
+    load_mode: explicit
+    consumers: [claude-code]
+    risk: medium
+    review:
+      cadence: quarterly
+      method: [semantic, usage]
+      last_reviewed: null
+    success_signals:
+      - "Running it produces the same findings the scheduled job would, with no instructions duplicated in the command body."
+      - "Its README.md row still matches what the command actually does."
+    retirement_triggers:
+      - "The assumptions audit is folded into another audit, leaving no distinct interactive entry point to expose."
+      - "Ninety days pass with no observed invocation and no scheduled run depending on it."
+    remediation_policy: propose_patch
+    related:
+      - assumptions-audit-monthly-prompt
+      - audit-assumptions-codex-bridge
+
+  audit-assumptions-codex-bridge:
+    path: skills/audit-assumptions/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    scope: c4po
+    canonical_ref: audit-assumptions-command
+    rationale: "Codex has no slash commands and does not scan .claude/commands/, so this generated skill is the only way a Codex session can reach the audit. It lives outside the repo under CODEX_HOME, which is exactly why it needs a record — nothing in the checkout would otherwise reveal it exists."
+    introduced: 2026-05-27
+    provenance:
+      - kind: upstream_feature
+        reference: "Codex loads skills from $CODEX_HOME/skills; .bin/sync-codex-prompts.sh adapts each command's frontmatter into one."
+    review:
+      cadence: each_audit
+      method: [drift_only]
+      last_reviewed: null
+    success_signals:
+      - "Its hash matches the canonical command's entry in $CODEX_HOME/skills/.theborg-managed-skills.tsv."
+      - ".bin/sync-codex-prompts.sh --check reports no drift."
+    retirement_triggers:
+      - "Codex reads .claude/commands/ natively."
+      - "The canonical command is retired, at which point sync removes this file."
+    remediation_policy: auto_safe
+    related:
+      - audit-assumptions-command
+
+  assumptions-audit-monthly-prompt:
+    path: c4po/.claude/scheduled/c4po-assumptions-audit-monthly.prompt
+    type: scheduled_prompt
+    owner: c4po
+    scope: c4po
+    visibility: public
+    canonicality: canonical
+    rationale: "Holds the canonical assumptions-audit procedure and is the artifact this whole inventory extends: without a scheduled re-check, the workspace's ephemeral best-practice assumptions decay silently because nothing fails when they go stale."
+    introduced: 2026-05-27
+    provenance:
+      - kind: workspace_decision
+        reference: "c4po/AGENTS.md Lint enforcement — C4PO owns monthly review of ephemeral best-practice assumptions."
+      - kind: design_document
+        reference: "c4po/LONG-TERM-MEMORY-INVENTORY-DESIGN.md — revises this prompt into a ten-stage memory-governance orchestrator."
+    load_mode: scheduled
+    consumers: [claude-code, launchd, run-scheduled-task.sh]
+    risk: high
+    review:
+      cadence: quarterly
+      method: [mechanical, semantic, best_practice]
+      last_reviewed: null
+    success_signals:
+      - "Each monthly run reports every assumption as verified or explicitly unverifiable, never silently skipped."
+      - "Assumptions A-H keep their current checks and update pointers across refactors."
+      - "The run stays report-only: no scheduled invocation makes a semantic or destructive change."
+    retirement_triggers:
+      - "Every assumption it tracks becomes machine-enforced by a lint rule, leaving nothing that needs judgment."
+      - "The launchd job com.theborg.c4po-assumptions-audit-monthly is retired."
+    remediation_policy: approval_required
+    related:
+      - audit-assumptions-command
+      - root-agent-instructions
+
+  # ── Cerebruh: retrieval index, knowledge page, and the source it cites ───
+  #
+  # Read-only from C4PO. These records describe governance only; changing the
+  # content routes through Cerebruh's own injection-scanned ingest workflow.
+  # The files are gitignored (see .gitignore, `cerebruh/wikis/*`), so their
+  # `introduced` dates come from page frontmatter rather than git history.
+
+  cerebruh-claude-code-ecosystem-index:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/index.md
+    type: retrieval_index
+    owner: cerebruh
+    scope: cerebruh/wikis/claude-code-ecosystem
+    visibility: public
+    canonicality: canonical
+    rationale: "The sub-wiki's only retrieval entry point. An agent that cannot find a page here concludes the wiki has no relevant content, so a stale or incomplete index silently removes knowledge from circulation without deleting anything."
+    introduced: 2026-07-08
+    provenance:
+      - kind: workspace_decision
+        reference: "Split out of harness-engineering on 2026-07-08 to keep both sub-wikis under the raw-source token budget."
+    load_mode: retrieved
+    consumers: [claude-code, codex, claude-desktop]
+    risk: medium
+    review:
+      cadence: quarterly
+      method: [mechanical, semantic]
+      last_reviewed: null
+    success_signals:
+      - "Every wiki/*.md file in the sub-wiki is linked from it, and every link it lists resolves."
+      - "Its one-line descriptions are specific enough to choose a page without opening several."
+    retirement_triggers:
+      - "The sub-wiki is merged back into another, at which point its index is consolidated rather than kept."
+      - "Retrieval stops going through hand-written indexes in favour of a search or embedding layer."
+    remediation_policy: approval_required
+    related:
+      - claude-md-best-practices-page
+
+  claude-md-best-practices-page:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/claude-md-best-practices-article.md
+    type: knowledge_page
+    scope: cerebruh/wikis/claude-code-ecosystem
+    rationale: "Carries a cited external account of what belongs in a CLAUDE.md, so the workspace's own instruction-file conventions can be checked against a named outside source instead of against habit."
+    introduced: 2026-05-18
+    provenance:
+      - kind: external_source
+        reference: "Nick Babich, 'CLAUDE.md Best Practices', UX Planet, published 2026-03-06; ingested 2026-05-18."
+    review:
+      cadence: rolling_annual
+      method: [semantic, source_verification]
+      last_reviewed: null
+    success_signals:
+      - "Its claims are still attributed to the named source and still reflect current harness behavior."
+      - "It is reachable from the sub-wiki index and is cited when instruction-file conventions are debated."
+    retirement_triggers:
+      - "The source article is retracted, or its guidance is contradicted by a newer ingested source."
+      - "Its content is fully absorbed by a synthesis page, leaving it a duplicate."
+    remediation_policy: approval_required
+    related:
+      - claude-md-best-practices-source
+      - cerebruh-claude-code-ecosystem-index
+
+  claude-md-best-practices-source:
+    path: "cerebruh/wikis/claude-code-ecosystem/raw/CLAUDE.md Best Practices.md"
+    type: knowledge_source
+    scope: cerebruh/wikis/claude-code-ecosystem
+    rationale: "The captured original behind the summary page. Kept so a claim can be re-checked against what the source actually said rather than against the summary of it, which is the failure the SOURCE-DOCUMENTS.md procedure exists to prevent."
+    introduced: 2026-05-18
+    provenance:
+      - kind: external_source
+        reference: "https://uxplanet.org/claude-md-best-practices-1ef4f861ce7c — captured 2026-05-18."
+    review:
+      cadence: monthly
+      method: [mechanical, source_verification]
+      last_reviewed: null
+    success_signals:
+      - "It is cited by at least one wiki page, and its upstream URL still resolves to the captured content."
+    retirement_triggers:
+      - "No wiki page cites it any longer, making it an orphaned capture."
+      - "The upstream is withdrawn and the capture may no longer be retained."
+    remediation_policy: prohibited
+    related:
+      - claude-md-best-practices-page
