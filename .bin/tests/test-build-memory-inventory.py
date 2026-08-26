@@ -3,9 +3,10 @@
 
     python3 .bin/tests/test-build-memory-inventory.py
 
-Proves the three things migration step 1 of
-`c4po/LONG-TERM-MEMORY-INVENTORY-DESIGN.md` has to establish before discovery
-is worth writing:
+Covers migration steps 1 and 2 of
+`c4po/LONG-TERM-MEMORY-INVENTORY-DESIGN.md`.
+
+Step 1 — schema and validator:
 
   1. the YAML subset reader parses what the registry uses and fails loudly —
      never silently — on anything it does not implement;
@@ -13,6 +14,20 @@ is worth writing:
      cross-record layer are supposed to enforce, and accepts a valid one;
   3. the real registry and the synthetic private overlay in this repo validate
      clean, end to end, through the CLI's exit codes.
+
+Step 2 — discovery, against a synthetic workspace built in a temp directory so
+the expected classification is exact and does not drift as The Borg grows:
+
+  4. every shape in the artifact taxonomy is classified, every exclusion is
+     recorded with a reason, and nothing in a memory-bearing location is left
+     unaccounted for;
+  5. canonical/mirror pairs resolve — wrappers, symlinks, rule bridges, and the
+     Codex command bridge read from its manifest — and a bridge with no
+     canonical source is reported rather than quietly resolved;
+  6. discovery mutates nothing it discovers, and names no private path unless
+     `--show-private` is passed;
+  7. coverage is measured but not enforced: a wholly unregistered tree still
+     exits 0, because the LINT.md rule is gated on migration step 4.
 
 No third-party dependencies: this workspace has neither PyYAML nor jsonschema
 and cannot install them, which is why the tool implements both subsets itself.
@@ -430,8 +445,366 @@ def test_cli():
         check("cli: a missing registry is a usage error, not an invalid one", code == 2,
               "exit %d: %s" % (code, out.strip()))
 
+
+
+
+# --------------------------------------------------------------------------
+# 9. Discovery (migration step 2)
+# --------------------------------------------------------------------------
+#
+# Built against a synthetic tree rather than the live workspace so the expected
+# classification is exact and stays stable as The Borg grows. A separate smoke
+# test below runs discovery over the real workspace for the properties that must
+# hold there no matter what it currently contains.
+
+FIXTURE_FILES = {
+    # Always-on instructions and their wrappers.
+    "AGENTS.md": "# root\n",
+    "CLAUDE.md": "@AGENTS.md\n",
+    "agentx/AGENTS.md": "# agentx\n",
+    "agentx/CLAUDE.md": "@AGENTS.md\n",
+    "cerebruh/template/AGENTS.md": "# template\n",
+    "cerebruh/template/CLAUDE.md": "@AGENTS.md\n",
+
+    # Policy, design, and the registry that governs this inventory.
+    "LINT.md": "# lint\n",
+    "agentx/MCP.md": "# mcp\n",
+    "MEMORY-INVENTORY.yaml": "version: 1\nartifacts:\n",
+    "MEMORY-INVENTORY.schema.json": "{}\n",
+    "SOMETHING-DESIGN.md": "# design\n",
+
+    # Deliberately not memory.
+    "BACKLOG.md": "- item\n",
+    ".gitignore": "x\n",
+    ".claude/settings.local.json": "{}\n",
+
+    # Rules and their generated Codex bridges, including the gitignored pair.
+    ".claude/rules/alpha.md": "---\nname: alpha\n---\n",
+    ".claude/rules/beta.local.md": "---\nname: beta\n---\n",
+    ".agents/skills/alpha/SKILL.md": "stub\n",
+    ".agents/skills/beta.local/SKILL.md": "stub\n",
+    ".agents/skills/gone/SKILL.md": "stub\n",          # canonical rule deleted
+
+    # Commands, skills, scheduled prompts, and their companions.
+    ".claude/commands/doit.md": "# doit\n",
+    "agentx/.claude/skills/pack/SKILL.md": "# pack\n",
+    "agentx/.claude/skills/pack/reference.md": "# ref\n",
+    "agentx/.claude/skills/pack/helper.sh": "#!/bin/sh\n",
+    "agentx/.claude/skills/pack/.DS_Store": "noise\n",
+    "agentx/.claude/scheduled/job.prompt": "do the thing\n",
+    "agentx/.claude/scheduled/job.settings.json": "{}\n",
+    "agentx/.claude/scheduled/logs/run.log": "noise\n",
+    "agentx/.claude/scheduled/state/job.json": "{}\n",
+
+    # Private: notes, wrappers, the overlay, and domain documents.
+    "agentx/CLAUDE.local.md": "@.private/AGENTS.md\n",
+    "agentx/.private/AGENTS.md": "# private\n",
+    "agentx/.private/CLAUDE.md": "@AGENTS.md\n",
+    "agentx/.private/note.md": "# note\n",
+    "agentx/.private/contract.docx": "binary-ish\n",
+    "agentx/.private/scheduled-tasks/jobs.tasks": "table\n",
+    "agentx/.private/memory-inventory.yaml": "version: 1\nartifacts:\n",
+    "agentx/.private.example/AGENTS.example.md": "# synthetic\n",
+
+    # Cerebruh.
+    "cerebruh/wikis/index.md": "# index\n",
+    "cerebruh/wikis/w1/CLAUDE.md": "@AGENTS.md\n",
+    "cerebruh/wikis/w1/wiki/index.md": "# w1 index\n",
+    "cerebruh/wikis/w1/wiki/page.md": "# page\n",
+    "cerebruh/wikis/w1/raw/Source.pdf": "%PDF-fake\n",
+    "cerebruh/wikis/w1/raw/.DS_Store": "noise\n",
+    "cerebruh/ingest/pending.md": "# not yet knowledge\n",
+
+    # Excluded subtrees.
+    "bernard/AGENTS.md": "# exhibit\n",
+    "repos/thing/AGENTS.md": "# other repo\n",
+    "repos/thing/.claude/commands/other.md": "# other\n",
+    "tmp/scratch.md": "# scratch\n",
+}
+
+# path -> (type, canonicality, visibility)
+EXPECTED = {
+    "AGENTS.md": ("always_on_instruction", "canonical", "public"),
+    "CLAUDE.md": ("compatibility_wrapper", "mirror", "public"),
+    "agentx/AGENTS.md": ("always_on_instruction", "canonical", "public"),
+    "agentx/CLAUDE.md": ("compatibility_wrapper", "mirror", "public"),
+    "cerebruh/template/AGENTS.md": ("always_on_instruction", "canonical", "public"),
+    "cerebruh/template/CLAUDE.md": ("compatibility_wrapper", "mirror", "public"),
+    "LINT.md": ("policy_registry", "canonical", "public"),
+    "agentx/MCP.md": ("policy_registry", "canonical", "public"),
+    "MEMORY-INVENTORY.yaml": ("policy_registry", "canonical", "public"),
+    "MEMORY-INVENTORY.schema.json": ("policy_registry", "canonical", "public"),
+    "SOMETHING-DESIGN.md": ("design_decision", "canonical", "public"),
+    ".claude/rules/alpha.md": ("scoped_rule", "canonical", "public"),
+    ".claude/rules/beta.local.md": ("scoped_rule", "canonical", "private"),
+    ".agents/skills/alpha/SKILL.md": ("generated_rule_bridge", "generated", "public"),
+    ".agents/skills/beta.local/SKILL.md": ("generated_rule_bridge", "generated", "private"),
+    ".agents/skills/gone/SKILL.md": ("generated_rule_bridge", "generated", "public"),
+    ".claude/commands/doit.md": ("command", "canonical", "public"),
+    "agentx/.claude/skills/pack/SKILL.md": ("procedural_skill", "canonical", "public"),
+    "agentx/.claude/scheduled/job.prompt": ("scheduled_prompt", "canonical", "public"),
+    "agentx/CLAUDE.local.md": ("compatibility_wrapper", "mirror", "private"),
+    "agentx/.private/AGENTS.md": ("always_on_instruction", "canonical", "private"),
+    "agentx/.private/CLAUDE.md": ("compatibility_wrapper", "mirror", "private"),
+    "agentx/.private/note.md": ("private_memory", "canonical", "private"),
+    "cerebruh/wikis/index.md": ("retrieval_index", "canonical", "public"),
+    "cerebruh/wikis/w1/AGENTS.md": ("compatibility_wrapper", "mirror", "public"),
+    "cerebruh/wikis/w1/CLAUDE.md": ("compatibility_wrapper", "mirror", "public"),
+    "cerebruh/wikis/w1/wiki/index.md": ("retrieval_index", "canonical", "public"),
+    "cerebruh/wikis/w1/wiki/page.md": ("knowledge_page", "canonical", "public"),
+    "cerebruh/wikis/w1/raw/Source.pdf": ("knowledge_source", "source", "public"),
+}
+
+
+def build_fixture(base):
+    """Materialize the synthetic workspace, a CODEX_HOME, and a HOME."""
+    root = os.path.join(base, "borg")
+    for rel, body in FIXTURE_FILES.items():
+        target = os.path.join(root, rel)
+        os.makedirs(os.path.dirname(target), exist_ok=True)
+        with open(target, "w", encoding="utf-8") as fh:
+            fh.write(body)
+
+    # A sub-wiki AGENTS.md is a symlink to the canonical template, and a
+    # directory symlink points back into the tree the way repos/waiq's
+    # .claude/commands does.
+    os.symlink("../../template/AGENTS.md", os.path.join(root, "cerebruh/wikis/w1/AGENTS.md"))
+    os.symlink("../../.claude/commands", os.path.join(root, "agentx/.claude/borrowed"))
+
+    codex_home = os.path.join(base, "codex")
+    os.makedirs(os.path.join(codex_home, "skills"), exist_ok=True)
+    with open(os.path.join(codex_home, "skills/.theborg-managed-skills.tsv"), "w",
+              encoding="utf-8") as fh:
+        fh.write("doit\t%s\tdeadbeef\n" % os.path.join(root, ".claude/commands/doit.md"))
+        fh.write("orphan\t/somewhere/else/cmd.md\tcafe\n")
+
+    home = os.path.join(base, "home")
+    slug = os.path.abspath(root).replace("/", "-")
+    memdir = os.path.join(home, ".claude/projects", slug, "memory")
+    os.makedirs(memdir, exist_ok=True)
+    for name in ("MEMORY.md", "topic.md"):
+        with open(os.path.join(memdir, name), "w", encoding="utf-8") as fh:
+            fh.write("# %s\n" % name)
+    return root, codex_home, home
+
+
+def _tree_state(root):
+    """Every file's size, mtime, and bytes — the read-only proof."""
+    state = {}
+    for dirpath, dirnames, filenames in os.walk(root, followlinks=False):
+        for name in filenames:
+            full = os.path.join(dirpath, name)
+            st = os.lstat(full)
+            body = b"" if os.path.islink(full) else open(full, "rb").read()
+            state[os.path.relpath(full, root)] = (st.st_size, st.st_mtime_ns, body)
+        for name in dirnames:
+            state.setdefault("dir:" + os.path.relpath(os.path.join(dirpath, name), root), None)
+    return state
+
+
+def test_discovery_classification():
+    with tempfile.TemporaryDirectory() as base:
+        root, codex_home, home = build_fixture(base)
+        result = bmi.discover(root, codex_home=codex_home, home=home)
+
+        workspace = {a["path"]: (a["type"], a["canonicality"], a["visibility"])
+                     for a in result["artifacts"] if a["path_root"] == "borg_root"}
+        check("discover: classifies every taxonomy shape exactly",
+              workspace == EXPECTED,
+              "missing=%r unexpected=%r wrong=%r" % (
+                  sorted(set(EXPECTED) - set(workspace)),
+                  sorted(set(workspace) - set(EXPECTED)),
+                  sorted(k for k in set(EXPECTED) & set(workspace)
+                         if EXPECTED[k] != workspace[k])))
+
+        excluded = dict(result["excluded"])
+        for name in ("bernard", "repos", "tmp", "cerebruh/ingest",
+                     "agentx/.private.example",
+                     "agentx/.claude/scheduled/logs", "agentx/.claude/scheduled/state"):
+            check("discover: excludes %s with a stated reason" % name,
+                  name in excluded and bool(excluded[name]), sorted(excluded))
+        check("discover: does not follow a directory symlink back into the tree",
+              "agentx/.claude/borrowed" in excluded
+              and not any(a["path"].startswith("agentx/.claude/borrowed")
+                          for a in result["artifacts"]),
+              sorted(excluded))
+
+        skipped = dict(result["skipped"])
+        for name, why in (("BACKLOG.md", "work queue"),
+                          (".gitignore", "repository configuration"),
+                          (".claude/settings.local.json", "harness configuration"),
+                          ("agentx/.private/contract.docx", "domain document"),
+                          ("agentx/.private/scheduled-tasks/jobs.tasks", "registration table"),
+                          ("cerebruh/wikis/w1/raw/.DS_Store", "OS noise")):
+            check("discover: skips %s" % name, name in skipped, sorted(skipped))
+        check("discover: a raw/ capture is a source despite its format, "
+              "but OS noise beside it is not",
+              "cerebruh/wikis/w1/raw/Source.pdf" in workspace
+              and "cerebruh/wikis/w1/raw/.DS_Store" in skipped)
+
+        check("discover: nothing in a memory-bearing location is left unclassified",
+              result["unclassified"] == [], result["unclassified"])
+        check("discover: the private overlay is counted apart from the artifacts",
+              result["overlays"] == ["agentx/.private/memory-inventory.yaml"]
+              and "agentx/.private/memory-inventory.yaml" not in workspace,
+              result["overlays"])
+
+
+def test_discovery_pairs_and_companions():
+    with tempfile.TemporaryDirectory() as base:
+        root, codex_home, home = build_fixture(base)
+        result = bmi.discover(root, codex_home=codex_home, home=home)
+        by_path = {(a["path_root"], a["path"]): a for a in result["artifacts"]}
+
+        pairs = [
+            (".agents/skills/alpha/SKILL.md", ".claude/rules/alpha.md"),
+            (".agents/skills/beta.local/SKILL.md", ".claude/rules/beta.local.md"),
+            ("CLAUDE.md", "AGENTS.md"),
+            ("agentx/CLAUDE.local.md", "agentx/.private/AGENTS.md"),
+            ("cerebruh/wikis/w1/AGENTS.md", "cerebruh/template/AGENTS.md"),
+            ("cerebruh/wikis/w1/CLAUDE.md", "cerebruh/wikis/w1/AGENTS.md"),
+        ]
+        for derived, canonical in pairs:
+            record = by_path[("borg_root", derived)]
+            check("discover: %s resolves to %s" % (derived, canonical),
+                  record["canonical_path"] == canonical and record["canonical_resolved"],
+                  "got %r resolved=%r" % (record["canonical_path"],
+                                          record.get("canonical_resolved")))
+
+        dangling = sorted(d[1] for d in result["pairs"]["dangling"])
+        check("discover: a bridge with no canonical source is reported, not resolved",
+              dangling == [".agents/skills/gone/SKILL.md", "skills/orphan/SKILL.md"],
+              dangling)
+
+        prompt = by_path[("borg_root", "agentx/.claude/scheduled/job.prompt")]
+        check("discover: a prompt's configuration is folded into the prompt",
+              prompt["companions"] == ["agentx/.claude/scheduled/job.settings.json"],
+              prompt["companions"])
+        pack = by_path[("borg_root", "agentx/.claude/skills/pack/SKILL.md")]
+        # The helper script is the point: a bare `.sh` anywhere else is skipped
+        # as code, but inside a skill package it is part of the audit unit.
+        check("discover: a skill package's supporting files stay in the package",
+              pack["companions"] == ["agentx/.claude/skills/pack/helper.sh",
+                                     "agentx/.claude/skills/pack/reference.md"],
+              pack["companions"])
+        check("discover: OS noise inside a package is still noise",
+              ("agentx/.claude/skills/pack/.DS_Store", "OS noise")
+              in result["skipped"], result["skipped"])
+
+        bridge = by_path[("codex_home", "skills/doit/SKILL.md")]
+        check("discover: the Codex command bridge is read from its manifest",
+              bridge["type"] == "generated_command_bridge"
+              and bridge["canonical_path"] == ".claude/commands/doit.md"
+              and bridge["canonical_resolved"], bridge)
+        orphan = by_path[("codex_home", "skills/orphan/SKILL.md")]
+        check("discover: a managed skill sourced outside the workspace does not resolve",
+              orphan["canonical_path"] is None and not orphan["canonical_resolved"], orphan)
+
+        memory = sorted(a["path"] for a in result["artifacts"] if a["path_root"] == "home")
+        check("discover: Auto Memory is found under the computed project slug",
+              len(memory) == 2 and memory[0].endswith("/MEMORY.md")
+              and all(a["visibility"] == "private" and a["type"] == "private_memory"
+                      for a in result["artifacts"] if a["path_root"] == "home"),
+              memory)
+
+
+def test_discovery_is_read_only():
+    with tempfile.TemporaryDirectory() as base:
+        root, codex_home, home = build_fixture(base)
+        before = _tree_state(root)
+        result = bmi.discover(root, codex_home=codex_home, home=home)
+        join = bmi.join_registry(result["artifacts"], [])
+        bmi.format_report(result, join, show_private=True)
+        json.dumps(bmi._public_json(result, join, show_private=True))
+        after = _tree_state(root)
+        check("discover: mutates nothing it discovers", before == after,
+              "changed: %r" % sorted(set(before) ^ set(after)
+                                     | {k for k in set(before) & set(after)
+                                        if before[k] != after[k]}))
+
+
+def test_discovery_withholds_private_paths():
+    with tempfile.TemporaryDirectory() as base:
+        root, codex_home, home = build_fixture(base)
+        result = bmi.discover(root, codex_home=codex_home, home=home)
+        join = bmi.join_registry(result["artifacts"], [])
+
+        report = bmi.format_report(result, join, show_private=False)
+        blob = json.dumps(bmi._public_json(result, join, show_private=False))
+        for surface, text in (("report", report), ("json", blob)):
+            leaks = [line for line in text.replace(",", "\n").splitlines()
+                     if ".private/" in line or "CLAUDE.local.md" in line
+                     or "beta.local" in line or "/memory/" in line]
+            check("discover: the %s names no private path by default" % surface,
+                  not leaks, leaks[:3])
+
+        counts = {d["type"]: d["count"]
+                  for d in bmi._public_json(result, join, False)["private_counts_by_type"]}
+        check("discover: private artifacts survive as redacted counts by type",
+              counts.get("private_memory") == 3 and counts.get("scoped_rule") == 1,
+              counts)
+
+        # The report is totals and findings; the per-artifact surface is JSON,
+        # which is where --show-private has anything to reveal.
+        shown = json.dumps(bmi._public_json(result, join, show_private=True))
+        check("discover: --show-private does name them",
+              "agentx/.private/note.md" in shown and '"private_counts_by_type": []' in shown,
+              shown[:200])
+
+
+def test_discovery_cli():
+    with tempfile.TemporaryDirectory() as base:
+        root, codex_home, home = build_fixture(base)
+        args = ["discover", "--root", root, "--codex-home", codex_home, "--home", home]
+
+        code, out = cli(*args)
+        check("cli: discovery over a fully unregistered tree still exits 0",
+              code == 0, "exit %d: %s" % (code, out.strip()))
+        check("cli: and says coverage is measured rather than enforced",
+              "not enforced" in out, out.strip())
+
+        code, out = cli(*(args + ["--json"]))
+        check("cli: --json is parseable", code == 0, out.strip())
+        payload = json.loads(out)
+        check("cli: the JSON view declares itself read-only and unenforced",
+              payload["read_only"] is True and payload["coverage_enforced"] is False,
+              payload.get("read_only"))
+        check("cli: every discovered type is a schema-valid artifact type",
+              set(a["type"] for a in payload["artifacts"])
+              <= set(SCHEMA["$defs"]["artifactType"]["enum"]),
+              sorted(set(a["type"] for a in payload["artifacts"])))
+        # EXPECTED plus the two manifest-declared Codex bridges and the two
+        # Auto Memory files, none of which the empty fixture registry declares.
+        check("cli: coverage counts the unregistered without failing",
+              payload["coverage"]["registered"] == 0
+              and payload["coverage"]["unregistered"] == len(EXPECTED) + 4,
+              payload["coverage"])
+
+
+def test_discovery_over_this_workspace():
+    """Properties that must hold for the live workspace whatever it contains."""
     code, out = cli("discover")
-    check("cli: discover reports that step 2 is not implemented", code == 3, out.strip())
+    check("cli: discovery runs clean over this workspace", code == 0, out.strip()[:400])
+    check("cli: and leaks no private path into the default report",
+          ".private/" not in out and "/memory/MEMORY.md" not in out, out.strip()[:400])
+
+    code, out = cli("discover", "--json")
+    check("cli: this workspace's discovery emits parseable JSON", code == 0, out.strip()[:400])
+    payload = json.loads(out)
+    types = SCHEMA["$defs"]["artifactType"]["enum"]
+    found = set(a["type"] for a in payload["artifacts"])
+    check("cli: every type it reports is in the taxonomy", found <= set(types), sorted(found))
+    for required in ("always_on_instruction", "compatibility_wrapper", "scoped_rule",
+                     "generated_rule_bridge", "command", "generated_command_bridge",
+                     "scheduled_prompt", "knowledge_page", "knowledge_source",
+                     "policy_registry", "retrieval_index", "procedural_skill",
+                     "design_decision"):
+        check("cli: this workspace's %s artifacts are discovered" % required,
+              required in found, sorted(found))
+    check("cli: every record declared in MEMORY-INVENTORY.yaml is found on disk",
+          payload["coverage"]["missing"] == 0, payload["coverage"])
+    check("cli: every generated bridge and mirror resolves to its canonical source",
+          payload["pairs"]["unresolved"] == 0, payload["pairs"])
 
 
 # --------------------------------------------------------------------------
@@ -440,7 +813,10 @@ def main():
     for fn in (test_yaml_reader, test_schema_support_guard, test_accepts_valid,
                test_rejects_malformed, test_overlay_accepts_private_and_redacted,
                test_defaults_merge, test_private_redaction,
-               test_cli):
+               test_cli,
+               test_discovery_classification, test_discovery_pairs_and_companions,
+               test_discovery_is_read_only, test_discovery_withholds_private_paths,
+               test_discovery_cli, test_discovery_over_this_workspace):
         fn()
 
     failed = [r for r in _results if not r[1]]

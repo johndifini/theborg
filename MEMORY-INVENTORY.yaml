@@ -9,11 +9,13 @@
 # Schema:       MEMORY-INVENTORY.schema.json
 # Validate:     python3 .bin/build-memory-inventory.py validate
 #
-# Migration status: step 1 of the design's migration sequence. This file holds a
-# deliberately small representative set — one artifact of each shape the schema
-# has to survive — so the schema is exercised before discovery (step 2) bulk-
-# loads several hundred records. It is NOT yet a complete inventory, so the
-# LINT.md coverage rule stays unwritten until step 4, per the design's
+# Migration status: steps 1-2 of the design's migration sequence. This file holds
+# a deliberately small representative set — one artifact of each shape the schema
+# has to survive — so the schema was exercised before discovery bulk-loads
+# several hundred records. Discovery has since measured the workspace: run
+# `python3 .bin/build-memory-inventory.py discover` for current totals, the
+# exclusions applied, and the coverage gap. It is NOT yet a complete inventory,
+# so the LINT.md coverage rule stays unwritten until step 4, per the design's
 # instruction not to run a knowingly red audit during migration.
 #
 # `review.last_reviewed: null` throughout is literal, not a placeholder: no
