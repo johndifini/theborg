@@ -1,0 +1,3 @@
+# Copy this row into the workspace's gitignored private scheduled-task table.
+# It runs the public, deterministic scanner every Sunday at 06:00 local time.
+ari|ari-resume-harvest-scan|weekly-sun-06-00|script|ari/.bin/run-resume-harvest-scan.sh

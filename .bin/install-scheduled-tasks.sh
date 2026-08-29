@@ -307,6 +307,10 @@ render_failures=()
 
 for row in "${TASKS[@]}"; do
   IFS='|' read -r agent task sched kind target <<< "$row"
+  # launchd opens StandardOutPath/StandardErrorPath before starting the target,
+  # so a newly added agent task needs its ignored log directory to exist before
+  # the first load. --print remains strictly read-only.
+  [[ "$MODE" == "print" ]] || mkdir -p "$BORG_ROOT/$agent/.claude/scheduled/logs"
   case "$kind" in
     prompt)
       # Deliberately a warning, not an error, unlike an undefined schedule id.

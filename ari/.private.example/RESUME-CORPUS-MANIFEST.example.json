@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "artifacts": [
+    {
+      "id": "resume-00000000-0000-4000-8000-000000000000",
+      "docxPath": "example-target-role.docx",
+      "pdfPath": "example-target-role.pdf",
+      "docxSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "pdfSha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "finalizedAt": "2000-01-01T00:00:00Z",
+      "harvestedAt": "2000-01-01T00:00:00Z",
+      "status": "final",
+      "bulletIds": [
+        "RB-001"
+      ],
+      "baselineId": null,
+      "supersedesId": null
+    }
+  ]
+}
