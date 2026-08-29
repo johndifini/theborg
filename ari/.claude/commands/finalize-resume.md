@@ -1,5 +1,5 @@
 ---
-description: Export, visually verify, harvest, and record a private resume artifact.
+description: Verify a Word-exported PDF, harvest, and record a private resume artifact.
 argument-hint: <DOCX path or unambiguous resume name>
 private: true
 ---
@@ -31,51 +31,68 @@ the method.
        python3 "${BORG_ROOT}/ari/.bin/resume_corpus.py" validate \
          --manifest "${BORG_ROOT}/ari/.private/Resume Corpus Manifest.json"
 
-## Export and verify
+## Require a current Word PDF and verify it
 
-5. Preserve the DOCX as the editable source. Export to a temporary PDF under
-   `${BORG_ROOT}/tmp/`, using the most reliable available local document-export
-   mechanism. Prefer the native office application's PDF export when available;
-   otherwise use a verified headless converter. If GUI automation or another
-   privileged action needs approval, request it rather than routing around it.
-6. Render every page of the temporary PDF to images with the available PDF
+5. Preserve the DOCX as the editable source and derive its required same-stem
+   PDF path beside it. The final PDF must be exported by the candidate from
+   Microsoft Word. Never create or replace the final PDF with LibreOffice,
+   Pages, Pandoc, a headless converter, `render_docx.py`, or any other
+   non-Word renderer. Do not automate Word export as part of this command.
+   Rendering an existing PDF to images for inspection is allowed.
+6. Require explicit evidence that the PDF is the current Word export:
+   - If the user already said they exported it from Word after the latest DOCX
+     edit, treat that statement as provenance.
+   - If the same-stem PDF is missing, tell the user to open the DOCX in Word,
+     export or save it as the required same-stem PDF, and then reply to continue.
+     Pause the workflow; do not harvest or update the manifest.
+   - If the PDF exists but the user has not confirmed its origin and currency,
+     ask whether it is the Word export of the current DOCX. Treat a PDF older
+     than the DOCX as stale unless the user explicitly confirms that the DOCX
+     content did not change after export. Pause when confirmation is needed.
+   - Before asking for a new export, record in working notes whether the PDF
+     existed and, if so, its SHA-256. On continuation, require the PDF to be new
+     or its hash to have changed. If it did not, ask the user to export again.
+   PDF metadata alone is not sufficient proof of Word origin or currency.
+7. Extract text from both the DOCX and the Word-generated PDF and compare their
+   substantive content. Stop and request a fresh Word export if headings,
+   bullets, metrics, dates, or other material are missing or changed.
+8. Render every page of the Word-generated PDF to images with the available PDF
    tooling and visually inspect every page for clipping, overflow, unexpected
    page breaks, missing glyphs, broken bullets, spacing or alignment problems,
    and inconsistent headers, footers, or margins.
-7. If export, rendering, or visual inspection fails, stop. Do not replace the
-   same-stem PDF, harvest evidence, or update the manifest. Keep working
-   artifacts only in the workspace-root `tmp/` and clean them up when safe.
-8. After the PDF passes visual inspection, place it beside the DOCX with the
-   same relative stem and a `.pdf` suffix. Re-render the placed PDF or verify
-   its hash matches the inspected temporary PDF before continuing.
+9. If content comparison, rendering, or visual inspection fails, stop before
+   harvesting or recording. Report the affected page or content, ask the user
+   to correct the DOCX if necessary, and require another manual Word export.
+   Never repair or replace the final PDF with a third-party conversion.
 
 ## Harvest
 
-9. Re-read `${BORG_ROOT}/ari/.private/Resume Bullet Bank.md` immediately before
+10. Re-read `${BORG_ROOT}/ari/.private/Resume Bullet Bank.md` immediately before
    editing it. Compare the final resume with that evidence bank and its cited
    source records.
-10. Record the existing `RB-NNN` entries used by the final resume. Add materially
+11. Record the existing `RB-NNN` entries used by the final resume. Add materially
     improved wording as approved variants under the corresponding entries.
-11. Add genuinely new claims as `needs-confirmation` unless an authoritative
+12. Add genuinely new claims as `needs-confirmation` unless an authoritative
     source supports them or the candidate confirms them interactively. Never
     silently promote a new claim to `verified`. Preserve retired or superseded
     wording for provenance, and never change factual meaning, ownership, scale,
     dates, or metrics.
-12. If any claim remains unresolved, complete the safe portions of the harvest,
+13. If any claim remains unresolved, complete the safe portions of the harvest,
     report the pending confirmations, and do not record the resume as harvested
     until the evidence-bank state accurately reflects what can be reused.
 
 ## Record
 
-13. Revalidate the manifest. Reuse the artifact's existing stable ID when its
+14. Revalidate the manifest. Reuse the artifact's existing stable ID when its
     DOCX path is already recorded; otherwise generate one with
     `resume_corpus.py new-id`.
-14. Only after export, placed-PDF verification, and harvest all succeed, record
-    the result atomically with `resume_corpus.py record`. Pass the relative DOCX
-    and PDF paths, status (`final` unless the user explicitly says it was
-    submitted), every used `--bullet-id`, and any known baseline or superseded
-    artifact identifiers. Never infer `submitted` merely from PDF export.
-15. Run `resume_corpus.py validate` again, then run the scanner in dry-run mode.
+15. Only after Word-export provenance, content comparison, visual verification,
+    and harvest all succeed, record the result atomically with
+    `resume_corpus.py record`. Pass the relative DOCX and PDF paths, status
+    (`final` unless the user explicitly says it was submitted), every used
+    `--bullet-id`, and any known baseline or superseded artifact identifiers.
+    Never infer `submitted` merely from PDF export.
+16. Run `resume_corpus.py validate` again, then run the scanner in dry-run mode.
     The finalized artifact must no longer appear as pending.
 
 Report the resolved DOCX, exported PDF, page-verification result, harvested

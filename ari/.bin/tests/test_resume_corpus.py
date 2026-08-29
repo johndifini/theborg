@@ -169,11 +169,16 @@ class ResumeCorpusTests(unittest.TestCase):
             with self.subTest(query=query), self.assertRaises(corpus.CorpusError):
                 corpus.resolve_resume(self.resumes, query)
 
-    def test_command_contract_stops_on_export_and_visual_failures(self) -> None:
+    def test_command_contract_requires_manual_current_word_export(self) -> None:
         command = (MODULE_PATH.parents[1] / ".claude/commands/finalize-resume.md").read_text(encoding="utf-8")
-        self.assertIn("If export, rendering, or visual inspection fails, stop", command)
-        self.assertIn("Do not replace the", command)
-        self.assertLess(command.index("## Export and verify"), command.index("## Harvest"))
+        self.assertIn("final PDF must be exported by the candidate from", command)
+        self.assertIn("Never create or replace the final PDF with LibreOffice", command)
+        self.assertIn("Pause the workflow; do not harvest or update the manifest", command)
+        self.assertIn("require the PDF to be new", command)
+        self.assertIn("PDF metadata alone is not sufficient proof", command)
+        self.assertIn("Extract text from both the DOCX", command)
+        self.assertIn("require another manual Word export", command)
+        self.assertLess(command.index("## Require a current Word PDF"), command.index("## Harvest"))
         self.assertLess(command.index("## Harvest"), command.index("## Record"))
 
 
