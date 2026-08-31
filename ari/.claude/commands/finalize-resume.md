@@ -56,10 +56,19 @@ the method.
 7. Extract text from both the DOCX and the Word-generated PDF and compare their
    substantive content. Stop and request a fresh Word export if headings,
    bullets, metrics, dates, or other material are missing or changed.
+   Also inspect the DOCX core properties and Word PDF metadata. Tailored-resume
+   builders must overwrite inherited template properties. Require a stable,
+   role-neutral title (for example, `<Candidate Name> Resume`), the correct
+   author, and blank subject, keywords, category, and comments unless a
+   candidate-specific private policy says otherwise. Stop on stale employer,
+   role, client, or target names.
 8. Render every page of the Word-generated PDF to images with the available PDF
    tooling and visually inspect every page for clipping, overflow, unexpected
    page breaks, missing glyphs, broken bullets, spacing or alignment problems,
    and inconsistent headers, footers, or margins.
+   When a full-page render suggests overlap or crowding, inspect the affected
+   region at native resolution or with a lossless crop before failing it; never
+   infer a layout defect from a downscaled preview alone.
 9. If content comparison, rendering, or visual inspection fails, stop before
    harvesting or recording. Report the affected page or content, ask the user
    to correct the DOCX if necessary, and require another manual Word export.
