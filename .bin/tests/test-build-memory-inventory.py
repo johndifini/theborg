@@ -3,7 +3,7 @@
 
     python3 .bin/tests/test-build-memory-inventory.py
 
-Covers migration steps 1, 2, and 3 of
+Covers migration steps 1, 2, 3, and 4 of
 `c4po/LONG-TERM-MEMORY-INVENTORY-DESIGN.md`.
 
 Step 1 — schema and validator:
@@ -26,8 +26,8 @@ the expected classification is exact and does not drift as The Borg grows:
      canonical source is reported rather than quietly resolved;
   6. discovery mutates nothing it discovers, and names no private path unless
      `--show-private` is passed;
-  7. coverage is measured but not enforced: a wholly unregistered tree still
-     exits 0, because the LINT.md rule is gated on migration step 4.
+  7. coverage is measured, not enforced, unless it is asked for: a wholly
+     unregistered tree still exits 0 without `--require-coverage`.
 
 Step 3 — the split between registered and reviewed, and the bootstrap that
 produces the difference:
@@ -41,6 +41,15 @@ produces the difference:
  10. bootstrap is a dry run by default, is idempotent, defers artifacts it
      cannot honestly describe, and — over the fixture and over the live
      workspace — puts no private path in a tracked file.
+
+Step 4 — the LINT.md `Memory inventory` coverage rule, in its mechanical form:
+
+ 11. `discover --require-coverage` fails loudly on an unregistered artifact, a
+     record whose artifact is gone, or an unclassified candidate — naming the
+     path, the owner accountable for it, and the metadata its record must carry,
+     read out of the schema rather than restated; it withholds private paths,
+     refuses to guess when the schema cannot state the requirements, and passes
+     over the live workspace, which is the condition step 4 was gated on.
 
 No third-party dependencies: this workspace has neither PyYAML nor jsonschema
 and cannot install them, which is why the tool implements both subsets itself.
@@ -1024,6 +1033,155 @@ def test_bootstrap_over_this_workspace():
 
 
 # --------------------------------------------------------------------------
+# 13. Coverage enforcement (migration step 4)
+# --------------------------------------------------------------------------
+#
+# The LINT.md `Memory inventory` rule is only worth writing if an unregistered
+# artifact fails loudly: non-zero exit, the offender named, its owner named, and
+# the metadata its record must carry spelled out. Each of those is asserted here
+# rather than trusted to the report's prose.
+
+STALE_REGISTRY = """version: 1
+
+artifacts:
+  gone-thing:
+    path: agentx/GONE.md
+    type: always_on_instruction
+    owner: agentx
+    scope: agentx
+    visibility: public
+    canonicality: canonical
+    status: draft
+    introduced: 2026-01-01
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: monthly
+      method: [mechanical]
+      last_reviewed: null
+    related: []
+"""
+
+
+def test_required_fields_come_from_the_schema():
+    fields = bmi.required_draft_fields(SCHEMA)
+    required = SCHEMA["$defs"]["artifact"]["required"]
+    check("enforcement: the field list is the schema's, minus the judgment fields",
+          [f for f in bmi.HUMAN_JUDGMENT_FIELDS if f in fields] == [], fields)
+    for field in required:
+        if field in bmi.HUMAN_JUDGMENT_FIELDS or field == "review":
+            continue
+        check("enforcement: %s is named as required" % field, field in fields, fields)
+    check("enforcement: the map key is named too", "id" in fields, fields)
+    check("enforcement: review is expanded to its own required members",
+          {"review.cadence", "review.method", "review.last_reviewed"} <= set(fields), fields)
+    check("enforcement: a schema without a required list yields no guess",
+          bmi.required_draft_fields({"$defs": {"artifact": {}}}) is None)
+
+
+def test_coverage_enforcement():
+    with tempfile.TemporaryDirectory() as base:
+        root, codex_home, home = build_fixture(base)
+        # The fixture's own schema file is a stub, so enforcement is pointed at
+        # the real one: a run that cannot read the requirements must not invent
+        # them, which the last check below asserts.
+        args = ["discover", "--root", root, "--codex-home", codex_home, "--home", home,
+                "--schema", os.path.join(ROOT, "MEMORY-INVENTORY.schema.json")]
+
+        code, out = cli(*args)
+        check("enforcement: without the flag an unregistered tree still exits 0",
+              code == 0, "exit %d" % code)
+
+        code, out = cli(*(args + ["--require-coverage"]))
+        check("enforcement: --require-coverage fails on an unregistered tree",
+              code == 1, "exit %d: %s" % (code, out.strip()[:300]))
+        check("enforcement: and says so in its first line",
+              "COVERAGE FAILURE" in out, out.strip()[:200])
+        check("enforcement: it names the offending path",
+              "UNREGISTERED  agentx/AGENTS.md" in out, out.strip()[:400])
+        check("enforcement: it names the owner accountable for it",
+              "owner     agentx" in out, out.strip()[:400])
+        check("enforcement: it names the metadata the record must carry",
+              "must carry" in out and "load_mode" in out and "review.cadence" in out,
+              out.strip()[:400])
+        check("enforcement: it points at the rule that requires this",
+              "LINT.md" in out and "Memory inventory" in out, out.strip()[:400])
+        check("enforcement: it says a draft record is enough",
+              "status: draft` record satisfies this rule" in out, out.strip()[:400])
+        check("enforcement: and that registration is still not review",
+              "--require-reviewed" in out and "rationale" in out, out.strip()[:400])
+        check("enforcement: a derived artifact is told it needs a canonical_ref",
+              "canonical_ref" in out, out.strip()[:400])
+
+        # Private artifacts are counted, never named — the failure text is as
+        # emailable as the report it follows.
+        check("enforcement: no private path is named by default",
+              ".private/" not in out and "/memory/MEMORY.md" not in out
+              and "private artifact(s) withheld" in out, out.strip()[:400])
+        code, shown = cli(*(args + ["--require-coverage", "--show-private"]))
+        check("enforcement: --show-private names them",
+              code == 1 and "agentx/.private/note.md" in shown, shown.strip()[:400])
+
+        code, out = cli(*(args + ["--require-coverage", "--json"]))
+        payload = json.loads(out[:out.find("\nCOVERAGE FAILURE")] if "COVERAGE FAILURE" in out
+                             else out)
+        check("enforcement: the JSON view reports itself enforced",
+              payload["coverage_enforced"] is True, payload["coverage_enforced"])
+        detail = payload["coverage"]["unregistered_detail"]
+        check("enforcement: the JSON view routes each offender to an owner",
+              detail and all({"path", "type", "owner"} <= set(row) for row in detail),
+              detail[:2])
+        check("enforcement: and lists no private offender",
+              [r for r in detail if ".private/" in r["path"]] == [], detail[:2])
+
+        # A record whose artifact was deleted is the mirror-image failure.
+        stale = os.path.join(base, "stale.yaml")
+        with open(stale, "w", encoding="utf-8") as fh:
+            fh.write(STALE_REGISTRY)
+        code, out = cli(*(args + ["--require-coverage", "--registry", stale]))
+        check("enforcement: a record naming a path that is gone fails too",
+              code == 1 and "MISSING_ARTIFACT  gone-thing" in out, out.strip()[:300])
+        check("enforcement: and names that record's owner",
+              "owner     agentx" in out, out.strip()[:300])
+
+        # A file in a memory-bearing location that no classifier claims would
+        # otherwise slip past registration entirely: it never becomes an
+        # artifact, so it can never be UNREGISTERED.
+        mystery = os.path.join(root, "agentx/.claude/mystery")
+        os.makedirs(mystery, exist_ok=True)
+        with open(os.path.join(mystery, "weird.md"), "w", encoding="utf-8") as fh:
+            fh.write("# ?\n")
+        code, out = cli(*(args + ["--require-coverage"]))
+        check("enforcement: an unclassified candidate fails rather than vanishing",
+              code == 1 and "UNCLASSIFIED  agentx/.claude/mystery/weird.md" in out,
+              out.strip()[:300])
+
+        code, out = cli("discover", "--root", root, "--codex-home", codex_home,
+                        "--home", home, "--require-coverage",
+                        "--schema", "/nope/schema.json")
+        check("enforcement: an unreadable schema is a usage error, not a guess",
+              code == 2 and "cannot read schema" in out, "exit %d: %s" % (code, out[:200]))
+        code, out = cli("discover", "--root", root, "--codex-home", codex_home,
+                        "--home", home, "--require-coverage")
+        check("enforcement: nor does it enforce against a schema that states no "
+              "requirements", code == 2 and "names no required fields" in out,
+              "exit %d: %s" % (code, out[:200]))
+
+
+def test_coverage_enforcement_over_this_workspace():
+    """The gate step 4 was conditioned on: the live workspace is green today.
+
+    A lint rule that is red the day it lands is a rule nobody can act on, so this
+    is asserted here as well as in the audit that consumes it.
+    """
+    code, out = cli("discover", "--require-coverage")
+    check("cli: this workspace passes the coverage rule it now enforces",
+          code == 0 and "COVERAGE OK" in out, out.strip()[-400:])
+    check("cli: enforcement leaks no private path either",
+          ".private/" not in out and "/memory/MEMORY.md" not in out, out.strip()[-400:])
+
+
+# --------------------------------------------------------------------------
 
 def main():
     for fn in (test_yaml_reader, test_schema_support_guard, test_accepts_valid,
@@ -1034,7 +1192,9 @@ def main():
                test_discovery_is_read_only, test_discovery_withholds_private_paths,
                test_discovery_cli, test_discovery_over_this_workspace,
                test_draft_status, test_emitter_round_trips,
-               test_bootstrap_over_fixture, test_bootstrap_over_this_workspace):
+               test_bootstrap_over_fixture, test_bootstrap_over_this_workspace,
+               test_required_fields_come_from_the_schema, test_coverage_enforcement,
+               test_coverage_enforcement_over_this_workspace):
         fn()
 
     failed = [r for r in _results if not r[1]]

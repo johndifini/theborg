@@ -338,7 +338,9 @@ no health finding exists, no review is overdue, and every reviewed assumption is
    retirement trigger, and remediation policy before marking each record valid.
    See **Step 3 in detail** below.
 4. Add the memory-inventory coverage rule to `LINT.md` only after the initial
-   inventory reaches 100%, avoiding a knowingly red audit during migration.
+   inventory reaches 100%, avoiding a knowingly red audit during migration, and
+   wire the existing lint audit to enforce it mechanically.
+   See **Step 4 in detail** below.
 5. Refactor the assumptions prompt into the ten-stage orchestrator while keeping
    the existing schedule, command name, state semantics, and email behavior.
 6. Dry-run monthly and interactive modes; verify private data never enters the
@@ -404,9 +406,50 @@ delete the bridge is a judgment call. Those artifacts are reported by path with
 a reason and left `UNREGISTERED`, so coverage stays honest about them.
 
 The remaining half of step 3 is human and is not code: promoting each draft to
-`reviewed` by supplying the six judgment fields. It proceeds by cohort, and step
-4's `LINT.md` coverage rule stays unwritten until it finishes, per the rule
-against running a knowingly red audit during migration.
+`reviewed` by supplying the six judgment fields. It proceeds by cohort, and is
+independent of step 4 — the coverage rule is gated on registration reaching
+100%, which bootstrap achieved, not on review reaching 100%, which would keep
+the rule unwritten for as long as the cohorts take.
+
+### Step 4 in detail
+
+Step 4 turns full registration into a rule the workspace is held to, so that the
+next durable artifact someone adds cannot quietly escape the inventory.
+
+**Gate.** The rule lands only when `discover` reports zero `UNREGISTERED` and
+zero `MISSING_ARTIFACT` and `validate` passes, so it is green the day it is
+written. It is deliberately *not* gated on step 3's human review: registration
+and review are different numbers, and requiring review would leave the audit
+knowingly red for as long as the cohorts take. `validate --require-reviewed`
+stays the separate gate and stays red until the last draft is promoted; the lint
+audit must not run it.
+
+**The rule.** `LINT.md` gains a `Memory inventory` section, workspace-specific
+like the README and MCP rules, since `repos/*` govern their own memory. It
+requires exactly one record per durable artifact — tracked registry for public,
+gitignored overlay for private — and treats three conditions as violations: an
+unregistered artifact, a record whose path is gone, and a file in a
+memory-bearing location that matches no artifact class. The third matters
+because such a file never becomes an artifact at all and so could never be
+reported as unregistered: without it the rule would have a silent hole exactly
+where a new kind of memory would appear.
+
+**Failing loudly is the acceptance criterion.** `discover --require-coverage`
+exits non-zero and prints, for each offender, its path, its class, the owner the
+directory layout makes accountable, the file its record belongs in, and the
+metadata that record must carry — the last read out of the schema rather than
+restated, so the message cannot drift from what the validator will demand. The
+audit prompt emits one finding per named artifact rather than a count, because a
+count names nobody. Enforcement refuses to run at all if the schema cannot state
+its requirements, rather than reporting a violation while guessing what would
+fix it. Private paths stay withheld, as everywhere else in this design: the
+failure text is as emailable as the report it follows.
+
+**What it does not do.** Enforcement is opt-in: plain `discover` still measures
+and exits 0, and nothing about the check writes. Coverage is not review, a
+`status: draft` record satisfies the rule, and an orphaned bridge with no
+canonical source stays unregistered by design — the honest finding — rather than
+being papered over with a record pointing nowhere.
 
 ## Acceptance criteria
 
