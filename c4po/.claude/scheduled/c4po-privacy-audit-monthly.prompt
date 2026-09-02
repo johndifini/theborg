@@ -56,6 +56,11 @@ identifier in it:
 - `mrs-beast/.claude/scheduled/mrs-beast-social-media-drafts.prompt`: the
   `johndifini` repository-owner occurrences are load-bearing because mrs-beast
   links public social copy and its sources as John.
+- `QUICKSTART.md`: the `johndifini` occurrence in the clone URL is load-bearing
+  because a public quick-start needs a working clone command.
+- `.claude/rules/tracked-agent-files-are-public.md`: the `johndifini/theborg`
+  occurrence is load-bearing because naming the public repository is the rule's
+  premise.
 
 Control-text exclusion, not a durable allowlist: while the source backlog item
 for this audit still exists, do not report the absolute John home path or other

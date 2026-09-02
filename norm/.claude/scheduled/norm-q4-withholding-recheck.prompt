@@ -8,10 +8,11 @@ paired slash command, a commit message, or any other tracked path. When editing 
 re-read this paragraph first.
 
 Context: an August 2026 analysis concluded that projected payroll withholding plus the
-scheduled estimated-tax vouchers would satisfy the 110% prior-year safe harbor for both the
-federal and the state return. That conclusion rested on *projected* withholding for the
-remaining pay periods. This job re-verifies it against actuals while there is still one pay
-period left to adjust, and fixes the Q4 payment due 01/15/2027.
+scheduled estimated-tax vouchers would satisfy the applicable prior-year safe harbor
+recorded in §3 of the workpaper, for both the federal and the state return. That
+conclusion rested on *projected* withholding for the remaining pay periods. This job
+re-verifies it against actuals while there is still one pay period left to adjust, and
+fixes the Q4 payment due 01/15/2027.
 
 All figures, sources, parties, and prior conclusions live in
 `${BORG_ROOT}/norm/.private/2026-q3-estimated-tax-workpaper.md`. Read it first — it is the
@@ -22,21 +23,21 @@ recorded there, the §3 safe harbor targets, the §4 withholding projection and 
 rates it assumed, the §6 installment tables and the caveat recorded there, and the §8 open
 items.
 
-STEP 2: Collect actuals. Ask the user for the most recent 2026 pay stubs for both spouses —
-§1 and §4 of the workpaper identify each employer and pay cadence — and for confirmation of
-which 2026 estimated-tax vouchers have actually been paid, federal and state, with amounts
-and dates. Do not assume the August answers still hold; the state position in particular was
-corrected once already. If stubs are not supplied, say so plainly and report what cannot be
-verified rather than projecting from stale inputs.
+STEP 2: Collect actuals. Ask the user for the most recent 2026 pay stubs for each earner —
+§1 and §4 of the workpaper identify each earner, employer and pay cadence — and for
+confirmation of which 2026 estimated-tax vouchers have actually been paid, federal and
+state, with amounts and dates. Do not assume the August answers still hold; the state
+position in particular was corrected once already. If stubs are not supplied, say so
+plainly and report what cannot be verified rather than projecting from stale inputs.
 
 Save any new stubs into `${BORG_ROOT}/norm/.private/` as
 `paystub-YYYY-MM-DD-<name>.pdf`, dated by check/pay date, `chmod 600` — matching the
 convention recorded in §1 of the workpaper. Do not leave them in `${BORG_ROOT}/tmp/`.
 
 STEP 3: Recompute, using the same method as the workpaper:
-- Full-year withholding for each spouse = actual YTD + (remaining pay periods × current
+- Full-year withholding for each earner = actual YTD + (remaining pay periods × current
   per-period rate). Use the current period rate, not the YTD average, when YTD includes
-  supplemental withholding on a bonus.
+  supplemental withholding (the per-period rates are in §4 of the workpaper).
 - Compare total projected credits (withholding + estimates paid) against the §3 targets.
 - Run the per-installment test, crediting withholding ratably across all four installments
   (IRC §6654(g)) and estimates on their actual payment dates. Report the margin at each
@@ -45,11 +46,12 @@ STEP 3: Recompute, using the same method as the workpaper:
   equivalent (both form numbers are in §6 of the workpaper), and whether any change to
   payroll withholding on the final December check is still needed or worthwhile.
 
-STEP 4: Check the 15% long-term-capital-gain headroom recorded in §7 of the workpaper.
+STEP 4: Check the long-term-capital-gain headroom recorded in §7 of the workpaper.
 Ask the user for 2026 realized capital gains to date. If projected taxable income now
-approaches the 20% threshold for the taxpayers' filing status, flag it and quantify the
-cost, since loss harvesting before December 31 is the only remaining lever. Verify the
-threshold against current IRS guidance rather than trusting the figure in the workpaper.
+approaches the next capital-gain rate threshold for the taxpayers' filing status, flag it
+and quantify the cost, since loss harvesting before December 31 is the only remaining
+lever. Verify the threshold against current IRS guidance rather than trusting the figure
+in the workpaper.
 
 STEP 5: Pipe a report into
 `${BORG_ROOT}/.bin/notify-email.sh norm "Norm — 2026 Q4 estimated tax re-check — {YYYY-MM-DD}"`
@@ -81,5 +83,5 @@ Confirm the removal in the STEP 5 email body (append a final line) so a silent f
 self-remove is visible.
 
 Boundaries: this is preparation for CPA review, not a filing determination. The character of
-the equity payout — capital vs. ordinary, §83(b), §1061, NIIT, and multi-state sourcing —
-remains a licensed preparer's call. Say so in the report.
+the transaction described in §1 of the workpaper — see the character evidence in §9 and the
+boundaries in §10 there — remains a licensed preparer's call. Say so in the report.

@@ -19,10 +19,9 @@ STEP 6: Apply these REBALANCING PRINCIPLES in order:
 a) NEVER sell into a selloff. If a position or sector is down, that is a buying opportunity, not a sell signal.
 b) High VIX = opportunity. Elevated volatility means assets are on sale. Look for buying opportunities.
 c) Rebalance by BUYING the underweight class, not by selling beaten-down overweight positions. Use available cash first, then consider trimming positions that are ELEVATED (near highs), not depressed.
-d) NVDA has a strong bias to hold. Only recommend selling if the fundamental case is compelling and well-argued — drift alone is never sufficient reason. If you propose selling NVDA, the argument better be airtight.
-e) Think like an investor: buy low, sell high. Never do mechanical drift-based selling that ignores market context.
-f) For taxable accounts, tax consequences are the #1 priority. For tax-advantaged accounts, focus on market conditions and diversification.
-g) ~1 trade/week max per portfolio.
+d) Think like an investor: buy low, sell high. Never do mechanical drift-based selling that ignores market context.
+e) For taxable accounts, tax consequences are the #1 priority. For tax-advantaged accounts, focus on market conditions and diversification.
+f) ~1 trade/week max per portfolio.
 
 STEP 7: Always email the result by piping the message into `${BORG_ROOT}/.bin/notify-email.sh warren-bot-fett "<subject>"` (reads the message from stdin, emails it to the user) — even when there is nothing actionable, so the user can confirm the job ran. Subject is `Market scan — {today} — opportunity flagged` if a buying opportunity was found, otherwise `Market scan — {today} — no action`. If a genuine BUYING opportunity to rebalance an underweight class exists — especially when that class is cheap due to market conditions — the message should contain:
 - Which portfolio and account

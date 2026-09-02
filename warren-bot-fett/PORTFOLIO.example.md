@@ -1,27 +1,33 @@
 # PORTFOLIO.md — Portfolio Manager Long-Term Memory
 
-> Template. Copy to `PORTFOLIO.md` (gitignored) and replace the example
-> values below with your own portfolios, accounts, and data source.
-> The structure is what the scheduled jobs
-> (`warren-bot-fett-daily-market-scan.prompt`,
+> Template. Copy to `PORTFOLIO.md` (gitignored) and replace **every** value
+> below with your own. Nothing in this file may describe a real portfolio,
+> account, entity, instrument, person, or family circumstance — the placeholders
+> show shape only, and the shape is the only part that is public. That structure
+> is what the scheduled jobs (`warren-bot-fett-daily-market-scan.prompt`,
 > `warren-bot-fett-ai-sleeve-monthly.prompt`) expect to find.
+>
+> In particular, entity and trust details, governing-instrument citations,
+> beneficiary and family structure, estate-tax posture, and the account
+> inventory are private. They belong only in the gitignored `PORTFOLIO.md`.
 
 ## EXAMPLE-TRUST
 
-**Structure:** Irrevocable trust, <STATE> law, established <MONTH YEAR>. Settlor deceased <MONTH YEAR>. Surviving spouse still living — trust terminates at their death.
+**Structure:** <entity type>, <jurisdiction> law, established <MONTH YEAR>.
+<One line on the termination event, if the entity has one.>
 
-**Owner's roles:** Co-Trustee, Trust Advisor, Co-Beneficiary.
+**Owner's roles:** <role>, <role>
 
 **Tax framework:**
-- No step-up in basis (no 706 filed, no estate inclusion)
-- All current positions purchased by the trust (not transferred in-kind) — brokerage basis should be accurate
-- Carryover basis to beneficiaries at termination
-- Trust compressed brackets — tax efficiency is a priority
-- At termination: assets distribute per stirpes to living children/descendants
+- <Basis treatment — how positions were acquired and what basis carries>
+- <Bracket treatment, and what it implies for tax-efficiency priority>
+- <Distribution treatment at termination, if applicable>
 
-**Investment authority:** Trust Advisor must approve sales/investments/exchanges (Article 7.4). Trustee has broad powers (Article 8). Owner wears both hats.
+**Investment authority:** <Who must approve sales, investments and exchanges,
+and under what authority. Refer to the governing instrument generically — keep
+article and section numbers in the private copy.>
 
-**Key constraint:** Low-frequency trading (~1 trade/week max per owner's preference). Tax-aware management critical given no step-up and compressed trust brackets.
+**Key constraint:** <Trading cadence, plus any tax-driven constraint.>
 
 ---
 
@@ -87,9 +93,15 @@ Categories within asset classes are **tactical, not formulaic**. Priority order:
 - Contains all positions across all portfolios (PORTFOLIO_A, PORTFOLIO_B, EXAMPLE-TRUST)
 
 ### Accounts by Portfolio
-**PORTFOLIO_A:** <acct> (Rollover IRA), <acct> (Brokerage), <acct> (Trad Non-deductible IRA), <acct> (Roth IRA), <acct> (Roth IRA), <acct> (Trad Non-deductible IRA), <acct> (Rollover IRA), 403b, 401k
-**PORTFOLIO_B:** <acct> (Traditional IRA), <acct> (Traditional IRA), <acct> (Roth IRA), <acct> (Roth IRA), <acct> (Brokerage)
-**EXAMPLE-TRUST:** <acct> (Irrevocable Trust)
+
+One line per portfolio. List each account as `<acct> (<type>)`, where `<acct>` is
+whatever short identifier your data source uses. The real account count, type mix
+and employer-plan participation are private — record them only in the gitignored
+`PORTFOLIO.md`.
+
+**PORTFOLIO_A:** <acct> (<type>), <acct> (<type>)
+**PORTFOLIO_B:** <acct> (<type>)
+**EXAMPLE-TRUST:** <acct> (<type>)
 
 ## Rebalancing Parameters
 - **Drift threshold:** 8% deviation in any asset class triggers alert
