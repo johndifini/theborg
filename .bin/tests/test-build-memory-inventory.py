@@ -3,7 +3,7 @@
 
     python3 .bin/tests/test-build-memory-inventory.py
 
-Covers migration steps 1 and 2 of
+Covers migration steps 1, 2, and 3 of
 `c4po/LONG-TERM-MEMORY-INVENTORY-DESIGN.md`.
 
 Step 1 — schema and validator:
@@ -28,6 +28,19 @@ the expected classification is exact and does not drift as The Borg grows:
      `--show-private` is passed;
   7. coverage is measured but not enforced: a wholly unregistered tree still
      exits 0, because the LINT.md rule is gated on migration step 4.
+
+Step 3 — the split between registered and reviewed, and the bootstrap that
+produces the difference:
+
+  8. `status: draft` relaxes exactly the human-judgment fields and nothing else;
+     omitting the flag is the strict state, a draft cannot claim a review date,
+     a draft that has cleared the promotion gate must be promoted, and the flag
+     is not defaultable by class;
+  9. the YAML writer round-trips through this tool's own reader and refuses the
+     shapes it cannot express rather than stringifying them;
+ 10. bootstrap is a dry run by default, is idempotent, defers artifacts it
+     cannot honestly describe, and — over the fixture and over the live
+     workspace — puts no private path in a tracked file.
 
 No third-party dependencies: this workspace has neither PyYAML nor jsonschema
 and cannot install them, which is why the tool implements both subsets itself.
@@ -417,13 +430,22 @@ def cli(*args):
 
 
 def test_cli():
-    code, out = cli("validate", "--today", "2026-08-26")
+    # No --today here, unlike the synthetic registries below. Since the step-3
+    # bootstrap, this repo's records carry `introduced` dates derived from git
+    # and the filesystem, and the newest advances every time an artifact is
+    # added — a pinned date would start failing on its own the next time someone
+    # writes a rule. The real check is that the registry is valid TODAY.
+    code, out = cli("validate")
     check("cli: this repo's registry validates clean", code == 0, out.strip())
 
     overlay = os.path.join(ROOT, "c4po/.private.example/memory-inventory.example.yaml")
-    code, out = cli("validate", "--today", "2026-08-26", "--overlay", overlay)
+    code, out = cli("validate", "--overlay", overlay)
     check("cli: the synthetic private overlay validates clean", code == 0, out.strip())
-    check("cli: it is counted as private, not public", "1 private record" in out, out.strip())
+    check("cli: it is counted as private, not public", "2 private record" in out, out.strip())
+    check("cli: and the example covers both a reviewed record and a draft stub",
+          bmi.status_counts([bmi.Registry(bmi.load_yaml(open(overlay, encoding="utf-8").read(),
+                                                        overlay), overlay, private=True)])
+          == (0, 0, 1, 1), out.strip())
 
     with tempfile.TemporaryDirectory() as tmp:
         broken = os.path.join(tmp, "broken.yaml")
@@ -808,6 +830,200 @@ def test_discovery_over_this_workspace():
 
 
 # --------------------------------------------------------------------------
+# 10. Draft status and mechanical bootstrap (migration step 3)
+# --------------------------------------------------------------------------
+#
+# The point of step 3 is a distinction that has to be machine-checkable: a
+# record can be REGISTERED without being REVIEWED. These tests pin both halves —
+# the validator's split requirements, and the bootstrap that produces the stubs.
+
+SCHEMA_PATH = os.path.join(ROOT, "MEMORY-INVENTORY.schema.json")
+
+
+def draft(**over):
+    """A record holding only what a mechanical bootstrap can derive."""
+    base = {k: v for k, v in record().items() if k not in bmi.HUMAN_JUDGMENT_FIELDS}
+    base["status"] = "draft"
+    base.update(copy.deepcopy(over))
+    return base
+
+
+def test_draft_status():
+    errs = run({"stub": draft()})
+    check("draft: a stub with no human judgment fields is accepted",
+          errs == [], "; ".join(errs))
+
+    bare = {k: v for k, v in draft().items() if k != "status"}
+    errs = run({"stub": bare})
+    check("draft: omitting `status` does not relax anything — strict is the default",
+          any("missing required field 'rationale'" in e for e in errs), "; ".join(errs))
+
+    errs = run({"stub": draft(status="reviewed")})
+    check("draft: `status: reviewed` demands the full record",
+          any("missing required field 'rationale'" in e for e in errs), "; ".join(errs))
+
+    errs = run({"stub": draft(review={"cadence": "quarterly", "method": ["semantic"],
+                                      "last_reviewed": "2026-01-02"})})
+    check("draft: a stub may not claim a review date",
+          any("cannot carry `review.last_reviewed" in e for e in errs), "; ".join(errs))
+
+    errs = run({"stub": draft(
+        rationale="A rationale long enough to say what failure this prevents.",
+        retirement_triggers=["A concrete condition that would retire it."],
+        remediation_policy="propose_patch")})
+    check("draft: a stub that has cleared the promotion gate must be promoted",
+          any("no longer a stub" in e for e in errs), "; ".join(errs))
+
+    errs = run({"stub": draft()}, defaults={"scoped_rule": {"status": "draft"}})
+    check("draft: `status` cannot be set as a class default",
+          any("unknown field 'status'" in e for e in errs), "; ".join(errs))
+
+    regs = [bmi.Registry({"version": 1, "artifacts": {"a": draft(), "b": record()}},
+                         "MEMORY-INVENTORY.yaml", private=False),
+            bmi.Registry({"version": 1, "artifacts": {"c": draft(visibility="private")}},
+                         "x/.private/memory-inventory.yaml", private=True)]
+    check("draft: public and private, reviewed and draft are counted apart",
+          bmi.status_counts(regs) == (1, 1, 0, 1), bmi.status_counts(regs))
+
+
+def test_emitter_round_trips():
+    r = draft(path="agentx/a path/with spaces.md",
+              consumers=["claude-code", "codex", "claude-desktop"],
+              review={"cadence": "monthly", "method": ["semantic", "best_practice"],
+                      "last_reviewed": None},
+              related=[])
+    r["_comments"] = {"introduced": "first git add"}
+    text = "version: 1\n\nartifacts:\n" + "\n".join(bmi.emit_record("some-id", r)) + "\n"
+    parsed = bmi.load_yaml(text, "emitted")
+    got = parsed["artifacts"]["some-id"]
+    check("emit: a record round-trips through this tool's own reader",
+          got == bmi.strip_comments(r), got)
+    check("emit: a list nested inside `review` survives as a list",
+          got["review"]["method"] == ["semantic", "best_practice"], got.get("review"))
+    check("emit: a path with spaces survives", got["path"] == r["path"], got.get("path"))
+    check("emit: an empty list stays a list", got["related"] == [], got.get("related"))
+    check("emit: a trailing comment is a comment, not part of the value",
+          got["introduced"] == r["introduced"], got.get("introduced"))
+    bmi.verify_roundtrip(text, [("some-id", r)], "emitted")
+
+    for name, bad in (
+            ("a list of mappings",
+             draft(provenance=[{"kind": "workspace_decision", "reference": "r"}])),
+            ("a field missing from the emission order", draft(colour="blue"))):
+        try:
+            bmi.emit_record("x", bad)
+            check("emit: %s is refused, not stringified" % name, False, "no error raised")
+        except bmi.YamlSubsetError:
+            check("emit: %s is refused, not stringified" % name, True)
+
+
+def _bootstrap(root, home, codex_home, *extra):
+    return cli("bootstrap", "--root", root, "--home", home, "--codex-home", codex_home,
+               "--schema", SCHEMA_PATH, "--today", "2026-09-02", *extra)
+
+
+def test_bootstrap_over_fixture():
+    with tempfile.TemporaryDirectory() as base:
+        root, codex_home, home = build_fixture(base)
+
+        before = _tree_state(root)
+        code, out = _bootstrap(root, home, codex_home)
+        check("bootstrap: a dry run exits 0", code == 0, out.strip()[:400])
+        check("bootstrap: and writes nothing", _tree_state(root) == before,
+              "the dry run mutated the tree")
+
+        code, out = _bootstrap(root, home, codex_home, "--write")
+        check("bootstrap: the write run exits 0", code == 0, out.strip()[:600])
+
+        tracked = open(os.path.join(root, "MEMORY-INVENTORY.yaml"), encoding="utf-8").read()
+        registry = bmi.load_yaml(tracked, "MEMORY-INVENTORY.yaml")["artifacts"]
+        check("bootstrap: every emitted record is flagged `status: draft`",
+              registry and all(r.get("status") == "draft" for r in registry.values()),
+              sorted(k for k, r in registry.items() if r.get("status") != "draft"))
+
+        # The hard requirement: no private path, in any form, in a tracked file.
+        private_paths = [a["path"] for a in
+                         bmi.discover(root, codex_home=codex_home, home=home)["artifacts"]
+                         if a["visibility"] != "public"]
+        check("bootstrap: private artifacts exist in the fixture to be misplaced",
+              len(private_paths) >= 4, private_paths)
+        leaked = [p for p in private_paths if p in tracked]
+        check("bootstrap: no private path reaches the tracked registry", leaked == [], leaked)
+        check("bootstrap: and no private directory is named there",
+              ".private/" not in tracked and ".local.md" not in tracked,
+              [l for l in tracked.splitlines() if ".private/" in l or ".local.md" in l])
+        check("bootstrap: the default report withholds the overlay paths",
+              ".private/" not in out, [l for l in out.splitlines() if ".private/" in l])
+
+        overlay = os.path.join(root, "agentx/.private/memory-inventory.yaml")
+        body = open(overlay, encoding="utf-8").read()
+        check("bootstrap: the agent's private records land in its overlay",
+              all(p in body for p in private_paths if p.startswith("agentx/")),
+              [p for p in private_paths if p.startswith("agentx/") and p not in body])
+        check("bootstrap: an overlay it creates is owner-readable only",
+              oct(os.stat(os.path.join(root, "c4po/.private/memory-inventory.yaml")).st_mode
+                  & 0o777) == "0o600")
+
+        # An orphaned bridge has no canonical source to point at, so no valid
+        # record exists for it. It must be named and left uncovered, not guessed.
+        check("bootstrap: an orphaned bridge is deferred, with a reason",
+              "Deferred" in out and ".agents/skills/gone/SKILL.md" in out, out.strip()[:600])
+        check("bootstrap: and never enters the registry",
+              ".agents/skills/gone/SKILL.md" not in tracked)
+
+        code, out = cli("validate", "--registry", os.path.join(root, "MEMORY-INVENTORY.yaml"),
+                        "--schema", SCHEMA_PATH, "--overlay", overlay,
+                        "--overlay", os.path.join(root, "c4po/.private/memory-inventory.yaml"),
+                        "--today", "2026-09-02")
+        check("bootstrap: the bootstrapped registry and overlays validate", code == 0,
+              out.strip()[:600])
+        check("bootstrap: and validate says how much of it is merely registered",
+              "0 reviewed" in out and "draft" in out, out.strip()[:400])
+
+        code, out = cli("validate", "--registry", os.path.join(root, "MEMORY-INVENTORY.yaml"),
+                        "--schema", SCHEMA_PATH, "--overlay", overlay, "--today", "2026-09-02",
+                        "--require-reviewed")
+        check("bootstrap: --require-reviewed fails while any draft remains", code == 1,
+              "exit %d: %s" % (code, out.strip()[:400]))
+
+        code, out = cli("discover", "--root", root, "--home", home,
+                        "--codex-home", codex_home, "--json")
+        payload = json.loads(out)
+        check("bootstrap: discovery now covers everything except the deferred orphans",
+              payload["coverage"]["unregistered"] == 2, payload["coverage"])
+        check("bootstrap: and finds no registered record without a file",
+              payload["coverage"]["missing"] == 0, payload["coverage"])
+
+        code, out = _bootstrap(root, home, codex_home, "--write")
+        check("bootstrap: a second run is a no-op", "Nothing to bootstrap" in out,
+              out.strip()[:400])
+
+
+def test_bootstrap_over_this_workspace():
+    """The live workspace, where the private/tracked split actually matters."""
+    code, out = cli("bootstrap")
+    check("cli: this workspace has nothing left to bootstrap",
+          code == 0 and "Nothing to bootstrap" in out, out.strip()[:400])
+
+    tracked = open(os.path.join(ROOT, "MEMORY-INVENTORY.yaml"), encoding="utf-8").read()
+    code, discovered = cli("discover", "--json")
+    payload = json.loads(discovered)
+    check("cli: every artifact this workspace has is registered",
+          payload["coverage"]["unregistered"] == 0, payload["coverage"])
+
+    result = bmi.discover(ROOT, codex_home=os.environ.get("CODEX_HOME"),
+                          home=os.path.expanduser("~"))
+    private_paths = [a["path"] for a in result["artifacts"] if a["visibility"] != "public"]
+    check("cli: this workspace has private artifacts to protect", private_paths != [],
+          len(private_paths))
+    check("cli: none of their paths appear in the tracked registry",
+          [p for p in private_paths if p in tracked] == [],
+          [p for p in private_paths if p in tracked])
+    check("cli: nor does any absolute home path",
+          os.path.expanduser("~") not in tracked)
+
+
+# --------------------------------------------------------------------------
 
 def main():
     for fn in (test_yaml_reader, test_schema_support_guard, test_accepts_valid,
@@ -816,7 +1032,9 @@ def main():
                test_cli,
                test_discovery_classification, test_discovery_pairs_and_companions,
                test_discovery_is_read_only, test_discovery_withholds_private_paths,
-               test_discovery_cli, test_discovery_over_this_workspace):
+               test_discovery_cli, test_discovery_over_this_workspace,
+               test_draft_status, test_emitter_round_trips,
+               test_bootstrap_over_fixture, test_bootstrap_over_this_workspace):
         fn()
 
     failed = [r for r in _results if not r[1]]

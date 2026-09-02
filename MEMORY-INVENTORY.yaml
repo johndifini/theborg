@@ -9,14 +9,21 @@
 # Schema:       MEMORY-INVENTORY.schema.json
 # Validate:     python3 .bin/build-memory-inventory.py validate
 #
-# Migration status: steps 1-2 of the design's migration sequence. This file holds
-# a deliberately small representative set — one artifact of each shape the schema
-# has to survive — so the schema was exercised before discovery bulk-loads
-# several hundred records. Discovery has since measured the workspace: run
-# `python3 .bin/build-memory-inventory.py discover` for current totals, the
-# exclusions applied, and the coverage gap. It is NOT yet a complete inventory,
-# so the LINT.md coverage rule stays unwritten until step 4, per the design's
-# instruction not to run a knowingly red audit during migration.
+# Migration status: step 3 of the design's migration sequence. Coverage is now
+# complete — every artifact `python3 .bin/build-memory-inventory.py discover`
+# finds has a record — but coverage is NOT review. The hand-written records at
+# the top of `artifacts:` are the step-1 representative set: one artifact of each
+# shape the schema had to survive, each with a real rationale. Everything below
+# the bootstrap marker is `status: draft`: mechanically derived from the tree by
+# `build-memory-inventory.py bootstrap`, with no human judgment applied.
+#
+# A draft is REGISTERED, NOT REVIEWED. Promote one by supplying the six judgment
+# fields — rationale, provenance, risk, success_signals, retirement_triggers,
+# remediation_policy — and setting `status: reviewed`. `validate` prints both
+# numbers on every run; `validate --require-reviewed` fails while any draft
+# remains. The LINT.md coverage rule stays unwritten until that gate is green
+# (step 4), per the design's instruction not to run a knowingly red audit
+# during migration.
 #
 # `review.last_reviewed: null` throughout is literal, not a placeholder: no
 # artifact has yet had a substantive review under this scheme, which correctly
@@ -28,7 +35,7 @@
 #
 # Private artifacts are absent by construction. Their records live in gitignored
 # <agent>/.private/memory-inventory.yaml overlays; see
-# c4po/.private.example/memory-inventory.yaml for the shape.
+# c4po/.private.example/memory-inventory.example.yaml for the shape.
 
 version: 1
 
@@ -352,3 +359,5896 @@ artifacts:
     remediation_policy: prohibited
     related:
       - claude-md-best-practices-page
+
+  # ── bootstrapped drafts — mechanically derived, NOT reviewed ───────────
+  #
+  # Emitted by `python3 .bin/build-memory-inventory.py bootstrap --write`
+  # (migration step 3 of c4po/LONG-TERM-MEMORY-INVENTORY-DESIGN.md). Every
+  # record below is `status: draft`: its identity, ownership, canonicality, and
+  # context cost were read off the tree, and no human judgment has been applied.
+  #
+  # A draft is REGISTERED, NOT REVIEWED. To promote one, add a rationale,
+  # provenance, risk, success signals, retirement triggers, and a remediation
+  # policy, then set `status: reviewed`. `validate --require-reviewed` is the
+  # gate: it fails while any draft remains, so full coverage can never be
+  # mistaken for full review.
+
+  architetto-agents:
+    path: architetto/AGENTS.md
+    type: always_on_instruction
+    status: draft
+    owner: architetto
+    scope: architetto
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-07-12    # first git add
+    load_mode: always
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [semantic, best_practice]
+    related: []
+
+  ari-agents:
+    path: ari/AGENTS.md
+    type: always_on_instruction
+    status: draft
+    owner: ari
+    scope: ari
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-08-15    # first git add
+    load_mode: always
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [semantic, best_practice]
+    related: []
+
+  ari-career-dossier-agents:
+    path: ari/career-dossier/AGENTS.md
+    type: always_on_instruction
+    status: draft
+    owner: ari
+    scope: ari
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-09-01    # first git add
+    load_mode: always
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [semantic, best_practice]
+    related: []
+
+  bones-agents:
+    path: bones/AGENTS.md
+    type: always_on_instruction
+    status: draft
+    owner: bones
+    scope: bones
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-07-12    # first git add
+    load_mode: always
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [semantic, best_practice]
+    related: []
+
+  c4po-agents:
+    path: c4po/AGENTS.md
+    type: always_on_instruction
+    status: draft
+    owner: c4po
+    scope: c4po
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-07-12    # first git add
+    load_mode: always
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [semantic, best_practice]
+    related: []
+
+  cerebruh-agents:
+    path: cerebruh/AGENTS.md
+    type: always_on_instruction
+    status: draft
+    owner: cerebruh
+    scope: cerebruh
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-07-12    # first git add
+    load_mode: always
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [semantic, best_practice]
+    related: []
+
+  cerebruh-template-agents:
+    path: cerebruh/template/AGENTS.md
+    type: always_on_instruction
+    status: draft
+    owner: cerebruh
+    scope: cerebruh
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-07-12    # first git add
+    load_mode: always
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [semantic, best_practice]
+    related: []
+
+  jony-vibe-agents:
+    path: jony-vibe/AGENTS.md
+    type: always_on_instruction
+    status: draft
+    owner: jony-vibe
+    scope: jony-vibe
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-07-12    # first git add
+    load_mode: always
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [semantic, best_practice]
+    related: []
+
+  jony-vibe-media-agents:
+    path: jony-vibe/media/AGENTS.md
+    type: always_on_instruction
+    status: draft
+    owner: jony-vibe
+    scope: jony-vibe
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-08-30    # first git add
+    load_mode: always
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [semantic, best_practice]
+    related: []
+
+  jony-vibe-media-example-agents:
+    path: jony-vibe/media/example/AGENTS.md
+    type: always_on_instruction
+    status: draft
+    owner: jony-vibe
+    scope: jony-vibe
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-08-30    # first git add
+    load_mode: always
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [semantic, best_practice]
+    related: []
+
+  mrs-beast-agents:
+    path: mrs-beast/AGENTS.md
+    type: always_on_instruction
+    status: draft
+    owner: mrs-beast
+    scope: mrs-beast
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-07-12    # first git add
+    load_mode: always
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [semantic, best_practice]
+    related: []
+
+  norm-agents:
+    path: norm/AGENTS.md
+    type: always_on_instruction
+    status: draft
+    owner: norm
+    scope: norm
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-08-15    # first git add
+    load_mode: always
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [semantic, best_practice]
+    related: []
+
+  vinny-agents:
+    path: vinny/AGENTS.md
+    type: always_on_instruction
+    status: draft
+    owner: vinny
+    scope: vinny
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-08-15    # first git add
+    load_mode: always
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [semantic, best_practice]
+    related: []
+
+  warren-bot-fett-agents:
+    path: warren-bot-fett/AGENTS.md
+    type: always_on_instruction
+    status: draft
+    owner: warren-bot-fett
+    scope: warren-bot-fett
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-07-12    # first git add
+    load_mode: always
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [semantic, best_practice]
+    related: []
+
+  ari-claude-commands-finalize-resume:
+    path: ari/.claude/commands/finalize-resume.md
+    type: command
+    status: draft
+    owner: ari
+    scope: ari
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-08-29    # first git add
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  c4po-claude-commands-backlog-burndown:
+    path: c4po/.claude/commands/backlog-burndown.md
+    type: command
+    status: draft
+    owner: c4po
+    scope: c4po
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-07-05    # first git add
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  c4po-claude-commands-lint-audit:
+    path: c4po/.claude/commands/lint-audit.md
+    type: command
+    status: draft
+    owner: c4po
+    scope: c4po
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-05-28    # first git add
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  c4po-claude-commands-privacy-audit:
+    path: c4po/.claude/commands/privacy-audit.md
+    type: command
+    status: draft
+    owner: c4po
+    scope: c4po
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-08-02    # first git add
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  c4po-claude-commands-security-audit:
+    path: c4po/.claude/commands/security-audit.md
+    type: command
+    status: draft
+    owner: c4po
+    scope: c4po
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-05-28    # first git add
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  c4po-claude-commands-vet-skill:
+    path: c4po/.claude/commands/vet-skill.md
+    type: command
+    status: draft
+    owner: c4po
+    scope: c4po
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-06-28    # first git add
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  claude-commands-backlog:
+    path: ".claude/commands/backlog.md"
+    type: command
+    status: draft
+    owner: workspace
+    scope: workspace
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-07-04    # first git add
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  claude-commands-done:
+    path: ".claude/commands/done.md"
+    type: command
+    status: draft
+    owner: workspace
+    scope: workspace
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-08-02    # first git add
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  claude-commands-f:
+    path: ".claude/commands/f.md"
+    type: command
+    status: draft
+    owner: workspace
+    scope: workspace
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-07-18    # first git add
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  claude-commands-h:
+    path: ".claude/commands/h.md"
+    type: command
+    status: draft
+    owner: workspace
+    scope: workspace
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-06-25    # first git add
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  claude-commands-o:
+    path: ".claude/commands/o.md"
+    type: command
+    status: draft
+    owner: workspace
+    scope: workspace
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-07-18    # first git add
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  claude-commands-push:
+    path: ".claude/commands/push.md"
+    type: command
+    status: draft
+    owner: workspace
+    scope: workspace
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-07-03    # first git add
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  claude-commands-remember:
+    path: ".claude/commands/remember.md"
+    type: command
+    status: draft
+    owner: workspace
+    scope: workspace
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-05-25    # first git add
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  claude-commands-retro:
+    path: ".claude/commands/retro.md"
+    type: command
+    status: draft
+    owner: workspace
+    scope: workspace
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-05-25    # first git add
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  claude-commands-s:
+    path: ".claude/commands/s.md"
+    type: command
+    status: draft
+    owner: workspace
+    scope: workspace
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-06-25    # first git add
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  claude-commands-wrap:
+    path: ".claude/commands/wrap.md"
+    type: command
+    status: draft
+    owner: workspace
+    scope: workspace
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-07-27    # first git add
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  mrs-beast-claude-commands-social-media-drafts:
+    path: mrs-beast/.claude/commands/social-media-drafts.md
+    type: command
+    status: draft
+    owner: mrs-beast
+    scope: mrs-beast
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-05-28    # first git add
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  norm-claude-commands-q4-withholding-recheck:
+    path: norm/.claude/commands/q4-withholding-recheck.md
+    type: command
+    status: draft
+    owner: norm
+    scope: norm
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-08-16    # first git add
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  warren-bot-fett-claude-commands-ai-sleeve-rebalance:
+    path: warren-bot-fett/.claude/commands/ai-sleeve-rebalance.md
+    type: command
+    status: draft
+    owner: warren-bot-fett
+    scope: warren-bot-fett
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-05-28    # first git add
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  warren-bot-fett-claude-commands-market-scan:
+    path: warren-bot-fett/.claude/commands/market-scan.md
+    type: command
+    status: draft
+    owner: warren-bot-fett
+    scope: warren-bot-fett
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-05-28    # first git add
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  architetto-claude:
+    path: architetto/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: architetto
+    scope: architetto
+    visibility: public
+    canonicality: mirror
+    canonical_ref: architetto-agents
+    introduced: 2026-06-19    # first git add
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  ari-career-dossier-claude:
+    path: ari/career-dossier/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: ari
+    scope: ari
+    visibility: public
+    canonicality: mirror
+    canonical_ref: ari-career-dossier-agents
+    introduced: 2026-09-01    # first git add
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  ari-claude:
+    path: ari/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: ari
+    scope: ari
+    visibility: public
+    canonicality: mirror
+    canonical_ref: ari-agents
+    introduced: 2026-08-15    # first git add
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  bones-claude:
+    path: bones/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: bones
+    scope: bones
+    visibility: public
+    canonicality: mirror
+    canonical_ref: bones-agents
+    introduced: 2026-05-25    # first git add
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  c4po-claude:
+    path: c4po/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: c4po
+    scope: c4po
+    visibility: public
+    canonicality: mirror
+    canonical_ref: c4po-agents
+    introduced: 2026-05-23    # first git add
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-claude:
+    path: cerebruh/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-agents
+    introduced: 2026-05-23    # first git add
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-template-claude:
+    path: cerebruh/template/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-template-agents
+    introduced: 2026-05-23    # first git add
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-agents:
+    path: cerebruh/wikis/ai-native-engineering/AGENTS.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/ai-native-engineering
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-template-agents
+    introduced: 2026-08-14    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-claude:
+    path: cerebruh/wikis/ai-native-engineering/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/ai-native-engineering
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-wikis-ai-native-engineering-agents
+    introduced: 2026-07-12    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-agents:
+    path: cerebruh/wikis/claude-code-ecosystem/AGENTS.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/claude-code-ecosystem
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-template-agents
+    introduced: 2026-08-14    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-claude:
+    path: cerebruh/wikis/claude-code-ecosystem/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/claude-code-ecosystem
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-wikis-claude-code-ecosystem-agents
+    introduced: 2026-07-12    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-wikis-codex-ecosystem-agents:
+    path: cerebruh/wikis/codex-ecosystem/AGENTS.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/codex-ecosystem
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-template-agents
+    introduced: 2026-08-14    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-wikis-codex-ecosystem-claude:
+    path: cerebruh/wikis/codex-ecosystem/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/codex-ecosystem
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-wikis-codex-ecosystem-agents
+    introduced: 2026-07-12    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-wikis-fixed-income-investing-agents:
+    path: cerebruh/wikis/fixed-income-investing/AGENTS.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/fixed-income-investing
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-template-agents
+    introduced: 2026-08-14    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-wikis-fixed-income-investing-claude:
+    path: cerebruh/wikis/fixed-income-investing/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/fixed-income-investing
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-wikis-fixed-income-investing-agents
+    introduced: 2026-07-26    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-wikis-harness-engineering-agents:
+    path: cerebruh/wikis/harness-engineering/AGENTS.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/harness-engineering
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-template-agents
+    introduced: 2026-08-14    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-wikis-harness-engineering-claude:
+    path: cerebruh/wikis/harness-engineering/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/harness-engineering
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-wikis-harness-engineering-agents
+    introduced: 2026-07-12    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-wikis-home-network-security-agents:
+    path: cerebruh/wikis/home-network-security/AGENTS.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/home-network-security
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-template-agents
+    introduced: 2026-08-14    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-wikis-home-network-security-claude:
+    path: cerebruh/wikis/home-network-security/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/home-network-security
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-wikis-home-network-security-agents
+    introduced: 2026-07-12    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-agents:
+    path: cerebruh/wikis/local-ai-apple-silicon/AGENTS.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-template-agents
+    introduced: 2026-08-14    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-claude:
+    path: cerebruh/wikis/local-ai-apple-silicon/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-wikis-local-ai-apple-silicon-agents
+    introduced: 2026-07-12    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-wikis-medical-records-agents:
+    path: cerebruh/wikis/medical-records/AGENTS.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/medical-records
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-template-agents
+    introduced: 2026-08-14    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-wikis-medical-records-claude:
+    path: cerebruh/wikis/medical-records/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/medical-records
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-wikis-medical-records-agents
+    introduced: 2026-07-12    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-wikis-personal-ai-workflows-agents:
+    path: cerebruh/wikis/personal-ai-workflows/AGENTS.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/personal-ai-workflows
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-template-agents
+    introduced: 2026-08-14    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-wikis-personal-ai-workflows-claude:
+    path: cerebruh/wikis/personal-ai-workflows/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/personal-ai-workflows
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-wikis-personal-ai-workflows-agents
+    introduced: 2026-07-12    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-agents:
+    path: cerebruh/wikis/personal-knowledge-mgmt/AGENTS.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-template-agents
+    introduced: 2026-08-14    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-claude:
+    path: cerebruh/wikis/personal-knowledge-mgmt/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-wikis-personal-knowledge-mgmt-agents
+    introduced: 2026-07-12    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-wikis-spec-driven-development-agents:
+    path: cerebruh/wikis/spec-driven-development/AGENTS.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/spec-driven-development
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-template-agents
+    introduced: 2026-08-14    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-wikis-spec-driven-development-claude:
+    path: cerebruh/wikis/spec-driven-development/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/spec-driven-development
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-wikis-spec-driven-development-agents
+    introduced: 2026-07-12    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  claude:
+    path: CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: workspace
+    scope: workspace
+    visibility: public
+    canonicality: mirror
+    canonical_ref: root-agent-instructions
+    introduced: 2026-05-23    # first git add
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  jony-vibe-claude:
+    path: jony-vibe/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: jony-vibe
+    scope: jony-vibe
+    visibility: public
+    canonicality: mirror
+    canonical_ref: jony-vibe-agents
+    introduced: 2026-07-03    # first git add
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  jony-vibe-media-claude:
+    path: jony-vibe/media/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: jony-vibe
+    scope: jony-vibe
+    visibility: public
+    canonicality: mirror
+    canonical_ref: jony-vibe-media-agents
+    introduced: 2026-08-30    # first git add
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  jony-vibe-media-example-claude:
+    path: jony-vibe/media/example/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: jony-vibe
+    scope: jony-vibe
+    visibility: public
+    canonicality: mirror
+    canonical_ref: jony-vibe-media-example-agents
+    introduced: 2026-08-30    # first git add
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  mrs-beast-claude:
+    path: mrs-beast/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: mrs-beast
+    scope: mrs-beast
+    visibility: public
+    canonicality: mirror
+    canonical_ref: mrs-beast-agents
+    introduced: 2026-05-23    # first git add
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  norm-claude:
+    path: norm/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: norm
+    scope: norm
+    visibility: public
+    canonicality: mirror
+    canonical_ref: norm-agents
+    introduced: 2026-08-15    # first git add
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  vinny-claude:
+    path: vinny/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: vinny
+    scope: vinny
+    visibility: public
+    canonicality: mirror
+    canonical_ref: vinny-agents
+    introduced: 2026-08-15    # first git add
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  warren-bot-fett-claude:
+    path: warren-bot-fett/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: warren-bot-fett
+    scope: warren-bot-fett
+    visibility: public
+    canonicality: mirror
+    canonical_ref: warren-bot-fett-agents
+    introduced: 2026-05-23    # first git add
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  c4po-long-term-memory-inventory-design:
+    path: c4po/LONG-TERM-MEMORY-INVENTORY-DESIGN.md
+    type: design_decision
+    status: draft
+    owner: c4po
+    scope: c4po
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-08-26    # first git add
+    load_mode: explicit
+    consumers: [claude-code, codex]
+    review:
+      cadence: annual
+      last_reviewed: null
+      method: [semantic]
+    related: []
+
+  codex-home-skills-ai-sleeve-rebalance-skill:
+    path: skills/ai-sleeve-rebalance/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    owner: warren-bot-fett
+    scope: warren-bot-fett
+    canonical_ref: warren-bot-fett-claude-commands-ai-sleeve-rebalance
+    introduced: 2026-09-01    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  codex-home-skills-backlog-burndown-skill:
+    path: skills/backlog-burndown/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    owner: c4po
+    scope: c4po
+    canonical_ref: c4po-claude-commands-backlog-burndown
+    introduced: 2026-09-01    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  codex-home-skills-backlog-skill:
+    path: skills/backlog/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-commands-backlog
+    introduced: 2026-09-01    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  codex-home-skills-done-skill:
+    path: skills/done/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-commands-done
+    introduced: 2026-09-01    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  codex-home-skills-f-skill:
+    path: skills/f/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-commands-f
+    introduced: 2026-09-01    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  codex-home-skills-finalize-resume-skill:
+    path: skills/finalize-resume/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    owner: ari
+    scope: ari
+    canonical_ref: ari-claude-commands-finalize-resume
+    introduced: 2026-09-01    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  codex-home-skills-h-skill:
+    path: skills/h/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-commands-h
+    introduced: 2026-09-01    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  codex-home-skills-lint-audit-skill:
+    path: skills/lint-audit/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    owner: c4po
+    scope: c4po
+    canonical_ref: c4po-claude-commands-lint-audit
+    introduced: 2026-09-01    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  codex-home-skills-market-scan-skill:
+    path: skills/market-scan/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    owner: warren-bot-fett
+    scope: warren-bot-fett
+    canonical_ref: warren-bot-fett-claude-commands-market-scan
+    introduced: 2026-09-01    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  codex-home-skills-o-skill:
+    path: skills/o/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-commands-o
+    introduced: 2026-09-01    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  codex-home-skills-privacy-audit-skill:
+    path: skills/privacy-audit/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    owner: c4po
+    scope: c4po
+    canonical_ref: c4po-claude-commands-privacy-audit
+    introduced: 2026-09-01    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  codex-home-skills-push-skill:
+    path: skills/push/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-commands-push
+    introduced: 2026-09-01    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  codex-home-skills-q4-withholding-recheck-skill:
+    path: skills/q4-withholding-recheck/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    owner: norm
+    scope: norm
+    canonical_ref: norm-claude-commands-q4-withholding-recheck
+    introduced: 2026-09-01    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  codex-home-skills-remember-skill:
+    path: skills/remember/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-commands-remember
+    introduced: 2026-09-01    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  codex-home-skills-retro-skill:
+    path: skills/retro/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-commands-retro
+    introduced: 2026-09-01    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  codex-home-skills-s-skill:
+    path: skills/s/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-commands-s
+    introduced: 2026-09-01    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  codex-home-skills-security-audit-skill:
+    path: skills/security-audit/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    owner: c4po
+    scope: c4po
+    canonical_ref: c4po-claude-commands-security-audit
+    introduced: 2026-09-01    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  codex-home-skills-social-media-drafts-skill:
+    path: skills/social-media-drafts/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    owner: mrs-beast
+    scope: mrs-beast
+    canonical_ref: mrs-beast-claude-commands-social-media-drafts
+    introduced: 2026-09-01    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  codex-home-skills-vet-skill-skill:
+    path: skills/vet-skill/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    owner: c4po
+    scope: c4po
+    canonical_ref: c4po-claude-commands-vet-skill
+    introduced: 2026-09-01    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  codex-home-skills-wrap-skill:
+    path: skills/wrap/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-commands-wrap
+    introduced: 2026-09-01    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  agents-skills-backlog-write-safety-skill:
+    path: ".agents/skills/backlog-write-safety/SKILL.md"
+    type: generated_rule_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-rules-backlog-write-safety
+    introduced: 2026-08-15    # first git add
+    review:
+      last_reviewed: null
+    related: []
+
+  agents-skills-readonly-scheduled-tasks-skill:
+    path: ".agents/skills/readonly-scheduled-tasks/SKILL.md"
+    type: generated_rule_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-rules-readonly-scheduled-tasks
+    introduced: 2026-08-21    # first git add
+    review:
+      last_reviewed: null
+    related: []
+
+  agents-skills-tracked-agent-files-are-public-skill:
+    path: ".agents/skills/tracked-agent-files-are-public/SKILL.md"
+    type: generated_rule_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-rules-tracked-agent-files-are-public
+    introduced: 2026-08-21    # first git add
+    review:
+      last_reviewed: null
+    related: []
+
+  c4po-agents-skills-last30days-x-cookie-health-skill:
+    path: c4po/.agents/skills/last30days-x-cookie-health/SKILL.md
+    type: generated_rule_bridge
+    status: draft
+    owner: c4po
+    scope: c4po
+    canonical_ref: c4po-claude-rules-last30days-x-cookie-health
+    introduced: 2026-08-15    # first git add
+    review:
+      last_reviewed: null
+    related: []
+
+  warren-bot-fett-agents-skills-market-scan-execution-state-skill:
+    path: warren-bot-fett/.agents/skills/market-scan-execution-state/SKILL.md
+    type: generated_rule_bridge
+    status: draft
+    owner: warren-bot-fett
+    scope: warren-bot-fett
+    canonical_ref: warren-bot-fett-claude-rules-market-scan-execution-state
+    introduced: 2026-08-15    # first git add
+    review:
+      last_reviewed: null
+    related: []
+
+  warren-bot-fett-agents-skills-yahoo-chart-daily-return-skill:
+    path: warren-bot-fett/.agents/skills/yahoo-chart-daily-return/SKILL.md
+    type: generated_rule_bridge
+    status: draft
+    owner: warren-bot-fett
+    scope: warren-bot-fett
+    canonical_ref: warren-bot-fett-claude-rules-yahoo-chart-daily-return
+    introduced: 2026-08-15    # first git add
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-wiki-agentic-engineering:
+    path: cerebruh/wikis/ai-native-engineering/wiki/agentic-engineering.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-wiki-agentic-engineering-pl-d03b325:
+    path: cerebruh/wikis/ai-native-engineering/wiki/agentic-engineering-playbook-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-wiki-agentic-platform-layers:
+    path: cerebruh/wikis/ai-native-engineering/wiki/agentic-platform-layers.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-wiki-ai-maturity-stages:
+    path: cerebruh/wikis/ai-native-engineering/wiki/ai-maturity-stages.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-wiki-ai-native-engineering-metrics:
+    path: cerebruh/wikis/ai-native-engineering/wiki/ai-native-engineering-metrics.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-wiki-ai-platform-team:
+    path: cerebruh/wikis/ai-native-engineering/wiki/ai-platform-team.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-wiki-ai-platform-team-bluep-9ffdbfc:
+    path: cerebruh/wikis/ai-native-engineering/wiki/ai-platform-team-blueprint-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-wiki-ai-platform-team-roles:
+    path: cerebruh/wikis/ai-native-engineering/wiki/ai-platform-team-roles.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-wiki-aidlc-loop-not-replace-bbdb27b:
+    path: cerebruh/wikis/ai-native-engineering/wiki/aidlc-loop-not-replacement-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-07-10    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-wiki-anthropic-pm-ai-era-article:
+    path: cerebruh/wikis/ai-native-engineering/wiki/anthropic-pm-ai-era-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-21    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-wiki-building-on-a-rising-f-60e269f:
+    path: cerebruh/wikis/ai-native-engineering/wiki/building-on-a-rising-foundation.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-21    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-wiki-codified-rules-hierarchy:
+    path: cerebruh/wikis/ai-native-engineering/wiki/codified-rules-hierarchy.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-wiki-handoff-chain-to-loop:
+    path: cerebruh/wikis/ai-native-engineering/wiki/handoff-chain-to-loop.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-wiki-just-in-time-planning:
+    path: cerebruh/wikis/ai-native-engineering/wiki/just-in-time-planning.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-wiki-killing-obsolete-processes:
+    path: cerebruh/wikis/ai-native-engineering/wiki/killing-obsolete-processes.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-wiki-log:
+    path: cerebruh/wikis/ai-native-engineering/wiki/log.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-08-14    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-wiki-observable-development:
+    path: cerebruh/wikis/ai-native-engineering/wiki/observable-development.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-wiki-pev-loop:
+    path: cerebruh/wikis/ai-native-engineering/wiki/pev-loop.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-wiki-role-redistribution:
+    path: cerebruh/wikis/ai-native-engineering/wiki/role-redistribution.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-wiki-running-ai-native-org-article:
+    path: cerebruh/wikis/ai-native-engineering/wiki/running-ai-native-org-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-wiki-trust-but-verify:
+    path: cerebruh/wikis/ai-native-engineering/wiki/trust-but-verify.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-wiki-ways-of-working-handof-a3c75b9:
+    path: cerebruh/wikis/ai-native-engineering/wiki/ways-of-working-handoff-collapse-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-agentic-ai-engineer-ro-d00dbd1:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/agentic-ai-engineer-roadmap-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-06-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-agentic-ai-engineer-skills:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/agentic-ai-engineer-skills.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-06-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-agentic-ai-learning-order:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/agentic-ai-learning-order.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-06-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-agentic-ai-stack:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/agentic-ai-stack.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-06-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-agentic-engineering:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/agentic-engineering.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-agentic-execution-rules:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/agentic-execution-rules.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-22    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-anthropic-4-part-setup-article:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/anthropic-4-part-setup-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-06-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-backstage:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/backstage.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-boris-cherny-workflow-article:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/boris-cherny-workflow-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-28    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-bun-zig-to-rust-migration:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/bun-zig-to-rust-migration.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-07-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-claude-code-antipatterns:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/claude-code-antipatterns.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-claude-code-bare-flag:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/claude-code-bare-flag.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-claude-code-best-pract-49fe8a4:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/claude-code-best-practices-repo.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-claude-code-best-pract-5a1c94c:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/claude-code-best-practices-12-patterns-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-claude-code-btw:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/claude-code-btw.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-claude-code-ecosystem-article:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/claude-code-ecosystem-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-claude-code-hooks:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/claude-code-hooks.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-claude-code-loop:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/claude-code-loop.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-claude-code-sandbox:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/claude-code-sandbox.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-claude-cowork:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/claude-cowork.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-06-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-claude-md-anatomy:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/claude-md-anatomy.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-claude-md-self-writing-rules:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/claude-md-self-writing-rules.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-28    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-claude-skills:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/claude-skills.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-21    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-code-is-not-cheap-article:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/code-is-not-cheap-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-code-migration-kit:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/code-migration-kit.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-07-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-code-migration-with-cl-70ff77e:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/code-migration-with-claude-code-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-07-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-code-vs-cowork-stacks-article:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/code-vs-cowork-stacks-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-06-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-conditional-claude-md-tags:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/conditional-claude-md-tags.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-context-fork:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/context-fork.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-cross-repo-flow-mapping:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/cross-repo-flow-mapping.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-deep-vs-shallow-modules:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/deep-vs-shallow-modules.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-dotclaude-directory:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/dotclaude-directory.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-engineering-at-ai-speed:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/engineering-at-ai-speed.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-fix-the-loop-not-the-code:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/fix-the-loop-not-the-code.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-07-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-forrestchang-andrej-ka-f9cd38e:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/forrestchang-andrej-karpathy-skills.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-gitnexus:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/gitnexus.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-google-code-wiki:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/google-code-wiki.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-graphify:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/graphify.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-06-26    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-graphify-article:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/graphify-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-06-26    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-graphify-codex-usage-article:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/graphify-codex-usage-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-07-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-gray-box-model:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/gray-box-model.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-grill-me:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/grill-me.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-gstack:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/gstack.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-22    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-gstack-article:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/gstack-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-22    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-hierarchical-claude-md:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/hierarchical-claude-md.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-karpathy-claude-md-rul-07d5c31:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/karpathy-claude-md-rules-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-22    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-karpathy-four-rules:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/karpathy-four-rules.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-22    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-krieger-python-to-type-f45bae8:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/krieger-python-to-typescript-migration.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-07-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-large-code-migration-process:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/large-code-migration-process.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-07-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-last30days-skill:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/last30days-skill.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-06-29    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-lat-md:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/lat-md.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-21    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-lat-md-article:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/lat-md-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-21    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-llm-wiki-and-wiki-builder:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/llm-wiki-and-wiki-builder.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-log:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/log.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-08-14    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-migration-judge:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/migration-judge.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-07-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-migration-rulebook:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/migration-rulebook.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-07-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-obsidian-external-brain:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/obsidian-external-brain.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-parallel-claudes-worktrees:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/parallel-claudes-worktrees.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-plan-ceo-review:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/plan-ceo-review.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-22    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-plan-mode:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/plan-mode.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-28    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-pocock-skills:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/pocock-skills.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-scrap-and-reimplement-prompt:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/scrap-and-reimplement-prompt.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-28    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-sensenova-skills:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/sensenova-skills.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-21    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-sensenova-skills-article:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/sensenova-skills-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-21    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-single-claude-md-viral-article:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/single-claude-md-viral-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-skill-audit-discipline:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/skill-audit-discipline.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-06-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-skills-vs-plugins:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/skills-vs-plugins.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-06-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-spec-based-development:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/spec-based-development.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-subagents-for-context-hygiene:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/subagents-for-context-hygiene.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-28    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-tdd-with-ai:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/tdd-with-ai.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-ubiquitous-language-for-ai:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/ubiquitous-language-for-ai.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-ultrathink:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/ultrathink.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-verifiable-check-loop:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/verifiable-check-loop.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-06-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-wiki-what-to-skip-2026:
+    path: cerebruh/wikis/claude-code-ecosystem/wiki/what-to-skip-2026.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-06-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-codex-ecosystem-wiki-codex-maxxing-article:
+    path: cerebruh/wikis/codex-ecosystem/wiki/codex-maxxing-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/codex-ecosystem
+    introduced: 2026-05-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-codex-ecosystem-wiki-codex-memories:
+    path: cerebruh/wikis/codex-ecosystem/wiki/codex-memories.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/codex-ecosystem
+    introduced: 2026-05-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-codex-ecosystem-wiki-codex-operating-loop:
+    path: cerebruh/wikis/codex-ecosystem/wiki/codex-operating-loop.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/codex-ecosystem
+    introduced: 2026-05-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-codex-ecosystem-wiki-codex-skills:
+    path: cerebruh/wikis/codex-ecosystem/wiki/codex-skills.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/codex-ecosystem
+    introduced: 2026-05-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-codex-ecosystem-wiki-computer-and-browser-use:
+    path: cerebruh/wikis/codex-ecosystem/wiki/computer-and-browser-use.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/codex-ecosystem
+    introduced: 2026-05-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-codex-ecosystem-wiki-durable-threads:
+    path: cerebruh/wikis/codex-ecosystem/wiki/durable-threads.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/codex-ecosystem
+    introduced: 2026-05-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-codex-ecosystem-wiki-goals:
+    path: cerebruh/wikis/codex-ecosystem/wiki/goals.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/codex-ecosystem
+    introduced: 2026-05-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-codex-ecosystem-wiki-heartbeats:
+    path: cerebruh/wikis/codex-ecosystem/wiki/heartbeats.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/codex-ecosystem
+    introduced: 2026-05-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-codex-ecosystem-wiki-log:
+    path: cerebruh/wikis/codex-ecosystem/wiki/log.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/codex-ecosystem
+    introduced: 2026-08-14    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-codex-ecosystem-wiki-remote-control:
+    path: cerebruh/wikis/codex-ecosystem/wiki/remote-control.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/codex-ecosystem
+    introduced: 2026-05-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-codex-ecosystem-wiki-shared-memory-vault:
+    path: cerebruh/wikis/codex-ecosystem/wiki/shared-memory-vault.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/codex-ecosystem
+    introduced: 2026-05-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-codex-ecosystem-wiki-side-panel:
+    path: cerebruh/wikis/codex-ecosystem/wiki/side-panel.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/codex-ecosystem
+    introduced: 2026-05-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-codex-ecosystem-wiki-steering:
+    path: cerebruh/wikis/codex-ecosystem/wiki/steering.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/codex-ecosystem
+    introduced: 2026-05-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-codex-ecosystem-wiki-voice-input:
+    path: cerebruh/wikis/codex-ecosystem/wiki/voice-input.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/codex-ecosystem
+    introduced: 2026-05-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-fixed-income-investing-wiki-after-tax-yield-comparison:
+    path: cerebruh/wikis/fixed-income-investing/wiki/after-tax-yield-comparison.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/fixed-income-investing
+    introduced: 2026-07-26    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-fixed-income-investing-wiki-duration-and-curve-po-7081add:
+    path: cerebruh/wikis/fixed-income-investing/wiki/duration-and-curve-positioning.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/fixed-income-investing
+    introduced: 2026-07-26    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-fixed-income-investing-wiki-high-yield-muni-naming-trap:
+    path: cerebruh/wikis/fixed-income-investing/wiki/high-yield-muni-naming-trap.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/fixed-income-investing
+    introduced: 2026-07-26    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-fixed-income-investing-wiki-log:
+    path: cerebruh/wikis/fixed-income-investing/wiki/log.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/fixed-income-investing
+    introduced: 2026-08-14    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-fixed-income-investing-wiki-long-end-etf-gap:
+    path: cerebruh/wikis/fixed-income-investing/wiki/long-end-etf-gap.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/fixed-income-investing
+    introduced: 2026-07-26    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-fixed-income-investing-wiki-muni-etf-dislocations-2020:
+    path: cerebruh/wikis/fixed-income-investing/wiki/muni-etf-dislocations-2020.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/fixed-income-investing
+    introduced: 2026-07-26    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-fixed-income-investing-wiki-muni-fund-and-etf-landscape:
+    path: cerebruh/wikis/fixed-income-investing/wiki/muni-fund-and-etf-landscape.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/fixed-income-investing
+    introduced: 2026-07-26    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-fixed-income-investing-wiki-muni-market-state-2026-07:
+    path: cerebruh/wikis/fixed-income-investing/wiki/muni-market-state-2026-07.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/fixed-income-investing
+    introduced: 2026-07-26    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-fixed-income-investing-wiki-muni-tax-mechanics:
+    path: cerebruh/wikis/fixed-income-investing/wiki/muni-tax-mechanics.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/fixed-income-investing
+    introduced: 2026-07-26    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-fixed-income-investing-wiki-muni-yield-data-quality:
+    path: cerebruh/wikis/fixed-income-investing/wiki/muni-yield-data-quality.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/fixed-income-investing
+    introduced: 2026-07-26    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-fixed-income-investing-wiki-municipal-bond-funds-and-etfs:
+    path: cerebruh/wikis/fixed-income-investing/wiki/municipal-bond-funds-and-etfs.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/fixed-income-investing
+    introduced: 2026-07-26    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-fixed-income-investing-wiki-mutual-funds-vs-etfs-munis:
+    path: cerebruh/wikis/fixed-income-investing/wiki/mutual-funds-vs-etfs-munis.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/fixed-income-investing
+    introduced: 2026-07-26    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-fixed-income-investing-wiki-vanguard-admiral-shar-24ada9d:
+    path: cerebruh/wikis/fixed-income-investing/wiki/vanguard-admiral-share-classes.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/fixed-income-investing
+    introduced: 2026-07-26    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-adversarial-self-review:
+    path: cerebruh/wikis/harness-engineering/wiki/adversarial-self-review.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-06-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-agent-budgets:
+    path: cerebruh/wikis/harness-engineering/wiki/agent-budgets.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-06-03    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-agent-harness:
+    path: cerebruh/wikis/harness-engineering/wiki/agent-harness.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-06-03    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-agentic-context-engineering:
+    path: cerebruh/wikis/harness-engineering/wiki/agentic-context-engineering.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-08    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-agentic-loop:
+    path: cerebruh/wikis/harness-engineering/wiki/agentic-loop.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-06-03    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-anthropic-base-url:
+    path: cerebruh/wikis/harness-engineering/wiki/anthropic-base-url.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-05    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-anti-ai-flavor-style-guide:
+    path: cerebruh/wikis/harness-engineering/wiki/anti-ai-flavor-style-guide.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-06-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-auto-research-benchmarks:
+    path: cerebruh/wikis/harness-engineering/wiki/auto-research-benchmarks.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-08    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-auto-research-harnesses:
+    path: cerebruh/wikis/harness-engineering/wiki/auto-research-harnesses.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-08    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-automated-agentic-design:
+    path: cerebruh/wikis/harness-engineering/wiki/automated-agentic-design.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-08    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-claude-md-agents-md-harn-137b50b:
+    path: cerebruh/wikis/harness-engineering/wiki/claude-md-agents-md-harness-evolution.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-06-03    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-claude-subscription-limi-e768e89:
+    path: cerebruh/wikis/harness-engineering/wiki/claude-subscription-limits-headless-jobs.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-confidence-as-a-number:
+    path: cerebruh/wikis/harness-engineering/wiki/confidence-as-a-number.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-06-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-context-engineering:
+    path: cerebruh/wikis/harness-engineering/wiki/context-engineering.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-06-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-context-engineering-moat-article:
+    path: cerebruh/wikis/harness-engineering/wiki/context-engineering-moat-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-06-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-context-layering:
+    path: cerebruh/wikis/harness-engineering/wiki/context-layering.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-06-03    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-darwin-godel-machine:
+    path: cerebruh/wikis/harness-engineering/wiki/darwin-godel-machine.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-08    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-evolutionary-search-for-872b382:
+    path: cerebruh/wikis/harness-engineering/wiki/evolutionary-search-for-harnesses.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-08    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-git-as-state-store:
+    path: cerebruh/wikis/harness-engineering/wiki/git-as-state-store.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-06-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-guardrail-dlp-proxy-for-claude:
+    path: cerebruh/wikis/harness-engineering/wiki/guardrail-dlp-proxy-for-claude.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-05    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-harness-design-patterns:
+    path: cerebruh/wikis/harness-engineering/wiki/harness-design-patterns.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-08    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-harness-engineer-99-perc-c47e984:
+    path: cerebruh/wikis/harness-engineering/wiki/harness-engineer-99-percent-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-06-03    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-harness-engineering:
+    path: cerebruh/wikis/harness-engineering/wiki/harness-engineering.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-06-03    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-harness-engineering-2026-article:
+    path: cerebruh/wikis/harness-engineering/wiki/harness-engineering-2026-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-09    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-harness-engineering-best-b824eaa:
+    path: cerebruh/wikis/harness-engineering/wiki/harness-engineering-best-practices-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-06-03    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-harness-engineering-self-af01a5f:
+    path: cerebruh/wikis/harness-engineering/wiki/harness-engineering-self-improvement-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-08    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-harness-optimization:
+    path: cerebruh/wikis/harness-engineering/wiki/harness-optimization.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-08    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-inner-vs-outer-harness:
+    path: cerebruh/wikis/harness-engineering/wiki/inner-vs-outer-harness.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-09    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-joint-optimization-model-weights:
+    path: cerebruh/wikis/harness-engineering/wiki/joint-optimization-model-weights.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-08    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-local-pii-detection:
+    path: cerebruh/wikis/harness-engineering/wiki/local-pii-detection.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-05    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-log:
+    path: cerebruh/wikis/harness-engineering/wiki/log.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-08-21    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-meta-context-engineering:
+    path: cerebruh/wikis/harness-engineering/wiki/meta-context-engineering.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-08    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-meta-harness:
+    path: cerebruh/wikis/harness-engineering/wiki/meta-harness.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-08    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-pre-commitment-hypothesis-lock:
+    path: cerebruh/wikis/harness-engineering/wiki/pre-commitment-hypothesis-lock.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-06-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-production-agent-harness-article:
+    path: cerebruh/wikis/harness-engineering/wiki/production-agent-harness-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-06-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-progressive-disclosure:
+    path: cerebruh/wikis/harness-engineering/wiki/progressive-disclosure.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-09    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-recursive-self-improvement:
+    path: cerebruh/wikis/harness-engineering/wiki/recursive-self-improvement.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-08    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-risk-taxonomy-and-permissions:
+    path: cerebruh/wikis/harness-engineering/wiki/risk-taxonomy-and-permissions.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-06-03    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-rsi-bottlenecks:
+    path: cerebruh/wikis/harness-engineering/wiki/rsi-bottlenecks.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-08    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-scheduled-job-budget-failures:
+    path: cerebruh/wikis/harness-engineering/wiki/scheduled-job-budget-failures.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-security-evals-for-harnesses:
+    path: cerebruh/wikis/harness-engineering/wiki/security-evals-for-harnesses.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-06-03    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-self-harness:
+    path: cerebruh/wikis/harness-engineering/wiki/self-harness.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-08    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-self-improving-harness:
+    path: cerebruh/wikis/harness-engineering/wiki/self-improving-harness.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-06-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-self-taught-optimizer:
+    path: cerebruh/wikis/harness-engineering/wiki/self-taught-optimizer.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-08    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-stale-build-artifact-ver-4b02a7b:
+    path: cerebruh/wikis/harness-engineering/wiki/stale-build-artifact-verification.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-08-21    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-sync-mirror-hardlinks-and-sqlite:
+    path: cerebruh/wikis/harness-engineering/wiki/sync-mirror-hardlinks-and-sqlite.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-08-21    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-sync-mirror-hardlinks-co-e8021a0:
+    path: cerebruh/wikis/harness-engineering/wiki/sync-mirror-hardlinks-corrupt-sqlite-build-caches.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-08-21    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-three-layer-harness-architecture:
+    path: cerebruh/wikis/harness-engineering/wiki/three-layer-harness-architecture.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-09    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-three-layer-self-heal:
+    path: cerebruh/wikis/harness-engineering/wiki/three-layer-self-heal.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-06-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-time-series-diagnosis-of-4f66b31:
+    path: cerebruh/wikis/harness-engineering/wiki/time-series-diagnosis-of-transient-failures.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-08-21    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-home-network-security-wiki-external-vuln-scanning-saas:
+    path: cerebruh/wikis/home-network-security/wiki/external-vuln-scanning-saas.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/home-network-security
+    introduced: 2026-05-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-home-network-security-wiki-home-network-security-thread:
+    path: cerebruh/wikis/home-network-security/wiki/home-network-security-thread.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/home-network-security
+    introduced: 2026-05-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-home-network-security-wiki-home-pentest-toolkit:
+    path: cerebruh/wikis/home-network-security/wiki/home-pentest-toolkit.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/home-network-security
+    introduced: 2026-05-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-home-network-security-wiki-log:
+    path: cerebruh/wikis/home-network-security/wiki/log.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/home-network-security
+    introduced: 2026-08-14    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-home-network-security-wiki-new-device-detection:
+    path: cerebruh/wikis/home-network-security/wiki/new-device-detection.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/home-network-security
+    introduced: 2026-05-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-home-network-security-wiki-notification-channels:
+    path: cerebruh/wikis/home-network-security/wiki/notification-channels.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/home-network-security
+    introduced: 2026-05-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-home-network-security-wiki-scanning-residential-ips:
+    path: cerebruh/wikis/home-network-security/wiki/scanning-residential-ips.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/home-network-security
+    introduced: 2026-05-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-apple-foundation-models:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/apple-foundation-models.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-apple-silicon-local-ai-stack:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/apple-silicon-local-ai-stack.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-avspeechsynthesizer:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/avspeechsynthesizer.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-07-11    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-best-local-coding-llm-261a4a5:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/best-local-coding-llm-2026-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-06-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-cloud-gpu-rental:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/cloud-gpu-rental.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-06-29    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-comfyui:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/comfyui.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-06-03    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-dflash-local-claude-c-220c177:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/dflash-local-claude-code-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-06-21    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-dflash-speculative-decoding:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/dflash-speculative-decoding.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-06-21    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-elevenlabs:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/elevenlabs.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-07-13    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-hardware-sizing-apple-silicon:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/hardware-sizing-apple-silicon.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-hybrid-ai-architecture:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/hybrid-ai-architecture.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-ios-tts-research-jul-2026:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/ios-tts-research-jul-2026.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-07-11    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-kokoro-tts:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/kokoro-tts.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-07-11    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-kokoro-vs-elevenlabs-9e1a53f:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/kokoro-vs-elevenlabs-m4-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-07-13    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-lm-studio:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/lm-studio.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-local-ai-apple-silico-7e3a221:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/local-ai-apple-silicon-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-local-coding-agents:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/local-coding-agents.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-06-03    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-local-llm-hardware-20-8d2d007:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/local-llm-hardware-2026-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-06-29    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-log:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/log.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-08-14    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-m5-max-replaced-subsc-51a68c1:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/m5-max-replaced-subscriptions-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-06-03    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-memory-bandwidth-boun-d026c16:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/memory-bandwidth-bound-inference.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-06-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-mlx:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/mlx.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-multi-gpu-scaling-wit-84cafce:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/multi-gpu-scaling-without-nvlink.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-06-29    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-ollama-mlx:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/ollama-mlx.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-omlx:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/omlx.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-05-21    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-omlx-mlx-too-slow-article:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/omlx-mlx-too-slow-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-05-21    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-on-device-speech-to-text:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/on-device-speech-to-text.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-open-source-tts-licensing:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/open-source-tts-licensing.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-07-11    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-qwen-3-6:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/qwen-3-6.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-06-03    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-qwen-3-6-27b:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/qwen-3-6-27b.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-06-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-qwen3-coder-next:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/qwen3-coder-next.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-06-29    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-sherpa-onnx:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/sherpa-onnx.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-07-11    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-strix-halo:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/strix-halo.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-06-29    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-vllm-vs-llamacpp:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/vllm-vs-llamacpp.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-06-29    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-medical-records-wiki-accent-dermatology:
+    path: cerebruh/wikis/medical-records/wiki/accent-dermatology.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/medical-records
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-medical-records-wiki-dermatitis-unspecified:
+    path: cerebruh/wikis/medical-records/wiki/dermatitis-unspecified.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/medical-records
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-medical-records-wiki-doxycycline-hyclate:
+    path: cerebruh/wikis/medical-records/wiki/doxycycline-hyclate.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/medical-records
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-medical-records-wiki-ketoconazole:
+    path: cerebruh/wikis/medical-records/wiki/ketoconazole.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/medical-records
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-medical-records-wiki-log:
+    path: cerebruh/wikis/medical-records/wiki/log.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/medical-records
+    introduced: 2026-08-14    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-medical-records-wiki-patient-profile:
+    path: cerebruh/wikis/medical-records/wiki/patient-profile.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/medical-records
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-medical-records-wiki-pityrosporum-folliculitis:
+    path: cerebruh/wikis/medical-records/wiki/pityrosporum-folliculitis.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/medical-records
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-medical-records-wiki-pruritus-nos:
+    path: cerebruh/wikis/medical-records/wiki/pruritus-nos.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/medical-records
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-medical-records-wiki-rosacea:
+    path: cerebruh/wikis/medical-records/wiki/rosacea.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/medical-records
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-medical-records-wiki-visit-2025-07-31-derm:
+    path: cerebruh/wikis/medical-records/wiki/visit-2025-07-31-derm.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/medical-records
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-medical-records-wiki-visit-2026-05-20-derm:
+    path: cerebruh/wikis/medical-records/wiki/visit-2026-05-20-derm.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/medical-records
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-ai-workflows-wiki-claude-inbox-prompts:
+    path: cerebruh/wikis/personal-ai-workflows/wiki/claude-inbox-prompts.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-ai-workflows
+    introduced: 2026-06-29    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-ai-workflows-wiki-inbox-as-meeting:
+    path: cerebruh/wikis/personal-ai-workflows/wiki/inbox-as-meeting.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-ai-workflows
+    introduced: 2026-06-29    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-ai-workflows-wiki-inbox-as-meeting-article:
+    path: cerebruh/wikis/personal-ai-workflows/wiki/inbox-as-meeting-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-ai-workflows
+    introduced: 2026-06-29    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-ai-workflows-wiki-log:
+    path: cerebruh/wikis/personal-ai-workflows/wiki/log.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-ai-workflows
+    introduced: 2026-08-14    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-agentic-ai-wiki-patt-c76527c:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/agentic-ai-wiki-pattern-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-ai-knowledge-workflows:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/ai-knowledge-workflows.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-15    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-ai-second-brain-exec-ea5c2ac:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/ai-second-brain-executive-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-building-llm-wiki-article:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/building-llm-wiki-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-claude-memory-compiler:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/claude-memory-compiler.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-15    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-claude-obsidian-seco-17807c9:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/claude-obsidian-second-brain-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-claude-octopus:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/claude-octopus.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-06-22    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-custom-slash-commands:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/custom-slash-commands.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-karpathy-llm-wiki-article:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/karpathy-llm-wiki-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-15    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-karpathy-wiki-broke-bcce78a:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/karpathy-wiki-broke-rag-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-kepano-vault-template:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/kepano-vault-template.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-15    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-knowledge-entropy:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/knowledge-entropy.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-llm-wiki-implementations:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/llm-wiki-implementations.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-21    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-llm-wiki-pattern:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/llm-wiki-pattern.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-15    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-llm-wikizz:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/llm-wikizz.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-15    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-log:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/log.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-08-14    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-markdown-as-ai-interface:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/markdown-as-ai-interface.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-15    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-markdown-second-mind-article:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/markdown-second-mind-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-15    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-multi-agent-consensus-gate:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/multi-agent-consensus-gate.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-06-22    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-multi-agent-vault-oc-6081392:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/multi-agent-vault-octopus-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-06-22    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-obsidian-claude-code-setup:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/obsidian-claude-code-setup.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-15    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-obsidian-cli-knowled-1578bf2:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/obsidian-cli-knowledge-base-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-obsidian-knowledge-g-e478e2a:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/obsidian-knowledge-graph-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-15    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-obsidian-local-rest-api:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/obsidian-local-rest-api.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-06-22    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-obsidian-native-cli:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/obsidian-native-cli.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-okf-beyond-rag-article:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/okf-beyond-rag-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-07-10    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-open-knowledge-format:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/open-knowledge-format.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-07-10    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-para-and-second-brain:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/para-and-second-brain.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-rag-augmented-llm-wiki:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/rag-augmented-llm-wiki.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-rag-is-dead-llm-wiki-article:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/rag-is-dead-llm-wiki-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-21    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-vault-as-knowledge-graph:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/vault-as-knowledge-graph.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-15    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-wiki-core-operations:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/wiki-core-operations.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-adlc-ethos:
+    path: cerebruh/wikis/spec-driven-development/wiki/adlc-ethos.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-06-27    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-adlc-toolkit:
+    path: cerebruh/wikis/spec-driven-development/wiki/adlc-toolkit.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-06-27    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-adlc-toolkit-article:
+    path: cerebruh/wikis/spec-driven-development/wiki/adlc-toolkit-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-06-27    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-adlc-toolkit-v5-article:
+    path: cerebruh/wikis/spec-driven-development/wiki/adlc-toolkit-v5-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-06-30    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-adversary-skill:
+    path: cerebruh/wikis/spec-driven-development/wiki/adversary-skill.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-06-30    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-ai-dlc:
+    path: cerebruh/wikis/spec-driven-development/wiki/ai-dlc.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-07-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-ai-driven-sdlc-article:
+    path: cerebruh/wikis/spec-driven-development/wiki/ai-driven-sdlc-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-06-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-aidlc-claude-code-article:
+    path: cerebruh/wikis/spec-driven-development/wiki/aidlc-claude-code-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-07-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-artifact-drift:
+    path: cerebruh/wikis/spec-driven-development/wiki/artifact-drift.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-06-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-cdlc-sdd-article:
+    path: cerebruh/wikis/spec-driven-development/wiki/cdlc-sdd-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-context-architecture:
+    path: cerebruh/wikis/spec-driven-development/wiki/context-architecture.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-context-debt:
+    path: cerebruh/wikis/spec-driven-development/wiki/context-debt.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-context-development-30225d2:
+    path: cerebruh/wikis/spec-driven-development/wiki/context-development-lifecycle.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-ddd-spec-artifacts:
+    path: cerebruh/wikis/spec-driven-development/wiki/ddd-spec-artifacts.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-diagrams-as-code:
+    path: cerebruh/wikis/spec-driven-development/wiki/diagrams-as-code.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-five-specification-types:
+    path: cerebruh/wikis/spec-driven-development/wiki/five-specification-types.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-05-15    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-forge-adapter:
+    path: cerebruh/wikis/spec-driven-development/wiki/forge-adapter.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-06-30    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-four-phase-workflow:
+    path: cerebruh/wikis/spec-driven-development/wiki/four-phase-workflow.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-intent-drift:
+    path: cerebruh/wikis/spec-driven-development/wiki/intent-drift.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-kimi-delegation:
+    path: cerebruh/wikis/spec-driven-development/wiki/kimi-delegation.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-06-27    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-log:
+    path: cerebruh/wikis/spec-driven-development/wiki/log.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-08-14    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-multi-agent-orchestration:
+    path: cerebruh/wikis/spec-driven-development/wiki/multi-agent-orchestration.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-no-silver-bullet:
+    path: cerebruh/wikis/spec-driven-development/wiki/no-silver-bullet.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-06-27    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-persistence-artifacts:
+    path: cerebruh/wikis/spec-driven-development/wiki/persistence-artifacts.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-project-constitution:
+    path: cerebruh/wikis/spec-driven-development/wiki/project-constitution.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-05-15    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-prompt-agent-skill-model:
+    path: cerebruh/wikis/spec-driven-development/wiki/prompt-agent-skill-model.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-06-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-screen-context-artifact:
+    path: cerebruh/wikis/spec-driven-development/wiki/screen-context-artifact.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-06-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-sdd-ddd-article:
+    path: cerebruh/wikis/spec-driven-development/wiki/sdd-ddd-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-sdd-definitive-guide-article:
+    path: cerebruh/wikis/spec-driven-development/wiki/sdd-definitive-guide-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-sdd-framework-landscape:
+    path: cerebruh/wikis/spec-driven-development/wiki/sdd-framework-landscape.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-06-27    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-sdd-reality-check:
+    path: cerebruh/wikis/spec-driven-development/wiki/sdd-reality-check.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-sdd-role-playbooks:
+    path: cerebruh/wikis/spec-driven-development/wiki/sdd-role-playbooks.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-sdd-silver-bullet-cr-81888fc:
+    path: cerebruh/wikis/spec-driven-development/wiki/sdd-silver-bullet-critique-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-06-27    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-sdd-spec-survives-co-cd511bc:
+    path: cerebruh/wikis/spec-driven-development/wiki/sdd-spec-survives-codegen-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-05-15    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-sdlc-artifact-pipeline:
+    path: cerebruh/wikis/spec-driven-development/wiki/sdlc-artifact-pipeline.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-06-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-seven-information-layers:
+    path: cerebruh/wikis/spec-driven-development/wiki/seven-information-layers.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-05-15    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-spec-driven-ai-frame-e3d4b4a:
+    path: cerebruh/wikis/spec-driven-development/wiki/spec-driven-ai-frameworks-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-06-27    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-spec-driven-development:
+    path: cerebruh/wikis/spec-driven-development/wiki/spec-driven-development.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-05-15    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-spec-lifecycle:
+    path: cerebruh/wikis/spec-driven-development/wiki/spec-lifecycle.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-05-15    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-raw-ai-dlc-what-a-real-ai-d-7d261c3:
+    path: "cerebruh/wikis/ai-native-engineering/raw/AI DLC What a Real AI-Driven Software Lifecycle Actually Looks Like.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-07-10    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-raw-beyond-spec-driven-deve-9dfa348:
+    path: "cerebruh/wikis/ai-native-engineering/raw/Beyond Spec-Driven Development_ The Agentic Engineering Playbook That’s Replacing How We Build Software.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-raw-blueprint-for-an-ai-pla-ebb3b3d:
+    path: "cerebruh/wikis/ai-native-engineering/raw/Blueprint for an AI Platform Team in the Agentic Era_ Orchestration, Trust, and the Operating Model Enterprises Actually Need.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-raw-running-an-ai-native-en-756517b:
+    path: "cerebruh/wikis/ai-native-engineering/raw/Running an AI-native engineering org.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-raw-traditional-pm-assumpti-f67d181:
+    path: "cerebruh/wikis/ai-native-engineering/raw/Traditional PM Assumptions Are Dead_ How Anthropic’s Product Managers Work in the AI Era.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-21    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-raw-ways-of-working-for-ai-213f83e:
+    path: "cerebruh/wikis/ai-native-engineering/raw/Ways of Working for AI-Native Engineering Teams, Part 1_ When the Handoff Chain Collapses.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/ai-native-engineering
+    introduced: 2026-06-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-raw-a-single-claude-md-file-a3b4275:
+    path: "cerebruh/wikis/claude-code-ecosystem/raw/A Single CLAUDE.md File Went Viral. The Reason Is Embarrassingly Simple..md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-raw-anthropic-ships-17-skil-d71339b:
+    path: "cerebruh/wikis/claude-code-ecosystem/raw/Anthropic Ships 17 Skills for Code and 11 Plugins for Cowork. Master Both Stacks Differently in 2026..md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-06-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-raw-best-office-claude-skil-d2a66ef:
+    path: "cerebruh/wikis/claude-code-ecosystem/raw/Best Office Claude Skills I use in 2026.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-21    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-raw-boris-s-claude-code-wor-48b89f6:
+    path: "cerebruh/wikis/claude-code-ecosystem/raw/Boris’s Claude Code Workflow_ What I’d Do Differently.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-28    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-raw-claude-code-best-practi-8c843e3:
+    path: "cerebruh/wikis/claude-code-ecosystem/raw/Claude Code Best Practices_ 12 Patterns Agentic Engineers Use.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-raw-code-is-not-cheap-how-t-5c7bf42:
+    path: "cerebruh/wikis/claude-code-ecosystem/raw/Code Is Not Cheap_ How to Multiply Your AI’s Output With Software Fundamentals.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-25    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-raw-dario-amodei-says-90-of-b95b616:
+    path: "cerebruh/wikis/claude-code-ecosystem/raw/Dario Amodei Says 90% of Anthropic’s Code Is Now Written by Claude. I Copied Their Exact 4-Part Setup..md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-06-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-raw-graphify-navigate-our-c-db6fa97:
+    path: "cerebruh/wikis/claude-code-ecosystem/raw/Graphify_ Navigate Our Codebase by Structure, Not Similarity.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-06-26    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-raw-gstack-is-not-a-dev-too-96f4caa:
+    path: "cerebruh/wikis/claude-code-ecosystem/raw/gstack is not a dev tool. it’s Garry Tan’s brain on AI.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-22    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-raw-how-anthropic-runs-larg-6b8c6dc:
+    path: "cerebruh/wikis/claude-code-ecosystem/raw/How Anthropic runs large-scale code migrations with Claude Code.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-07-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-raw-how-graphify-makes-al-c-3fbe2a0:
+    path: "cerebruh/wikis/claude-code-ecosystem/raw/How Graphify Makes_Al Coding Smarter (And Cheaper).md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-07-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-raw-how-to-get-the-most-out-56d8681:
+    path: "cerebruh/wikis/claude-code-ecosystem/raw/How to Get the Most Out of Claude Code_ The Complete Ecosystem with Obsidian, GitNexus, Code Wiki, and More.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-raw-how-to-use-lat-md-turn-7baef4f:
+    path: "cerebruh/wikis/claude-code-ecosystem/raw/How to Use lat.md_ Turn Any Folder Into a Validated Knowledge Graph.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-21    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-raw-karpathy-s-4-claude-md-3059957:
+    path: "cerebruh/wikis/claude-code-ecosystem/raw/Karpathy’s 4 CLAUDE.md Rules Cut Mistakes by 30%. I added 4 more to further cut it down to less than 5..md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-05-22    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-raw-last30days-skill-operat-6b287b7:
+    path: cerebruh/wikis/claude-code-ecosystem/raw/last30days-skill-operation-and-security.md
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-06-28    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-claude-code-ecosystem-raw-the-agentic-ai-engineer-9f9a484:
+    path: "cerebruh/wikis/claude-code-ecosystem/raw/The Agentic AI Engineer Roadmap for 2026_ Skills, Stack, and Order.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/claude-code-ecosystem
+    introduced: 2026-06-16    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-codex-ecosystem-raw-codex-maxxing-jason-liu:
+    path: "cerebruh/wikis/codex-ecosystem/raw/Codex-maxxing - Jason Liu.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/codex-ecosystem
+    introduced: 2026-05-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-fixed-income-investing-raw-municipal-bond-funds-and-etfs:
+    path: cerebruh/wikis/fixed-income-investing/raw/municipal-bond-funds-and-etfs.md
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/fixed-income-investing
+    introduced: 2026-07-26    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-raw-ai-agent-best-practices-p-455acf6:
+    path: "cerebruh/wikis/harness-engineering/raw/AI Agent Best Practices_ Production-Ready Harness Engineering (2026 Guide).md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-06-03    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-raw-building-a-production-age-7af9d05:
+    path: "cerebruh/wikis/harness-engineering/raw/Building a Production Agent Harness_ Turning Claude Code Into a Multi-Agent Engineering Pipeline.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-06-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-raw-claude-subscription-limit-d5b11a6:
+    path: cerebruh/wikis/harness-engineering/raw/claude-subscription-limits-headless-jobs.md
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-19    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-raw-context-engineering-is-th-a173143:
+    path: "cerebruh/wikis/harness-engineering/raw/Context Engineering Is the New Moat.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-06-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-raw-guardrail-dlp-proxy-in-fr-673e4f5:
+    path: cerebruh/wikis/harness-engineering/raw/guardrail-dlp-proxy-in-front-of-claude.md
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-raw-harness-engineering-for-a-a9c4570:
+    path: "cerebruh/wikis/harness-engineering/raw/Harness Engineering for AI Agents in 2026.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-09    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-raw-harness-engineering-for-s-2d4cb99:
+    path: "cerebruh/wikis/harness-engineering/raw/Harness Engineering for Self-Improvement.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-07-08    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-raw-how-to-build-a-harness-en-2dd1af7:
+    path: "cerebruh/wikis/harness-engineering/raw/How to build a Harness Engineer Better than 99% of People.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-06-03    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-raw-sync-mirror-hardlinks-cor-3b7093c:
+    path: cerebruh/wikis/harness-engineering/raw/sync-mirror-hardlinks-corrupt-sqlite-build-caches.md
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-08-21    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-home-network-security-raw-home-network-security-t-a287551:
+    path: cerebruh/wikis/home-network-security/raw/home-network-security-thread-2026-05-19.md
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/home-network-security
+    introduced: 2026-07-08    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-raw-i-cancelled-chatgpt-cu-df9b71e:
+    path: "cerebruh/wikis/local-ai-apple-silicon/raw/I Cancelled ChatGPT, Cursor, and Midjourney This Week — My MacBook Pro M5 Max Quietly Replaced All Three.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-06-03    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-raw-i-tried-running-ai-age-1c919f9:
+    path: "cerebruh/wikis/local-ai-apple-silicon/raw/I Tried Running AI Agents on My MacBook. MLX Was Too Slow. Then I Found oMLX.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-05-21    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-raw-i-went-looking-for-the-2208572:
+    path: "cerebruh/wikis/local-ai-apple-silicon/raw/I Went Looking for the Best Local LLM for Coding in 2026..md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-06-19    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-raw-ios-text-to-speech-voi-05233a7:
+    path: cerebruh/wikis/local-ai-apple-silicon/raw/ios-text-to-speech-voice-quality-avspeechsynthesizer-on-device-tts-raw-v3.md
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-07-11    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-raw-run-claude-code-locall-3fb62b6:
+    path: "cerebruh/wikis/local-ai-apple-silicon/raw/Run Claude Code Locally on a Mac_ 65 tok_s with a 4-bit Qwen3.6–27B and DFlash Speculative Decoding.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-06-21    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-raw-the-local-ai-stack-for-5cc87e8:
+    path: "cerebruh/wikis/local-ai-apple-silicon/raw/The Local AI Stack for Apple Silicon, Now With Superpowers..md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-raw-we-replaced-elevenlabs-4f93a37:
+    path: "cerebruh/wikis/local-ai-apple-silicon/raw/We replaced ElevenLabs with Kokoro TTS on an M4 GPU — latency fell to 100 ms and TTS cost nearly disappeared.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-07-13    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-raw-what-is-the-best-hardw-8fbf4df:
+    path: "cerebruh/wikis/local-ai-apple-silicon/raw/What Is The Best Hardware for Running Local LLMs in 2026_ Mac vs 5090 vs Cloud.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-06-29    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-medical-records-raw-dermatology-2025-07-31:
+    path: "cerebruh/wikis/medical-records/raw/Dermatology - 2025-07-31.pdf"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/medical-records
+    introduced: 2026-05-25    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-medical-records-raw-dermatology-2026-05-20:
+    path: "cerebruh/wikis/medical-records/raw/Dermatology - 2026-05-20.pdf"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/medical-records
+    introduced: 2026-05-25    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-ai-workflows-raw-i-stopped-checking-emai-dde40df:
+    path: "cerebruh/wikis/personal-ai-workflows/raw/I Stopped Checking Emails and Kept Claude. Here’s How I Read My Inbox Every Morning..md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/personal-ai-workflows
+    introduced: 2026-06-29    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-raw-agentic-ai-in-action-c704c22:
+    path: "cerebruh/wikis/personal-knowledge-mgmt/raw/Agentic AI in Action — Part 18 -Compounding Knowledge With LLMs. Karpathy’s Wiki Pattern in Action.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-raw-beyond-rag-how-google-074fb4f:
+    path: "cerebruh/wikis/personal-knowledge-mgmt/raw/Beyond RAG_ How Google’s Open Knowledge Format (OKF) is Replacing the Vector Database (1).md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-07-10    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-raw-building-an-llm-wiki-28bf244:
+    path: "cerebruh/wikis/personal-knowledge-mgmt/raw/Building an LLM Wiki with Claude Code and Obsidian.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-raw-claude-code-obsidian-58c53a8:
+    path: "cerebruh/wikis/personal-knowledge-mgmt/raw/Claude Code + Obsidian_ How I Built an AI-Powered Second Brain.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-raw-how-i-built-an-ai-sec-10731f4:
+    path: "cerebruh/wikis/personal-knowledge-mgmt/raw/How I Built an AI Second Brain Using Claude Code and Obsidian.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-raw-karpathy-s-obsidian-w-00890aa:
+    path: "cerebruh/wikis/personal-knowledge-mgmt/raw/Karpathy’s Obsidian Wiki Broke at 100 Articles — RAG Fixed It.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-raw-local-knowledge-bases-f6f904e:
+    path: "cerebruh/wikis/personal-knowledge-mgmt/raw/Local Knowledge Bases with Obsidian CLI..md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-raw-my-brain-is-a-markdow-68a31cd:
+    path: "cerebruh/wikis/personal-knowledge-mgmt/raw/My Brain Is a Markdown File_ How I Use Obsidian + Claude as a Second Mind.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-15    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-raw-rag-is-dead-llm-wiki-59674ea:
+    path: "cerebruh/wikis/personal-knowledge-mgmt/raw/RAG Is Dead. LLM Wiki — Andrej Karpathy’s Idea — Is What Comes Next.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-21    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-raw-what-is-andrej-karpat-09333c3:
+    path: "cerebruh/wikis/personal-knowledge-mgmt/raw/What Is Andrej Karpathy’s LLM Wiki — And How Can You Extend It_.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-15    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-raw-your-obsidian-vault-i-f6c806e:
+    path: "cerebruh/wikis/personal-knowledge-mgmt/raw/Your Obsidian Vault Is a Knowledge Graph. Here’s How to Make It Think (quickly)..md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-05-15    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-raw-your-vault-as-a-share-67d4a46:
+    path: "cerebruh/wikis/personal-knowledge-mgmt/raw/Your Vault as a Shared Brain — Obsidian_ Multi-Agent with Claude Octopus, Codex, and Gemini.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-06-22    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-raw-ai-dlc-claude-code-th-c8fba26:
+    path: "cerebruh/wikis/spec-driven-development/raw/AI-DLC + Claude Code _ The End Of Vibe Coding, A Complete Hands-On Guide.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-07-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-raw-ai-driven-sdlc-beyond-0b50275:
+    path: "cerebruh/wikis/spec-driven-development/raw/AI-Driven SDLC_ Beyond Code Generation to Delivery Orchestration.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-06-16    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-raw-managing-agent-contex-b857a63:
+    path: "cerebruh/wikis/spec-driven-development/raw/Managing Agent Context at Every Stage of the SDLC — CDLC + SDD.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-raw-sdd-designing-a-spec-95ea557:
+    path: "cerebruh/wikis/spec-driven-development/raw/SDD — Designing a Spec That Survives Code Generation — Spec-First — Spec-Driven Development.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-05-15    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-raw-spec-driven-ai-bmad-s-7a0c906:
+    path: "cerebruh/wikis/spec-driven-development/raw/Spec-Driven AI _ BMAD, SpecKit, GSD & Superpowers.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-06-27    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-raw-spec-driven-developme-5316a5f:
+    path: "cerebruh/wikis/spec-driven-development/raw/Spec-Driven Development with AI Coding Agents_ The Definitive Guide.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-05-17    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-raw-the-adlc-toolkit-v4-9-0700f86:
+    path: "cerebruh/wikis/spec-driven-development/raw/The adlc-toolkit v4.9_ Development Infrastructure for Claude Code.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-06-27    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-raw-the-adlc-toolkit-v5-0-f610582:
+    path: "cerebruh/wikis/spec-driven-development/raw/The adlc-toolkit v5.0_ Works Anywhere.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-06-30    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-raw-why-specification-dri-72ea028:
+    path: "cerebruh/wikis/spec-driven-development/raw/Why Specification-Driven Development (SDD) is Not a Silver Bullet for AI-Assisted SDLC.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-06-27    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-spec-driven-development-raw-your-ai-sdd-specifica-9bda8b4:
+    path: "cerebruh/wikis/spec-driven-development/raw/Your AI SDD Specification Isn’t Incomplete — It Just Lacks DDD — Spec-Driven Development.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/spec-driven-development
+    introduced: 2026-05-18    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  c4po-mcp:
+    path: c4po/MCP.md
+    type: policy_registry
+    status: draft
+    owner: c4po
+    scope: c4po
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-05-24    # first git add
+    load_mode: explicit
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  cerebruh-auditing:
+    path: cerebruh/AUDITING.md
+    type: policy_registry
+    status: draft
+    owner: cerebruh
+    scope: cerebruh
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-08-01    # first git add
+    load_mode: explicit
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  cerebruh-ingesting:
+    path: cerebruh/INGESTING.md
+    type: policy_registry
+    status: draft
+    owner: cerebruh
+    scope: cerebruh
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-08-01    # first git add
+    load_mode: explicit
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  lint:
+    path: LINT.md
+    type: policy_registry
+    status: draft
+    owner: workspace
+    scope: workspace
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-08-01    # first git add
+    load_mode: explicit
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  memory-inventory:
+    path: MEMORY-INVENTORY.yaml
+    type: policy_registry
+    status: draft
+    owner: workspace
+    scope: workspace
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-08-26    # first git add
+    load_mode: explicit
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  memory-inventory-schema:
+    path: MEMORY-INVENTORY.schema.json
+    type: policy_registry
+    status: draft
+    owner: workspace
+    scope: workspace
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-08-26    # first git add
+    load_mode: explicit
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  mrs-beast-user:
+    path: mrs-beast/USER.md
+    type: policy_registry
+    status: draft
+    owner: mrs-beast
+    scope: mrs-beast
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-05-23    # first git add
+    load_mode: explicit
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  quickstart:
+    path: QUICKSTART.md
+    type: policy_registry
+    status: draft
+    owner: workspace
+    scope: workspace
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-08-16    # first git add
+    load_mode: explicit
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  readme:
+    path: README.md
+    type: policy_registry
+    status: draft
+    owner: workspace
+    scope: workspace
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-05-24    # first git add
+    load_mode: explicit
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  security:
+    path: SECURITY.md
+    type: policy_registry
+    status: draft
+    owner: workspace
+    scope: workspace
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-05-23    # first git add
+    load_mode: explicit
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  source-documents:
+    path: SOURCE-DOCUMENTS.md
+    type: policy_registry
+    status: draft
+    owner: workspace
+    scope: workspace
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-08-01    # first git add
+    load_mode: explicit
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  jony-vibe-claude-skills-image-gen-workflow-skill:
+    path: jony-vibe/.claude/skills/image-gen-workflow/SKILL.md
+    type: procedural_skill
+    status: draft
+    owner: jony-vibe
+    scope: jony-vibe
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-07-03    # first git add
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  warren-bot-fett-claude-skills-add-ai-universe-ticker-skill:
+    path: warren-bot-fett/.claude/skills/add-ai-universe-ticker/SKILL.md
+    type: procedural_skill
+    status: draft
+    owner: warren-bot-fett
+    scope: warren-bot-fett
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-06-21    # first git add
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  cerebruh-wikis-ai-native-engineering-wiki-index:
+    path: cerebruh/wikis/ai-native-engineering/wiki/index.md
+    type: retrieval_index
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/ai-native-engineering
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-06-04    # frontmatter created:
+    load_mode: retrieved
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  cerebruh-wikis-codex-ecosystem-wiki-index:
+    path: cerebruh/wikis/codex-ecosystem/wiki/index.md
+    type: retrieval_index
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/codex-ecosystem
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-05-19    # frontmatter created:
+    load_mode: retrieved
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  cerebruh-wikis-fixed-income-investing-wiki-index:
+    path: cerebruh/wikis/fixed-income-investing/wiki/index.md
+    type: retrieval_index
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/fixed-income-investing
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-07-26    # frontmatter created:
+    load_mode: retrieved
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-index:
+    path: cerebruh/wikis/harness-engineering/wiki/index.md
+    type: retrieval_index
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/harness-engineering
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-05-17    # frontmatter created:
+    load_mode: retrieved
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  cerebruh-wikis-home-network-security-wiki-index:
+    path: cerebruh/wikis/home-network-security/wiki/index.md
+    type: retrieval_index
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/home-network-security
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-05-19    # frontmatter created:
+    load_mode: retrieved
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  cerebruh-wikis-index:
+    path: cerebruh/wikis/index.md
+    type: retrieval_index
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/index.md
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-05-15    # frontmatter created:
+    load_mode: retrieved
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-index:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/index.md
+    type: retrieval_index
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-05-18    # frontmatter created:
+    load_mode: retrieved
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  cerebruh-wikis-medical-records-wiki-index:
+    path: cerebruh/wikis/medical-records/wiki/index.md
+    type: retrieval_index
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/medical-records
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-05-25    # frontmatter created:
+    load_mode: retrieved
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  cerebruh-wikis-personal-ai-workflows-wiki-index:
+    path: cerebruh/wikis/personal-ai-workflows/wiki/index.md
+    type: retrieval_index
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/personal-ai-workflows
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-06-29    # frontmatter created:
+    load_mode: retrieved
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-index:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/index.md
+    type: retrieval_index
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-05-15    # frontmatter created:
+    load_mode: retrieved
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  cerebruh-wikis-spec-driven-development-wiki-index:
+    path: cerebruh/wikis/spec-driven-development/wiki/index.md
+    type: retrieval_index
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/spec-driven-development
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-05-15    # frontmatter created:
+    load_mode: retrieved
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  c4po-claude-scheduled-c4po-backlog-burndown:
+    path: c4po/.claude/scheduled/c4po-backlog-burndown.prompt
+    type: scheduled_prompt
+    status: draft
+    owner: c4po
+    scope: c4po
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-07-05    # first git add
+    load_mode: scheduled
+    consumers: [claude-code, launchd, run-scheduled-task.sh]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  c4po-claude-scheduled-c4po-lint-audit-monthly:
+    path: c4po/.claude/scheduled/c4po-lint-audit-monthly.prompt
+    type: scheduled_prompt
+    status: draft
+    owner: c4po
+    scope: c4po
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-05-24    # first git add
+    load_mode: scheduled
+    consumers: [claude-code, launchd, run-scheduled-task.sh]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  c4po-claude-scheduled-c4po-privacy-audit-monthly:
+    path: c4po/.claude/scheduled/c4po-privacy-audit-monthly.prompt
+    type: scheduled_prompt
+    status: draft
+    owner: c4po
+    scope: c4po
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-08-02    # first git add
+    load_mode: scheduled
+    consumers: [claude-code, launchd, run-scheduled-task.sh]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  c4po-claude-scheduled-c4po-retro:
+    path: c4po/.claude/scheduled/c4po-retro.prompt
+    type: scheduled_prompt
+    status: draft
+    owner: c4po
+    scope: c4po
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-08-01    # first git add
+    load_mode: scheduled
+    consumers: [claude-code, launchd, run-scheduled-task.sh]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  c4po-claude-scheduled-c4po-security-audit:
+    path: c4po/.claude/scheduled/c4po-security-audit.prompt
+    type: scheduled_prompt
+    status: draft
+    owner: c4po
+    scope: c4po
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-05-23    # first git add
+    load_mode: scheduled
+    consumers: [claude-code, launchd, run-scheduled-task.sh]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  mrs-beast-claude-scheduled-mrs-beast-social-media-drafts:
+    path: mrs-beast/.claude/scheduled/mrs-beast-social-media-drafts.prompt
+    type: scheduled_prompt
+    status: draft
+    owner: mrs-beast
+    scope: mrs-beast
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-05-23    # first git add
+    load_mode: scheduled
+    consumers: [claude-code, launchd, run-scheduled-task.sh]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  norm-claude-scheduled-norm-q4-withholding-recheck:
+    path: norm/.claude/scheduled/norm-q4-withholding-recheck.prompt
+    type: scheduled_prompt
+    status: draft
+    owner: norm
+    scope: norm
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-08-16    # first git add
+    load_mode: scheduled
+    consumers: [claude-code, launchd, run-scheduled-task.sh]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  warren-bot-fett-claude-scheduled-warren-bot-fett-ai-sleeve-monthly:
+    path: warren-bot-fett/.claude/scheduled/warren-bot-fett-ai-sleeve-monthly.prompt
+    type: scheduled_prompt
+    status: draft
+    owner: warren-bot-fett
+    scope: warren-bot-fett
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-05-23    # first git add
+    load_mode: scheduled
+    consumers: [claude-code, launchd, run-scheduled-task.sh]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  warren-bot-fett-claude-scheduled-warren-bot-fett-daily-market-scan:
+    path: warren-bot-fett/.claude/scheduled/warren-bot-fett-daily-market-scan.prompt
+    type: scheduled_prompt
+    status: draft
+    owner: warren-bot-fett
+    scope: warren-bot-fett
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-05-23    # first git add
+    load_mode: scheduled
+    consumers: [claude-code, launchd, run-scheduled-task.sh]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
+
+  c4po-claude-rules-last30days-x-cookie-health:
+    path: c4po/.claude/rules/last30days-x-cookie-health.md
+    type: scoped_rule
+    status: draft
+    owner: c4po
+    scope: c4po
+    introduced: 2026-08-01    # first git add
+    consumers: [claude-code, codex]
+    review:
+      last_reviewed: null
+    related: []
+
+  claude-rules-backlog-write-safety:
+    path: ".claude/rules/backlog-write-safety.md"
+    type: scoped_rule
+    status: draft
+    scope: workspace
+    introduced: 2026-08-15    # first git add
+    consumers: [claude-code, codex]
+    review:
+      last_reviewed: null
+    related: []
+
+  claude-rules-readonly-scheduled-tasks:
+    path: ".claude/rules/readonly-scheduled-tasks.md"
+    type: scoped_rule
+    status: draft
+    scope: workspace
+    introduced: 2026-08-21    # first git add
+    consumers: [claude-code, codex]
+    review:
+      last_reviewed: null
+    related: []
+
+  claude-rules-tracked-agent-files-are-public:
+    path: ".claude/rules/tracked-agent-files-are-public.md"
+    type: scoped_rule
+    status: draft
+    scope: workspace
+    introduced: 2026-08-21    # first git add
+    consumers: [claude-code, codex]
+    review:
+      last_reviewed: null
+    related: []
+
+  warren-bot-fett-claude-rules-market-scan-execution-state:
+    path: warren-bot-fett/.claude/rules/market-scan-execution-state.md
+    type: scoped_rule
+    status: draft
+    owner: warren-bot-fett
+    scope: warren-bot-fett
+    introduced: 2026-08-08    # first git add
+    consumers: [claude-code, codex]
+    review:
+      last_reviewed: null
+    related: []
+
+  warren-bot-fett-claude-rules-yahoo-chart-daily-return:
+    path: warren-bot-fett/.claude/rules/yahoo-chart-daily-return.md
+    type: scoped_rule
+    status: draft
+    owner: warren-bot-fett
+    scope: warren-bot-fett
+    introduced: 2026-08-01    # first git add
+    consumers: [claude-code, codex]
+    review:
+      last_reviewed: null
+    related: []

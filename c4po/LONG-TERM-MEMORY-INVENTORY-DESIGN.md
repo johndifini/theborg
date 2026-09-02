@@ -99,6 +99,38 @@ artifacts:
     related: [lint-rules, cerebruh-routing]
 ```
 
+### Record status: registered is not reviewed
+
+A record additionally carries an optional `status` of `draft` or `reviewed`.
+It describes the state of the **record**, not of the artifact, and it exists so
+that inventory coverage can reach 100% without anyone being able to read that as
+"every memory in The Borg has been justified".
+
+- `draft` marks a stub emitted by `build-memory-inventory.py bootstrap`. Its
+  identity, ownership, canonicality, and context cost were read off the tree; no
+  human judgment has been applied. The validator therefore exempts it from the
+  six **human judgment fields** — `rationale`, `provenance`, `risk`,
+  `success_signals`, `retirement_triggers`, `remediation_policy` — each of which
+  is a statement about consequence and intent that no scanner can derive.
+- Absent `status` means `reviewed`, which is the strict state. The default has
+  to be strict in both directions: every record written before drafts existed
+  was hand-authored and complete, and a record must not be able to become
+  unreviewed by dropping a field.
+- A `draft` may not carry `review.last_reviewed`. A stub has not been reviewed,
+  and a date there would be a false claim that survives into the review ledger.
+- **Promotion gate.** Once a record declares a rationale, retirement triggers,
+  and a remediation policy, it is no longer a stub: the validator requires it to
+  be promoted to `reviewed`. This is what stops a half-filled record from
+  sitting in the exempt tier indefinitely.
+- `status` is deliberately **not** defaultable by class. Every other field in
+  the `defaults:` block is a concision device; a class-wide `status: reviewed`
+  would let one line declare several hundred artifacts reviewed at once, which
+  is precisely the claim this flag exists to make impossible.
+- `validate --require-reviewed` is the machine-checkable gate. It fails while
+  any draft remains and names them, so the distinction is enforceable by a job
+  rather than left to a reader's attention. Plain `validate` reports the split
+  — reviewed, draft, and percent reviewed — on every run, including passing ones.
+
 ### Required declared fields
 
 - `id`: stable, path-independent identifier (the map key).
@@ -128,6 +160,13 @@ artifacts:
   archival, or removal.
 - `remediation_policy`: permission tier defined below.
 - `related`: known dependencies, overlaps, replacements, or superseded items.
+
+The six fields marked above as human judgment — `rationale`, `provenance`,
+`risk`, `success_signals`, `retirement_triggers`, `remediation_policy` — are
+required only of a `reviewed` record. Everything else is required of every
+record, draft included, because it is mechanically derivable and a record that
+cannot state its own path, class, owner, and load mode is not an inventory entry
+at all.
 
 ### Computed snapshot fields
 
@@ -297,6 +336,7 @@ no health finding exists, no review is overdue, and every reviewed assumption is
    resolve exclusions and canonical/mirror pairs before enforcing coverage.
 3. Bootstrap records mechanically, then require a human-quality rationale,
    retirement trigger, and remediation policy before marking each record valid.
+   See **Step 3 in detail** below.
 4. Add the memory-inventory coverage rule to `LINT.md` only after the initial
    inventory reaches 100%, avoiding a knowingly red audit during migration.
 5. Refactor the assumptions prompt into the ten-stage orchestrator while keeping
@@ -305,6 +345,68 @@ no health finding exists, no review is overdue, and every reviewed assumption is
    tracked snapshot, logs, or email.
 7. Enable `--apply` only after deterministic actions have fixtures, idempotence
    tests, diff checks, and rollback verification.
+
+### Step 3 in detail
+
+Step 2 measured the gap: 542 artifacts on disk against 9 declared records. Step 3
+closes it mechanically, without pretending the resulting records are reviewed.
+
+**What bootstrap derives, and what it refuses to.** `build-memory-inventory.py
+bootstrap` emits one record per discovered-but-unregistered artifact, populating
+only what the tree determines: path and path root, artifact class, canonicality
+and the canonical it derives from, owner and scope from the directory layout,
+visibility, how it enters context, and the date it first appeared. `introduced`
+comes from YAML frontmatter `created:` where a page carries one, else the
+earliest `git log --diff-filter=A` date, else file mtime — and each record
+records in a trailing comment which of the three produced it, so a reviewer can
+tell a history fact from a filesystem guess. Nothing else is written. Inventing
+plausible-looking rationales would destroy the distinction `status` exists to
+preserve, and a scanner has no access to the intent that a rationale states.
+
+**Every emitted record is `status: draft`,** the machine-checkable marking
+defined under *Record status* above. Coverage and review are printed as separate
+numbers on every `validate` run, and `--require-reviewed` fails while any draft
+remains, so 100% registration cannot be mistaken for 100% review.
+
+**Routing is by visibility, and it is one-way.** A public artifact's record goes
+to the tracked `MEMORY-INVENTORY.yaml`; a private artifact's record goes to the
+gitignored `<owner>/.private/memory-inventory.yaml` overlay and never to a
+tracked file — not its path, not its rationale, not a redacted stand-in. This is
+design principle 5 and it is verified rather than asserted: the test suite
+discovers this workspace's private artifacts and checks each path's absence from
+the tracked registry. Workspace-scoped private records — shared Auto Memory,
+which belongs to no single agent — go to C4PO's overlay, because C4PO owns this
+inventory and `AGENTS.md` places durable confidential material under an owning
+agent's `.private/`, not at the workspace root. Overlays are created `0600` and
+carry no `defaults:` block, so a class-wide policy can never end up written down
+only in a gitignored file.
+
+**Concision without a second source of truth.** A drafted field whose value the
+registry's own class `defaults:` block already supplies is omitted from the
+emitted record; `apply_defaults` puts the identical value back before
+validation. This applies only to tracked records, for the overlay reason above.
+
+**Two safety properties the writer must have.** The tool ships its own YAML
+reader, so it also ships a matching writer, and the two are checked against each
+other: every file bootstrap is about to write is parsed back and compared record
+by record before anything touches disk, and the writer raises on any shape it
+cannot express rather than stringifying it. The whole would-be registry —
+tracked file and every overlay together, so cross-file `canonical_ref`s resolve
+— is validated in memory first. A registry that would not validate never exists
+on disk, even momentarily. Bootstrap is a dry run unless `--write` is passed,
+and it is idempotent: a second run finds nothing to do.
+
+**What bootstrap will not guess.** An orphaned generated bridge or wrapper —
+one whose canonical source is gone — has no honest mechanical record, because
+`canonical_ref` is required precisely so that a derived artifact without one
+reads as a finding rather than as a memory. Whether to restore the source or
+delete the bridge is a judgment call. Those artifacts are reported by path with
+a reason and left `UNREGISTERED`, so coverage stays honest about them.
+
+The remaining half of step 3 is human and is not code: promoting each draft to
+`reviewed` by supplying the six judgment fields. It proceeds by cohort, and step
+4's `LINT.md` coverage rule stays unwritten until it finishes, per the rule
+against running a knowingly red audit during migration.
 
 ## Acceptance criteria
 

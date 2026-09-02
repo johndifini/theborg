@@ -53,3 +53,27 @@ artifacts:
       - "Its content stops being sensitive and can move to the tracked registry."
     remediation_policy: approval_required
     related: []
+
+  # A bootstrapped stub, the shape `build-memory-inventory.py bootstrap` writes
+  # for a private artifact. `status: draft` means the record is REGISTERED, NOT
+  # REVIEWED: its identity, ownership, canonicality, and context cost were read
+  # off the tree and no human judgment has been applied, so the validator exempts
+  # it from rationale, provenance, risk, success_signals, retirement_triggers,
+  # and remediation_policy. Promote it by supplying those six and setting
+  # `status: reviewed`; `validate --require-reviewed` fails while any remain.
+  example-bootstrapped-draft:
+    path: .private/example-bootstrapped-note.md
+    type: private_memory
+    status: draft
+    owner: c4po
+    scope: c4po
+    visibility: private
+    canonicality: canonical
+    introduced: 2026-08-26    # file mtime (untracked; not a history fact)
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
