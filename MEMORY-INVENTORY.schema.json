@@ -76,6 +76,10 @@
       "description": "Consequence of this memory being stale or wrong, not its confidentiality. A `critical` artifact may override its class review cadence with a shorter one.",
       "enum": ["low", "medium", "high", "critical"]
     },
+    "status": {
+      "description": "Review state of the RECORD, not of the artifact. `draft` marks a stub emitted by `build-memory-inventory.py bootstrap`: identity, ownership, canonicality, and context cost are derived mechanically and no human judgment has been applied, so the validator exempts it from rationale, provenance, risk, success_signals, retirement_triggers, and remediation_policy. Absent means `reviewed`, which is the strict state — a record cannot become unreviewed by omitting a field. A draft may not carry `review.last_reviewed`, and once it declares a rationale, retirement triggers, and a remediation policy it must be promoted to `reviewed`. Never defaultable by class: no one gets to mark a whole artifact class reviewed at once.",
+      "enum": ["draft", "reviewed"]
+    },
     "remediationPolicy": {
       "description": "Permission tier for changes the audit proposes to this artifact. auto_safe is reachable only from interactive --apply and only for deterministic, reversible, content-preserving changes to generated artifacts or computed state. Deletion, archival, and destructive consolidation are approval_required regardless of what is written here.",
       "enum": ["auto_safe", "propose_patch", "approval_required", "prohibited"]
@@ -208,6 +212,7 @@
         "path": { "$ref": "#/$defs/relativePath" },
         "path_root": { "$ref": "#/$defs/pathRoot" },
         "type": { "$ref": "#/$defs/artifactType" },
+        "status": { "$ref": "#/$defs/status" },
         "owner": { "$ref": "#/$defs/shortName" },
         "scope": { "$ref": "#/$defs/shortName" },
         "visibility": { "$ref": "#/$defs/visibility" },
