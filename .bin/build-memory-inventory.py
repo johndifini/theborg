@@ -28,12 +28,13 @@ Design constraints this file exists to satisfy:
     hand-declared registry; discovery computes observed facts. The two are
     joined for reporting and never written back into each other.
 
-  * Discovery is read-only and does not enforce coverage. It reports how many
-    artifacts are unregistered and exits 0 either way, because the design gates
-    the LINT.md coverage rule on the inventory first reaching 100% (migration
-    step 4) — enforcing earlier would mean a knowingly red audit for the whole
-    migration. Hashes, link graphs, drift checks, and review scheduling belong
-    to the computed snapshot and are deliberately still absent.
+  * Discovery is read-only, and enforcement is opt-in. Plain `discover` reports
+    how many artifacts are unregistered and exits 0 either way;
+    `discover --require-coverage` is the mechanical form of the LINT.md `Memory
+    inventory` rule (migration step 4) and exits non-zero, naming each offender,
+    its owner, and the metadata its record must carry. Neither mode writes.
+    Hashes, link graphs, drift checks, and review scheduling belong to the
+    computed snapshot and are deliberately still absent.
 
   * Registered is not reviewed. `bootstrap` writes only what the tree
     determines and marks every record it emits `status: draft`; the human
@@ -912,10 +913,11 @@ def _redact(message: str, artifacts: dict) -> str:
 # resolves symlinks; nothing writes, moves, regenerates, or repairs a
 # discovered artifact. Remediation is migration step 7, behind `--apply`.
 #
-# Coverage is measured, never enforced: `discover` reports how many artifacts
-# are unregistered but exits 0 regardless, because the design gates the LINT.md
-# coverage rule on the inventory first reaching 100% (migration step 4) so the
-# workspace is never knowingly red during migration.
+# Coverage is measured by default and enforced only on request: plain `discover`
+# reports how many artifacts are unregistered but exits 0 regardless, while
+# `--require-coverage` fails on the gap. The split exists because the design
+# gated the LINT.md coverage rule on the inventory first reaching 100%
+# (migration step 4), so the workspace was never knowingly red during migration.
 
 # Whole subtrees excluded, as workspace-relative prefixes. The design requires
 # an explicit list rather than a heuristic, so anything left out of the
@@ -1472,8 +1474,8 @@ def _resolve_pairs(artifacts):
 def join_registry(found, registries):
     """Match discovered artifacts against declared records, both directions.
 
-    Counting only; the coverage rule is migration step 4 and is not enforced
-    here (design: do not run a knowingly red audit during migration).
+    Counting only. Whether a gap is a failure is the caller's decision:
+    `discover --require-coverage` treats it as one, plain `discover` does not.
     """
     declared = {}
     for reg in registries:
@@ -1571,8 +1573,9 @@ def format_report(result, join, show_private: bool):
         else:
             out.append("    %s -> %s:%s" % (aid, proot, path))
     out.append("")
-    out.append("  The LINT.md coverage rule stays unwritten until the inventory reaches")
-    out.append("  100%; this run measures the gap rather than failing on it.")
+    out.append("  LINT.md → Memory inventory requires UNREGISTERED and MISSING_ARTIFACT to")
+    out.append("  be zero. This run measures them; `--require-coverage` fails on them, which")
+    out.append("  is how the lint audit consumes the rule.")
     out.append("")
 
     out.append("Exclusions applied (%d directory/ies)" % len(result["excluded"]))
@@ -1618,7 +1621,148 @@ def format_report(result, join, show_private: bool):
     return "\n".join(out)
 
 
-def _public_json(result, join, show_private: bool):
+# --------------------------------------------------------------------------
+# Coverage enforcement (migration step 4)
+# --------------------------------------------------------------------------
+#
+# `discover --require-coverage` is the mechanical form of the LINT.md "Memory
+# inventory" rule. The acceptance criterion for step 4 is that an unregistered
+# durable artifact fails LOUDLY: the exit status is non-zero, and every offender
+# is named together with the owner accountable for it and the metadata its
+# record must carry. A count alone would let a reader see the number and not
+# know whose desk it lands on, which is the failure mode this replaces.
+#
+# It enforces registration only. Promotion of a `status: draft` record to
+# `reviewed` is a separate, deliberately-still-red gate (`validate
+# --require-reviewed`); conflating the two would make the lint audit knowingly
+# red for the whole of the human review, which the design forbids.
+
+
+def required_draft_fields(schema: dict):
+    """Field names a record must carry to satisfy coverage, in schema order.
+
+    Read out of the schema rather than restated, so the message a violation
+    prints can never drift from what the validator will actually demand. `id` is
+    the map key rather than a property, so it is named separately.
+    """
+    artifact = _draft_schema(schema).get("$defs", {}).get("artifact", {})
+    required = artifact.get("required")
+    if not isinstance(required, list):
+        return None
+    out = ["id"]
+    for field in required:
+        if not isinstance(field, str):
+            continue
+        # `review` is an object with required members of its own. Naming the
+        # container alone would send someone off to guess what belongs in it.
+        nested = artifact.get("properties", {}).get(field, {})
+        members = nested.get("required") if isinstance(nested, dict) else None
+        if isinstance(members, list) and members:
+            out.extend("%s.%s" % (field, m) for m in members if isinstance(m, str))
+        else:
+            out.append(field)
+    return out
+
+
+def _wrapped(fields, width=64):
+    """Field names as indented lines, so a long list stays readable in email."""
+    lines, current = [], ""
+    for field in fields:
+        candidate = field if not current else current + ", " + field
+        if len(candidate) > width and current:
+            lines.append(current + ",")
+            current = field
+        else:
+            current = candidate
+    if current:
+        lines.append(current)
+    return lines
+
+
+def coverage_violations(result, join):
+    """Every condition that fails the LINT.md coverage rule, worst first."""
+    return {
+        "unregistered": list(join["unregistered"]),
+        "missing": list(join["missing"]),
+        "unclassified": list(result["unclassified"]),
+    }
+
+
+def format_coverage_failure(result, join, required, show_private: bool):
+    """The loud failure. Names each offender, its owner, and what it must carry."""
+    bad = coverage_violations(result, join)
+    out = []
+    out.append("COVERAGE FAILURE — %d unregistered, %d missing artifact(s), "
+               "%d unclassified" % (len(bad["unregistered"]), len(bad["missing"]),
+                                    len(bad["unclassified"])))
+    out.append("LINT.md → Memory inventory: every durable memory artifact needs exactly")
+    out.append("one record before it is committed.")
+
+    hidden = 0
+    for record in sorted(bad["unregistered"], key=lambda r: (r["type"], r["path"])):
+        owner, scope = derive_owner_scope(record["path"], record["path_root"],
+                                          record.get("canonical_path"))
+        private = record["visibility"] != "public"
+        if private and not show_private:
+            hidden += 1
+            continue
+        out.append("")
+        out.append("  UNREGISTERED  %s" % record["path"])
+        out.append("      type      %s" % record["type"])
+        out.append("      owner     %s (scope %s)" % (owner, scope))
+        out.append("      record in %s" % (overlay_path_for(owner) + " (gitignored overlay)"
+                                           if private else "MEMORY-INVENTORY.yaml"))
+        if required:
+            extra = list(required)
+            if record["canonicality"] in DERIVED_CANONICALITY and "canonical_ref" not in extra:
+                extra.append("canonical_ref")
+            head = "      must carry"
+            for line in _wrapped(extra):
+                out.append("%s %s" % (head, line))
+                head = "                "
+    if hidden:
+        out.append("")
+        out.append("  %d private artifact(s) withheld; rerun with --show-private to see "
+                   "their paths." % hidden)
+
+    for aid, proot, path, is_private in bad["missing"]:
+        out.append("")
+        if is_private and not show_private:
+            out.append("  MISSING_ARTIFACT  <private record>")
+            out.append("      owner     see the private overlay; rerun with --show-private")
+        else:
+            owner, scope = derive_owner_scope(path, proot, None)
+            out.append("  MISSING_ARTIFACT  %s (%s:%s)" % (aid, proot, path))
+            out.append("      owner     %s (scope %s)" % (owner, scope))
+        out.append("      the record declares a path that no longer exists — update its")
+        out.append("      `path`, or retire the record if the artifact is gone for good.")
+
+    for path in sorted(bad["unclassified"]):
+        if _is_private(path) and not show_private:
+            out.append("")
+            out.append("  UNCLASSIFIED  <private path>; rerun with --show-private")
+            continue
+        owner, scope = derive_owner_scope(path, "borg_root", None)
+        out.append("")
+        out.append("  UNCLASSIFIED  %s" % path)
+        out.append("      owner     %s (scope %s)" % (owner, scope))
+        out.append("      it sits in a memory-bearing location but matches no artifact")
+        out.append("      class — classify it in build-memory-inventory.py, or move it")
+        out.append("      somewhere the scanner already excludes.")
+
+    out.append("")
+    out.append("Fix: `python3 .bin/build-memory-inventory.py bootstrap --write` drafts the")
+    out.append("mechanical fields above; a `status: draft` record satisfies this rule.")
+    out.append("(`review.last_reviewed` is null in a draft: a stub has not been reviewed.)")
+    out.append("Registration is not review. Promotion to `status: reviewed` additionally")
+    out.append("needs:")
+    for line in _wrapped(list(HUMAN_JUDGMENT_FIELDS), width=70):
+        out.append("  %s" % line)
+    out.append("and is gated separately by `validate --require-reviewed`.")
+    return "\n".join(out)
+
+
+def _public_json(result, join, show_private: bool, enforced: bool = False):
     """JSON view. Without --show-private this is safe to write to a tracked or
     emailed destination: private records collapse to counts by type."""
     arts = result["artifacts"]
@@ -1635,7 +1779,7 @@ def _public_json(result, join, show_private: bool):
     return {
         "root": result["root"],
         "read_only": True,
-        "coverage_enforced": False,
+        "coverage_enforced": enforced,
         "artifacts": artifacts,
         "private_counts_by_type": [{"type": t, "count": c} for t, c in redacted],
         "excluded": [{"path": p, "reason": r} for p, r in result["excluded"]
@@ -1656,6 +1800,14 @@ def _public_json(result, join, show_private: bool):
             "registered": sum(1 for a in arts if a["registered_as"]),
             "unregistered": len(join["unregistered"]),
             "missing": len(join["missing"]),
+            # Named offenders, so a consumer can route each one to its owner
+            # without re-deriving ownership. Private artifacts stay counted-only.
+            "unregistered_detail": [
+                {"path": r["path"], "path_root": r["path_root"], "type": r["type"],
+                 "owner": derive_owner_scope(r["path"], r["path_root"],
+                                             r.get("canonical_path"))[0]}
+                for r in join["unregistered"]
+                if show_private or r["visibility"] == "public"],
         },
         "notes": result["notes"] if show_private else
                  [n for n in result["notes"] if not _is_private(n)],
@@ -2355,12 +2507,41 @@ def cmd_discover(args) -> int:
     result["notes"].extend(notes)
     join = join_registry(result["artifacts"], registries)
 
+    enforce = getattr(args, "require_coverage", False)
+    required = None
+    if enforce:
+        schema_path = args.schema or os.path.join(root, "MEMORY-INVENTORY.schema.json")
+        try:
+            required = required_draft_fields(json.loads(_read(schema_path)))
+        except (OSError, ValueError) as exc:
+            # Enforcement without the schema would report a violation while
+            # guessing at the metadata it demands. Fail as a usage error instead.
+            print("error: cannot read schema %s: %s" % (schema_path, exc), file=sys.stderr)
+            return EXIT_USAGE
+        if not required:
+            print("error: schema %s names no required fields for an artifact record; "
+                  "enforcement would have to guess what a violation must carry"
+                  % schema_path, file=sys.stderr)
+            return EXIT_USAGE
+
     if args.json:
-        print(json.dumps(_public_json(result, join, args.show_private),
+        print(json.dumps(_public_json(result, join, args.show_private, enforce),
                          indent=2, sort_keys=False))
     else:
         print(format_report(result, join, args.show_private))
-    return EXIT_OK
+
+    if not enforce:
+        return EXIT_OK
+    bad = coverage_violations(result, join)
+    if not any(bad.values()):
+        print("")
+        print("COVERAGE OK — %d artifact(s), every one registered; no record names a "
+              "path that is gone." % len(result["artifacts"]))
+        return EXIT_OK
+    print("")
+    print(format_coverage_failure(result, join, required, args.show_private),
+          file=sys.stderr)
+    return EXIT_INVALID
 
 
 def _print_deferred(deferred, show_private: bool) -> None:
@@ -2541,8 +2722,9 @@ def main(argv=None) -> int:
     d = sub.add_parser(
         "discover",
         help="enumerate every durable memory artifact on disk (read-only)",
-        description="Read-only discovery. Reports coverage against the registry but "
-                    "never enforces it, and never mutates a discovered artifact.",
+        description="Read-only discovery. Reports coverage against the registry, and "
+                    "with --require-coverage fails on a gap; never mutates a "
+                    "discovered artifact either way.",
     )
     d.add_argument("--root", help="workspace root to scan (default: BORG_ROOT)")
     d.add_argument("--home", help="treat this as $HOME when locating Auto Memory")
@@ -2551,7 +2733,14 @@ def main(argv=None) -> int:
     d.add_argument("--registry", help="path to MEMORY-INVENTORY.yaml")
     d.add_argument("--overlay", action="append", default=[],
                    help="gitignored private overlay to join against (repeatable)")
+    d.add_argument("--schema", help="path to MEMORY-INVENTORY.schema.json "
+                                    "(read only under --require-coverage)")
     d.add_argument("--json", action="store_true", help="emit the machine-readable snapshot view")
+    d.add_argument("--require-coverage", action="store_true", dest="require_coverage",
+                   help="fail if any discovered artifact is unregistered, any record names "
+                        "a path that is gone, or any file in a memory-bearing location is "
+                        "unclassified; names each offender, its owner, and the metadata its "
+                        "record must carry. This is the LINT.md `Memory inventory` rule")
     d.add_argument("--show-private", action="store_true",
                    help="print private ids and paths; never use in a scheduled or emailed run")
     d.set_defaults(func=cmd_discover)
