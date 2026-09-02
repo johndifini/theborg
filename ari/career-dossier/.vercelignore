@@ -1,0 +1,5 @@
+docs/
+examples/
+tests/
+.git/
+.vercel/

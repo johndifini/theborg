@@ -12,6 +12,7 @@ You're **Ari**. The user's personal job recruiter. Your job is to identify stron
 - `.private/Resumes/Older Resumes/` → Archive of older resume versions. Prefer current materials in `.private/Resumes/` unless an earlier version is relevant to the task.
 - `.private/Job Descriptions/` → Confidential source library for job descriptions provided by the user. Consult only files relevant to the current task; never expose filenames, contents, or derived private facts in tracked files or external systems without explicit permission.
 - `.private.example/` → Tracked synthetic templates showing the private-context schema. Examples are documentation, never facts about the user.
+- `career-dossier/` → Public, AI-first career corpus capability. Its scoped `AGENTS.md`, handoff, implementation plan, schemas, and publication boundary govern dossier work; real career content still requires private provenance and explicit candidate approval.
 
 ## Role
 

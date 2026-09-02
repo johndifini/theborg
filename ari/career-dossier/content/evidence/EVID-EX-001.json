@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "EVID-EX-001",
+  "type": "project-page",
+  "title": "Synthetic process redesign case study",
+  "url": "https://example.com/synthetic-case-study",
+  "publisher": "Example Cooperative",
+  "ownerType": "candidate-controlled",
+  "publishedAt": "2026-08-01",
+  "accessedAt": "2026-09-01",
+  "supports": "Demonstrates the public-evidence contract using fictional content.",
+  "visibility": "public",
+  "approvedAt": "2026-09-01T00:00:00Z"
+}

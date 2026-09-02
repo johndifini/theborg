@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="AI-first public career dossier">
+  <link rel="alternate" type="application/json" href="/career.json" title="Structured career dossier">
+  <link rel="alternate" type="text/markdown" href="/career.md" title="Markdown career dossier">
+  <title>Alex Example — AI career dossier</title>
+  <style>
+    :root { color-scheme: light dark; font-family: ui-sans-serif, system-ui, sans-serif; line-height: 1.55; }
+    body { margin: 0; }
+    main { max-width: 44rem; margin: 0 auto; padding: 10vh 1.25rem 4rem; }
+    h1 { font-size: clamp(2rem, 7vw, 4rem); line-height: 1.05; letter-spacing: -0.04em; }
+    ol { padding-left: 1.25rem; }
+    pre { padding: 1rem; border: 1px solid currentColor; border-radius: .5rem; white-space: pre-wrap; }
+    button { font: inherit; padding: .55rem .85rem; }
+    nav { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <p>Public, evidence-backed, and designed for machine retrieval.</p>
+    <h1>Ask an AI assistant about Alex Example.</h1>
+    <p>This career dossier is designed for an AI assistant. Give the assistant this URL and a job description to assess strong matches, partial matches, and gaps using cited evidence.</p>
+    <ol>
+      <li>Copy this dossier URL.</li>
+      <li>Attach the job description to your AI assistant.</li>
+      <li>Paste the prompt below.</li>
+    </ol>
+    <pre id="prompt">Using the career dossier at https://agent.johndifini.com/career.json and the attached job description, identify strong matches, partial matches, and gaps. Cite the dossier claim and evidence IDs for every conclusion. Do not infer missing qualifications; state uncertainty explicitly.</pre>
+    <button type="button" id="copy">Copy prompt</button>
+    <p id="copy-status" aria-live="polite"></p>
+    <nav aria-label="Machine-readable dossier files">
+      <a href="/career.json">Career JSON</a>
+      <a href="/career.md">Career Markdown</a>
+      <a href="/evidence.json">Evidence JSON</a>
+      <a href="/llms.txt">LLM index</a>
+    </nav>
+  </main>
+  <script>document.getElementById('copy').addEventListener('click',async()=>{await navigator.clipboard.writeText(document.getElementById('prompt').textContent);document.getElementById('copy-status').textContent='Prompt copied.'})</script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+{
+  "asOf": "2026-09-01",
+  "claims": [
+    {
+      "approvedAt": "2026-09-01T00:00:00Z",
+      "asOf": "2026-08-01",
+      "claim": "Led a fictional cross-functional team that redesigned an example intake process.",
+      "evidenceIds": [
+        "EVID-EX-001"
+      ],
+      "evidenceLevel": "publicly-documented",
+      "id": "EX-001",
+      "limitations": [
+        "No real person or employer is described",
+        "Synthetic demonstration only"
+      ],
+      "organizations": [
+        "Example Cooperative"
+      ],
+      "period": {
+        "end": "2026",
+        "start": "2025"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Change management",
+        "Operations",
+        "Process design"
+      ],
+      "status": "completed",
+      "title": "Led a synthetic process redesign",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-01T00:00:00Z",
+      "asOf": "2026-09-01",
+      "claim": "Building a fictional reporting tool to demonstrate time-sensitive claim handling.",
+      "evidenceIds": [],
+      "evidenceLevel": "candidate-confirmed",
+      "id": "EX-002",
+      "limitations": [
+        "No outcome claim",
+        "Not publicly launched",
+        "Synthetic demonstration only"
+      ],
+      "organizations": [],
+      "period": {
+        "end": null,
+        "start": "2026"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Data modeling",
+        "TypeScript"
+      ],
+      "status": "in-development",
+      "title": "Building a synthetic reporting tool",
+      "type": "project",
+      "visibility": "public"
+    }
+  ],
+  "evidence": [
+    {
+      "accessedAt": "2026-09-01",
+      "approvedAt": "2026-09-01T00:00:00Z",
+      "id": "EVID-EX-001",
+      "ownerType": "candidate-controlled",
+      "publishedAt": "2026-08-01",
+      "publisher": "Example Cooperative",
+      "schemaVersion": 1,
+      "supports": "Demonstrates the public-evidence contract using fictional content.",
+      "title": "Synthetic process redesign case study",
+      "type": "project-page",
+      "url": "https://example.com/synthetic-case-study",
+      "visibility": "public"
+    }
+  ],
+  "profile": {
+    "approvedAt": "2026-09-01T00:00:00Z",
+    "headline": "Operations leader and systems builder",
+    "location": "United States",
+    "name": "Alex Example",
+    "schemaVersion": 1,
+    "summary": "Synthetic profile demonstrating evidence-backed career retrieval.",
+    "visibility": "public",
+    "website": "https://example.com"
+  },
+  "schemaVersion": 1
+}

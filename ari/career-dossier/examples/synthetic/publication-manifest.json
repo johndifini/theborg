@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "claimId": "EX-001",
+  "privateSourceDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "publicContentDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "approvedAt": "2026-09-01T00:00:00Z",
+  "exportedAt": "2026-09-01T00:00:00Z",
+  "status": "published"
+}

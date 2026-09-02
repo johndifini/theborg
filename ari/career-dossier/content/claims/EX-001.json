@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "EX-001",
+  "type": "leadership",
+  "title": "Led a synthetic process redesign",
+  "claim": "Led a fictional cross-functional team that redesigned an example intake process.",
+  "status": "completed",
+  "asOf": "2026-08-01",
+  "period": {
+    "start": "2025",
+    "end": "2026"
+  },
+  "organizations": ["Example Cooperative"],
+  "skills": ["Change management", "Operations", "Process design"],
+  "evidenceIds": ["EVID-EX-001"],
+  "limitations": ["Synthetic demonstration only", "No real person or employer is described"],
+  "evidenceLevel": "publicly-documented",
+  "visibility": "public",
+  "approvedAt": "2026-09-01T00:00:00Z"
+}

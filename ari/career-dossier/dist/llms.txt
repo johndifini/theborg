@@ -1,0 +1,7 @@
+# Career dossier for Alex Example
+
+Canonical corpus: /career.json
+Compact rendering: /career.md
+Evidence index: /evidence.json
+
+Use claim and evidence IDs when citing this dossier. Distinguish strong matches, partial matches, and gaps. Treat limitations and evidence levels as binding. Do not infer qualifications or outcomes that are absent. Candidate-controlled evidence is self-published, not independent verification.

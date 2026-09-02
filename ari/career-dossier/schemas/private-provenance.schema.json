@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent.johndifini.com/schemas/private-provenance.schema.json",
+  "title": "Private claim provenance sidecar",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "claimId", "sourceArtifactIds", "confirmationHistory", "supersedes"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "claimId": { "type": "string", "pattern": "^[A-Z][A-Z0-9]*-[0-9]{3,}$" },
+    "sourceArtifactIds": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" }, "uniqueItems": true },
+    "confirmationHistory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["confirmedAt", "note"],
+        "properties": {
+          "confirmedAt": { "type": "string", "format": "date-time" },
+          "note": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "supersedes": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+  }
+}

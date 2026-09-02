@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "EX-002",
+  "type": "project",
+  "title": "Building a synthetic reporting tool",
+  "claim": "Building a fictional reporting tool to demonstrate time-sensitive claim handling.",
+  "status": "in-development",
+  "asOf": "2026-09-01",
+  "period": {
+    "start": "2026",
+    "end": null
+  },
+  "organizations": [],
+  "skills": ["Data modeling", "TypeScript"],
+  "evidenceIds": [],
+  "limitations": ["Synthetic demonstration only", "Not publicly launched", "No outcome claim"],
+  "evidenceLevel": "candidate-confirmed",
+  "visibility": "public",
+  "approvedAt": "2026-09-01T00:00:00Z"
+}

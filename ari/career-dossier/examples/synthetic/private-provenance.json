@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "claimId": "EX-001",
+  "sourceArtifactIds": ["synthetic-artifact-001"],
+  "confirmationHistory": [
+    {
+      "confirmedAt": "2026-09-01T00:00:00Z",
+      "note": "Synthetic confirmation for schema demonstration only."
+    }
+  ],
+  "supersedes": []
+}

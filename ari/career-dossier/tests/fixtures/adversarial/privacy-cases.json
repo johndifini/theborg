@@ -1,0 +1,13 @@
+[
+  { "name": "private path", "value": "../.private/source.txt" },
+  { "name": "POSIX absolute path", "value": "/opt/synthetic/source.txt" },
+  { "name": "Linux absolute path", "value": "/home/example/source.txt" },
+  { "name": "resume filename", "value": "target-company-resume.docx" },
+  { "name": "document filename", "value": "application.pdf" },
+  { "name": "artifact hash", "value": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
+  { "name": "email address", "value": "person@example.test" },
+  { "name": "phone number", "value": "303-555-0100" },
+  { "name": "credential", "value": "api_key=synthetic" },
+  { "name": "file URL", "value": "file:///example/source" },
+  { "name": "FTP URL", "value": "ftp://example.com/source" }
+]

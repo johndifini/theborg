@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent.johndifini.com/schemas/public-evidence.schema.json",
+  "title": "Public evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "id", "type", "title", "url", "publisher", "ownerType", "accessedAt", "supports", "visibility", "approvedAt"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[A-Z][A-Z0-9]*-[A-Z0-9-]+$" },
+    "type": { "enum": ["article", "credential", "project-page", "publication", "recording", "website"] },
+    "title": { "type": "string", "minLength": 1, "maxLength": 240 },
+    "url": { "type": "string", "format": "uri", "pattern": "^https://" },
+    "publisher": { "type": "string", "minLength": 1, "maxLength": 160 },
+    "ownerType": { "enum": ["independent", "candidate-controlled"] },
+    "publishedAt": { "type": "string", "format": "date" },
+    "accessedAt": { "type": "string", "format": "date" },
+    "supports": { "type": "string", "minLength": 1, "maxLength": 1000 },
+    "visibility": { "const": "public" },
+    "approvedAt": { "type": "string", "format": "date-time" }
+  }
+}
