@@ -47,6 +47,7 @@ enforcement (see `c4po/AGENTS.md`).
 - Every MCP server loaded by any Borg agent must have an entry in `c4po/MCP.md` with scope, source, which agent(s) load it, and a one-line justification.
 - A server not listed in `c4po/MCP.md` is unapproved — remove it or add an entry.
 - Prefer the narrowest scope that works.
+- Report each server's **enabled state**, not merely that a config stanza exists. A Codex `[mcp_servers.*]` block carrying `enabled = false` is registered but not loaded, and calling it live overstates the finding — on 2026-09-01 the lint audit did exactly that with `computer-use`. Read the flag before classifying a server as in use; absence of the key means enabled.
 ### Slash commands
 - Markdown files under the workspace or a live agent's `.claude/commands/` are the canonical command sources for both harnesses. Claude Code invokes them as `/name`; `.bin/sync-codex-prompts.sh` adapts them into Codex skills invoked as `$name` (or selected through `/skills`).
 - After adding, renaming, or removing a command, run `.bin/sync-codex-prompts.sh`; `.bin/sync-codex-prompts.sh --check` must pass. Unique basenames keep their name; collisions are scope-prefixed. The bridge never overwrites an unrelated skill.
