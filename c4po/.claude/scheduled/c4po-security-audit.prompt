@@ -47,14 +47,28 @@ Run the /security-review skill against the current state of ${BORG_ROOT}. Specif
   secrets in config that no env file would list. Triage keyword matches
   individually before reporting: dictionaries and text corpora legitimately
   contain the words "secret" and "token".
-- Before classifying repeats, read the prior state file. Preserve any
-  `accepted_risks` entries and treat them as resolved, not findings, unless the
-  current facts materially exceed the scope the user accepted. Carry the
-  entries forward when writing the new state.
+- Before classifying repeats, read the prior state file named in RECORD STATE
+  below. Preserve any `accepted_risks` entries and treat them as resolved, not
+  findings, unless the current facts materially exceed the scope the user
+  accepted. Carry the entries forward when RECORD STATE writes the new state.
 
 Always email the result by piping it into `${BORG_ROOT}/.bin/notify-email.sh c4po "Borg security audit — {YYYY-MM-DD} — {N} finding(s)"` (reads the message from stdin and emails it to the user) — even when the audit is clean, so the user can confirm the job ran. Body header: same as the subject.
 - If anything critical is found (auth weakness, dangerous permission, broken access policy, suspicious MCP server, leaked secret), include each finding and a recommended fix.
 - If clean, the body is a one-liner: `All clear — no findings.`
+
+RECORD STATE — write the run's state file, after the email has gone out so the
+delivery result can be recorded with it.
+
+Write `${BORG_ROOT}/c4po/.claude/scheduled/state/c4po-security-audit.json`,
+`mkdir -p`-ing the state directory first if it does not exist. This file is the
+next run's baseline: it is how the following audit tells a new finding from a
+repeat, and how an `accepted_risks` entry stays accepted instead of resurfacing
+as a finding. Record at minimum `date`, `ts`, `findings`, `emailed`, the
+new/closed/repeat finding lists, and the `accepted_risks` entries carried
+forward per the bullet above; otherwise keep the keys the previous run used, so
+a diff between consecutive runs stays meaningful. Never silently drop an
+`accepted_risks` entry the user approved — carry it forward, or say explicitly
+in the report why it no longer applies.
 
 Tooling constraints that have silently voided a run before — treat as hard rules:
 - Pin every sweep to `/usr/bin/grep`. The interactive `grep` here is a ugrep shim

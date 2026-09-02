@@ -1,5 +1,6 @@
 ---
 description: Re-verify the 2026 estimated-tax safe harbor against actual withholding, reporting results to this session.
+private: true
 ---
 
 Re-verify the 2026 estimated-tax safe harbor interactively. Same logic as the one-shot
