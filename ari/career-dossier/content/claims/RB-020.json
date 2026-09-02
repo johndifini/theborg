@@ -1,0 +1,31 @@
+{
+  "approvedAt": "2026-09-02T02:18:00Z",
+  "asOf": "2026-09-01",
+  "claim": "Architected and developed the company's first secure microservices API for financial institutions, taking it from initial design through production launch and knowledge transfer.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-020",
+  "limitations": [
+    "No adoption, transaction-volume, revenue, or performance metric is claimed.",
+    "The claim is supported by candidate-provided resume evidence rather than independent public documentation."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2021",
+    "start": "2017"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "API design",
+    "Microservices",
+    "Product launch",
+    "Security",
+    "Software architecture"
+  ],
+  "status": "historical",
+  "title": "Architect and launch a partner microservices API",
+  "type": "experience",
+  "visibility": "public"
+}

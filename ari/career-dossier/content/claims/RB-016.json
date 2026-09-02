@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-02T02:18:00Z",
+  "asOf": "2026-09-01",
+  "claim": "Set a long-term architecture vision that used disaster recovery in AWS as the first step toward moving from an on-premises datacenter to cloud architecture.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-016",
+  "limitations": [
+    "The claim does not state that the full datacenter migration was completed.",
+    "No quantified availability, recovery, cost, or migration outcome is claimed."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2021",
+    "start": "2017"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "AWS",
+    "Cloud strategy",
+    "Disaster recovery",
+    "Enterprise architecture"
+  ],
+  "status": "historical",
+  "title": "Set a phased cloud-migration architecture",
+  "type": "leadership",
+  "visibility": "public"
+}

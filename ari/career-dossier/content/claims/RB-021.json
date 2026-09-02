@@ -1,0 +1,31 @@
+{
+  "approvedAt": "2026-09-02T02:18:00Z",
+  "asOf": "2026-09-01",
+  "claim": "Led the design, development, and launch of the company's first custom web and mobile applications for iOS and Android, including data-visualization experiences.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-021",
+  "limitations": [
+    "The claim does not quantify adoption, customer satisfaction, or business impact.",
+    "Leadership of delivery does not imply sole design or implementation."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2021",
+    "start": "2017"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Data visualization",
+    "Mobile applications",
+    "Product delivery",
+    "User experience",
+    "Web applications"
+  ],
+  "status": "historical",
+  "title": "Launch the first custom web and mobile applications",
+  "type": "leadership",
+  "visibility": "public"
+}

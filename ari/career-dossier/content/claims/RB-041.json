@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-02T02:18:00Z",
+  "asOf": "2026-09-01",
+  "claim": "Defined technology roadmaps and led delivery of platforms that enabled investors to hold alternative assets, including private-market assets and real estate, within IRAs.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-041",
+  "limitations": [
+    "The claim does not provide asset, account, adoption, or revenue metrics.",
+    "The claim describes technology delivery and does not provide legal, tax, or investment advice."
+  ],
+  "organizations": [
+    "PENSCO Trust"
+  ],
+  "period": {
+    "end": "2017",
+    "start": "2012"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Alternative assets",
+    "Platform delivery",
+    "Retirement technology",
+    "Technology roadmaps"
+  ],
+  "status": "historical",
+  "title": "Lead platforms for alternative assets in IRAs",
+  "type": "leadership",
+  "visibility": "public"
+}

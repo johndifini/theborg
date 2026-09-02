@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "sourceArtifacts": [
+    {
+      "id": "resume-00000000-0000-4000-8000-000000000000",
+      "kind": "resume-manifest",
+      "manifestArtifactId": "resume-00000000-0000-4000-8000-000000000000"
+    }
+  ],
+  "claims": [
+    {
+      "schemaVersion": 1,
+      "claimId": "RB-001",
+      "sourceArtifactIds": [
+        "resume-00000000-0000-4000-8000-000000000000"
+      ],
+      "confirmationHistory": [],
+      "supersedes": []
+    }
+  ]
+}

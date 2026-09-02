@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-02T02:18:00Z",
+  "asOf": "2026-09-01",
+  "claim": "Led engineering personnel management across hiring, retention, coaching, feedback, quality control, budgeting, delegation, technical debt, and team-capacity planning.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-014",
+  "limitations": [
+    "The listed responsibilities span the role and are not presented as one project or quantified outcome.",
+    "This claim does not assert sole execution of every personnel-management activity."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2021",
+    "start": "2017"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Engineering operations",
+    "People leadership",
+    "Performance management",
+    "Team development"
+  ],
+  "status": "historical",
+  "title": "Lead engineering people and operating systems",
+  "type": "leadership",
+  "visibility": "public"
+}

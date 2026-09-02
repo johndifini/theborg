@@ -58,6 +58,219 @@
       "title": "Building a synthetic reporting tool",
       "type": "project",
       "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-02T02:18:00Z",
+      "asOf": "2026-09-01",
+      "claim": "Led engineering personnel management across hiring, retention, coaching, feedback, quality control, budgeting, delegation, technical debt, and team-capacity planning.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-014",
+      "limitations": [
+        "The listed responsibilities span the role and are not presented as one project or quantified outcome.",
+        "This claim does not assert sole execution of every personnel-management activity."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2021",
+        "start": "2017"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Engineering operations",
+        "People leadership",
+        "Performance management",
+        "Team development"
+      ],
+      "status": "historical",
+      "title": "Lead engineering people and operating systems",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-02T02:18:00Z",
+      "asOf": "2026-09-01",
+      "claim": "Redefined the software-development process and lifecycle by introducing agile and lean practices designed to respond to frequent change.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-015",
+      "limitations": [
+        "No quantified delivery improvement is claimed.",
+        "The claim describes process leadership rather than sole execution by one person."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2021",
+        "start": "2017"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Agile transformation",
+        "Change management",
+        "Process improvement",
+        "Software development lifecycle"
+      ],
+      "status": "historical",
+      "title": "Introduce agile and lean software delivery practices",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-02T02:18:00Z",
+      "asOf": "2026-09-01",
+      "claim": "Set a long-term architecture vision that used disaster recovery in AWS as the first step toward moving from an on-premises datacenter to cloud architecture.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-016",
+      "limitations": [
+        "No quantified availability, recovery, cost, or migration outcome is claimed.",
+        "The claim does not state that the full datacenter migration was completed."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2021",
+        "start": "2017"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "AWS",
+        "Cloud strategy",
+        "Disaster recovery",
+        "Enterprise architecture"
+      ],
+      "status": "historical",
+      "title": "Set a phased cloud-migration architecture",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-02T02:18:00Z",
+      "asOf": "2026-09-01",
+      "claim": "Architected and developed the company's first secure microservices API for financial institutions, taking it from initial design through production launch and knowledge transfer.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-020",
+      "limitations": [
+        "No adoption, transaction-volume, revenue, or performance metric is claimed.",
+        "The claim is supported by candidate-provided resume evidence rather than independent public documentation."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2021",
+        "start": "2017"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "API design",
+        "Microservices",
+        "Product launch",
+        "Security",
+        "Software architecture"
+      ],
+      "status": "historical",
+      "title": "Architect and launch a partner microservices API",
+      "type": "experience",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-02T02:18:00Z",
+      "asOf": "2026-09-01",
+      "claim": "Led the design, development, and launch of the company's first custom web and mobile applications for iOS and Android, including data-visualization experiences.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-021",
+      "limitations": [
+        "Leadership of delivery does not imply sole design or implementation.",
+        "The claim does not quantify adoption, customer satisfaction, or business impact."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2021",
+        "start": "2017"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Data visualization",
+        "Mobile applications",
+        "Product delivery",
+        "User experience",
+        "Web applications"
+      ],
+      "status": "historical",
+      "title": "Launch the first custom web and mobile applications",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-02T02:18:00Z",
+      "asOf": "2026-09-01",
+      "claim": "Designed and delivered electronic-payment capabilities that enabled customers to pay fees using credit cards and bank transfers through ACH.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-040",
+      "limitations": [
+        "No payment volume, adoption, revenue, or processing-cost outcome is claimed.",
+        "The claim does not identify specific gateways, processors, or compliance certifications."
+      ],
+      "organizations": [
+        "PENSCO Trust"
+      ],
+      "period": {
+        "end": "2017",
+        "start": "2012"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "ACH",
+        "Card payments",
+        "Fintech",
+        "Payment systems",
+        "Product delivery"
+      ],
+      "status": "historical",
+      "title": "Deliver electronic-payment capabilities",
+      "type": "experience",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-02T02:18:00Z",
+      "asOf": "2026-09-01",
+      "claim": "Defined technology roadmaps and led delivery of platforms that enabled investors to hold alternative assets, including private-market assets and real estate, within IRAs.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-041",
+      "limitations": [
+        "The claim describes technology delivery and does not provide legal, tax, or investment advice.",
+        "The claim does not provide asset, account, adoption, or revenue metrics."
+      ],
+      "organizations": [
+        "PENSCO Trust"
+      ],
+      "period": {
+        "end": "2017",
+        "start": "2012"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Alternative assets",
+        "Platform delivery",
+        "Retirement technology",
+        "Technology roadmaps"
+      ],
+      "status": "historical",
+      "title": "Lead platforms for alternative assets in IRAs",
+      "type": "leadership",
+      "visibility": "public"
     }
   ],
   "evidence": [

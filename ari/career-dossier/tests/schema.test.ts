@@ -6,7 +6,10 @@ import { clone, fixture } from "./helpers.ts";
 
 test("valid synthetic public and private-sidecar records pass", async () => {
   const corpus = await loadAndValidateCorpus();
-  assert.equal(corpus.claims.length, 2);
+  assert.deepEqual(
+    corpus.claims.filter((claim) => claim.id.startsWith("EX-")).map((claim) => claim.id),
+    ["EX-001", "EX-002"]
+  );
   await validateDocument("private-provenance", await fixture("examples/synthetic/private-provenance.json"));
   await validateDocument("publication-manifest", await fixture("examples/synthetic/publication-manifest.json"));
 });

@@ -4,7 +4,7 @@
 **Target:** `ari/career-dossier/`
 **Deployment:** Vercel at `agent.johndifini.com`, with
 `johndifini.com/agent` redirecting to it
-**Status:** Phase 0 accepted; Phases 1–4 implemented with synthetic data
+**Status:** Phases 1–5 implemented; Phase 6 in progress with Batch 001 approved
 
 ## Objective
 

@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-02T02:18:00Z",
+  "asOf": "2026-09-01",
+  "claim": "Redefined the software-development process and lifecycle by introducing agile and lean practices designed to respond to frequent change.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-015",
+  "limitations": [
+    "No quantified delivery improvement is claimed.",
+    "The claim describes process leadership rather than sole execution by one person."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2021",
+    "start": "2017"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Agile transformation",
+    "Change management",
+    "Process improvement",
+    "Software development lifecycle"
+  ],
+  "status": "historical",
+  "title": "Introduce agile and lean software delivery practices",
+  "type": "leadership",
+  "visibility": "public"
+}

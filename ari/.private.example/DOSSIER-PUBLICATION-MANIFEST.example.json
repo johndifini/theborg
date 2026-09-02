@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "publications": [
+    {
+      "schemaVersion": 1,
+      "claimId": "RB-001",
+      "privateSourceDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "publicContentDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "approvedAt": "2000-01-01T00:00:00Z",
+      "exportedAt": "2000-01-01T00:00:00Z",
+      "status": "published"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "approvedAt": "2026-09-02T02:18:00Z",
+  "asOf": "2026-09-01",
+  "claim": "Designed and delivered electronic-payment capabilities that enabled customers to pay fees using credit cards and bank transfers through ACH.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-040",
+  "limitations": [
+    "No payment volume, adoption, revenue, or processing-cost outcome is claimed.",
+    "The claim does not identify specific gateways, processors, or compliance certifications."
+  ],
+  "organizations": [
+    "PENSCO Trust"
+  ],
+  "period": {
+    "end": "2017",
+    "start": "2012"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "ACH",
+    "Card payments",
+    "Fintech",
+    "Payment systems",
+    "Product delivery"
+  ],
+  "status": "historical",
+  "title": "Deliver electronic-payment capabilities",
+  "type": "experience",
+  "visibility": "public"
+}

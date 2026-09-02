@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "batchId": "BATCH-001",
+  "createdAt": "2000-01-01T00:00:00Z",
+  "claims": [
+    {
+      "schemaVersion": 1,
+      "id": "RB-001",
+      "type": "experience",
+      "title": "Synthetic public claim",
+      "claim": "Delivered a synthetic example outcome.",
+      "status": "historical",
+      "asOf": "2000-01-01",
+      "skills": [
+        "Example skill"
+      ],
+      "evidenceIds": [],
+      "limitations": [
+        "Synthetic example only."
+      ],
+      "evidenceLevel": "resume-sourced",
+      "visibility": "public"
+    }
+  ]
+}

@@ -131,6 +131,32 @@ The landing structure and copy are contract-approved but visually provisional;
 Jony Vibe review remains a later Phase 7 gate. Ari is now the next owner for the
 private provenance and real-content phases described below.
 
+## Ari implementation progress — 2026-09-01
+
+Ari verified the foundation and implemented the local Phase 5 workflow outside
+the deployment root:
+
+- owner-only private provenance and publication-manifest sidecars are
+  initialized from the evidence bank and resume-corpus manifest;
+- all active claim IDs resolve to private sources, while retired entries remain
+  excluded;
+- unsealed proposals can be checked in a temporary project copy without
+  changing tracked content or generated output;
+- exact public diffs receive content digests before the separate explicit
+  approval phrase can authorize a write;
+- source or public-record changes mark an existing publication stale without
+  rewriting public content; and
+- failed validation is no-write, while an approved publication runs the full
+  typecheck, test, build, privacy, and determinism suite.
+
+Phase 6 is in progress. The candidate approved the first batch of seven
+lower-risk historical claims, and the workflow wrote those public records plus
+their private approval digests before regenerating and verifying `dist/`. No
+real profile value or evidence record has been migrated yet. Current-employer
+claims, incomplete metrics, future activities, and public-evidence URLs remain
+outside the approved first batch. Nothing has been deployed or published to a
+remote service.
+
 ## Ari session scope after the foundation handoff
 
 Ari then owns Phases 5, 6, and 9 because they involve candidate evidence and job
