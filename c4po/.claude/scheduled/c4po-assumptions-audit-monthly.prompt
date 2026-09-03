@@ -11,7 +11,7 @@ the fix lands** — the canonical file(s) that hold the codified value or choice
 so the change can be made without re-deriving it. Each assumption below ends
 with a "Where to update if flagged" pointer; carry it into the report.
 
-STEP 1: This job is fired by launchd on calendar days 1-5 of each month, but
+STEP 1: This job is fired by launchd on calendar days 6-10 of each month, but
 should only execute once per month. Stop and output nothing if:
 - ${BORG_ROOT}/c4po/.claude/scheduled/state/c4po-assumptions-audit-monthly.json
   exists and its `date` field is in the current calendar month (already ran

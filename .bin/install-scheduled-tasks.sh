@@ -41,27 +41,40 @@ TASKS=(
   # firing, so a starved run is a lost audit rather than a no-op. It was in
   # fact lost on 2026-09-02 (exit 1 after one second, no report, no email).
   "c4po|c4po-security-audit|daily-13-00|prompt"
-  # The four monthly model jobs sit on a six-hour grid — 03:00 privacy, 09:00
-  # warren-bot-fett/ai-sleeve, 15:00 lint, 21:00 assumptions — so no two share
-  # a five-hour usage window. The grid is ANCHORED ON ai-sleeve's pre-existing
-  # 09:00 (declared further down); the three c4po audits were placed around it.
-  # Move ai-sleeve and the grid breaks — rephase all four, don't shift one.
+  # The four monthly model jobs are spaced so no two share a five-hour usage
+  # window, AND none starts inside c4po-backlog-burndown's pre-reset window
+  # (reset minus two session windows minus slack — Wed 00:40-10:30 for an 11:00
+  # reset). Both at once is impossible on a single day range, which is why the
+  # jobs are split across two:
   #
-  # Two of them, 03:00 and 09:00, land inside c4po-backlog-burndown's pre-reset
-  # window (reset minus two session windows minus slack — Wed 00:40-10:30 for an
-  # 11:00 reset). That is unavoidable, not an oversight: the window is ~9h50m
-  # wide, so four jobs spaced >5h apart need >15h of the 14h10m left outside it,
-  # and any 6h grid puts at least one slot inside a window that wide. This
-  # phasing is the best available with ai-sleeve fixed at 09:00 — it moved lint
-  # and assumptions out of the window and off each other, at the cost of putting
-  # privacy in. A phasing that halves the overlap (05/11/17/23) exists but
-  # requires moving ai-sleeve, which is warren-bot-fett's call, not this file's.
+  #   days 1-5   11:00 privacy, 17:00 ai-sleeve, 23:00 lint
+  #   days 6-10  11:00 assumptions
   #
-  # Keep the first-five-days retries: each prompt's state gate makes later
-  # firings no-ops after a successful run.
-  "c4po|c4po-lint-audit-monthly|month-first5-15-00|prompt"
-  "c4po|c4po-assumptions-audit-monthly|month-first5-21-00|prompt"
-  "c4po|c4po-privacy-audit-monthly|month-first5-03-00|prompt"
+  # The arithmetic that forces the split: the burn window is ~9h50m wide, so
+  # only 14h10m of the day is usable, while four jobs spaced >5h apart need
+  # >15h. No same-day phasing can satisfy both constraints — and because a 6h
+  # grid's largest gap is 6h, any such grid puts at least one slot inside a
+  # window that wide. Dropping the fourth job to days 6-10 removes it from the
+  # same-day packing problem entirely; alone on those days it is free to take a
+  # clean out-of-window hour, and the remaining three fit 11/17/23 with 6h gaps.
+  # Overlap with the burn window is now zero, down from two (03:00 and 09:00).
+  #
+  # Which job may move day range is NOT free: ai-sleeve's prompt is "first
+  # business day of the month" and gates on the first trading day, so it must
+  # stay on days 1-5. The three c4po audits gate on the calendar month only, so
+  # any one of them can move; assumptions was chosen as the least date-sensitive.
+  # If you move a job between these ranges, re-check that its prompt's own
+  # STEP 1 wording still matches the days it now fires on.
+  #
+  # ai-sleeve moved 09:00 -> 17:00 (2026-09-02). It has no intraday dependency —
+  # nothing in its prompt reads open/close/quote timing — and 17:00 local is
+  # after the US close, which suits a rebalance that reads daily data.
+  #
+  # Keep the five-day retry runs in each range: each prompt's state gate makes
+  # later firings no-ops after a successful run.
+  "c4po|c4po-lint-audit-monthly|month-first5-23-00|prompt"
+  "c4po|c4po-assumptions-audit-monthly|month-second5-11-00|prompt"
+  "c4po|c4po-privacy-audit-monthly|month-first5-11-00|prompt"
   "c4po|c4po-retro|weekly-wed-thu-12-00|prompt"
   "c4po|c4po-backlog-burndown|weekly-wed-01-00-06-10|prompt"
   "c4po|c4po-cli-update|weekly-sun-06-00|cli-update"
@@ -72,7 +85,7 @@ TASKS=(
   # row stays so the job remains in the tracked inventory; the one-shot reminder
   # below fires 2026-12-06 to ask whether to re-enable it.
   "warren-bot-fett|warren-bot-fett-daily-market-scan|weekly-mon-fri-09-00|prompt"
-  "warren-bot-fett|warren-bot-fett-ai-sleeve-monthly|month-first5-09-00|prompt"
+  "warren-bot-fett|warren-bot-fett-ai-sleeve-monthly|month-first5-17-00|prompt"
 )
 
 # Where each row came from, index-aligned with TASKS. Only used to make a bad
@@ -149,6 +162,30 @@ schedule_xml() {
     month-first5-09-00)
       printf '    <key>StartCalendarInterval</key>\n    <array>\n'
       for d in 1 2 3 4 5; do cal_entry "Day=$d" "Hour=9" "Minute=0"; done
+      printf '    </array>\n'
+      ;;
+    # The monthly grid: 11:00 / 17:00 / 23:00 on days 1-5, plus 11:00 on days
+    # 6-10 for the fourth job. Every slot clears the Wed 00:40-10:30 burn
+    # window, and the three same-day slots sit 6h apart. See the TASKS table
+    # above for why the fourth job has to leave days 1-5 entirely.
+    month-first5-11-00)
+      printf '    <key>StartCalendarInterval</key>\n    <array>\n'
+      for d in 1 2 3 4 5; do cal_entry "Day=$d" "Hour=11" "Minute=0"; done
+      printf '    </array>\n'
+      ;;
+    month-first5-17-00)
+      printf '    <key>StartCalendarInterval</key>\n    <array>\n'
+      for d in 1 2 3 4 5; do cal_entry "Day=$d" "Hour=17" "Minute=0"; done
+      printf '    </array>\n'
+      ;;
+    month-first5-23-00)
+      printf '    <key>StartCalendarInterval</key>\n    <array>\n'
+      for d in 1 2 3 4 5; do cal_entry "Day=$d" "Hour=23" "Minute=0"; done
+      printf '    </array>\n'
+      ;;
+    month-second5-11-00)
+      printf '    <key>StartCalendarInterval</key>\n    <array>\n'
+      for d in 6 7 8 9 10; do cal_entry "Day=$d" "Hour=11" "Minute=0"; done
       printf '    </array>\n'
       ;;
     month-first5-15-00)
