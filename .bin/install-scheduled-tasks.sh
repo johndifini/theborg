@@ -143,26 +143,15 @@ cal_entry() {
 # Emit the StartCalendarInterval block for a schedule id.
 schedule_xml() {
   case "$1" in
-    daily-10-00)
-      printf '    <key>StartCalendarInterval</key>\n    <dict>\n'
-      printf '        <key>Hour</key>\n        <integer>10</integer>\n'
-      printf '        <key>Minute</key>\n        <integer>0</integer>\n'
-      printf '    </dict>\n'
-      ;;
     # 13:00 daily — two hours after the Wednesday weekly reset, so a daily job
-    # never lands inside the burndown's Wed 01:00-11:00 burn window, and two
-    # hours before the 15:00 monthly slot. See
+    # never lands inside the burndown's Wed 00:40-10:30 burn window, and clear
+    # of the monthly slots at 11:00, 17:00 and 23:00. See
     # .claude/rules/burndown-window-is-not-schedulable.md.
     daily-13-00)
       printf '    <key>StartCalendarInterval</key>\n    <dict>\n'
       printf '        <key>Hour</key>\n        <integer>13</integer>\n'
       printf '        <key>Minute</key>\n        <integer>0</integer>\n'
       printf '    </dict>\n'
-      ;;
-    month-first5-09-00)
-      printf '    <key>StartCalendarInterval</key>\n    <array>\n'
-      for d in 1 2 3 4 5; do cal_entry "Day=$d" "Hour=9" "Minute=0"; done
-      printf '    </array>\n'
       ;;
     # The monthly grid: 11:00 / 17:00 / 23:00 on days 1-5, plus 11:00 on days
     # 6-10 for the fourth job. Every slot clears the Wed 00:40-10:30 burn
@@ -188,21 +177,6 @@ schedule_xml() {
       for d in 6 7 8 9 10; do cal_entry "Day=$d" "Hour=11" "Minute=0"; done
       printf '    </array>\n'
       ;;
-    month-first5-15-00)
-      printf '    <key>StartCalendarInterval</key>\n    <array>\n'
-      for d in 1 2 3 4 5; do cal_entry "Day=$d" "Hour=15" "Minute=0"; done
-      printf '    </array>\n'
-      ;;
-    month-first5-21-00)
-      printf '    <key>StartCalendarInterval</key>\n    <array>\n'
-      for d in 1 2 3 4 5; do cal_entry "Day=$d" "Hour=21" "Minute=0"; done
-      printf '    </array>\n'
-      ;;
-    month-first5-03-00)
-      printf '    <key>StartCalendarInterval</key>\n    <array>\n'
-      for d in 1 2 3 4 5; do cal_entry "Day=$d" "Hour=3" "Minute=0"; done
-      printf '    </array>\n'
-      ;;
     weekly-sun-wed-16-00)
       printf '    <key>StartCalendarInterval</key>\n    <array>\n'
       for w in 0 1 2 3; do cal_entry "Weekday=$w" "Hour=16" "Minute=0"; done
@@ -216,11 +190,6 @@ schedule_xml() {
     weekly-mon-fri-09-00)
       printf '    <key>StartCalendarInterval</key>\n    <array>\n'
       for w in 1 2 3 4 5; do cal_entry "Weekday=$w" "Hour=9" "Minute=0"; done
-      printf '    </array>\n'
-      ;;
-    weekly-mon-wed-fri-09-00)
-      printf '    <key>StartCalendarInterval</key>\n    <array>\n'
-      for w in 1 3 5; do cal_entry "Weekday=$w" "Hour=9" "Minute=0"; done
       printf '    </array>\n'
       ;;
     # Mon/Thu/Sat 09:00 — three runs a week at roughly even spacing that avoid
