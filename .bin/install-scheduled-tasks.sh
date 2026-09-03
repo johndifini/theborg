@@ -37,9 +37,27 @@ LAUNCH_AGENTS="$HOME/Library/LaunchAgents"
 # BORG_ROOT.
 TASKS=(
   "c4po|c4po-security-audit|daily-10-00|prompt"
-  "c4po|c4po-lint-audit-monthly|month-first5-09-00|prompt"
-  "c4po|c4po-assumptions-audit-monthly|month-first5-09-00|prompt"
-  "c4po|c4po-privacy-audit-monthly|month-first5-11-00|prompt"
+  # The four monthly model jobs sit on a six-hour grid — 03:00 privacy, 09:00
+  # warren-bot-fett/ai-sleeve, 15:00 lint, 21:00 assumptions — so no two share
+  # a five-hour usage window. The grid is ANCHORED ON ai-sleeve's pre-existing
+  # 09:00 (declared further down); the three c4po audits were placed around it.
+  # Move ai-sleeve and the grid breaks — rephase all four, don't shift one.
+  #
+  # Two of them, 03:00 and 09:00, land inside c4po-backlog-burndown's pre-reset
+  # window (reset minus two session windows minus slack — Wed 00:40-10:30 for an
+  # 11:00 reset). That is unavoidable, not an oversight: the window is ~9h50m
+  # wide, so four jobs spaced >5h apart need >15h of the 14h10m left outside it,
+  # and any 6h grid puts at least one slot inside a window that wide. This
+  # phasing is the best available with ai-sleeve fixed at 09:00 — it moved lint
+  # and assumptions out of the window and off each other, at the cost of putting
+  # privacy in. A phasing that halves the overlap (05/11/17/23) exists but
+  # requires moving ai-sleeve, which is warren-bot-fett's call, not this file's.
+  #
+  # Keep the first-five-days retries: each prompt's state gate makes later
+  # firings no-ops after a successful run.
+  "c4po|c4po-lint-audit-monthly|month-first5-15-00|prompt"
+  "c4po|c4po-assumptions-audit-monthly|month-first5-21-00|prompt"
+  "c4po|c4po-privacy-audit-monthly|month-first5-03-00|prompt"
   "c4po|c4po-retro|weekly-wed-thu-12-00|prompt"
   "c4po|c4po-backlog-burndown|weekly-wed-01-00-06-10|prompt"
   "c4po|c4po-cli-update|weekly-sun-06-00|cli-update"
@@ -119,9 +137,19 @@ schedule_xml() {
       for d in 1 2 3 4 5; do cal_entry "Day=$d" "Hour=9" "Minute=0"; done
       printf '    </array>\n'
       ;;
-    month-first5-11-00)
+    month-first5-15-00)
       printf '    <key>StartCalendarInterval</key>\n    <array>\n'
-      for d in 1 2 3 4 5; do cal_entry "Day=$d" "Hour=11" "Minute=0"; done
+      for d in 1 2 3 4 5; do cal_entry "Day=$d" "Hour=15" "Minute=0"; done
+      printf '    </array>\n'
+      ;;
+    month-first5-21-00)
+      printf '    <key>StartCalendarInterval</key>\n    <array>\n'
+      for d in 1 2 3 4 5; do cal_entry "Day=$d" "Hour=21" "Minute=0"; done
+      printf '    </array>\n'
+      ;;
+    month-first5-03-00)
+      printf '    <key>StartCalendarInterval</key>\n    <array>\n'
+      for d in 1 2 3 4 5; do cal_entry "Day=$d" "Hour=3" "Minute=0"; done
       printf '    </array>\n'
       ;;
     weekly-sun-wed-16-00)
