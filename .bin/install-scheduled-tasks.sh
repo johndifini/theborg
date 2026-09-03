@@ -36,7 +36,11 @@ LAUNCH_AGENTS="$HOME/Library/LaunchAgents"
 # companion; LINT.md records that narrow exemption. <agent> is relative to
 # BORG_ROOT.
 TASKS=(
-  "c4po|c4po-security-audit|daily-10-00|prompt"
+  # Moved off 10:00 on 2026-09-02: 10:00 sits inside the Wednesday burndown's
+  # 01:00-11:00 burn window, and this job has no state gate and no retry
+  # firing, so a starved run is a lost audit rather than a no-op. It was in
+  # fact lost on 2026-09-02 (exit 1 after one second, no report, no email).
+  "c4po|c4po-security-audit|daily-13-00|prompt"
   # The four monthly model jobs sit on a six-hour grid — 03:00 privacy, 09:00
   # warren-bot-fett/ai-sleeve, 15:00 lint, 21:00 assumptions — so no two share
   # a five-hour usage window. The grid is ANCHORED ON ai-sleeve's pre-existing
@@ -132,6 +136,16 @@ schedule_xml() {
       printf '        <key>Minute</key>\n        <integer>0</integer>\n'
       printf '    </dict>\n'
       ;;
+    # 13:00 daily — two hours after the Wednesday weekly reset, so a daily job
+    # never lands inside the burndown's Wed 01:00-11:00 burn window, and two
+    # hours before the 15:00 monthly slot. See
+    # .claude/rules/burndown-window-is-not-schedulable.md.
+    daily-13-00)
+      printf '    <key>StartCalendarInterval</key>\n    <dict>\n'
+      printf '        <key>Hour</key>\n        <integer>13</integer>\n'
+      printf '        <key>Minute</key>\n        <integer>0</integer>\n'
+      printf '    </dict>\n'
+      ;;
     month-first5-09-00)
       printf '    <key>StartCalendarInterval</key>\n    <array>\n'
       for d in 1 2 3 4 5; do cal_entry "Day=$d" "Hour=9" "Minute=0"; done
@@ -170,6 +184,16 @@ schedule_xml() {
     weekly-mon-wed-fri-09-00)
       printf '    <key>StartCalendarInterval</key>\n    <array>\n'
       for w in 1 3 5; do cal_entry "Weekday=$w" "Hour=9" "Minute=0"; done
+      printf '    </array>\n'
+      ;;
+    # Mon/Thu/Sat 09:00 — three runs a week at roughly even spacing that avoid
+    # Wednesday entirely. This is the slot for a job with NO state gate, which
+    # cannot no-op and retry if the Wednesday burndown starves it; a starved run
+    # is a permanently lost report. See
+    # .claude/rules/burndown-window-is-not-schedulable.md.
+    weekly-mon-thu-sat-09-00)
+      printf '    <key>StartCalendarInterval</key>\n    <array>\n'
+      for w in 1 4 6; do cal_entry "Weekday=$w" "Hour=9" "Minute=0"; done
       printf '    </array>\n'
       ;;
     # One-shot: launchd has no "run once" flag and StartCalendarInterval has no
