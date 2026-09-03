@@ -6252,3 +6252,95 @@ artifacts:
     review:
       last_reviewed: null
     related: []
+
+  agents-skills-burndown-window-is-not-schedulable-skill:
+    path: ".agents/skills/burndown-window-is-not-schedulable/SKILL.md"
+    type: generated_rule_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-rules-burndown-window-is-not-schedulable
+    introduced: 2026-09-02    # first git add
+    review:
+      last_reviewed: null
+    related: []
+
+  agents-skills-second-checkout-launchd-collision-skill:
+    path: ".agents/skills/second-checkout-launchd-collision/SKILL.md"
+    type: generated_rule_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-rules-second-checkout-launchd-collision
+    introduced: 2026-09-02    # first git add
+    review:
+      last_reviewed: null
+    related: []
+
+  c4po-agents-skills-google-drive-symlink-errors-skill:
+    path: c4po/.agents/skills/google-drive-symlink-errors/SKILL.md
+    type: generated_rule_bridge
+    status: draft
+    owner: c4po
+    scope: c4po
+    canonical_ref: c4po-claude-rules-google-drive-symlink-errors
+    introduced: 2026-09-02    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  c4po-agents-skills-scheduled-state-writes-skill:
+    path: c4po/.agents/skills/scheduled-state-writes/SKILL.md
+    type: generated_rule_bridge
+    status: draft
+    owner: c4po
+    scope: c4po
+    canonical_ref: c4po-claude-rules-scheduled-state-writes
+    introduced: 2026-09-02    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  c4po-claude-rules-google-drive-symlink-errors:
+    path: c4po/.claude/rules/google-drive-symlink-errors.md
+    type: scoped_rule
+    status: draft
+    owner: c4po
+    scope: c4po
+    introduced: 2026-09-02    # file mtime (untracked; not a history fact)
+    consumers: [claude-code, codex]
+    review:
+      last_reviewed: null
+    related: []
+
+  c4po-claude-rules-scheduled-state-writes:
+    path: c4po/.claude/rules/scheduled-state-writes.md
+    type: scoped_rule
+    status: draft
+    owner: c4po
+    scope: c4po
+    introduced: 2026-09-02    # file mtime (untracked; not a history fact)
+    consumers: [claude-code, codex]
+    review:
+      last_reviewed: null
+    related: []
+
+  claude-rules-burndown-window-is-not-schedulable:
+    path: ".claude/rules/burndown-window-is-not-schedulable.md"
+    type: scoped_rule
+    status: draft
+    scope: workspace
+    introduced: 2026-09-02    # first git add
+    consumers: [claude-code, codex]
+    review:
+      last_reviewed: null
+    related: []
+
+  claude-rules-second-checkout-launchd-collision:
+    path: ".claude/rules/second-checkout-launchd-collision.md"
+    type: scoped_rule
+    status: draft
+    scope: workspace
+    introduced: 2026-09-02    # first git add
+    consumers: [claude-code, codex]
+    review:
+      last_reviewed: null
+    related: []
