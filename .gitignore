@@ -58,6 +58,16 @@ Thumbs.db
 **/.private/
 **/CLAUDE.local.md
 
+# Workspace backlog and its decision log. Kept local, not published: the Done
+# entries narrate operating posture over time (which jobs ran unsandboxed, which
+# shipped unverified, security-audit finding numbers) — no secrets, but not
+# something the public repo needs to carry. The file itself stays in place and
+# every tool that reads it (`/backlog`, `/wrap`, the burndown, its Done-count
+# clobber tripwire) keeps working; only publication stops. Per-repo backlogs
+# under `repos/` are already ignored with the rest of that tree.
+# NOTE: this does not remove the file's existing history from the public repo.
+/BACKLOG.md
+
 # Claude Code agent worktrees — checkouts the harness creates in-tree for
 # parallel agent work. Each is a full working copy of the repo and would show up
 # as a large untracked directory; the branch is the durable artifact, not the

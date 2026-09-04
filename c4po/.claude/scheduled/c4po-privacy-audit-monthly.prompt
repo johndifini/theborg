@@ -61,12 +61,27 @@ identifier in it:
 - `.claude/rules/tracked-agent-files-are-public.md`: the `johndifini/theborg`
   occurrence is load-bearing because naming the public repository is the rule's
   premise.
-
-Control-text exclusion, not a durable allowlist: while the source backlog item
-for this audit still exists, do not report the absolute John home path or other
-identifiers quoted solely inside that item's own description. They document the
-check itself and disappear when the parent session closes the item. This does
-not exempt other content in `BACKLOG.md`.
+- `ari/career-dossier/` identity values: `John DiFini`, `agent.johndifini.com`,
+  and `johndifini.com` are load-bearing wherever they appear in a tracked file,
+  because the dossier is a deliberately attributed public corpus served from that
+  hostname, and the `schemas/*.json` `$id` values are published, resolvable URLs.
+  This covers `docs/`, `dist/`, `templates/landing-page.html`, and `schemas/`.
+  Per ADR-0001 this is value-scoped, not a
+  directory exemption: any other identifier under `ari/career-dossier/` — a real
+  email address, phone number, absolute path, private-source filename, or a third
+  party's name — is still a finding.
+- `ari/career-dossier/content/claims/*.json` and the generated
+  `dist/career.json`, `dist/career.md`, `dist/evidence.json`, and `dist/llms.txt`:
+  within a record carrying both `"visibility": "public"` and a non-empty
+  `approvedAt`, the `organizations`, `period`, `title`, `claim`, `skills`, and
+  `limitations` values are load-bearing employment history, because ADR-0001
+  makes explicit candidate approval — not this audit — the publication control
+  for career facts. Re-reporting an approved claim every month is noise the
+  audit cannot converge out of. Still report: a record missing `approvedAt` or
+  whose `visibility` is not exactly `public`; a private fact in a field outside
+  that list; and any claim rendered into a tracked `dist/` file that has no
+  corresponding tracked source under `content/claims/`, since that publishes a
+  career fact whose reviewable source is not in git.
 
 Known limitations: this cannot catch an identifier class nobody thought to
 look for, and it cannot catch anything in an untracked or ignored file. Most
