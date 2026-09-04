@@ -153,3 +153,36 @@ Required order before re-running this audit:
 4. Re-run the route, header, source-exposure, and byte-comparison audit. Only a
    run where the six routes return 200 with their declared media types makes the
    404 source probes meaningful.
+
+### Build failure and `.vercelignore` removal — 2026-09-04
+
+The first Git-connected production build of `2e31828` failed in one second:
+
+```text
+Cloning github.com/johndifini/theborg (Branch: main, Commit: 2e31828)
+Found .vercelignore
+Removed 415 ignored files defined in .vercelignore
+Running "git diff --quiet HEAD^ HEAD ./"
+warning: Not a git repository. Use --no-index to compare two paths outside a working tree
+```
+
+`.vercelignore` is resolved against the **deployment** root for a CLI deploy but
+against the **repository** root for a Git-connected build. The allowlist was
+written for the CLI path, so on the Git build `/*` swept the repository root —
+the removal log names workspace paths such as `/.bin/notify-email.sh`, not
+project paths — while `!content`, `!src`, and the other negations pointed at
+repository-root directories that do not exist. It removed 415 files against 388
+tracked files, so `.git` went with them and `ignoreCommand` had no repository to
+inspect.
+
+The file is removed rather than repaired. It could not do its stated job on a
+Git build: excluding documentation and fixtures from the upload never controlled
+what is reachable, because Vercel serves `outputDirectory` alone. That is the
+control the 2026-09-02 preview audit actually exercised when `/src/build.ts` and
+`/package.json` returned 404. Build inputs are now scoped by the project's Root
+Directory. ADR-0001 §8 is amended accordingly, and `tests/deployment.test.ts`
+asserts the file stays absent and that `outputDirectory` remains `dist`.
+
+`ignoreCommand` is unchanged. With `.git` present it can run, but whether
+`HEAD^` resolves in Vercel's clone depth is still unproven; the next build's log
+settles it.

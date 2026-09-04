@@ -71,22 +71,26 @@ test("all responses receive the required static-site security headers", async ()
   assert.match(policy, /form-action 'none'/u);
 });
 
-test("the upload allowlist contains only remote-build inputs", async () => {
-  const entries = (await readProjectText(".vercelignore"))
-    .split(/\r?\n/u)
-    .map((line) => line.trim())
-    .filter(Boolean);
-  assert.deepEqual(entries, [
-    "/*",
-    "!content",
-    "!package.json",
-    "!package-lock.json",
-    "!schemas",
-    "!src",
-    "!templates",
-    "!vercel.json"
-  ]);
-  assert.ok(!entries.some((entry) => /(?:private|docs|examples|tests)/iu.test(entry)));
+test("no .vercelignore strips the Git-connected build context", async () => {
+  // A repository-root `/*` allowlist removed `.git` on the Git-connected build
+  // and broke `ignoreCommand` (2026-09-04). `.vercelignore` is resolved against
+  // the repository root for Git builds but against the deployment root for CLI
+  // deploys, so an allowlist written for one path silently guts the other. The
+  // build context is scoped by the project's Root Directory instead.
+  await assert.rejects(
+    () => readProjectText(".vercelignore"),
+    /ENOENT/u,
+    ".vercelignore must stay absent; it cannot scope a Git-connected build"
+  );
+});
+
+test("only the generated output directory is served", async () => {
+  // Source exposure is prevented by Vercel serving `outputDirectory` alone,
+  // which the preview audit confirmed with 404s for /src/build.ts and
+  // /package.json. This is the control that actually holds, so assert it.
+  const config = await loadConfig();
+  assert.equal(config.outputDirectory, "dist");
+  assert.equal(config.framework, null);
 });
 
 test("the deployment output inventory is the public six-file contract", () => {

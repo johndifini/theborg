@@ -1,6 +1,6 @@
 # ADR-0001: Ari owns an AI-first public career dossier with private provenance
 
-**Status:** Accepted — 2026-09-01; amended — 2026-09-02
+**Status:** Accepted — 2026-09-01; amended — 2026-09-02, 2026-09-04
 **Decision owners:** John DiFini (product and publication), Ari (career-domain
 ownership), Architetto (architecture), Jony Vibe (landing-page visual direction)
 
@@ -293,11 +293,21 @@ Custom domain:    agent.johndifini.com
 directory, clean URL behavior, the `/agent` alias, explicit content types for
 Markdown/JSON/text artifacts, and conservative cache/security headers.
 
-The project SHALL deploy from tracked Git content only. `.vercelignore` SHALL
-exclude non-build inputs such as documentation, adversarial fixtures, and local
-Vercel metadata while retaining the package manifests, public content, schemas,
-templates, and generator source required by the remote build. Only `dist/` is
-served as deployment output.
+The project SHALL deploy from tracked Git content only. The build context SHALL
+be scoped by the Vercel project's Root Directory, and only `dist/` is served as
+deployment output.
+
+**Amended 2026-09-04.** This clause previously required a `.vercelignore`
+allowlist. That requirement is withdrawn and the file is removed. `.vercelignore`
+is resolved against the *deployment* root for a CLI deploy but against the
+*repository* root for a Git-connected build, so the allowlist written for the
+former silently stripped the entire checkout — including `.git` — on the first
+Git-connected production build, which failed in one second when `ignoreCommand`
+found no repository. The clause was also ineffective at its stated purpose:
+excluding documentation and fixtures from the upload never controlled what is
+reachable, because Vercel serves `outputDirectory` alone. The preview audit had
+already demonstrated the real control by returning 404 for `/src/build.ts` and
+`/package.json`.
 
 Vercel SHALL be configured to skip deployments when the project directory has no
 relevant change. No Vercel environment variable may contain private corpus data.
