@@ -186,3 +186,27 @@ asserts the file stays absent and that `outputDirectory` remains `dist`.
 `ignoreCommand` is unchanged. With `.git` present it can run, but whether
 `HEAD^` resolves in Vercel's clone depth is still unproven; the next build's log
 settles it.
+
+### Second build failure — empty `content/evidence/` — 2026-09-04
+
+Removing `.vercelignore` fixed the first failure: `.git` survived, the
+`ignoreCommand` ran without error (so `HEAD^` does resolve in Vercel's clone),
+and `npm ci` completed. The build then failed at `npm run build`:
+
+```text
+Error: ENOENT: no such file or directory, scandir '/vercel/path0/ari/career-dossier/content/evidence'
+    at async sourceFiles (src/privacy.ts:59)
+    at async assertDeployableSourcesSafe (src/privacy.ts:51)
+```
+
+The corpus has zero public evidence records by design, so `content/evidence/`
+is empty — and Git does not track empty directories, so the clone had no such
+path while the local working tree did. `npm run verify` therefore cannot catch
+this class of failure: it passes locally against a directory that does not exist
+in the repository.
+
+Fixed with a tracked `content/evidence/.gitkeep`. `sourceFiles` filters for
+`.json`, so the placeholder is not read as a corpus record, and
+`assertDeployableSourcesSafe` keeps failing loudly if a corpus directory ever
+genuinely disappears. `content/evidence/` was the only empty directory in the
+project.
