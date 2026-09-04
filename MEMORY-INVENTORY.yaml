@@ -6375,3 +6375,23 @@ artifacts:
     review:
       last_reviewed: null
     related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-private-cloud-compute:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/private-cloud-compute.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-09-02    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-raw-apple-foundation-model-9924512:
+    path: cerebruh/wikis/local-ai-apple-silicon/raw/apple-foundation-models-third-party-ceiling.md
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-09-02    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
