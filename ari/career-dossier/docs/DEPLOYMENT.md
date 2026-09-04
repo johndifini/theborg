@@ -210,3 +210,48 @@ Fixed with a tracked `content/evidence/.gitkeep`. `sourceFiles` filters for
 `assertDeployableSourcesSafe` keeps failing loudly if a corpus directory ever
 genuinely disappears. `content/evidence/` was the only empty directory in the
 project.
+
+### Production audit result — 2026-09-04: PASSED
+
+Deployment `career-dossier-9hhwn6vw6` built from `177d2cd`, status `Ready`,
+target Production, aliased to `agent.johndifini.com`.
+
+Routes — all 200:
+
+```text
+/  /agent  /career.json  /career.md  /evidence.json  /llms.txt
+```
+
+Headers — every route returned exactly the `vercel.json` contract: the declared
+`Content-Type`; the reviewed Content Security Policy (`default-src 'none'`,
+`frame-ancestors 'none'`, `form-action 'none'`, `base-uri 'none'`);
+`Referrer-Policy: no-referrer`; `X-Content-Type-Options: nosniff`;
+`Strict-Transport-Security: max-age=63072000`; and the bounded cache policy
+(`max-age=0, must-revalidate` for HTML, `max-age=300, must-revalidate` for the
+four machine artifacts).
+
+Source exposure — 404 for all of `/src/build.ts`, `/src/privacy.ts`,
+`/package.json`, `/package-lock.json`, `/vercel.json`,
+`/schemas/public-claim.schema.json`, `/content/profile.json`,
+`/content/claims/RB-002.json`, `/docs/DEPLOYMENT.md`,
+`/tests/deployment.test.ts`, `/examples/synthetic/public-claim-completed.json`,
+`/.git/config`, and `/AGENTS.md`. Unlike the 2026-09-04 failed run, these 404s
+are meaningful: the six documented routes returned 200 in the same pass.
+
+Artifact integrity — all six served files are byte-identical to local `dist/`,
+including `/`. The platform feedback-script injection seen on the preview does
+not occur on production, so `/` and `/agent` are now identical.
+
+Content — the served `career.json` carries the John DiFini profile with exactly
+70 claims, zero `EX-*` ids, and zero evidence records. A scan of all six served
+files for `.private`, private directory names, absolute home paths, and the
+retired `Alex Example` fixture found nothing.
+
+TLS and canonicalisation — Let's Encrypt `CN=agent.johndifini.com`, valid
+2026-09-04 to 2026-12-03. `http://` returns 308 to `https://`. `/agent/`
+resolves 200 via `cleanUrls`.
+
+Still unproven: that an unrelated Borg commit produces no dossier deployment.
+`ignoreCommand` now runs without error, but every commit so far has touched the
+project directory, so the skip path has not been exercised. Confirm it the next
+time a sibling agent commits outside `ari/career-dossier/`.
