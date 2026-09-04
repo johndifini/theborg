@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-03T01:54:45Z",
+  "asOf": "2026-09-02",
+  "claim": "Developed a scalable financial-data processing platform that served as a backbone of Goldman Sachs' institutional trading product, REDIPlus.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-057",
+  "limitations": [
+    "The claim preserves the product's historical name and employer context from the 2001–2005 role.",
+    "No transaction-volume, latency, availability, revenue, or sole-authorship claim is made."
+  ],
+  "organizations": [
+    "Goldman Sachs, Execution & Clearing"
+  ],
+  "period": {
+    "end": "2005",
+    "start": "2001"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Financial data",
+    "Platform engineering",
+    "Scalability",
+    "Trading systems"
+  ],
+  "status": "historical",
+  "title": "Build the REDIPlus financial-data platform",
+  "type": "experience",
+  "visibility": "public"
+}

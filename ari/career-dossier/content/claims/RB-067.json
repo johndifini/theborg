@@ -1,0 +1,31 @@
+{
+  "approvedAt": "2026-09-04T02:30:46Z",
+  "asOf": "2026-09-03",
+  "claim": "Built Perl scripts to convert single-threaded C and Fortran code into a multithreaded C++ tier.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-067",
+  "limitations": [
+    "The claim describes a code-conversion technique and does not state that every workload or the complete legacy estate was modernized.",
+    "No proprietary code, conversion scale, performance result, delivery timeline, or business outcome is disclosed."
+  ],
+  "organizations": [
+    "XOR, Inc."
+  ],
+  "period": {
+    "end": "2000",
+    "start": "2000"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "C and C++",
+    "Fortran",
+    "Multithreading",
+    "Perl",
+    "Software modernization"
+  ],
+  "status": "historical",
+  "title": "Modernize C and Fortran workloads",
+  "type": "experience",
+  "visibility": "public"
+}

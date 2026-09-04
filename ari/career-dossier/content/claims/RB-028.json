@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:22:09Z",
+  "asOf": "2026-09-03",
+  "claim": "Set the strategy for core dashboard experiences, using an initial business-intelligence implementation before building a more extensible platform for richer data visualizations.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-028",
+  "limitations": [
+    "The claim describes a staged product and platform strategy rather than sole implementation or ownership of every dashboard and visualization.",
+    "No vendor identity, internal analytics, data source, architecture detail, user identity, adoption metric, or quantified outcome is disclosed."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2021",
+    "start": "2017"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Analytics platforms",
+    "Data visualization",
+    "MVP strategy",
+    "Platform strategy"
+  ],
+  "status": "historical",
+  "title": "Evolve analytics dashboards from MVP to platform",
+  "type": "leadership",
+  "visibility": "public"
+}

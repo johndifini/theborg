@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:22:09Z",
+  "asOf": "2026-09-03",
+  "claim": "Oversaw custom and third-party workforce-management system integrations designed to create a more seamless user experience.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-026",
+  "limitations": [
+    "Oversight does not imply sole implementation or ownership of every integrated system, partner relationship, or user-experience decision.",
+    "No employee data, customer data, provider identity, integration design, adoption metric, or quantified user outcome is disclosed."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2021",
+    "start": "2017"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Systems integration",
+    "Technology leadership",
+    "User experience",
+    "Workforce technology"
+  ],
+  "status": "historical",
+  "title": "Oversee workforce-management system integrations",
+  "type": "leadership",
+  "visibility": "public"
+}

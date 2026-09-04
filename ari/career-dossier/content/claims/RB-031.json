@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:22:09Z",
+  "asOf": "2026-09-03",
+  "claim": "Led full-lifecycle software and database projects spanning design, development, testing, deployment, and production support.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-031",
+  "limitations": [
+    "The listed activities span projects during the historical role and are not presented as one project's deliverable set.",
+    "Lifecycle leadership does not imply sole execution or ownership, and no project count, delivery metric, system detail, or business outcome is claimed."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2021",
+    "start": "2017"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Database development",
+    "Production support",
+    "Software delivery",
+    "Software-development lifecycle"
+  ],
+  "status": "historical",
+  "title": "Lead full-lifecycle software and database delivery",
+  "type": "leadership",
+  "visibility": "public"
+}

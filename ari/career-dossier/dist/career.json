@@ -1,62 +1,214 @@
 {
-  "asOf": "2026-09-01",
+  "asOf": "2026-09-03",
   "claims": [
     {
-      "approvedAt": "2026-09-01T00:00:00Z",
-      "asOf": "2026-08-01",
-      "claim": "Led a fictional cross-functional team that redesigned an example intake process.",
-      "evidenceIds": [
-        "EVID-EX-001"
-      ],
-      "evidenceLevel": "publicly-documented",
-      "id": "EX-001",
+      "approvedAt": "2026-09-04T02:48:36Z",
+      "asOf": "2026-09-03",
+      "claim": "Restructured software-engineering work into smaller autonomous teams to reduce context switching and clarify priorities.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-002",
       "limitations": [
-        "No real person or employer is described",
-        "Synthetic demonstration only"
+        "No team name or count, employee identity or data, restructuring detail, measured productivity result, or quantified outcome is disclosed.",
+        "The claim describes an organizational-design approach and does not imply sole authority over every staffing, reporting, or prioritization decision."
       ],
       "organizations": [
-        "Example Cooperative"
+        "American Trust/EdgeCo Holdings"
       ],
       "period": {
-        "end": "2026",
-        "start": "2025"
+        "end": null,
+        "start": "2021"
       },
       "schemaVersion": 1,
       "skills": [
-        "Change management",
-        "Operations",
-        "Process design"
+        "Engineering culture",
+        "Organizational design",
+        "Prioritization",
+        "Team autonomy"
       ],
       "status": "completed",
-      "title": "Led a synthetic process redesign",
+      "title": "Restructure engineering work around autonomous teams",
       "type": "leadership",
       "visibility": "public"
     },
     {
-      "approvedAt": "2026-09-01T00:00:00Z",
-      "asOf": "2026-09-01",
-      "claim": "Building a fictional reporting tool to demonstrate time-sensitive claim handling.",
+      "approvedAt": "2026-09-04T02:48:36Z",
+      "asOf": "2026-09-03",
+      "claim": "Set an engineering hiring strategy centered on recruiting high-caliber, creative talent for a fast-paced product environment.",
       "evidenceIds": [],
-      "evidenceLevel": "candidate-confirmed",
-      "id": "EX-002",
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-003",
       "limitations": [
-        "No outcome claim",
-        "Not publicly launched",
-        "Synthetic demonstration only"
+        "No candidate or employee identity, evaluation criterion, hiring count, staffing target, retention measure, or quantified outcome is disclosed.",
+        "Setting hiring strategy does not imply sole execution of recruiting, interviewing, selection, compensation, or every hiring decision."
       ],
-      "organizations": [],
+      "organizations": [
+        "American Trust/EdgeCo Holdings"
+      ],
       "period": {
         "end": null,
-        "start": "2026"
+        "start": "2021"
       },
       "schemaVersion": 1,
       "skills": [
-        "Data modeling",
-        "TypeScript"
+        "Engineering leadership",
+        "Hiring strategy",
+        "Organizational growth",
+        "Talent strategy"
       ],
-      "status": "in-development",
-      "title": "Building a synthetic reporting tool",
-      "type": "project",
+      "status": "completed",
+      "title": "Set an engineering hiring strategy",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:48:36Z",
+      "asOf": "2026-09-03",
+      "claim": "Led and influenced technical architecture, product, and user-experience design decisions.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-007",
+      "limitations": [
+        "No proprietary design, architecture, product roadmap, customer data, internal decision, or quantified outcome is disclosed.",
+        "The wording reflects shared design influence and does not imply sole ownership or authorship of every architecture, product, or user-experience decision."
+      ],
+      "organizations": [
+        "American Trust/EdgeCo Holdings"
+      ],
+      "period": {
+        "end": null,
+        "start": "2021"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Architecture",
+        "Cross-functional leadership",
+        "Product design",
+        "User experience"
+      ],
+      "status": "completed",
+      "title": "Influence architecture, product, and user-experience design",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:48:36Z",
+      "asOf": "2026-09-03",
+      "claim": "Built cross-functional partnerships to identify user needs and translate them into technical solutions.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-008",
+      "limitations": [
+        "No stakeholder identity, internal function list, customer data, initiative detail, proprietary solution, or quantified outcome is disclosed.",
+        "The claim describes collaborative discovery and delivery and does not imply sole ownership of requirements, product decisions, or implementation."
+      ],
+      "organizations": [
+        "American Trust/EdgeCo Holdings"
+      ],
+      "period": {
+        "end": null,
+        "start": "2021"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Cross-functional collaboration",
+        "Product discovery",
+        "Stakeholder management",
+        "Technical delivery"
+      ],
+      "status": "completed",
+      "title": "Build cross-functional product partnerships",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:48:36Z",
+      "asOf": "2026-09-03",
+      "claim": "Provided technical leadership for teams and systems supporting retirement-services recordkeeping.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-010",
+      "limitations": [
+        "No customer or plan identity or data, platform architecture, operational detail, staffing figure, financial measure, or quantified outcome is disclosed.",
+        "The claim is limited to retirement-services recordkeeping and does not imply sole ownership of every related team, product, system, or business function."
+      ],
+      "organizations": [
+        "American Trust/EdgeCo Holdings"
+      ],
+      "period": {
+        "end": null,
+        "start": "2021"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Engineering leadership",
+        "Fintech",
+        "Retirement services",
+        "Systems leadership"
+      ],
+      "status": "completed",
+      "title": "Lead retirement-recordkeeping engineering",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:48:36Z",
+      "asOf": "2026-09-03",
+      "claim": "Updated engineering role titles to align with technology-industry conventions and support a growth-oriented team culture.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-012",
+      "limitations": [
+        "No employee identity or data, compensation or leveling detail, prior or revised title, promotion decision, retention result, or quantified outcome is disclosed.",
+        "The claim describes an organizational-development practice and does not imply that title changes alone produced employee growth or business results."
+      ],
+      "organizations": [
+        "American Trust/EdgeCo Holdings"
+      ],
+      "period": {
+        "end": null,
+        "start": "2021"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Engineering culture",
+        "Organizational design",
+        "Role design",
+        "Talent development"
+      ],
+      "status": "completed",
+      "title": "Modernize engineering role titles",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:30:46Z",
+      "asOf": "2026-09-03",
+      "claim": "Directed the strategy, tactical management, and governance of a technology organization spanning full-stack engineering, infrastructure, tooling, and operations.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-013",
+      "limitations": [
+        "No budget, staffing level, security scope, proprietary operating detail, or quantified outcome is disclosed.",
+        "The claim describes organizational leadership and does not imply sole execution or ownership of every function and decision."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2021",
+        "start": "2017"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "CTO leadership",
+        "Engineering leadership",
+        "Technology governance",
+        "Technology operations"
+      ],
+      "status": "historical",
+      "title": "Direct a technology organization",
+      "type": "leadership",
       "visibility": "public"
     },
     {
@@ -150,6 +302,96 @@
       "visibility": "public"
     },
     {
+      "approvedAt": "2026-09-04T02:04:58Z",
+      "asOf": "2026-09-03",
+      "claim": "Modernized a legacy technology stack by introducing PostgreSQL, Python, D3, Node.js, JavaScript, Git, Linux, and cloud services.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-017",
+      "limitations": [
+        "The claim does not state that every legacy component was replaced or quantify delivery, reliability, cost, or business outcomes.",
+        "The technologies are source-supported examples introduced during the role, not an exhaustive architecture inventory or claim of sole adoption authority."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2021",
+        "start": "2017"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Cloud services",
+        "Open-source technologies",
+        "Platform engineering",
+        "Technology modernization"
+      ],
+      "status": "historical",
+      "title": "Modernize a legacy technology stack",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:04:58Z",
+      "asOf": "2026-09-03",
+      "claim": "Created customer-focused product roadmaps emphasizing intuitive, polished experiences and supported delivery with capacity planning and executive project-status reporting.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-018",
+      "limitations": [
+        "No customer identity, roadmap contents, capacity figure, adoption result, satisfaction measure, or financial outcome is disclosed.",
+        "The claim describes collaborative product and delivery planning rather than sole authority over product priorities, staffing, or executive decisions."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2021",
+        "start": "2017"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Capacity planning",
+        "Executive communication",
+        "Product roadmapping",
+        "User experience"
+      ],
+      "status": "historical",
+      "title": "Build customer-focused roadmaps and delivery plans",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:04:58Z",
+      "asOf": "2026-09-03",
+      "claim": "Established coding, security, testing, and quality standards and architectural patterns for the company's digital platforms.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-019",
+      "limitations": [
+        "No proprietary architecture, security control, test procedure, certification, vulnerability result, or quantified quality outcome is disclosed.",
+        "The claim describes engineering governance and does not imply sole authorship, sole enforcement authority, or a legal or regulatory compliance determination."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2021",
+        "start": "2017"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Architecture governance",
+        "Engineering standards",
+        "Quality engineering",
+        "Security governance"
+      ],
+      "status": "historical",
+      "title": "Establish platform security and quality standards",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
       "approvedAt": "2026-09-02T02:18:00Z",
       "asOf": "2026-09-01",
       "claim": "Architected and developed the company's first secure microservices API for financial institutions, taking it from initial design through production launch and knowledge transfer.",
@@ -208,6 +450,546 @@
       ],
       "status": "historical",
       "title": "Launch the first custom web and mobile applications",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:04:58Z",
+      "asOf": "2026-09-03",
+      "claim": "Built collaborative relationships with product leaders and stakeholders and introduced shared diagramming, collaboration, and work-management tools to improve communication and requirements gathering.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-022",
+      "limitations": [
+        "No customer identity, vendor identity, internal requirement, adoption metric, delivery result, or productivity improvement is disclosed.",
+        "The claim describes collaborative practices and tool adoption rather than sole ownership of stakeholder relationships or requirements decisions."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2021",
+        "start": "2017"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Collaboration",
+        "Delivery tooling",
+        "Requirements gathering",
+        "Stakeholder alignment"
+      ],
+      "status": "historical",
+      "title": "Improve collaboration and requirements gathering",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:30:46Z",
+      "asOf": "2026-09-03",
+      "claim": "Built an analytical process to measure engineering time-allocation trends and inform the balance between system maintenance and high-priority product work.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-023",
+      "limitations": [
+        "No employee-level data, allocation percentage, staffing figure, project detail, productivity result, or financial outcome is disclosed.",
+        "The process supplied decision support and does not imply sole authority over staffing, maintenance, or product priorities."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2021",
+        "start": "2017"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Capacity management",
+        "Engineering analytics",
+        "Portfolio prioritization",
+        "Resource planning"
+      ],
+      "status": "historical",
+      "title": "Measure engineering capacity allocation",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:04:58Z",
+      "asOf": "2026-09-03",
+      "claim": "Established context-specific guidelines for selecting technology stacks and programming languages based on the work being performed.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-024",
+      "limitations": [
+        "No proprietary evaluation criteria, architecture decision, vendor identity, cost figure, or quantified engineering outcome is disclosed.",
+        "The guidelines supported technology decisions and do not imply sole approval authority or universal rules for every system and engineering team."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2021",
+        "start": "2017"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Architecture standards",
+        "Programming-language selection",
+        "Technology evaluation",
+        "Technology strategy"
+      ],
+      "status": "historical",
+      "title": "Establish technology-selection guidelines",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:22:09Z",
+      "asOf": "2026-09-03",
+      "claim": "Set strategic quarterly objectives and connected them to tactical resource planning, product roadmaps, and executive portfolio reporting.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-025",
+      "limitations": [
+        "No staffing level, project count, budget, roadmap detail, delivery result, or financial outcome is disclosed.",
+        "The claim describes leadership within a collaborative planning process and does not imply sole authority over objectives, resources, roadmaps, or portfolio decisions."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2021",
+        "start": "2017"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Executive communication",
+        "Objectives and key results",
+        "Portfolio management",
+        "Resource planning"
+      ],
+      "status": "historical",
+      "title": "Translate objectives into resource and portfolio plans",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:22:09Z",
+      "asOf": "2026-09-03",
+      "claim": "Oversaw custom and third-party workforce-management system integrations designed to create a more seamless user experience.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-026",
+      "limitations": [
+        "No employee data, customer data, provider identity, integration design, adoption metric, or quantified user outcome is disclosed.",
+        "Oversight does not imply sole implementation or ownership of every integrated system, partner relationship, or user-experience decision."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2021",
+        "start": "2017"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Systems integration",
+        "Technology leadership",
+        "User experience",
+        "Workforce technology"
+      ],
+      "status": "historical",
+      "title": "Oversee workforce-management system integrations",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:22:09Z",
+      "asOf": "2026-09-03",
+      "claim": "Expanded the platform's integrations with payroll providers.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-027",
+      "limitations": [
+        "No multiplier, baseline, final integration count, or expansion dates are asserted.",
+        "No provider identity, proprietary integration detail, adoption result, transaction volume, or financial outcome is disclosed."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2021",
+        "start": "2017"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "API integrations",
+        "Payroll technology",
+        "Platform growth",
+        "Systems integration"
+      ],
+      "status": "historical",
+      "title": "Expand payroll-provider integrations",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:22:09Z",
+      "asOf": "2026-09-03",
+      "claim": "Set the strategy for core dashboard experiences, using an initial business-intelligence implementation before building a more extensible platform for richer data visualizations.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-028",
+      "limitations": [
+        "No vendor identity, internal analytics, data source, architecture detail, user identity, adoption metric, or quantified outcome is disclosed.",
+        "The claim describes a staged product and platform strategy rather than sole implementation or ownership of every dashboard and visualization."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2021",
+        "start": "2017"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Analytics platforms",
+        "Data visualization",
+        "MVP strategy",
+        "Platform strategy"
+      ],
+      "status": "historical",
+      "title": "Evolve analytics dashboards from MVP to platform",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:30:46Z",
+      "asOf": "2026-09-03",
+      "claim": "Presented the company's proprietary products to prospective buyers during a company-sale process.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-029",
+      "limitations": [
+        "No buyer identity, product detail, valuation, transaction term, purchase-price result, or causal deal outcome is disclosed.",
+        "The claim describes product demonstrations and does not imply sole responsibility for the sale process or buyer decisions."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2021",
+        "start": "2017"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Executive presentation",
+        "M&A support",
+        "Product demonstrations",
+        "Product storytelling"
+      ],
+      "status": "historical",
+      "title": "Support a company-sale process through product demonstrations",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:22:09Z",
+      "asOf": "2026-09-03",
+      "claim": "Fostered innovation by studying industry trends, explaining their relevance, and writing about technology and financial markets to educate team members.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-030",
+      "limitations": [
+        "No private research, internal writing, investment recommendation, adoption metric, or quantified organizational outcome is disclosed.",
+        "The claim describes internal learning and communication practices and does not assert publication, external recognition, or sole responsibility for team innovation."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2021",
+        "start": "2017"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Continuous learning",
+        "Industry research",
+        "Technical communication",
+        "Thought leadership"
+      ],
+      "status": "historical",
+      "title": "Promote innovation through industry research and writing",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:22:09Z",
+      "asOf": "2026-09-03",
+      "claim": "Led full-lifecycle software and database projects spanning design, development, testing, deployment, and production support.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-031",
+      "limitations": [
+        "Lifecycle leadership does not imply sole execution or ownership, and no project count, delivery metric, system detail, or business outcome is claimed.",
+        "The listed activities span projects during the historical role and are not presented as one project's deliverable set."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2021",
+        "start": "2017"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Database development",
+        "Production support",
+        "Software delivery",
+        "Software-development lifecycle"
+      ],
+      "status": "historical",
+      "title": "Lead full-lifecycle software and database delivery",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-03T01:46:16Z",
+      "asOf": "2026-09-02",
+      "claim": "Scaled an engineering team from two to eight people and led delivery of a self-directed IRA portal and IRA distribution wizard.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-032",
+      "limitations": [
+        "No adoption, revenue, or customer-outcome metric is claimed for the two products.",
+        "The team-size figures describe growth during the role and do not assert a single point-in-time organization chart."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2012",
+        "start": "2009"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Engineering leadership",
+        "Product delivery",
+        "Retirement technology",
+        "Team scaling"
+      ],
+      "status": "historical",
+      "title": "Scale an engineering team and deliver retirement tools",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-03T01:46:16Z",
+      "asOf": "2026-09-02",
+      "claim": "Introduced agile practices to improve risk management, responsiveness to change, and delivery predictability, with practices later adopted across the organization.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-033",
+      "limitations": [
+        "No specific framework, delivery-frequency change, or quantified improvement is claimed.",
+        "Organization-wide adoption does not imply sole implementation by one person."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2012",
+        "start": "2009"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Agile transformation",
+        "Change management",
+        "Delivery predictability",
+        "Risk management"
+      ],
+      "status": "historical",
+      "title": "Introduce agile practices across the organization",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-03T01:46:16Z",
+      "asOf": "2026-09-02",
+      "claim": "Served on the Architecture Team, reviewing system designs, evaluating application frameworks, setting standards, and providing technical guidance.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-034",
+      "limitations": [
+        "Architecture Team membership does not imply sole decision authority.",
+        "No quantified delivery or reliability outcome is attributed to this governance work."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2012",
+        "start": "2009"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Architecture governance",
+        "Design review",
+        "Technical guidance",
+        "Technical standards"
+      ],
+      "status": "historical",
+      "title": "Serve on an enterprise architecture team",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-03T01:46:16Z",
+      "asOf": "2026-09-02",
+      "claim": "Mentored engineers with sample code, architecture and sequence diagrams, data models, client stubs, and SQL examples, and used production incidents as troubleshooting lessons.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-035",
+      "limitations": [
+        "No quantified performance or promotion outcome is attributed to the mentoring.",
+        "The examples describe mentoring methods used during the role rather than one discrete program."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2012",
+        "start": "2009"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Architecture communication",
+        "Incident learning",
+        "Mentoring",
+        "Technical communication"
+      ],
+      "status": "historical",
+      "title": "Mentor engineers through artifacts and incidents",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:42:50Z",
+      "asOf": "2026-09-03",
+      "claim": "Provided management support for a core-system conversion.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-036",
+      "limitations": [
+        "The asset measure, valuation date, personal scope, architecture, customer data, conversion result, and quantified outcome are not disclosed or independently verified.",
+        "The claim establishes management support and does not imply sole program authority, technical implementation, or responsibility for every conversion decision."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2012",
+        "start": "2009"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Core-system conversions",
+        "Financial systems",
+        "Program support",
+        "Risk management"
+      ],
+      "status": "historical",
+      "title": "Support a core-system conversion",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:42:50Z",
+      "asOf": "2026-09-03",
+      "claim": "Contributed to banking-product redesign for a company spinoff in which deposit-insurance considerations were a stated design objective.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-037",
+      "limitations": [
+        "No product structure, customer identity or data, coverage amount, achieved coverage, proprietary design detail, or quantified outcome is disclosed.",
+        "The claim describes a product-design objective and does not make a legal conclusion, coverage guarantee, eligibility determination, or representation about regulatory approval."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2012",
+        "start": "2009"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Banking products",
+        "Product design",
+        "Regulatory considerations",
+        "Spinoff support"
+      ],
+      "status": "historical",
+      "title": "Redesign banking products for a company spinoff",
+      "type": "experience",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-03T01:46:16Z",
+      "asOf": "2026-09-02",
+      "claim": "Directed three engineering teams that developed and continuously improved full-stack web applications and production systems.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-038",
+      "limitations": [
+        "No release, quality, adoption, or business-impact metric is claimed.",
+        "The claim counts teams rather than individual contributors or direct reports."
+      ],
+      "organizations": [
+        "PENSCO Trust"
+      ],
+      "period": {
+        "end": "2017",
+        "start": "2012"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Engineering leadership",
+        "Full-stack delivery",
+        "Production systems",
+        "Team leadership"
+      ],
+      "status": "historical",
+      "title": "Direct three full-stack engineering teams",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-03T01:46:16Z",
+      "asOf": "2026-09-02",
+      "claim": "Partnered with business and technology stakeholders to prioritize, scope, coordinate, and plan business initiatives.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-039",
+      "limitations": [
+        "No portfolio size, delivery volume, or business outcome is claimed.",
+        "The claim describes collaborative planning responsibilities rather than sole prioritization authority."
+      ],
+      "organizations": [
+        "PENSCO Trust"
+      ],
+      "period": {
+        "end": "2017",
+        "start": "2012"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Initiative planning",
+        "Prioritization",
+        "Stakeholder management",
+        "Technology strategy"
+      ],
+      "status": "historical",
+      "title": "Partner on initiative prioritization and planning",
       "type": "leadership",
       "visibility": "public"
     },
@@ -271,33 +1053,1072 @@
       "title": "Lead platforms for alternative assets in IRAs",
       "type": "leadership",
       "visibility": "public"
-    }
-  ],
-  "evidence": [
+    },
     {
-      "accessedAt": "2026-09-01",
-      "approvedAt": "2026-09-01T00:00:00Z",
-      "id": "EVID-EX-001",
-      "ownerType": "candidate-controlled",
-      "publishedAt": "2026-08-01",
-      "publisher": "Example Cooperative",
+      "approvedAt": "2026-09-04T01:34:09Z",
+      "asOf": "2026-09-03",
+      "claim": "Provided hands-on project management to define scope, assess schedule and compliance risks, and negotiate mitigations and tradeoffs with business leaders.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-042",
+      "limitations": [
+        "No project size, risk reduction, compliance determination, delivery result, or financial outcome is claimed.",
+        "The claim describes collaborative project-risk management and does not imply sole authority over scope, schedules, compliance, or business decisions."
+      ],
+      "organizations": [
+        "PENSCO Trust"
+      ],
+      "period": {
+        "end": "2017",
+        "start": "2012"
+      },
       "schemaVersion": 1,
-      "supports": "Demonstrates the public-evidence contract using fictional content.",
-      "title": "Synthetic process redesign case study",
-      "type": "project-page",
-      "url": "https://example.com/synthetic-case-study",
+      "skills": [
+        "Executive communication",
+        "Program management",
+        "Risk management",
+        "Scope management"
+      ],
+      "status": "historical",
+      "title": "Manage project scope, risk, and tradeoffs",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T01:34:09Z",
+      "asOf": "2026-09-03",
+      "claim": "Mentored and motivated software engineers as they pursued professional-development goals and strengthened technical and interpersonal skills.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-043",
+      "limitations": [
+        "No promotion, retention, performance-rating, team-size, or productivity outcome is claimed.",
+        "The claim describes ongoing engineer development rather than a formal training program or sole responsibility for individual growth."
+      ],
+      "organizations": [
+        "PENSCO Trust"
+      ],
+      "period": {
+        "end": "2017",
+        "start": "2012"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Coaching",
+        "Engineering leadership",
+        "Mentoring",
+        "Talent development"
+      ],
+      "status": "historical",
+      "title": "Mentor and develop software engineers",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-03T01:46:16Z",
+      "asOf": "2026-09-02",
+      "claim": "Translated nuanced business requirements for engineers through architecture diagrams, data models, data-flow diagrams, web-service stubs, and detailed specifications.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-044",
+      "limitations": [
+        "No quantified delivery or quality improvement is attributed to these artifacts.",
+        "The listed artifacts are representative methods used during the role, not one project deliverable set."
+      ],
+      "organizations": [
+        "PENSCO Trust"
+      ],
+      "period": {
+        "end": "2017",
+        "start": "2012"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Data modeling",
+        "Requirements analysis",
+        "Solution architecture",
+        "Technical communication"
+      ],
+      "status": "historical",
+      "title": "Translate business requirements into technical artifacts",
+      "type": "experience",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T01:34:09Z",
+      "asOf": "2026-09-03",
+      "claim": "Facilitated issue resolution among cross-functional teams, business partners, stakeholders, and commercial vendors.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-045",
+      "limitations": [
+        "Facilitation does not imply sole authority over participating teams, partners, stakeholders, vendors, or final decisions.",
+        "No customer identity, vendor identity, dispute detail, resolution time, or business outcome is disclosed."
+      ],
+      "organizations": [
+        "PENSCO Trust"
+      ],
+      "period": {
+        "end": "2017",
+        "start": "2012"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Cross-functional collaboration",
+        "Issue resolution",
+        "Stakeholder alignment",
+        "Vendor management"
+      ],
+      "status": "historical",
+      "title": "Facilitate cross-functional and vendor issue resolution",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:42:50Z",
+      "asOf": "2026-09-03",
+      "claim": "Evaluated payment vendors against tokenization requirements, with limiting PCI-DSS scope as an evaluation objective.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-046",
+      "limitations": [
+        "No vendor identity, payment or customer data, proprietary requirement, control design, selection result, audit finding, or quantified outcome is disclosed.",
+        "The claim describes vendor evaluation criteria and an intended scope objective; it does not establish a compliance determination, validated scope reduction, certification, or elimination of PCI-DSS responsibilities."
+      ],
+      "organizations": [
+        "PENSCO Trust"
+      ],
+      "period": {
+        "end": "2017",
+        "start": "2012"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Payment security",
+        "PCI-DSS",
+        "Tokenization",
+        "Vendor evaluation"
+      ],
+      "status": "historical",
+      "title": "Evaluate payment tokenization requirements",
+      "type": "experience",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:30:46Z",
+      "asOf": "2026-09-03",
+      "claim": "Oversaw implementation of a payment gateway and later managed migration to a replacement gateway with an XML-based integration.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-047",
+      "limitations": [
+        "No provider identity, customer or payment data, proprietary interface detail, compliance conclusion, transaction volume, or financial outcome is disclosed.",
+        "Oversight and management do not imply sole implementation or ownership of all platform and migration decisions."
+      ],
+      "organizations": [
+        "PENSCO Trust"
+      ],
+      "period": {
+        "end": "2017",
+        "start": "2012"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Payment gateways",
+        "Program delivery",
+        "Systems integration",
+        "XML"
+      ],
+      "status": "historical",
+      "title": "Manage a payment-gateway migration",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T01:34:09Z",
+      "asOf": "2026-09-03",
+      "claim": "Partnered with Sales on strategic proposals by contributing technology and solutioning input.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-048",
+      "limitations": [
+        "No customer identity, proposal detail, win count, revenue, market-share result, or market-leadership causality is claimed.",
+        "The claim describes partnership and technical contribution rather than sole ownership of proposals, customer decisions, or sales outcomes."
+      ],
+      "organizations": [
+        "PENSCO Trust"
+      ],
+      "period": {
+        "end": "2017",
+        "start": "2012"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Sales partnership",
+        "Solutioning",
+        "Strategic proposals",
+        "Technical communication"
+      ],
+      "status": "historical",
+      "title": "Partner with Sales on strategic proposals",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T01:34:09Z",
+      "asOf": "2026-09-03",
+      "claim": "Created an automated prioritization list that ranked projects using estimated implementation cost and business value.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-049",
+      "limitations": [
+        "No project count, budget, realized return, delivery outcome, or financial value is disclosed.",
+        "The ranking was a decision-support mechanism based on estimates and does not imply sole authority over final portfolio choices."
+      ],
+      "organizations": [
+        "PENSCO Trust"
+      ],
+      "period": {
+        "end": "2017",
+        "start": "2012"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Automation",
+        "Business-value analysis",
+        "Portfolio prioritization",
+        "Technology planning"
+      ],
+      "status": "historical",
+      "title": "Create value-versus-effort portfolio prioritization",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:30:46Z",
+      "asOf": "2026-09-03",
+      "claim": "Evaluated and created proof-of-concept identity-provider implementations for single sign-on and access management.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-050",
+      "limitations": [
+        "No provider identity, security configuration, user data, evaluation result, compliance conclusion, or quantified outcome is disclosed.",
+        "Proof-of-concept work does not imply production deployment, final selection, or sole decision authority."
+      ],
+      "organizations": [
+        "PENSCO Trust"
+      ],
+      "period": {
+        "end": "2017",
+        "start": "2012"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Identity and access management",
+        "Prototyping",
+        "Security architecture",
+        "Single sign-on"
+      ],
+      "status": "historical",
+      "title": "Prototype identity-provider solutions",
+      "type": "experience",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:30:46Z",
+      "asOf": "2026-09-03",
+      "claim": "Formalized baseline security requirements for cloud providers, including multifactor authentication and encrypted transport.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-051",
+      "limitations": [
+        "No provider identity, proprietary evaluation criteria, control configuration, audit result, vulnerability detail, or quantified outcome is disclosed.",
+        "The claim describes baseline requirements and does not imply sole approval authority, implementation ownership, certification, or a compliance determination."
+      ],
+      "organizations": [
+        "PENSCO Trust"
+      ],
+      "period": {
+        "end": "2017",
+        "start": "2012"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Cloud security",
+        "Multifactor authentication",
+        "Security requirements",
+        "Vendor governance"
+      ],
+      "status": "historical",
+      "title": "Define baseline cloud-provider security requirements",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:30:46Z",
+      "asOf": "2026-09-03",
+      "claim": "Managed engineering teams distributed across the United States and internationally.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-052",
+      "limitations": [
+        "No location, employee identity, staffing figure, productivity result, or business outcome is disclosed.",
+        "The claim establishes geographic distribution without asserting a specific team, employee, contractor, office, or country count."
+      ],
+      "organizations": [
+        "PENSCO Trust"
+      ],
+      "period": {
+        "end": "2017",
+        "start": "2012"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Distributed teams",
+        "Engineering leadership",
+        "Global collaboration",
+        "Remote leadership"
+      ],
+      "status": "historical",
+      "title": "Lead geographically distributed engineering teams",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-03T02:01:23Z",
+      "asOf": "2026-09-02",
+      "claim": "Managed a team of six engineers responsible for delivery and reliability of an advisor-services, wealth-management, and online-trading platform.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-053",
+      "limitations": [
+        "No clearing-network details, platform scale, availability result, or business-impact metric is claimed.",
+        "The six-person figure describes historical team scope and is not presented as an outcome or current staffing level."
+      ],
+      "organizations": [
+        "Fiserv ISS"
+      ],
+      "period": {
+        "end": "2009",
+        "start": "2005"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Engineering leadership",
+        "Platform reliability",
+        "Trading platforms",
+        "Wealth technology"
+      ],
+      "status": "historical",
+      "title": "Lead a six-engineer trading-platform team",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-03T02:01:23Z",
+      "asOf": "2026-09-02",
+      "claim": "Led integration of two Java systems to create a unified mutual-fund and equity-trading experience.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-054",
+      "limitations": [
+        "No adoption, transaction-volume, performance, or financial outcome is claimed.",
+        "The claim does not identify proprietary architectures, clearing networks, vendors, or integration protocols."
+      ],
+      "organizations": [
+        "Fiserv ISS"
+      ],
+      "period": {
+        "end": "2009",
+        "start": "2005"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Java",
+        "Systems integration",
+        "Trading systems",
+        "User experience"
+      ],
+      "status": "historical",
+      "title": "Integrate Java trading systems",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-03T02:01:23Z",
+      "asOf": "2026-09-02",
+      "claim": "Led design, development, testing, deployment, production support, and database work across the full software-development lifecycle.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-055",
+      "limitations": [
+        "Lifecycle leadership does not imply sole execution or ownership of every activity.",
+        "The listed responsibilities span the historical role and are not presented as one project's deliverable set."
+      ],
+      "organizations": [
+        "Fiserv ISS"
+      ],
+      "period": {
+        "end": "2009",
+        "start": "2005"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Database development",
+        "Delivery leadership",
+        "Production support",
+        "Software-development lifecycle"
+      ],
+      "status": "historical",
+      "title": "Lead the full software-development lifecycle",
+      "type": "leadership",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-03T02:01:23Z",
+      "asOf": "2026-09-02",
+      "claim": "Where automation was unavailable, standardized manual testing and deployment checks, including structured code testing and comparisons of deployment file sets.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-056",
+      "limitations": [
+        "Structured code testing does not assert literal testing of every executable path, and no defect-rate or deployment outcome is claimed.",
+        "The claim applies specifically to workflows where automation was unavailable and does not characterize the entire delivery environment as manual."
+      ],
+      "organizations": [
+        "Fiserv ISS"
+      ],
+      "period": {
+        "end": "2009",
+        "start": "2005"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Deployment controls",
+        "Operational controls",
+        "Quality assurance",
+        "Release management"
+      ],
+      "status": "historical",
+      "title": "Standardize manual testing and deployment controls",
+      "type": "experience",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-03T01:54:45Z",
+      "asOf": "2026-09-02",
+      "claim": "Developed a scalable financial-data processing platform that served as a backbone of Goldman Sachs' institutional trading product, REDIPlus.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-057",
+      "limitations": [
+        "No transaction-volume, latency, availability, revenue, or sole-authorship claim is made.",
+        "The claim preserves the product's historical name and employer context from the 2001–2005 role."
+      ],
+      "organizations": [
+        "Goldman Sachs, Execution & Clearing"
+      ],
+      "period": {
+        "end": "2005",
+        "start": "2001"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Financial data",
+        "Platform engineering",
+        "Scalability",
+        "Trading systems"
+      ],
+      "status": "historical",
+      "title": "Build the REDIPlus financial-data platform",
+      "type": "experience",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-03T01:54:45Z",
+      "asOf": "2026-09-02",
+      "claim": "Automated release management and production deployments with shell scripts, including source-control branching and tagging.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-058",
+      "limitations": [
+        "No deployment-frequency, lead-time, failure-rate, or recovery-time improvement is claimed.",
+        "The automation scope is limited to the systems and deployment process described by the historical role."
+      ],
+      "organizations": [
+        "Goldman Sachs, Execution & Clearing"
+      ],
+      "period": {
+        "end": "2005",
+        "start": "2001"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "DevOps",
+        "Release automation",
+        "Shell scripting",
+        "Source control"
+      ],
+      "status": "historical",
+      "title": "Automate release management and deployments",
+      "type": "experience",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-03T01:54:45Z",
+      "asOf": "2026-09-02",
+      "claim": "Developed C++ backend services that interfaced with real-time market-data publishers in a high-availability distributed architecture.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-059",
+      "limitations": [
+        "No latency, throughput, uptime, or reliability improvement is quantified.",
+        "The claim does not identify proprietary system details, market-data vendors, or messaging topology."
+      ],
+      "organizations": [
+        "Goldman Sachs, Execution & Clearing"
+      ],
+      "period": {
+        "end": "2005",
+        "start": "2001"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "C++",
+        "Distributed systems",
+        "Market data",
+        "Real-time systems"
+      ],
+      "status": "historical",
+      "title": "Develop real-time market-data services",
+      "type": "experience",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-03T01:54:45Z",
+      "asOf": "2026-09-02",
+      "claim": "Pioneered migration of C++ services from proprietary Unix platforms to open-source Linux.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-060",
+      "limitations": [
+        "No migration timeline, cost reduction, or performance improvement is claimed.",
+        "The claim does not state that every service or the complete platform estate was migrated."
+      ],
+      "organizations": [
+        "Goldman Sachs, Execution & Clearing"
+      ],
+      "period": {
+        "end": "2005",
+        "start": "2001"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "C++",
+        "Linux",
+        "Platform migration",
+        "Unix"
+      ],
+      "status": "historical",
+      "title": "Migrate C++ services from Unix to Linux",
+      "type": "experience",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-03T01:54:45Z",
+      "asOf": "2026-09-02",
+      "claim": "Maintained a custom analytics database supporting a risk-management tool used in options clearing.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-061",
+      "limitations": [
+        "Maintenance of the analytics database does not imply authorship of its risk models or ownership of clearing decisions.",
+        "No risk reduction, financial outcome, data volume, or availability metric is claimed."
+      ],
+      "organizations": [
+        "Goldman Sachs, Execution & Clearing"
+      ],
+      "period": {
+        "end": "2005",
+        "start": "2001"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Database engineering",
+        "Financial systems",
+        "Options clearing",
+        "Risk analytics"
+      ],
+      "status": "historical",
+      "title": "Maintain options-clearing risk analytics",
+      "type": "experience",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-03T01:54:45Z",
+      "asOf": "2026-09-02",
+      "claim": "Developed a C++ charting-data interface that helped traders evaluate expected transaction cost and time horizon before submitting orders.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-062",
+      "limitations": [
+        "No adoption, latency, savings, or trading-performance metric is claimed.",
+        "The interface supported pre-trade analysis and did not guarantee lower realized transaction costs or better execution outcomes."
+      ],
+      "organizations": [
+        "Goldman Sachs, Execution & Clearing"
+      ],
+      "period": {
+        "end": "2005",
+        "start": "2001"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "C++",
+        "Data visualization",
+        "Trading analytics",
+        "Transaction-cost analysis"
+      ],
+      "status": "historical",
+      "title": "Build a pre-trade charting-data interface",
+      "type": "experience",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-03T01:54:45Z",
+      "asOf": "2026-09-02",
+      "claim": "Developed a web dashboard that displayed the overall health of a Unix and Linux cluster.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-063",
+      "limitations": [
+        "No incident-rate, detection-time, availability, or operational-efficiency improvement is claimed.",
+        "The claim describes health visibility rather than a complete observability platform or automated remediation system."
+      ],
+      "organizations": [
+        "Goldman Sachs, Execution & Clearing"
+      ],
+      "period": {
+        "end": "2005",
+        "start": "2001"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Observability",
+        "Operations",
+        "Unix and Linux",
+        "Web dashboards"
+      ],
+      "status": "historical",
+      "title": "Build a Unix and Linux cluster-health dashboard",
+      "type": "experience",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:30:46Z",
+      "asOf": "2026-09-03",
+      "claim": "Developed Java extensions for Apache Xalan that used JDBC to retrieve partner-specific data and transform it into industry-standard formats.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-064",
+      "limitations": [
+        "No data volume, performance result, adoption measure, or financial outcome is claimed.",
+        "The claim identifies public technologies and a general integration purpose without disclosing a partner identity, data contents, schema, or proprietary transformation logic."
+      ],
+      "organizations": [
+        "MetalMaker, Inc."
+      ],
+      "period": {
+        "end": "2001",
+        "start": "2000"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Apache Xalan",
+        "Data transformation",
+        "Java",
+        "JDBC",
+        "XSLT"
+      ],
+      "status": "historical",
+      "title": "Retrieve and transform partner data with Java, XSLT, and JDBC",
+      "type": "experience",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:30:46Z",
+      "asOf": "2026-09-03",
+      "claim": "Created Java Servlets and JavaBeans running on Unix to provide registration and login functionality.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-066",
+      "limitations": [
+        "No user data, authentication flow, security control, adoption figure, vulnerability result, or quantified outcome is disclosed.",
+        "The claim describes application functionality and does not assert authorship of the complete authentication architecture or security model."
+      ],
+      "organizations": [
+        "MetalMaker, Inc."
+      ],
+      "period": {
+        "end": "2001",
+        "start": "2000"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Authentication features",
+        "Java",
+        "JavaBeans",
+        "Servlets",
+        "Unix"
+      ],
+      "status": "historical",
+      "title": "Build Unix registration and login components",
+      "type": "experience",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:30:46Z",
+      "asOf": "2026-09-03",
+      "claim": "Built Perl scripts to convert single-threaded C and Fortran code into a multithreaded C++ tier.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-067",
+      "limitations": [
+        "No proprietary code, conversion scale, performance result, delivery timeline, or business outcome is disclosed.",
+        "The claim describes a code-conversion technique and does not state that every workload or the complete legacy estate was modernized."
+      ],
+      "organizations": [
+        "XOR, Inc."
+      ],
+      "period": {
+        "end": "2000",
+        "start": "2000"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "C and C++",
+        "Fortran",
+        "Multithreading",
+        "Perl",
+        "Software modernization"
+      ],
+      "status": "historical",
+      "title": "Modernize C and Fortran workloads",
+      "type": "experience",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:30:46Z",
+      "asOf": "2026-09-03",
+      "claim": "Provided Unix and distributed-object expertise for a multi-platform web application and evaluated COM, CORBA, and EJB approaches for integrating C and Fortran workloads.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-068",
+      "limitations": [
+        "Evaluation of multiple approaches does not imply that every technology was selected or deployed in production.",
+        "No proprietary architecture, customer identity, selection result, performance metric, or business outcome is disclosed."
+      ],
+      "organizations": [
+        "XOR, Inc."
+      ],
+      "period": {
+        "end": "2000",
+        "start": "2000"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "COM",
+        "CORBA",
+        "Distributed objects",
+        "EJB",
+        "Legacy integration",
+        "Unix"
+      ],
+      "status": "historical",
+      "title": "Evaluate legacy-system integration architecture",
+      "type": "experience",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T01:26:23Z",
+      "asOf": "2026-09-03",
+      "claim": "Improved scalability and fault tolerance in large-scale order-routing systems at the Chicago Board of Trade.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-069",
+      "limitations": [
+        "No throughput, latency, availability, transaction-volume, or financial outcome is quantified.",
+        "The claim does not attribute organization-level transaction-processing records or system-wide performance solely to one contributor."
+      ],
+      "organizations": [
+        "CSC / Chicago Board of Trade"
+      ],
+      "period": {
+        "end": "2000",
+        "start": "1997"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Fault tolerance",
+        "Performance engineering",
+        "Scalability",
+        "Trading systems"
+      ],
+      "status": "historical",
+      "title": "Improve order-routing scalability and fault tolerance",
+      "type": "experience",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T01:26:23Z",
+      "asOf": "2026-09-03",
+      "claim": "Identified distributed-system bottlenecks and implemented performance improvements in middleware communication, database access, and load balancing.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-070",
+      "limitations": [
+        "No latency, throughput, capacity, availability, or cost improvement is quantified.",
+        "The claim identifies improvement areas without disclosing proprietary architecture, configuration, or operating thresholds."
+      ],
+      "organizations": [
+        "CSC / Chicago Board of Trade"
+      ],
+      "period": {
+        "end": "2000",
+        "start": "1997"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Database performance",
+        "Distributed systems",
+        "Load balancing",
+        "Middleware",
+        "Performance engineering"
+      ],
+      "status": "historical",
+      "title": "Remove distributed-system bottlenecks",
+      "type": "experience",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T01:26:23Z",
+      "asOf": "2026-09-03",
+      "claim": "Developed C++ application services that interfaced with real-time order-routing messages over IBM MQ.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-071",
+      "limitations": [
+        "No comparison to later messaging technologies or quantified production outcome is claimed.",
+        "The claim identifies the language, messaging product, and functional purpose without describing proprietary message formats or system topology."
+      ],
+      "organizations": [
+        "CSC / Chicago Board of Trade"
+      ],
+      "period": {
+        "end": "2000",
+        "start": "1997"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "C++",
+        "IBM MQ",
+        "Messaging systems",
+        "Order routing",
+        "Real-time systems"
+      ],
+      "status": "historical",
+      "title": "Build IBM MQ order-routing services",
+      "type": "experience",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T01:26:23Z",
+      "asOf": "2026-09-03",
+      "claim": "Developed performance simulators using C and C++, IBM MQ, sockets, and threads, including simulators for handheld trading-floor devices.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-072",
+      "limitations": [
+        "No simulation scale, production-equivalence guarantee, performance result, or proprietary protocol detail is claimed.",
+        "This claim concerns protocol and device simulation; RB-073 separately describes system-level transaction load testing."
+      ],
+      "organizations": [
+        "CSC / Chicago Board of Trade"
+      ],
+      "period": {
+        "end": "2000",
+        "start": "1997"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "C and C++",
+        "Concurrency",
+        "IBM MQ",
+        "Performance simulation",
+        "Sockets"
+      ],
+      "status": "historical",
+      "title": "Develop exchange-performance simulators",
+      "type": "experience",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T01:26:23Z",
+      "asOf": "2026-09-03",
+      "claim": "Designed and developed a transaction-simulation engine for load testing an electronic trading-floor system and identifying performance bottlenecks before they became critical.",
+      "evidenceIds": [],
+      "evidenceLevel": "resume-sourced",
+      "id": "RB-073",
+      "limitations": [
+        "The claim does not assert that every production incident was prevented or quantify simulated load, bottleneck reduction, or production performance.",
+        "This claim concerns system-level transaction load testing; RB-072 separately describes protocol and device simulators."
+      ],
+      "organizations": [
+        "CSC / Chicago Board of Trade"
+      ],
+      "period": {
+        "end": "2000",
+        "start": "1997"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Load testing",
+        "Performance engineering",
+        "Simulation",
+        "Trading systems"
+      ],
+      "status": "historical",
+      "title": "Build a transaction load-testing engine",
+      "type": "experience",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:30:46Z",
+      "asOf": "2026-09-03",
+      "claim": "Presented two public talks about AI and has a third talk scheduled for November 2026.",
+      "evidenceIds": [],
+      "evidenceLevel": "candidate-confirmed",
+      "id": "RB-077",
+      "limitations": [
+        "The claim is candidate-confirmed; no attendance, audience, recording, reception, or speaking-impact outcome is asserted.",
+        "The November 2026 engagement is scheduled, not completed, and may change."
+      ],
+      "organizations": [],
+      "period": {
+        "end": null,
+        "start": "2026"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "AI education",
+        "Public speaking",
+        "Technical communication",
+        "Thought leadership"
+      ],
+      "status": "scheduled",
+      "title": "Present public talks about AI",
+      "type": "speaking",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:30:46Z",
+      "asOf": "2026-09-03",
+      "claim": "Created The Borg, an open-source AI workspace for Claude and ChatGPT featuring an LLM wiki knowledge base, role-specific agents, and scheduled jobs.",
+      "evidenceIds": [],
+      "evidenceLevel": "candidate-confirmed",
+      "id": "RB-078",
+      "limitations": [
+        "No user count, deployment count, external contribution, productivity result, or commercial outcome is claimed.",
+        "This is a candidate-created open-source project and is not independent verification of its effectiveness or adoption."
+      ],
+      "organizations": [],
+      "period": {
+        "end": null,
+        "start": "2026"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "AI agents",
+        "AI workspaces",
+        "Knowledge management",
+        "Open source",
+        "Workflow automation"
+      ],
+      "status": "completed",
+      "title": "Create The Borg open-source AI workspace",
+      "type": "project",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:30:46Z",
+      "asOf": "2026-09-03",
+      "claim": "Is developing a Swift iOS application that uses on-device and cloud AI models with local neural text-to-speech for music and podcasts.",
+      "evidenceIds": [],
+      "evidenceLevel": "candidate-confirmed",
+      "id": "RB-079",
+      "limitations": [
+        "No user adoption, content partnership, model-performance result, revenue, or quantified outcome is claimed.",
+        "The application is in development and is not presented as publicly launched or available through an app marketplace."
+      ],
+      "organizations": [],
+      "period": {
+        "end": null,
+        "start": "2026"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Cloud AI",
+        "iOS",
+        "Neural text-to-speech",
+        "On-device AI",
+        "Swift"
+      ],
+      "status": "in-development",
+      "title": "Develop an AI-powered Swift iOS application",
+      "type": "project",
+      "visibility": "public"
+    },
+    {
+      "approvedAt": "2026-09-04T02:30:46Z",
+      "asOf": "2026-09-03",
+      "claim": "Designed a methodology and directed engineering implementation of scheduled data-quality checks for retirement-recordkeeping data, notifying operations teams of inconsistencies for follow-up.",
+      "evidenceIds": [],
+      "evidenceLevel": "candidate-confirmed",
+      "id": "RB-080",
+      "limitations": [
+        "No customer or plan data, query logic, database topology, control threshold, automated remediation, or quantified outcome is disclosed.",
+        "The claim describes engineering implementation and support rather than a formal enterprise data-governance program or sole operational ownership."
+      ],
+      "organizations": [
+        "LT Trust"
+      ],
+      "period": {
+        "end": "2021",
+        "start": "2017"
+      },
+      "schemaVersion": 1,
+      "skills": [
+        "Data quality",
+        "Operational notifications",
+        "Production implementation",
+        "Retirement technology"
+      ],
+      "status": "historical",
+      "title": "Implement production data-quality notifications",
+      "type": "leadership",
       "visibility": "public"
     }
   ],
+  "evidence": [],
   "profile": {
-    "approvedAt": "2026-09-01T00:00:00Z",
-    "headline": "Operations leader and systems builder",
-    "location": "United States",
-    "name": "Alex Example",
+    "approvedAt": "2026-09-04T19:41:59Z",
+    "headline": "Technology executive and financial-services software leader",
+    "location": "Denver, Colorado, United States",
+    "name": "John DiFini",
     "schemaVersion": 1,
-    "summary": "Synthetic profile demonstrating evidence-backed career retrieval.",
+    "summary": "Technology executive with nearly three decades of experience in financial-services software. Experience spans hands-on development, engineering leadership, platform modernization, product delivery, data systems, and independent AI projects.",
     "visibility": "public",
-    "website": "https://example.com"
+    "website": "https://agent.johndifini.com"
   },
   "schemaVersion": 1
 }

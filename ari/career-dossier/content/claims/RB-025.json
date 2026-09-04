@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:22:09Z",
+  "asOf": "2026-09-03",
+  "claim": "Set strategic quarterly objectives and connected them to tactical resource planning, product roadmaps, and executive portfolio reporting.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-025",
+  "limitations": [
+    "The claim describes leadership within a collaborative planning process and does not imply sole authority over objectives, resources, roadmaps, or portfolio decisions.",
+    "No staffing level, project count, budget, roadmap detail, delivery result, or financial outcome is disclosed."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2021",
+    "start": "2017"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Executive communication",
+    "Objectives and key results",
+    "Portfolio management",
+    "Resource planning"
+  ],
+  "status": "historical",
+  "title": "Translate objectives into resource and portfolio plans",
+  "type": "leadership",
+  "visibility": "public"
+}

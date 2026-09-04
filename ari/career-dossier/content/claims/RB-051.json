@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:30:46Z",
+  "asOf": "2026-09-03",
+  "claim": "Formalized baseline security requirements for cloud providers, including multifactor authentication and encrypted transport.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-051",
+  "limitations": [
+    "The claim describes baseline requirements and does not imply sole approval authority, implementation ownership, certification, or a compliance determination.",
+    "No provider identity, proprietary evaluation criteria, control configuration, audit result, vulnerability detail, or quantified outcome is disclosed."
+  ],
+  "organizations": [
+    "PENSCO Trust"
+  ],
+  "period": {
+    "end": "2017",
+    "start": "2012"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Cloud security",
+    "Multifactor authentication",
+    "Security requirements",
+    "Vendor governance"
+  ],
+  "status": "historical",
+  "title": "Define baseline cloud-provider security requirements",
+  "type": "leadership",
+  "visibility": "public"
+}

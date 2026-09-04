@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-03T01:46:16Z",
+  "asOf": "2026-09-02",
+  "claim": "Introduced agile practices to improve risk management, responsiveness to change, and delivery predictability, with practices later adopted across the organization.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-033",
+  "limitations": [
+    "No specific framework, delivery-frequency change, or quantified improvement is claimed.",
+    "Organization-wide adoption does not imply sole implementation by one person."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2012",
+    "start": "2009"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Agile transformation",
+    "Change management",
+    "Delivery predictability",
+    "Risk management"
+  ],
+  "status": "historical",
+  "title": "Introduce agile practices across the organization",
+  "type": "leadership",
+  "visibility": "public"
+}

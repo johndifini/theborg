@@ -1,0 +1,31 @@
+{
+  "approvedAt": "2026-09-04T01:26:23Z",
+  "asOf": "2026-09-03",
+  "claim": "Developed performance simulators using C and C++, IBM MQ, sockets, and threads, including simulators for handheld trading-floor devices.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-072",
+  "limitations": [
+    "This claim concerns protocol and device simulation; RB-073 separately describes system-level transaction load testing.",
+    "No simulation scale, production-equivalence guarantee, performance result, or proprietary protocol detail is claimed."
+  ],
+  "organizations": [
+    "CSC / Chicago Board of Trade"
+  ],
+  "period": {
+    "end": "2000",
+    "start": "1997"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "C and C++",
+    "Concurrency",
+    "IBM MQ",
+    "Performance simulation",
+    "Sockets"
+  ],
+  "status": "historical",
+  "title": "Develop exchange-performance simulators",
+  "type": "experience",
+  "visibility": "public"
+}

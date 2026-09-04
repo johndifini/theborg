@@ -1,4 +1,4 @@
-# Career dossier for Alex Example
+# Career dossier for John DiFini
 
 Canonical corpus: /career.json
 Compact rendering: /career.md

@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-03T02:01:23Z",
+  "asOf": "2026-09-02",
+  "claim": "Managed a team of six engineers responsible for delivery and reliability of an advisor-services, wealth-management, and online-trading platform.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-053",
+  "limitations": [
+    "The six-person figure describes historical team scope and is not presented as an outcome or current staffing level.",
+    "No clearing-network details, platform scale, availability result, or business-impact metric is claimed."
+  ],
+  "organizations": [
+    "Fiserv ISS"
+  ],
+  "period": {
+    "end": "2009",
+    "start": "2005"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Engineering leadership",
+    "Platform reliability",
+    "Trading platforms",
+    "Wealth technology"
+  ],
+  "status": "historical",
+  "title": "Lead a six-engineer trading-platform team",
+  "type": "leadership",
+  "visibility": "public"
+}

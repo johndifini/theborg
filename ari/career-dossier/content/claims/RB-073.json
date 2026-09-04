@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T01:26:23Z",
+  "asOf": "2026-09-03",
+  "claim": "Designed and developed a transaction-simulation engine for load testing an electronic trading-floor system and identifying performance bottlenecks before they became critical.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-073",
+  "limitations": [
+    "This claim concerns system-level transaction load testing; RB-072 separately describes protocol and device simulators.",
+    "The claim does not assert that every production incident was prevented or quantify simulated load, bottleneck reduction, or production performance."
+  ],
+  "organizations": [
+    "CSC / Chicago Board of Trade"
+  ],
+  "period": {
+    "end": "2000",
+    "start": "1997"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Load testing",
+    "Performance engineering",
+    "Simulation",
+    "Trading systems"
+  ],
+  "status": "historical",
+  "title": "Build a transaction load-testing engine",
+  "type": "experience",
+  "visibility": "public"
+}

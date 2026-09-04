@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-03T02:01:23Z",
+  "asOf": "2026-09-02",
+  "claim": "Led design, development, testing, deployment, production support, and database work across the full software-development lifecycle.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-055",
+  "limitations": [
+    "The listed responsibilities span the historical role and are not presented as one project's deliverable set.",
+    "Lifecycle leadership does not imply sole execution or ownership of every activity."
+  ],
+  "organizations": [
+    "Fiserv ISS"
+  ],
+  "period": {
+    "end": "2009",
+    "start": "2005"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Database development",
+    "Delivery leadership",
+    "Production support",
+    "Software-development lifecycle"
+  ],
+  "status": "historical",
+  "title": "Lead the full software-development lifecycle",
+  "type": "leadership",
+  "visibility": "public"
+}

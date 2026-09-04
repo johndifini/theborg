@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-03T01:54:45Z",
+  "asOf": "2026-09-02",
+  "claim": "Developed a web dashboard that displayed the overall health of a Unix and Linux cluster.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-063",
+  "limitations": [
+    "The claim describes health visibility rather than a complete observability platform or automated remediation system.",
+    "No incident-rate, detection-time, availability, or operational-efficiency improvement is claimed."
+  ],
+  "organizations": [
+    "Goldman Sachs, Execution & Clearing"
+  ],
+  "period": {
+    "end": "2005",
+    "start": "2001"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Observability",
+    "Operations",
+    "Unix and Linux",
+    "Web dashboards"
+  ],
+  "status": "historical",
+  "title": "Build a Unix and Linux cluster-health dashboard",
+  "type": "experience",
+  "visibility": "public"
+}

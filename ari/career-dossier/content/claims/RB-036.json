@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:42:50Z",
+  "asOf": "2026-09-03",
+  "claim": "Provided management support for a core-system conversion.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-036",
+  "limitations": [
+    "The claim establishes management support and does not imply sole program authority, technical implementation, or responsibility for every conversion decision.",
+    "The asset measure, valuation date, personal scope, architecture, customer data, conversion result, and quantified outcome are not disclosed or independently verified."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2012",
+    "start": "2009"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Core-system conversions",
+    "Financial systems",
+    "Program support",
+    "Risk management"
+  ],
+  "status": "historical",
+  "title": "Support a core-system conversion",
+  "type": "leadership",
+  "visibility": "public"
+}

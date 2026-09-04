@@ -1,0 +1,29 @@
+{
+  "approvedAt": "2026-09-04T02:30:46Z",
+  "asOf": "2026-09-03",
+  "claim": "Is developing a Swift iOS application that uses on-device and cloud AI models with local neural text-to-speech for music and podcasts.",
+  "evidenceIds": [],
+  "evidenceLevel": "candidate-confirmed",
+  "id": "RB-079",
+  "limitations": [
+    "The application is in development and is not presented as publicly launched or available through an app marketplace.",
+    "No user adoption, content partnership, model-performance result, revenue, or quantified outcome is claimed."
+  ],
+  "organizations": [],
+  "period": {
+    "end": null,
+    "start": "2026"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Cloud AI",
+    "iOS",
+    "Neural text-to-speech",
+    "On-device AI",
+    "Swift"
+  ],
+  "status": "in-development",
+  "title": "Develop an AI-powered Swift iOS application",
+  "type": "project",
+  "visibility": "public"
+}

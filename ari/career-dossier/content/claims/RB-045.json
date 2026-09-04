@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T01:34:09Z",
+  "asOf": "2026-09-03",
+  "claim": "Facilitated issue resolution among cross-functional teams, business partners, stakeholders, and commercial vendors.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-045",
+  "limitations": [
+    "Facilitation does not imply sole authority over participating teams, partners, stakeholders, vendors, or final decisions.",
+    "No customer identity, vendor identity, dispute detail, resolution time, or business outcome is disclosed."
+  ],
+  "organizations": [
+    "PENSCO Trust"
+  ],
+  "period": {
+    "end": "2017",
+    "start": "2012"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Cross-functional collaboration",
+    "Issue resolution",
+    "Stakeholder alignment",
+    "Vendor management"
+  ],
+  "status": "historical",
+  "title": "Facilitate cross-functional and vendor issue resolution",
+  "type": "leadership",
+  "visibility": "public"
+}

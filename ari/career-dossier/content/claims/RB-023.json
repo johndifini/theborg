@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:30:46Z",
+  "asOf": "2026-09-03",
+  "claim": "Built an analytical process to measure engineering time-allocation trends and inform the balance between system maintenance and high-priority product work.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-023",
+  "limitations": [
+    "The process supplied decision support and does not imply sole authority over staffing, maintenance, or product priorities.",
+    "No employee-level data, allocation percentage, staffing figure, project detail, productivity result, or financial outcome is disclosed."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2021",
+    "start": "2017"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Capacity management",
+    "Engineering analytics",
+    "Portfolio prioritization",
+    "Resource planning"
+  ],
+  "status": "historical",
+  "title": "Measure engineering capacity allocation",
+  "type": "leadership",
+  "visibility": "public"
+}

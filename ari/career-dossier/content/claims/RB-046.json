@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:42:50Z",
+  "asOf": "2026-09-03",
+  "claim": "Evaluated payment vendors against tokenization requirements, with limiting PCI-DSS scope as an evaluation objective.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-046",
+  "limitations": [
+    "The claim describes vendor evaluation criteria and an intended scope objective; it does not establish a compliance determination, validated scope reduction, certification, or elimination of PCI-DSS responsibilities.",
+    "No vendor identity, payment or customer data, proprietary requirement, control design, selection result, audit finding, or quantified outcome is disclosed."
+  ],
+  "organizations": [
+    "PENSCO Trust"
+  ],
+  "period": {
+    "end": "2017",
+    "start": "2012"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "PCI-DSS",
+    "Payment security",
+    "Tokenization",
+    "Vendor evaluation"
+  ],
+  "status": "historical",
+  "title": "Evaluate payment tokenization requirements",
+  "type": "experience",
+  "visibility": "public"
+}

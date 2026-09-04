@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-03T01:54:45Z",
+  "asOf": "2026-09-02",
+  "claim": "Pioneered migration of C++ services from proprietary Unix platforms to open-source Linux.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-060",
+  "limitations": [
+    "The claim does not state that every service or the complete platform estate was migrated.",
+    "No migration timeline, cost reduction, or performance improvement is claimed."
+  ],
+  "organizations": [
+    "Goldman Sachs, Execution & Clearing"
+  ],
+  "period": {
+    "end": "2005",
+    "start": "2001"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "C++",
+    "Linux",
+    "Platform migration",
+    "Unix"
+  ],
+  "status": "historical",
+  "title": "Migrate C++ services from Unix to Linux",
+  "type": "experience",
+  "visibility": "public"
+}

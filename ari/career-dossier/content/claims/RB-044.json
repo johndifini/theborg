@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-03T01:46:16Z",
+  "asOf": "2026-09-02",
+  "claim": "Translated nuanced business requirements for engineers through architecture diagrams, data models, data-flow diagrams, web-service stubs, and detailed specifications.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-044",
+  "limitations": [
+    "The listed artifacts are representative methods used during the role, not one project deliverable set.",
+    "No quantified delivery or quality improvement is attributed to these artifacts."
+  ],
+  "organizations": [
+    "PENSCO Trust"
+  ],
+  "period": {
+    "end": "2017",
+    "start": "2012"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Data modeling",
+    "Requirements analysis",
+    "Solution architecture",
+    "Technical communication"
+  ],
+  "status": "historical",
+  "title": "Translate business requirements into technical artifacts",
+  "type": "experience",
+  "visibility": "public"
+}

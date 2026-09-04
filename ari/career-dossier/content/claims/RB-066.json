@@ -1,0 +1,31 @@
+{
+  "approvedAt": "2026-09-04T02:30:46Z",
+  "asOf": "2026-09-03",
+  "claim": "Created Java Servlets and JavaBeans running on Unix to provide registration and login functionality.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-066",
+  "limitations": [
+    "The claim describes application functionality and does not assert authorship of the complete authentication architecture or security model.",
+    "No user data, authentication flow, security control, adoption figure, vulnerability result, or quantified outcome is disclosed."
+  ],
+  "organizations": [
+    "MetalMaker, Inc."
+  ],
+  "period": {
+    "end": "2001",
+    "start": "2000"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Authentication features",
+    "Java",
+    "JavaBeans",
+    "Servlets",
+    "Unix"
+  ],
+  "status": "historical",
+  "title": "Build Unix registration and login components",
+  "type": "experience",
+  "visibility": "public"
+}

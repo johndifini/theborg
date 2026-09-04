@@ -1,0 +1,29 @@
+{
+  "approvedAt": "2026-09-04T02:30:46Z",
+  "asOf": "2026-09-03",
+  "claim": "Created The Borg, an open-source AI workspace for Claude and ChatGPT featuring an LLM wiki knowledge base, role-specific agents, and scheduled jobs.",
+  "evidenceIds": [],
+  "evidenceLevel": "candidate-confirmed",
+  "id": "RB-078",
+  "limitations": [
+    "This is a candidate-created open-source project and is not independent verification of its effectiveness or adoption.",
+    "No user count, deployment count, external contribution, productivity result, or commercial outcome is claimed."
+  ],
+  "organizations": [],
+  "period": {
+    "end": null,
+    "start": "2026"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "AI agents",
+    "AI workspaces",
+    "Knowledge management",
+    "Open source",
+    "Workflow automation"
+  ],
+  "status": "completed",
+  "title": "Create The Borg open-source AI workspace",
+  "type": "project",
+  "visibility": "public"
+}

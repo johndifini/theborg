@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:48:36Z",
+  "asOf": "2026-09-03",
+  "claim": "Set an engineering hiring strategy centered on recruiting high-caliber, creative talent for a fast-paced product environment.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-003",
+  "limitations": [
+    "Setting hiring strategy does not imply sole execution of recruiting, interviewing, selection, compensation, or every hiring decision.",
+    "No candidate or employee identity, evaluation criterion, hiring count, staffing target, retention measure, or quantified outcome is disclosed."
+  ],
+  "organizations": [
+    "American Trust/EdgeCo Holdings"
+  ],
+  "period": {
+    "end": null,
+    "start": "2021"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Engineering leadership",
+    "Hiring strategy",
+    "Organizational growth",
+    "Talent strategy"
+  ],
+  "status": "completed",
+  "title": "Set an engineering hiring strategy",
+  "type": "leadership",
+  "visibility": "public"
+}

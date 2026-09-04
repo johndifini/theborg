@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:30:46Z",
+  "asOf": "2026-09-03",
+  "claim": "Managed engineering teams distributed across the United States and internationally.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-052",
+  "limitations": [
+    "The claim establishes geographic distribution without asserting a specific team, employee, contractor, office, or country count.",
+    "No location, employee identity, staffing figure, productivity result, or business outcome is disclosed."
+  ],
+  "organizations": [
+    "PENSCO Trust"
+  ],
+  "period": {
+    "end": "2017",
+    "start": "2012"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Distributed teams",
+    "Engineering leadership",
+    "Global collaboration",
+    "Remote leadership"
+  ],
+  "status": "historical",
+  "title": "Lead geographically distributed engineering teams",
+  "type": "leadership",
+  "visibility": "public"
+}

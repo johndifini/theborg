@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-03T01:46:16Z",
+  "asOf": "2026-09-02",
+  "claim": "Mentored engineers with sample code, architecture and sequence diagrams, data models, client stubs, and SQL examples, and used production incidents as troubleshooting lessons.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-035",
+  "limitations": [
+    "The examples describe mentoring methods used during the role rather than one discrete program.",
+    "No quantified performance or promotion outcome is attributed to the mentoring."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2012",
+    "start": "2009"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Architecture communication",
+    "Incident learning",
+    "Mentoring",
+    "Technical communication"
+  ],
+  "status": "historical",
+  "title": "Mentor engineers through artifacts and incidents",
+  "type": "leadership",
+  "visibility": "public"
+}

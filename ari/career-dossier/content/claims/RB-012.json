@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:48:36Z",
+  "asOf": "2026-09-03",
+  "claim": "Updated engineering role titles to align with technology-industry conventions and support a growth-oriented team culture.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-012",
+  "limitations": [
+    "The claim describes an organizational-development practice and does not imply that title changes alone produced employee growth or business results.",
+    "No employee identity or data, compensation or leveling detail, prior or revised title, promotion decision, retention result, or quantified outcome is disclosed."
+  ],
+  "organizations": [
+    "American Trust/EdgeCo Holdings"
+  ],
+  "period": {
+    "end": null,
+    "start": "2021"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Engineering culture",
+    "Organizational design",
+    "Role design",
+    "Talent development"
+  ],
+  "status": "completed",
+  "title": "Modernize engineering role titles",
+  "type": "leadership",
+  "visibility": "public"
+}

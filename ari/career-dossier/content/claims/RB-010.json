@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:48:36Z",
+  "asOf": "2026-09-03",
+  "claim": "Provided technical leadership for teams and systems supporting retirement-services recordkeeping.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-010",
+  "limitations": [
+    "The claim is limited to retirement-services recordkeeping and does not imply sole ownership of every related team, product, system, or business function.",
+    "No customer or plan identity or data, platform architecture, operational detail, staffing figure, financial measure, or quantified outcome is disclosed."
+  ],
+  "organizations": [
+    "American Trust/EdgeCo Holdings"
+  ],
+  "period": {
+    "end": null,
+    "start": "2021"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Engineering leadership",
+    "Fintech",
+    "Retirement services",
+    "Systems leadership"
+  ],
+  "status": "completed",
+  "title": "Lead retirement-recordkeeping engineering",
+  "type": "leadership",
+  "visibility": "public"
+}

@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:30:46Z",
+  "asOf": "2026-09-03",
+  "claim": "Designed a methodology and directed engineering implementation of scheduled data-quality checks for retirement-recordkeeping data, notifying operations teams of inconsistencies for follow-up.",
+  "evidenceIds": [],
+  "evidenceLevel": "candidate-confirmed",
+  "id": "RB-080",
+  "limitations": [
+    "The claim describes engineering implementation and support rather than a formal enterprise data-governance program or sole operational ownership.",
+    "No customer or plan data, query logic, database topology, control threshold, automated remediation, or quantified outcome is disclosed."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2021",
+    "start": "2017"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Data quality",
+    "Operational notifications",
+    "Production implementation",
+    "Retirement technology"
+  ],
+  "status": "historical",
+  "title": "Implement production data-quality notifications",
+  "type": "leadership",
+  "visibility": "public"
+}

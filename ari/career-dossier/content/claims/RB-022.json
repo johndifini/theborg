@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:04:58Z",
+  "asOf": "2026-09-03",
+  "claim": "Built collaborative relationships with product leaders and stakeholders and introduced shared diagramming, collaboration, and work-management tools to improve communication and requirements gathering.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-022",
+  "limitations": [
+    "The claim describes collaborative practices and tool adoption rather than sole ownership of stakeholder relationships or requirements decisions.",
+    "No customer identity, vendor identity, internal requirement, adoption metric, delivery result, or productivity improvement is disclosed."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2021",
+    "start": "2017"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Collaboration",
+    "Delivery tooling",
+    "Requirements gathering",
+    "Stakeholder alignment"
+  ],
+  "status": "historical",
+  "title": "Improve collaboration and requirements gathering",
+  "type": "leadership",
+  "visibility": "public"
+}

@@ -1,20 +1,78 @@
-# Handoff: Career dossier foundation and Ari transition
+# Handoff: Career dossier
 
-**Prepared:** 2026-09-01
-**Immediate owner:** Architetto
+**Prepared:** 2026-09-04
+**Immediate owner:** Ari
 **Next domain owner:** Ari
-**Current state:** Phase 0 accepted; synthetic foundation complete; ready for Ari
+**Current state:** Phases 1–7 complete; Phase 8 preview audited pending Git
+connection, domain, DNS, and production verification
 
 ## Outcome
 
 Create an AI-first, evidence-backed career corpus under
-`ari/career-dossier/`. A recruiter gives `https://johndifini.com/agent` and a
+`ari/career-dossier/`. A recruiter gives `https://agent.johndifini.com` and a
 job description to an AI assistant, which evaluates John DiFini's strong
 matches, partial matches, and gaps and cites dossier evidence.
 
 The substantive site is for AI retrieval. A recruiter who opens the URL
 directly sees only a simple, sleek landing page explaining that the page is for
 an AI assistant and providing a copyable prompt.
+
+## Phase 7 browser gate complete
+
+The complete local browser acceptance gate passed on 2026-09-04 against the
+repaired 70-claim build. Desktop and mobile layout, logical keyboard order and
+visible focus, clipboard success and fault-injected failure fallback,
+JavaScript-disabled rendering, and runtime reduced-motion behavior all passed.
+Activating “Skip to main content” now moves `document.activeElement` to
+`main#main-content`. With macOS Reduce Motion temporarily enabled, the live
+`prefers-reduced-motion: reduce` query matched, transitions were capped at
+`.01ms`, no animations ran, and the page remained usable. The original system
+motion preference was restored after the check.
+
+### Verified starting state
+
+- The publication manifest records 70 of 70 claims as `published`.
+- All 79 active private provenance mappings resolve; nine sensitive current-
+  employer claims remain intentionally held and RB-065 remains retired.
+- `dist/career.json` contains the approved John DiFini profile, exactly 70
+  `RB-*` claims, zero `EX-*` claims, and zero public evidence records.
+- Synthetic test records live only under `examples/synthetic/`.
+- `npm run verify` passes all 28 dossier tests, typecheck, build, privacy, and
+  byte-for-byte generated-output checks.
+- The five publication-workflow tests pass.
+- The approved visual direction is already implemented: simple and sleek,
+  `#1ec503ff` brand accent, accessible light/dark pairings, `.015em` headline
+  letter spacing, and `.14em` headline word spacing.
+- The private runtime checklist is `ari/.private/Dossier Proposals/PHASE-7-QA.md`.
+
+### Completed browser procedure
+
+1. Confirm an in-app or connected browser is available before starting. If none
+   is available, stop and report the browser gate still pending; do not
+   substitute source inspection for rendered acceptance.
+2. Serve the existing build locally without modifying content:
+   `python3 -m http.server 4173 --directory dist` from `ari/career-dossier/`.
+3. Review `/` at a representative desktop viewport and confirm the two-step
+   recruiter flow is understandable without scrolling, with no clipping,
+   overlap, or unintended horizontal overflow.
+4. Review `/` at a representative narrow mobile viewport and confirm readable
+   hierarchy, single-column layout, full-width copy button, usable prompt, and
+   machine-resource links without clipping or horizontal overflow.
+5. Traverse the page using only the keyboard. Verify the skip link, prompt,
+   copy button, and resource links receive visible focus in logical order and
+   that activating the skip link moves focus to main content.
+6. Activate the copy button and verify both the clipboard-success state and the
+   clipboard-failure fallback that selects the visible prompt for manual copy.
+7. Emulate `prefers-reduced-motion: reduce` and verify the page remains usable
+   with transitions and animations effectively suppressed.
+8. Disable JavaScript and verify the complete prompt, two-step instructions,
+   and machine-resource links remain visible and usable; only one-click copying
+   may be unavailable.
+9. Stop the local server. Run `npm run verify`, the five publication-workflow
+   tests, `dossier_publication.py audit`, and `dossier_publication.py status`.
+
+All nine steps above passed. Phase 7 is complete. No public content, schema,
+deployment, DNS, or privacy-control changes were made during acceptance.
 
 ## Authoritative artifacts
 
@@ -26,8 +84,9 @@ Read these before acting:
 4. `ari/AGENTS.md`
 5. `ari/.private/AGENTS.md` only when Ari begins private-provenance work
 
-ADR-0001 is **Proposed**, not accepted. The implementation plan is gated on
-Phase 0 approval.
+ADR-0001 is accepted and the Phase 0 gate is closed. The continuation section
+above is the current operational entry point; the foundation sections below are
+retained as implementation history.
 
 ## Decisions already reached
 
@@ -42,7 +101,8 @@ Phase 0 approval.
   `/llms.txt`.
 - `/` and `/agent` serve the minimal recruiter landing page.
 - Vercel hosts `agent.johndifini.com` from the `ari/career-dossier` project root.
-- Squarespace redirects `johndifini.com/agent` to the Vercel landing page.
+- `https://agent.johndifini.com` is the direct public entry; no Squarespace URL
+  mapping is part of the current release.
 - The MVP uses static HTML/CSS, TypeScript generation, JSON files, JSON Schema,
   Node's built-in test runner, and no production database.
 - Remote MCP, WebMCP, embeddings, vector search, authentication, analytics,
@@ -76,7 +136,7 @@ Review these choices before implementation:
 4. Decide whether exact current-employer staffing metrics and the flagged
    current-employer AI/control claims are eligible for later publication.
 5. Verify and pin the Vercel-supported Node.js LTS version.
-6. Confirm `agent.johndifini.com` plus the Squarespace 301 redirect.
+6. Confirm `agent.johndifini.com` as the direct public and production URL.
 
 Record every accepted or amended decision in ADR-0001. Change its status to
 Accepted only after the user approves the complete Phase 0 contract.
@@ -104,7 +164,7 @@ Stop and hand off to Ari when all of the following are true:
 - schema, privacy, references, and determinism tests pass;
 - no code or fixture reads outside `ari/career-dossier/`;
 - no real private résumé fact has been migrated;
-- no production deployment or Squarespace change has occurred; and
+- no production deployment or DNS change has occurred; and
 - the next task would require reading `ari/.private/` or approving real career
   content.
 
@@ -149,13 +209,44 @@ the deployment root:
 - failed validation is no-write, while an approved publication runs the full
   typecheck, test, build, privacy, and determinism suite.
 
-Phase 6 is in progress. The candidate approved the first batch of seven
-lower-risk historical claims, and the workflow wrote those public records plus
-their private approval digests before regenerating and verifying `dist/`. No
-real profile value or evidence record has been migrated yet. Current-employer
-claims, incomplete metrics, future activities, and public-evidence URLs remain
-outside the approved first batch. Nothing has been deployed or published to a
-remote service.
+Phase 6 completed on 2026-09-04. The candidate approved 12 reviewable batches,
+and the workflow published 70 real claims with explicit evidence levels and
+limitations before regenerating and verifying `dist/`. All 79 active private
+claims were adjudicated: nine sensitive current-employer claims remain
+intentionally held, and retired RB-065 remains omitted. The approved Phase 7
+content cutover replaced the synthetic profile and removed both synthetic
+production claims plus their orphaned evidence record. No public evidence record
+has been migrated, and nothing has been deployed or published to a remote
+service.
+
+Phase 7 is implemented locally under Jony Vibe's documented simple-and-sleek
+direction: semantic HTML, a responsive two-column first viewport, visible
+two-step instructions, a progressively enhanced copy control, canonical and
+alternate-resource metadata, light/dark contrast tokens, explicit focus states,
+reduced-motion handling, and a visible machine-resource footer. Automated
+structure and WCAG contrast checks pass with the full dossier suite. Browser
+acceptance now passes at desktop and mobile sizes, including the keyboard-only
+walkthrough, skip-link destination focus, clipboard states, JavaScript-disabled
+rendering, and reduced-motion runtime behavior. The page renders the
+candidate-approved real public profile and exactly 70 approved claims.
+
+The résumé and landing page use `https://agent.johndifini.com` directly, while
+the canonical copied prompt targets `/career.json` on the same host for machine
+retrieval. No `johndifini.com/agent` redirect is required in the current release.
+`content/recruiter-prompt.txt` owns the exact prompt; any résumé prompt must use
+that file verbatim so the two surfaces cannot drift.
+
+Phase 8 now has an account-owned, deployment-protected Vercel preview. Its six
+public routes return 200 with the declared media types, security headers, and
+bounded cache policies; representative source and package paths return 404; and
+the generated artifacts match the local build. Vercel injects its own feedback
+script into the preview root only, so that response differs from `dist/index.html`
+by the platform-owned tag; `/agent` remains byte-identical. The audit corrected
+an initial `.vercelignore` directory-pattern defect before the successful
+preview. GitHub linking remains pending because the Vercel account has no GitHub
+login connection. No custom domain, DNS record, or successful production
+deployment exists; the one failed production-classified build record
+created during project initialization was removed.
 
 ## Ari session scope after the foundation handoff
 
@@ -176,9 +267,9 @@ alignment:
 8. Use private job descriptions only for the cross-assistant retrieval
    evaluation; never add them to tracked tests or fixtures.
 
-Ari must route the final landing-page visual review to Jony Vibe. Initial Vercel
-and Squarespace setup can return to Architetto after content and design approval;
-C4PO owns any changes to workspace privacy-audit configuration.
+The landing-page visual and browser acceptance review under Jony Vibe's
+direction is complete. Initial Vercel Git and domain setup can return to
+Architetto; C4PO owns any changes to workspace privacy-audit configuration.
 
 ## Privacy boundary
 
@@ -235,7 +326,7 @@ accepted ADR, scoped `AGENTS.md`, and README.
 > `ari/career-dossier/docs/HANDOFF.md`. Read ADR-0001 and the implementation plan
 > first. Close the Phase 0 decisions with me, then implement Phases 1–4 using
 > synthetic data only. Do not read or migrate Ari's private corpus, deploy to
-> production, or change Squarespace. Stop at the documented handoff to Ari.
+> production, or change DNS. Stop at the documented handoff to Ari.
 
 ## Subsequent Ari prompt
 

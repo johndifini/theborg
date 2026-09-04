@@ -1,0 +1,31 @@
+{
+  "approvedAt": "2026-09-04T01:26:23Z",
+  "asOf": "2026-09-03",
+  "claim": "Developed C++ application services that interfaced with real-time order-routing messages over IBM MQ.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-071",
+  "limitations": [
+    "The claim identifies the language, messaging product, and functional purpose without describing proprietary message formats or system topology.",
+    "No comparison to later messaging technologies or quantified production outcome is claimed."
+  ],
+  "organizations": [
+    "CSC / Chicago Board of Trade"
+  ],
+  "period": {
+    "end": "2000",
+    "start": "1997"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "C++",
+    "IBM MQ",
+    "Messaging systems",
+    "Order routing",
+    "Real-time systems"
+  ],
+  "status": "historical",
+  "title": "Build IBM MQ order-routing services",
+  "type": "experience",
+  "visibility": "public"
+}

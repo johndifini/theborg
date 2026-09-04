@@ -1,0 +1,32 @@
+{
+  "approvedAt": "2026-09-04T02:30:46Z",
+  "asOf": "2026-09-03",
+  "claim": "Provided Unix and distributed-object expertise for a multi-platform web application and evaluated COM, CORBA, and EJB approaches for integrating C and Fortran workloads.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-068",
+  "limitations": [
+    "Evaluation of multiple approaches does not imply that every technology was selected or deployed in production.",
+    "No proprietary architecture, customer identity, selection result, performance metric, or business outcome is disclosed."
+  ],
+  "organizations": [
+    "XOR, Inc."
+  ],
+  "period": {
+    "end": "2000",
+    "start": "2000"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "COM",
+    "CORBA",
+    "Distributed objects",
+    "EJB",
+    "Legacy integration",
+    "Unix"
+  ],
+  "status": "historical",
+  "title": "Evaluate legacy-system integration architecture",
+  "type": "experience",
+  "visibility": "public"
+}

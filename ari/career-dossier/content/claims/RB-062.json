@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-03T01:54:45Z",
+  "asOf": "2026-09-02",
+  "claim": "Developed a C++ charting-data interface that helped traders evaluate expected transaction cost and time horizon before submitting orders.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-062",
+  "limitations": [
+    "The interface supported pre-trade analysis and did not guarantee lower realized transaction costs or better execution outcomes.",
+    "No adoption, latency, savings, or trading-performance metric is claimed."
+  ],
+  "organizations": [
+    "Goldman Sachs, Execution & Clearing"
+  ],
+  "period": {
+    "end": "2005",
+    "start": "2001"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "C++",
+    "Data visualization",
+    "Trading analytics",
+    "Transaction-cost analysis"
+  ],
+  "status": "historical",
+  "title": "Build a pre-trade charting-data interface",
+  "type": "experience",
+  "visibility": "public"
+}
