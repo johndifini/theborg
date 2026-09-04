@@ -866,6 +866,24 @@ artifacts:
       method: [semantic, usage]
     related: []
 
+  claude-commands-suggest:
+    path: ".claude/commands/suggest.md"
+    type: command
+    status: draft
+    owner: workspace
+    scope: workspace
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-09-03
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related:
+      - codex-home-skills-suggest-skill
+
   claude-commands-wrap:
     path: ".claude/commands/wrap.md"
     type: command
@@ -1832,6 +1850,19 @@ artifacts:
     review:
       last_reviewed: null
     related: []
+
+  codex-home-skills-suggest-skill:
+    path: skills/suggest/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-commands-suggest
+    introduced: 2026-09-03
+    review:
+      last_reviewed: null
+    related:
+      - claude-commands-suggest
 
   codex-home-skills-security-audit-skill:
     path: skills/security-audit/SKILL.md
