@@ -27,6 +27,13 @@
 #      exits 127 and prints nothing, which is indistinguishable from "clean".
 #      And `grep … | head` reports head's status, not grep's. Nothing here pipes
 #      grep, and every rc is inspected.
+#   5. JSON STORES TOO. Added 2026-09-03 for security-audit finding 17. Not every
+#      credential store is a shell env file: the Vercel CLI writes a deploy token
+#      and a refresh token into a JSON file under ~/Library. That store was doubly
+#      invisible here — wrong path AND a shape the NAME=VALUE parser cannot read —
+#      so a Vercel token leaking into a build cache would have swept clean. JSON
+#      stores are now a first-class store class with the same rules: keys matching
+#      the credential-name regex, values long enough to be real, names-only output.
 #
 # It also self-tests before trusting itself (see CANARY): a sweep that cannot
 # see into a gitignored path must fail loudly, not return clean.
@@ -86,6 +93,63 @@ open(namef,'a').write(''.join(n+'\n' for n in names))
 PY
 done
 
+# ---------------------------------------------------------------------------
+# 1b. JSON credential stores. Same discovery principle as above — a key whose
+#     NAME looks like a credential and whose string value is long enough to be
+#     one — applied to nested JSON rather than NAME=VALUE lines.
+#
+#     A store that is ABSENT is skipped silently: not every machine has the
+#     Vercel CLI, and a missing optional store is not a failure. A store that is
+#     PRESENT but unparseable is FATAL. That asymmetry is the whole point: the
+#     bug this class exists to fix was a store we could not see reporting clean,
+#     so being unable to read a store that is sitting right there must never
+#     degrade into a clean result.
+# ---------------------------------------------------------------------------
+JSON_SECRET_FILES=("$HOME/Library/Application Support/com.vercel.cli/auth.json")
+# The `${a[@]+"${a[@]}"}` guard is not decoration: macOS ships bash 3.2, where an
+# empty array expanded under `set -u` is an "unbound variable" fatal, so emptying
+# this list would crash the sweep rather than skip the class.
+for f in ${JSON_SECRET_FILES[@]+"${JSON_SECRET_FILES[@]}"}; do
+  [[ -r "$f" ]] || continue
+  before=$(wc -l < "$NAMEFILE" | tr -d ' ')
+  python3 - "$f" "$PATFILE" "$NAMEFILE" <<'PY'
+import json,os,re,sys
+src,patf,namef=sys.argv[1],sys.argv[2],sys.argv[3]
+CRED=re.compile(r'(TOKEN|KEY|SECRET|PASS|PASSWORD|CREDENTIAL|API)',re.I)
+try:
+    with open(src,errors='replace') as fh: data=json.load(fh)
+except Exception as e:
+    sys.stderr.write("  json store unreadable (%s)\n" % e.__class__.__name__)
+    sys.exit(1)
+# Label the finding by store + key path, never by value.
+label=os.path.join(os.path.basename(os.path.dirname(src)),os.path.basename(src))
+pats,names=[],[]
+def walk(node,path):
+    if isinstance(node,dict):
+        for k,v in node.items(): walk(v,path+[str(k)])
+    elif isinstance(node,list):
+        for i,v in enumerate(node): walk(v,path+[str(i)])
+    elif isinstance(node,str):
+        if not path or not CRED.search(path[-1]): return
+        val=node.strip()
+        if len(val)<16: return
+        pats.append(val); names.append("%s:%s\t%s"%(label,".".join(path),val))
+walk(data,[])
+open(patf,'a').write(''.join(p+'\n' for p in pats))
+open(namef,'a').write(''.join(n+'\n' for n in names))
+PY
+  if [[ $? -ne 0 ]]; then
+    echo "FATAL: JSON credential store is present but could not be parsed:" >&2
+    echo "       $f" >&2
+    echo "       Refusing to report clean while blind to a store that exists." >&2
+    exit 2
+  fi
+  after=$(wc -l < "$NAMEFILE" | tr -d ' ')
+  # A logged-out CLI legitimately yields 0. Say so rather than staying silent,
+  # so a store that has quietly stopped contributing is visible in the report.
+  say "json store: $f -> $((after-before)) credential value(s)"
+done
+
 # Strip blank lines. A single empty line in a `grep -F -f` pattern file matches
 # EVERY line of EVERY file, which would turn this sweep into a firehose that
 # reads as catastrophe. Guard it explicitly rather than trusting the parser.
@@ -96,7 +160,7 @@ if [[ "$NPAT" -eq 0 ]]; then
   echo "       A sweep with an empty pattern set reports clean for the wrong reason." >&2
   exit 2
 fi
-say "patterns: $NPAT credential value(s) from ${#SECRET_FILES[@]} candidate store(s)"
+say "patterns: $NPAT credential value(s) from $(( ${#SECRET_FILES[@]} + ${#JSON_SECRET_FILES[@]} )) candidate store(s)"
 
 # ---------------------------------------------------------------------------
 # 2. CANARY. Prove the sweep can see into a gitignored path BEFORE trusting a
