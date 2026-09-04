@@ -424,6 +424,6 @@ complete.
 - [x] Initial claims reviewed in batches
 - [x] Jony Vibe landing-page review complete
 - [x] Vercel preview deployment inventory inspected
-- [ ] Custom domain and production TLS verified
+- [x] Custom domain and production TLS verified
 - [ ] Three-assistant retrieval evaluation complete
 - [x] Deferred features remain absent
