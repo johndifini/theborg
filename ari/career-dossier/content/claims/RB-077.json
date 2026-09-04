@@ -1,0 +1,28 @@
+{
+  "approvedAt": "2026-09-04T02:30:46Z",
+  "asOf": "2026-09-03",
+  "claim": "Presented two public talks about AI and has a third talk scheduled for November 2026.",
+  "evidenceIds": [],
+  "evidenceLevel": "candidate-confirmed",
+  "id": "RB-077",
+  "limitations": [
+    "The November 2026 engagement is scheduled, not completed, and may change.",
+    "The claim is candidate-confirmed; no attendance, audience, recording, reception, or speaking-impact outcome is asserted."
+  ],
+  "organizations": [],
+  "period": {
+    "end": null,
+    "start": "2026"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "AI education",
+    "Public speaking",
+    "Technical communication",
+    "Thought leadership"
+  ],
+  "status": "scheduled",
+  "title": "Present public talks about AI",
+  "type": "speaking",
+  "visibility": "public"
+}

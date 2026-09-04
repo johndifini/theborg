@@ -46,6 +46,7 @@ export function assertPublicValuesSafe(value: JsonValue, path = "public"): void 
 export async function assertDeployableSourcesSafe(): Promise<void> {
   for (const path of [
     "content/profile.json",
+    "content/recruiter-prompt.txt",
     ...(await sourceFiles("content/claims")),
     ...(await sourceFiles("content/evidence")),
     "templates/landing-page.html"

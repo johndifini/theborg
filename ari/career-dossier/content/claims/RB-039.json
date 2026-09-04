@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-03T01:46:16Z",
+  "asOf": "2026-09-02",
+  "claim": "Partnered with business and technology stakeholders to prioritize, scope, coordinate, and plan business initiatives.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-039",
+  "limitations": [
+    "The claim describes collaborative planning responsibilities rather than sole prioritization authority.",
+    "No portfolio size, delivery volume, or business outcome is claimed."
+  ],
+  "organizations": [
+    "PENSCO Trust"
+  ],
+  "period": {
+    "end": "2017",
+    "start": "2012"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Initiative planning",
+    "Prioritization",
+    "Stakeholder management",
+    "Technology strategy"
+  ],
+  "status": "historical",
+  "title": "Partner on initiative prioritization and planning",
+  "type": "leadership",
+  "visibility": "public"
+}

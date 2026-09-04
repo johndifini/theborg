@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:04:58Z",
+  "asOf": "2026-09-03",
+  "claim": "Established context-specific guidelines for selecting technology stacks and programming languages based on the work being performed.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-024",
+  "limitations": [
+    "The guidelines supported technology decisions and do not imply sole approval authority or universal rules for every system and engineering team.",
+    "No proprietary evaluation criteria, architecture decision, vendor identity, cost figure, or quantified engineering outcome is disclosed."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2021",
+    "start": "2017"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Architecture standards",
+    "Programming-language selection",
+    "Technology evaluation",
+    "Technology strategy"
+  ],
+  "status": "historical",
+  "title": "Establish technology-selection guidelines",
+  "type": "leadership",
+  "visibility": "public"
+}

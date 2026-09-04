@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:22:09Z",
+  "asOf": "2026-09-03",
+  "claim": "Expanded the platform's integrations with payroll providers.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-027",
+  "limitations": [
+    "No multiplier, baseline, final integration count, or expansion dates are asserted.",
+    "No provider identity, proprietary integration detail, adoption result, transaction volume, or financial outcome is disclosed."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2021",
+    "start": "2017"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "API integrations",
+    "Payroll technology",
+    "Platform growth",
+    "Systems integration"
+  ],
+  "status": "historical",
+  "title": "Expand payroll-provider integrations",
+  "type": "leadership",
+  "visibility": "public"
+}

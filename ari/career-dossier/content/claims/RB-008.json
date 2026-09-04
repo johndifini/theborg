@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:48:36Z",
+  "asOf": "2026-09-03",
+  "claim": "Built cross-functional partnerships to identify user needs and translate them into technical solutions.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-008",
+  "limitations": [
+    "The claim describes collaborative discovery and delivery and does not imply sole ownership of requirements, product decisions, or implementation.",
+    "No stakeholder identity, internal function list, customer data, initiative detail, proprietary solution, or quantified outcome is disclosed."
+  ],
+  "organizations": [
+    "American Trust/EdgeCo Holdings"
+  ],
+  "period": {
+    "end": null,
+    "start": "2021"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Cross-functional collaboration",
+    "Product discovery",
+    "Stakeholder management",
+    "Technical delivery"
+  ],
+  "status": "completed",
+  "title": "Build cross-functional product partnerships",
+  "type": "leadership",
+  "visibility": "public"
+}

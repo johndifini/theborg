@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:30:46Z",
+  "asOf": "2026-09-03",
+  "claim": "Presented the company's proprietary products to prospective buyers during a company-sale process.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-029",
+  "limitations": [
+    "The claim describes product demonstrations and does not imply sole responsibility for the sale process or buyer decisions.",
+    "No buyer identity, product detail, valuation, transaction term, purchase-price result, or causal deal outcome is disclosed."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2021",
+    "start": "2017"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Executive presentation",
+    "M&A support",
+    "Product demonstrations",
+    "Product storytelling"
+  ],
+  "status": "historical",
+  "title": "Support a company-sale process through product demonstrations",
+  "type": "leadership",
+  "visibility": "public"
+}

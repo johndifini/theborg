@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T01:26:23Z",
+  "asOf": "2026-09-03",
+  "claim": "Improved scalability and fault tolerance in large-scale order-routing systems at the Chicago Board of Trade.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-069",
+  "limitations": [
+    "The claim does not attribute organization-level transaction-processing records or system-wide performance solely to one contributor.",
+    "No throughput, latency, availability, transaction-volume, or financial outcome is quantified."
+  ],
+  "organizations": [
+    "CSC / Chicago Board of Trade"
+  ],
+  "period": {
+    "end": "2000",
+    "start": "1997"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Fault tolerance",
+    "Performance engineering",
+    "Scalability",
+    "Trading systems"
+  ],
+  "status": "historical",
+  "title": "Improve order-routing scalability and fault tolerance",
+  "type": "experience",
+  "visibility": "public"
+}

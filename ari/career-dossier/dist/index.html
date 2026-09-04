@@ -3,41 +3,394 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="AI-first public career dossier">
+  <meta name="description" content="An evidence-backed career dossier designed for AI-assisted role evaluation.">
+  <meta name="robots" content="index,follow">
+  <meta name="theme-color" content="#f4f2ec">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="John DiFini — AI career dossier">
+  <meta property="og:description" content="Use this evidence-backed dossier with a job description to assess strong matches, partial matches, and gaps.">
+  <meta property="og:url" content="https://agent.johndifini.com/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="John DiFini — AI career dossier">
+  <meta name="twitter:description" content="Evidence-backed career context for AI-assisted role evaluation.">
+  <link rel="canonical" href="https://agent.johndifini.com/">
   <link rel="alternate" type="application/json" href="/career.json" title="Structured career dossier">
   <link rel="alternate" type="text/markdown" href="/career.md" title="Markdown career dossier">
-  <title>Alex Example — AI career dossier</title>
+  <link rel="alternate" type="application/json" href="/evidence.json" title="Public evidence index">
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="AI retrieval index">
+  <title>John DiFini — AI career dossier</title>
   <style>
-    :root { color-scheme: light dark; font-family: ui-sans-serif, system-ui, sans-serif; line-height: 1.55; }
-    body { margin: 0; }
-    main { max-width: 44rem; margin: 0 auto; padding: 10vh 1.25rem 4rem; }
-    h1 { font-size: clamp(2rem, 7vw, 4rem); line-height: 1.05; letter-spacing: -0.04em; }
-    ol { padding-left: 1.25rem; }
-    pre { padding: 1rem; border: 1px solid currentColor; border-radius: .5rem; white-space: pre-wrap; }
-    button { font: inherit; padding: .55rem .85rem; }
-    nav { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
+    :root {
+      color-scheme: light;
+      --canvas: #f4f2ec;
+      --surface: #ffffff;
+      --surface-subtle: #ebe8e0;
+      --ink: #191919;
+      --muted: #62615c;
+      --line: #d4d0c5;
+      --accent: #006b20;
+      --accent-hover: #005f1a;
+      --accent-bright: #1ec503ff;
+      --accent-ink: #191919;
+      --focus: #d43e00;
+      --radius-large: 1.5rem;
+      --radius-small: .75rem;
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-synthesis: none;
+      line-height: 1.5;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { background: var(--canvas); }
+
+    body {
+      min-width: 20rem;
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(135deg, rgb(30 197 3 / 6%) 0, transparent 34rem),
+        var(--canvas);
+    }
+
+    a { color: inherit; text-underline-offset: .2em; }
+    a:hover { color: var(--accent); }
+
+    .skip-link {
+      position: fixed;
+      z-index: 10;
+      top: .75rem;
+      left: .75rem;
+      padding: .65rem .9rem;
+      border-radius: .5rem;
+      color: var(--accent-ink);
+      background: var(--accent-bright);
+      transform: translateY(-180%);
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    :focus-visible {
+      outline: .2rem solid var(--focus);
+      outline-offset: .2rem;
+    }
+
+    .shell {
+      width: min(74rem, calc(100% - 2rem));
+      margin-inline: auto;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 5rem;
+      gap: 1rem;
+    }
+
+    .wordmark {
+      margin: 0;
+      font-size: .78rem;
+      font-weight: 760;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .availability {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      margin: 0;
+      color: var(--muted);
+      font-size: .82rem;
+      font-weight: 650;
+    }
+
+    .availability::before {
+      width: .55rem;
+      height: .55rem;
+      border-radius: 50%;
+      outline: 1px solid var(--accent);
+      background: var(--accent-bright);
+      content: "";
+    }
+
+    main { padding: clamp(1.5rem, 4vw, 3.5rem) 0 3rem; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, .92fr) minmax(24rem, 1.08fr);
+      gap: clamp(2rem, 6vw, 5.5rem);
+      align-items: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 1rem;
+      color: var(--accent);
+      font-size: .78rem;
+      font-weight: 780;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 12ch;
+      margin: 0;
+      font-size: clamp(3rem, 6.5vw, 5.75rem);
+      font-weight: 680;
+      letter-spacing: .015em;
+      line-height: .94;
+      word-spacing: .14em;
+    }
+
+    .lede {
+      max-width: 37rem;
+      margin: 1.5rem 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.7vw, 1.2rem);
+    }
+
+    .prompt-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-large);
+      background: var(--surface);
+      box-shadow: 0 1.5rem 4rem rgb(25 25 25 / 8%);
+    }
+
+    .prompt-card__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: .8rem;
+      font-weight: 700;
+    }
+
+    .prompt-card__header span:last-child {
+      font-weight: 560;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    pre {
+      min-height: 12rem;
+      margin: 0;
+      padding: clamp(1.25rem, 3vw, 2rem);
+      overflow-wrap: anywhere;
+      color: var(--ink);
+      background: var(--surface);
+      font: 500 clamp(.94rem, 1.4vw, 1.05rem)/1.68 ui-monospace, "SFMono-Regular", Consolas, monospace;
+      white-space: pre-wrap;
+    }
+
+    .prompt-card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 4.65rem;
+      gap: 1rem;
+      padding: .8rem 1rem .8rem 1.25rem;
+      border-top: 1px solid var(--line);
+      background: var(--surface-subtle);
+    }
+
+    .copy-status {
+      min-height: 1.5em;
+      margin: 0;
+      color: var(--muted);
+      font-size: .86rem;
+    }
+
+    button {
+      min-height: 2.85rem;
+      padding: .65rem 1.05rem;
+      border: 1px solid var(--accent-bright);
+      border-radius: var(--radius-small);
+      color: var(--accent-ink);
+      background: var(--accent-bright);
+      font: inherit;
+      font-size: .9rem;
+      font-weight: 720;
+      cursor: pointer;
+      transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease;
+    }
+
+    button:hover { border-color: var(--accent-hover); background: var(--accent-bright); }
+    button:active { transform: translateY(1px); }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin: clamp(2.5rem, 6vw, 4.75rem) 0 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: steps;
+    }
+
+    .steps li {
+      display: grid;
+      grid-template-columns: 2rem 1fr;
+      gap: .8rem;
+      align-items: start;
+      padding: 1rem 0;
+      border-top: 1px solid var(--line);
+      counter-increment: steps;
+    }
+
+    .steps li::before {
+      display: grid;
+      place-items: center;
+      width: 1.9rem;
+      height: 1.9rem;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      color: var(--accent);
+      background: var(--surface);
+      content: counter(steps, decimal-leading-zero);
+      font-size: .7rem;
+      font-weight: 800;
+    }
+
+    .steps strong { display: block; margin-bottom: .25rem; font-size: .95rem; }
+    .steps span { color: var(--muted); font-size: .88rem; }
+    .steps code { font-size: .78rem; }
+
+    footer {
+      padding: 1.15rem 0 2.25rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .resource-nav {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: .65rem 1.25rem;
+      font-size: .82rem;
+    }
+
+    .resource-nav p { margin: 0 auto 0 0; color: var(--muted); }
+    .resource-nav a { font-weight: 680; }
+
+    @media (max-width: 52rem) {
+      .hero { grid-template-columns: 1fr; }
+      h1 { max-width: 12ch; }
+      .steps { grid-template-columns: 1fr; gap: 0; }
+      .steps li { grid-template-columns: 2rem 1fr; }
+      .prompt-card { max-width: 42rem; }
+    }
+
+    @media (max-width: 34rem) {
+      .shell { width: min(100% - 1.25rem, 74rem); }
+      header { min-height: 4.25rem; }
+      .availability { font-size: 0; }
+      .availability::after { content: "AI-ready"; font-size: .76rem; }
+      main { padding-top: 1rem; }
+      h1 { max-width: 13ch; font-size: clamp(2.7rem, 15vw, 4.2rem); }
+      .prompt-card__footer { align-items: stretch; flex-direction: column; }
+      .copy-status { order: 2; }
+      button { width: 100%; }
+      .resource-nav { align-items: flex-start; flex-direction: column; }
+      .resource-nav p { margin-bottom: .25rem; }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --canvas: #11120f;
+        --surface: #1b1c19;
+        --surface-subtle: #242521;
+        --ink: #f3f1ea;
+        --muted: #b7b5ad;
+        --line: #3f403a;
+        --accent: #1ec503ff;
+        --accent-hover: #35d11d;
+        --accent-bright: #1ec503ff;
+        --accent-ink: #11120f;
+        --focus: #ff9c73;
+      }
+
+      body { background: linear-gradient(135deg, rgb(30 197 3 / 9%) 0, transparent 34rem), var(--canvas); }
+      .prompt-card { box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 25%); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
   </style>
 </head>
 <body>
-  <main>
-    <p>Public, evidence-backed, and designed for machine retrieval.</p>
-    <h1>Ask an AI assistant about Alex Example.</h1>
-    <p>This career dossier is designed for an AI assistant. Give the assistant this URL and a job description to assess strong matches, partial matches, and gaps using cited evidence.</p>
-    <ol>
-      <li>Copy this dossier URL.</li>
-      <li>Attach the job description to your AI assistant.</li>
-      <li>Paste the prompt below.</li>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <header class="shell">
+    <p class="wordmark">Career dossier</p>
+    <p class="availability">Public · evidence-backed · machine-readable</p>
+  </header>
+
+  <main class="shell" id="main-content" tabindex="-1">
+    <section class="hero" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">For recruiters and hiring teams</p>
+        <h1 id="page-title">Ask AI about John DiFini.</h1>
+        <p class="lede">This career dossier is designed for an AI assistant. Attach a job description, then use the prompt to assess strong matches, partial matches, and gaps using cited evidence.</p>
+      </div>
+
+      <section class="prompt-card" aria-labelledby="prompt-title">
+        <div class="prompt-card__header">
+          <span id="prompt-title">Ready-to-use prompt</span>
+          <span>Plain text</span>
+        </div>
+        <pre id="prompt" tabindex="0">Using the career dossier at https://agent.johndifini.com/career.json and the attached job description, identify strong matches, partial matches, and gaps. Cite the dossier claim and evidence IDs for every conclusion. Do not infer missing qualifications; state uncertainty explicitly.</pre>
+        <div class="prompt-card__footer">
+          <p class="copy-status" id="copy-status" aria-live="polite"></p>
+          <button type="button" id="copy" aria-describedby="copy-status">Copy prompt</button>
+        </div>
+      </section>
+    </section>
+
+    <ol class="steps" aria-label="How to use this dossier">
+      <li><div><strong>Attach the job description</strong><span>Use the complete role description in your AI assistant.</span></div></li>
+      <li><div><strong>Paste the prompt</strong><span>Ask for evidence-backed matches, partial matches, and gaps.</span></div></li>
     </ol>
-    <pre id="prompt">Using the career dossier at https://agent.johndifini.com/career.json and the attached job description, identify strong matches, partial matches, and gaps. Cite the dossier claim and evidence IDs for every conclusion. Do not infer missing qualifications; state uncertainty explicitly.</pre>
-    <button type="button" id="copy">Copy prompt</button>
-    <p id="copy-status" aria-live="polite"></p>
-    <nav aria-label="Machine-readable dossier files">
+  </main>
+
+  <footer>
+    <nav class="shell resource-nav" aria-label="Machine-readable dossier files">
+      <p>Machine-readable resources</p>
       <a href="/career.json">Career JSON</a>
       <a href="/career.md">Career Markdown</a>
       <a href="/evidence.json">Evidence JSON</a>
       <a href="/llms.txt">LLM index</a>
     </nav>
-  </main>
-  <script>document.getElementById('copy').addEventListener('click',async()=>{await navigator.clipboard.writeText(document.getElementById('prompt').textContent);document.getElementById('copy-status').textContent='Prompt copied.'})</script>
+  </footer>
+
+  <script>
+    const button = document.getElementById("copy");
+    const prompt = document.getElementById("prompt");
+    const status = document.getElementById("copy-status");
+
+    button.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(prompt.textContent);
+        button.textContent = "Copied";
+        status.textContent = "Prompt copied to clipboard.";
+      } catch {
+        const selection = window.getSelection();
+        const range = document.createRange();
+        range.selectNodeContents(prompt);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        status.textContent = "Clipboard access was unavailable. The prompt is selected for manual copying.";
+      }
+    });
+  </script>
 </body>
 </html>

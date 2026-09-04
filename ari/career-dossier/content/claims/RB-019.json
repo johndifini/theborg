@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:04:58Z",
+  "asOf": "2026-09-03",
+  "claim": "Established coding, security, testing, and quality standards and architectural patterns for the company's digital platforms.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-019",
+  "limitations": [
+    "The claim describes engineering governance and does not imply sole authorship, sole enforcement authority, or a legal or regulatory compliance determination.",
+    "No proprietary architecture, security control, test procedure, certification, vulnerability result, or quantified quality outcome is disclosed."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2021",
+    "start": "2017"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Architecture governance",
+    "Engineering standards",
+    "Quality engineering",
+    "Security governance"
+  ],
+  "status": "historical",
+  "title": "Establish platform security and quality standards",
+  "type": "leadership",
+  "visibility": "public"
+}

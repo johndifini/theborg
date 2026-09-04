@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T01:34:09Z",
+  "asOf": "2026-09-03",
+  "claim": "Mentored and motivated software engineers as they pursued professional-development goals and strengthened technical and interpersonal skills.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-043",
+  "limitations": [
+    "The claim describes ongoing engineer development rather than a formal training program or sole responsibility for individual growth.",
+    "No promotion, retention, performance-rating, team-size, or productivity outcome is claimed."
+  ],
+  "organizations": [
+    "PENSCO Trust"
+  ],
+  "period": {
+    "end": "2017",
+    "start": "2012"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Coaching",
+    "Engineering leadership",
+    "Mentoring",
+    "Talent development"
+  ],
+  "status": "historical",
+  "title": "Mentor and develop software engineers",
+  "type": "leadership",
+  "visibility": "public"
+}

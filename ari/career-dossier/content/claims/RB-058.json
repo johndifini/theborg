@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-03T01:54:45Z",
+  "asOf": "2026-09-02",
+  "claim": "Automated release management and production deployments with shell scripts, including source-control branching and tagging.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-058",
+  "limitations": [
+    "The automation scope is limited to the systems and deployment process described by the historical role.",
+    "No deployment-frequency, lead-time, failure-rate, or recovery-time improvement is claimed."
+  ],
+  "organizations": [
+    "Goldman Sachs, Execution & Clearing"
+  ],
+  "period": {
+    "end": "2005",
+    "start": "2001"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "DevOps",
+    "Release automation",
+    "Shell scripting",
+    "Source control"
+  ],
+  "status": "historical",
+  "title": "Automate release management and deployments",
+  "type": "experience",
+  "visibility": "public"
+}

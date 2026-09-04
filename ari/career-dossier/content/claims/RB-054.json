@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-03T02:01:23Z",
+  "asOf": "2026-09-02",
+  "claim": "Led integration of two Java systems to create a unified mutual-fund and equity-trading experience.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-054",
+  "limitations": [
+    "The claim does not identify proprietary architectures, clearing networks, vendors, or integration protocols.",
+    "No adoption, transaction-volume, performance, or financial outcome is claimed."
+  ],
+  "organizations": [
+    "Fiserv ISS"
+  ],
+  "period": {
+    "end": "2009",
+    "start": "2005"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Java",
+    "Systems integration",
+    "Trading systems",
+    "User experience"
+  ],
+  "status": "historical",
+  "title": "Integrate Java trading systems",
+  "type": "leadership",
+  "visibility": "public"
+}

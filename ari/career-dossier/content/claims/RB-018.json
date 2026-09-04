@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:04:58Z",
+  "asOf": "2026-09-03",
+  "claim": "Created customer-focused product roadmaps emphasizing intuitive, polished experiences and supported delivery with capacity planning and executive project-status reporting.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-018",
+  "limitations": [
+    "The claim describes collaborative product and delivery planning rather than sole authority over product priorities, staffing, or executive decisions.",
+    "No customer identity, roadmap contents, capacity figure, adoption result, satisfaction measure, or financial outcome is disclosed."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2021",
+    "start": "2017"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Capacity planning",
+    "Executive communication",
+    "Product roadmapping",
+    "User experience"
+  ],
+  "status": "historical",
+  "title": "Build customer-focused roadmaps and delivery plans",
+  "type": "leadership",
+  "visibility": "public"
+}

@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:22:09Z",
+  "asOf": "2026-09-03",
+  "claim": "Fostered innovation by studying industry trends, explaining their relevance, and writing about technology and financial markets to educate team members.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-030",
+  "limitations": [
+    "The claim describes internal learning and communication practices and does not assert publication, external recognition, or sole responsibility for team innovation.",
+    "No private research, internal writing, investment recommendation, adoption metric, or quantified organizational outcome is disclosed."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2021",
+    "start": "2017"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Continuous learning",
+    "Industry research",
+    "Technical communication",
+    "Thought leadership"
+  ],
+  "status": "historical",
+  "title": "Promote innovation through industry research and writing",
+  "type": "leadership",
+  "visibility": "public"
+}

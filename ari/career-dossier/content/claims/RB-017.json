@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:04:58Z",
+  "asOf": "2026-09-03",
+  "claim": "Modernized a legacy technology stack by introducing PostgreSQL, Python, D3, Node.js, JavaScript, Git, Linux, and cloud services.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-017",
+  "limitations": [
+    "The technologies are source-supported examples introduced during the role, not an exhaustive architecture inventory or claim of sole adoption authority.",
+    "The claim does not state that every legacy component was replaced or quantify delivery, reliability, cost, or business outcomes."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2021",
+    "start": "2017"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Cloud services",
+    "Open-source technologies",
+    "Platform engineering",
+    "Technology modernization"
+  ],
+  "status": "historical",
+  "title": "Modernize a legacy technology stack",
+  "type": "leadership",
+  "visibility": "public"
+}

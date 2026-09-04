@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:48:36Z",
+  "asOf": "2026-09-03",
+  "claim": "Restructured software-engineering work into smaller autonomous teams to reduce context switching and clarify priorities.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-002",
+  "limitations": [
+    "The claim describes an organizational-design approach and does not imply sole authority over every staffing, reporting, or prioritization decision.",
+    "No team name or count, employee identity or data, restructuring detail, measured productivity result, or quantified outcome is disclosed."
+  ],
+  "organizations": [
+    "American Trust/EdgeCo Holdings"
+  ],
+  "period": {
+    "end": null,
+    "start": "2021"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Engineering culture",
+    "Organizational design",
+    "Prioritization",
+    "Team autonomy"
+  ],
+  "status": "completed",
+  "title": "Restructure engineering work around autonomous teams",
+  "type": "leadership",
+  "visibility": "public"
+}

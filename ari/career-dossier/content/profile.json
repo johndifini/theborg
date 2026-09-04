@@ -1,10 +1,10 @@
 {
+  "approvedAt": "2026-09-04T19:41:59Z",
+  "headline": "Technology executive and financial-services software leader",
+  "location": "Denver, Colorado, United States",
+  "name": "John DiFini",
   "schemaVersion": 1,
-  "name": "Alex Example",
-  "headline": "Operations leader and systems builder",
-  "summary": "Synthetic profile demonstrating evidence-backed career retrieval.",
-  "location": "United States",
-  "website": "https://example.com",
+  "summary": "Technology executive with nearly three decades of experience in financial-services software. Experience spans hands-on development, engineering leadership, platform modernization, product delivery, data systems, and independent AI projects.",
   "visibility": "public",
-  "approvedAt": "2026-09-01T00:00:00Z"
+  "website": "https://agent.johndifini.com"
 }

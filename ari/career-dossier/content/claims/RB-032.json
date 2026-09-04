@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-03T01:46:16Z",
+  "asOf": "2026-09-02",
+  "claim": "Scaled an engineering team from two to eight people and led delivery of a self-directed IRA portal and IRA distribution wizard.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-032",
+  "limitations": [
+    "The team-size figures describe growth during the role and do not assert a single point-in-time organization chart.",
+    "No adoption, revenue, or customer-outcome metric is claimed for the two products."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2012",
+    "start": "2009"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Engineering leadership",
+    "Product delivery",
+    "Retirement technology",
+    "Team scaling"
+  ],
+  "status": "historical",
+  "title": "Scale an engineering team and deliver retirement tools",
+  "type": "leadership",
+  "visibility": "public"
+}

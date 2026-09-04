@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-03T01:46:16Z",
+  "asOf": "2026-09-02",
+  "claim": "Directed three engineering teams that developed and continuously improved full-stack web applications and production systems.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-038",
+  "limitations": [
+    "The claim counts teams rather than individual contributors or direct reports.",
+    "No release, quality, adoption, or business-impact metric is claimed."
+  ],
+  "organizations": [
+    "PENSCO Trust"
+  ],
+  "period": {
+    "end": "2017",
+    "start": "2012"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Engineering leadership",
+    "Full-stack delivery",
+    "Production systems",
+    "Team leadership"
+  ],
+  "status": "historical",
+  "title": "Direct three full-stack engineering teams",
+  "type": "leadership",
+  "visibility": "public"
+}

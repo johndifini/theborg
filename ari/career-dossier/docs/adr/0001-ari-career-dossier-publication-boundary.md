@@ -1,6 +1,6 @@
 # ADR-0001: Ari owns an AI-first public career dossier with private provenance
 
-**Status:** Accepted — 2026-09-01
+**Status:** Accepted — 2026-09-01; amended — 2026-09-02
 **Decision owners:** John DiFini (product and publication), Ari (career-domain
 ownership), Architetto (architecture), Jony Vibe (landing-page visual direction)
 
@@ -18,9 +18,10 @@ The foundation implementation proceeds under these approved constraints:
   operational-control claims are **not eligible for publication** during the
   foundation phase. Each requires later, explicit candidate approval as part of
   a reviewable public-content batch.
-- Vercel will eventually serve `agent.johndifini.com`; Squarespace will
-  eventually own only the permanent redirect from `johndifini.com/agent`.
-  Neither production change is authorized by this foundation phase.
+- Vercel will eventually serve `agent.johndifini.com` as the direct public entry.
+  The earlier `johndifini.com/agent` redirect is deferred, so no Squarespace URL
+  mapping is part of the current release. DNS and production changes still
+  require separate authorization.
 - The provisional landing-page message is: “This career dossier is designed
   for an AI assistant. Give the assistant this URL and a job description to
   assess strong matches, partial matches, and gaps using cited evidence.”
@@ -29,14 +30,27 @@ The foundation implementation proceeds under these approved constraints:
   identify strong matches, partial matches, and gaps. Cite the dossier claim
   and evidence IDs for every conclusion. Do not infer missing qualifications;
   state uncertainty explicitly.”
+- Phase 7 uses `https://agent.johndifini.com` as the direct human-facing URL for
+  the résumé, while the copied prompt targets
+  `https://agent.johndifini.com/career.json` so an AI assistant can retrieve the
+  canonical corpus directly. The prompt in
+  `content/recruiter-prompt.txt` is canonical and any prompt printed on a résumé
+  must match it exactly.
+- The Phase 7 recruiter flow has two steps: attach the job description and paste
+  the prompt. Copying the dossier URL is not a separate step because the URL is
+  already present in the prompt.
+- Jony Vibe's reviewed Phase 7 direction uses `#1ec503ff` as the brand
+  accent with dark accessible text pairings, plus `.015em` letter spacing and
+  `.14em` word spacing for the main headline.
 
-Visual styling remains provisional until Jony Vibe reviews Phase 7.
+Browser-based desktop, mobile, and keyboard review remains required before
+Phase 7 is accepted as complete.
 
 ## Context
 
 The career dossier is an AI-readable, evidence-backed career corpus that a
 recruiter can give to an AI assistant alongside a job description. Its canonical
-entry URL is `https://johndifini.com/agent`. The assistant should be able to
+entry URL is `https://agent.johndifini.com`. The assistant should be able to
 identify strong matches, partial matches, and gaps, and cite dossier evidence for
 each conclusion.
 
@@ -99,7 +113,7 @@ The site is AI-first. It SHALL expose:
 The landing page SHALL contain no portfolio-style presentation. It SHALL contain:
 
 - a clear statement that the page is intended for an AI assistant;
-- three short steps: copy the URL, attach the job description, paste the prompt;
+- two short steps: attach the job description and paste the prompt;
 - a copyable prompt asking for strong matches, partial matches, gaps, and cited
   evidence; and
 - discoverable links to all machine-readable routes.
@@ -288,15 +302,10 @@ served as deployment output.
 Vercel SHALL be configured to skip deployments when the project directory has no
 relevant change. No Vercel environment variable may contain private corpus data.
 
-Squarespace SHALL retain `johndifini.com` and configure:
-
-```text
-/agent -> https://agent.johndifini.com/ 301
-```
-
-The URL printed on the resume remains `https://johndifini.com/agent`; agents and
-human visitors follow the redirect to the Vercel-hosted landing page. The Vercel
-project SHALL also serve `/agent` as an alias so either form remains intelligible.
+The URL printed on the resume SHALL be `https://agent.johndifini.com`. The
+Vercel project SHALL continue to serve `/agent` as a harmless same-host alias,
+but the release does not depend on `johndifini.com/agent` or a Squarespace URL
+mapping.
 
 Remote MCP and WebMCP are explicitly deferred. The MVP proves URL-based agent
 retrieval before adding a protocol-specific interface.
@@ -338,8 +347,8 @@ owner; private files retain provenance by ID and digest.
 ### Keep the landing page in Squarespace
 
 Rejected. It would split the entry page from generated artifacts and require
-manual synchronization. A Squarespace redirect preserves the resume URL while
-Vercel owns the complete dossier deployment.
+manual synchronization. Vercel owns the complete dossier deployment, and the
+direct `agent.johndifini.com` URL avoids a cross-platform path redirect.
 
 ### Build MCP or WebMCP in the MVP
 
@@ -351,8 +360,8 @@ before protocol-specific infrastructure is justified.
 - The user approves the exact landing-page copy and public schema.
 - Jony Vibe approves the rendered landing page at desktop and mobile widths.
 - Every public artifact returns HTTP 200 with the expected media type.
-- At least three major AI assistants can retrieve the canonical URL, follow the
-  redirect, use the corpus, distinguish matches from gaps, and cite evidence.
+- At least three major AI assistants can retrieve the canonical URL, use the
+  corpus, distinguish matches from gaps, and cite evidence.
 - Privacy tests pass against both real public content and adversarial fixtures.
 - A deliberately changed private source marks its publication stale without
   changing public output.
@@ -366,6 +375,5 @@ before protocol-specific infrastructure is justified.
 - [Vercel static configuration](https://vercel.com/docs/project-configuration/vercel-json)
 - [Vercel custom domains](https://vercel.com/docs/domains/set-up-custom-domain)
 - [Vercel deployment exclusions](https://vercel.com/docs/deployments/vercel-ignore)
-- [Squarespace URL mappings](https://support.squarespace.com/hc/en-us/articles/205815308-URL-mappings)
 - `cerebruh/wikis/spec-driven-development/wiki/persistence-artifacts.md`
 - `cerebruh/wikis/spec-driven-development/wiki/seven-information-layers.md`

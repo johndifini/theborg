@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:30:46Z",
+  "asOf": "2026-09-03",
+  "claim": "Evaluated and created proof-of-concept identity-provider implementations for single sign-on and access management.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-050",
+  "limitations": [
+    "Proof-of-concept work does not imply production deployment, final selection, or sole decision authority.",
+    "No provider identity, security configuration, user data, evaluation result, compliance conclusion, or quantified outcome is disclosed."
+  ],
+  "organizations": [
+    "PENSCO Trust"
+  ],
+  "period": {
+    "end": "2017",
+    "start": "2012"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Identity and access management",
+    "Prototyping",
+    "Security architecture",
+    "Single sign-on"
+  ],
+  "status": "historical",
+  "title": "Prototype identity-provider solutions",
+  "type": "experience",
+  "visibility": "public"
+}

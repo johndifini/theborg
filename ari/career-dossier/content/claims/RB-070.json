@@ -1,0 +1,31 @@
+{
+  "approvedAt": "2026-09-04T01:26:23Z",
+  "asOf": "2026-09-03",
+  "claim": "Identified distributed-system bottlenecks and implemented performance improvements in middleware communication, database access, and load balancing.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-070",
+  "limitations": [
+    "The claim identifies improvement areas without disclosing proprietary architecture, configuration, or operating thresholds.",
+    "No latency, throughput, capacity, availability, or cost improvement is quantified."
+  ],
+  "organizations": [
+    "CSC / Chicago Board of Trade"
+  ],
+  "period": {
+    "end": "2000",
+    "start": "1997"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Database performance",
+    "Distributed systems",
+    "Load balancing",
+    "Middleware",
+    "Performance engineering"
+  ],
+  "status": "historical",
+  "title": "Remove distributed-system bottlenecks",
+  "type": "experience",
+  "visibility": "public"
+}

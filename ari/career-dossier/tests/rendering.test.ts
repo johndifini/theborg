@@ -6,7 +6,9 @@ import { renderCareerMarkdown } from "../src/render-career-markdown.ts";
 import { renderEvidence } from "../src/render-evidence.ts";
 import { renderLandingPage } from "../src/render-landing-page.ts";
 import { renderLlmsTxt } from "../src/render-llms-txt.ts";
+import type { PublicClaim, PublicEvidence } from "../src/types.ts";
 import { loadAndValidateCorpus } from "../src/validate.ts";
+import { fixture } from "./helpers.ts";
 
 test("all renderers expose retrieval routes and bounded guidance", async () => {
   const corpus = normalizeCorpus(await loadAndValidateCorpus());
@@ -29,7 +31,12 @@ test("every claim occurs once as a canonical record and one Markdown heading", a
 });
 
 test("candidate-controlled evidence is explicitly labeled", async () => {
-  const corpus = normalizeCorpus(await loadAndValidateCorpus());
+  const base = await loadAndValidateCorpus();
+  const corpus = normalizeCorpus({
+    ...base,
+    claims: [await fixture("examples/synthetic/public-claim-completed.json") as PublicClaim],
+    evidence: [await fixture("examples/synthetic/public-evidence.json") as PublicEvidence]
+  });
   assert.match(renderCareerMarkdown(corpus), /candidate-controlled/u);
   assert.match(renderLlmsTxt(corpus), /self-published, not independent verification/u);
 });

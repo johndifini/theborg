@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:48:36Z",
+  "asOf": "2026-09-03",
+  "claim": "Led and influenced technical architecture, product, and user-experience design decisions.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-007",
+  "limitations": [
+    "The wording reflects shared design influence and does not imply sole ownership or authorship of every architecture, product, or user-experience decision.",
+    "No proprietary design, architecture, product roadmap, customer data, internal decision, or quantified outcome is disclosed."
+  ],
+  "organizations": [
+    "American Trust/EdgeCo Holdings"
+  ],
+  "period": {
+    "end": null,
+    "start": "2021"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Architecture",
+    "Cross-functional leadership",
+    "Product design",
+    "User experience"
+  ],
+  "status": "completed",
+  "title": "Influence architecture, product, and user-experience design",
+  "type": "leadership",
+  "visibility": "public"
+}

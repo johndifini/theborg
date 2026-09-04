@@ -5,17 +5,16 @@ import { loadAndValidateCorpus, validateDocument } from "../src/validate.ts";
 import { clone, fixture } from "./helpers.ts";
 
 test("valid synthetic public and private-sidecar records pass", async () => {
-  const corpus = await loadAndValidateCorpus();
-  assert.deepEqual(
-    corpus.claims.filter((claim) => claim.id.startsWith("EX-")).map((claim) => claim.id),
-    ["EX-001", "EX-002"]
-  );
+  await loadAndValidateCorpus();
+  await validateDocument("public-claim", await fixture("examples/synthetic/public-claim-completed.json"));
+  await validateDocument("public-claim", await fixture("examples/synthetic/public-claim-in-development.json"));
+  await validateDocument("public-evidence", await fixture("examples/synthetic/public-evidence.json"));
   await validateDocument("private-provenance", await fixture("examples/synthetic/private-provenance.json"));
   await validateDocument("publication-manifest", await fixture("examples/synthetic/publication-manifest.json"));
 });
 
 test("public claim schema rejects every contract violation with a path", async () => {
-  const valid = await fixture("content/claims/EX-001.json") as JsonObject;
+  const valid = await fixture("examples/synthetic/public-claim-completed.json") as JsonObject;
   const cases: Array<[string, (value: JsonObject) => void, RegExp]> = [
     ["unknown property", (value) => { value.unexpected = true; }, /additional properties/u],
     ["invalid ID", (value) => { value.id = "bad"; }, /\/id/u],
@@ -35,7 +34,7 @@ test("public claim schema rejects every contract violation with a path", async (
 });
 
 test("public evidence rejects insecure URLs, local paths, and unknown fields", async () => {
-  const valid = await fixture("content/evidence/EVID-EX-001.json") as JsonObject;
+  const valid = await fixture("examples/synthetic/public-evidence.json") as JsonObject;
   for (const [name, mutate] of [
     ["insecure URL", (value: JsonObject) => { value.url = "http://example.com"; }],
     ["local path", (value: JsonObject) => { value.localPath = "/synthetic/file"; }],

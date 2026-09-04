@@ -2,9 +2,9 @@
 
 **Architecture:** [ADR-0001](adr/0001-ari-career-dossier-publication-boundary.md)
 **Target:** `ari/career-dossier/`
-**Deployment:** Vercel at `agent.johndifini.com`, with
-`johndifini.com/agent` redirecting to it
-**Status:** Phases 1–5 implemented; Phase 6 in progress with Batch 001 approved
+**Deployment:** Vercel at `agent.johndifini.com`
+**Status:** Phases 1–7 complete;
+Phase 8 preview audited pending Git connection, domain, DNS, and production
 
 ## Objective
 
@@ -18,7 +18,7 @@ Vercel.
 
 The MVP is complete only when all of the following are true:
 
-1. `https://johndifini.com/agent` reaches a simple, sleek recruiter landing page.
+1. `https://agent.johndifini.com` reaches a simple, sleek recruiter landing page.
 2. The landing page explains the AI-only purpose and provides a copyable prompt.
 3. `/career.json`, `/career.md`, `/evidence.json`, and `/llms.txt` are generated
    from one validated public corpus.
@@ -119,8 +119,8 @@ index, or MCP transport requires a new ADR.
 4. Decide whether exact current-employer staffing metrics and the reviewed
    current-employer AI/control claims may be published.
 5. Confirm the Node.js LTS version supported by Vercel at implementation time.
-6. Confirm that `agent.johndifini.com` is the Vercel production domain and that
-   Squarespace will own only the `johndifini.com/agent` redirect.
+6. Confirm that `agent.johndifini.com` is the direct public and Vercel production
+   domain, with no `johndifini.com/agent` redirect in the current release.
 
 ### Gate
 
@@ -257,6 +257,13 @@ landing copy, schema, and current-employer publication choices.
 
 ## Phase 6 — migrate the initial public corpus
 
+**Completed 2026-09-04.** The approval-gated workflow published 70 real claims
+across 12 reviewed batches. All 79 active private claims were adjudicated: nine
+sensitive current-employer claims remain intentionally held and RB-065 remains
+retired rather than forming an unfinished publication queue. The approved
+production-content cutover removed the two synthetic foundation claims and their
+orphaned evidence record from production inputs.
+
 ### Tasks
 
 1. Transform active private evidence-bank entries into public claim proposals.
@@ -282,6 +289,16 @@ landing copy, schema, and current-employer publication choices.
 
 ## Phase 7 — landing-page design and accessibility
 
+**Complete 2026-09-04.** The real public profile and 70-claim corpus generate
+without synthetic production records. Browser review at 1440×900 and 390×844
+passed layout, overflow, prompt, two-step flow, and resource-link checks.
+Keyboard focus order and visible focus, clipboard success and fault-injected
+failure fallback, and JavaScript-disabled rendering passed. Activating the skip
+link moved focus to `main#main-content`. Runtime reduced-motion verification
+matched `prefers-reduced-motion: reduce`, capped transitions at `.01ms`, ran no
+animations, and preserved page usability. The original system preference was
+restored after verification.
+
 ### Tasks
 
 1. Route visual direction through Jony Vibe.
@@ -296,12 +313,18 @@ landing copy, schema, and current-employer publication choices.
 ### Acceptance criteria
 
 - The page is usable with JavaScript disabled except for one-click copying.
-- Recruiters can understand the three-step instruction without scrolling on a
+- Recruiters can understand the two-step instruction without scrolling on a
   typical desktop viewport.
 - Mobile and desktop renders receive Jony Vibe approval.
 - Automated accessibility checks pass, followed by a keyboard-only review.
 
-## Phase 8 — Vercel and Squarespace configuration
+## Phase 8 — Vercel domain configuration
+
+The tracked configuration, upload allowlist, route/header tests, and deployment
+runbook are implemented. An account-owned, deployment-protected preview passed
+the route, header, source-exposure, and generated-artifact audit. Connecting the
+GitHub repository, adding the custom domain, changing its DNS record, and
+verifying production remain external gates; see [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ### Tasks
 
@@ -321,15 +344,13 @@ landing copy, schema, and current-employer publication choices.
 5. Add `.vercelignore` without excluding remote-build inputs, then inspect the
    actual served `dist/` inventory.
 6. Configure Vercel to skip deployments for unrelated Borg changes.
-7. Add `agent.johndifini.com` and copy the exact CNAME value Vercel provides into
-   Squarespace DNS.
-8. Add the Squarespace permanent mapping:
-   `/agent -> https://agent.johndifini.com/ 301`.
-9. Verify TLS, redirects, canonical URLs, status codes, content types, and headers.
+7. Add `agent.johndifini.com` and copy the exact CNAME value Vercel provides to
+   the domain's authoritative DNS provider.
+8. Verify TLS, canonical URLs, status codes, content types, and headers.
 
 ### Acceptance criteria
 
-- `johndifini.com/agent` resolves in one permanent redirect to the landing page.
+- `agent.johndifini.com` serves the landing page directly over HTTPS.
 - Every documented route returns 200 over HTTPS.
 - There is no directory listing or accidental source-file route.
 - Preview deployments contain synthetic or approved public data only.
@@ -374,7 +395,7 @@ Implementation SHOULD proceed as these independently verifiable batches:
 6. First reviewed public-claim batch.
 7. Landing page and design review.
 8. Vercel preview and deployment audit.
-9. Squarespace redirect and production release.
+9. Custom domain and production release.
 10. Cross-assistant evaluation report.
 
 Each batch should be committed separately. Any implementation choice not covered
@@ -399,10 +420,10 @@ complete.
 - [x] Scoped `AGENTS.md` and exact `CLAUDE.md` wrapper created
 - [x] Public/private schemas implemented
 - [x] Privacy and determinism gates passing
-- [ ] Publication command approval-gated and atomic
-- [ ] Initial claims reviewed in batches
-- [ ] Jony Vibe landing-page review complete
-- [ ] Vercel deployment inventory inspected
-- [ ] Squarespace redirect verified
+- [x] Publication command approval-gated and atomic
+- [x] Initial claims reviewed in batches
+- [x] Jony Vibe landing-page review complete
+- [x] Vercel preview deployment inventory inspected
+- [ ] Custom domain and production TLS verified
 - [ ] Three-assistant retrieval evaluation complete
 - [x] Deferred features remain absent

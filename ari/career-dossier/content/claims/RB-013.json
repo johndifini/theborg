@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:30:46Z",
+  "asOf": "2026-09-03",
+  "claim": "Directed the strategy, tactical management, and governance of a technology organization spanning full-stack engineering, infrastructure, tooling, and operations.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-013",
+  "limitations": [
+    "The claim describes organizational leadership and does not imply sole execution or ownership of every function and decision.",
+    "No budget, staffing level, security scope, proprietary operating detail, or quantified outcome is disclosed."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2021",
+    "start": "2017"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "CTO leadership",
+    "Engineering leadership",
+    "Technology governance",
+    "Technology operations"
+  ],
+  "status": "historical",
+  "title": "Direct a technology organization",
+  "type": "leadership",
+  "visibility": "public"
+}

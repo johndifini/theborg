@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-03T02:01:23Z",
+  "asOf": "2026-09-02",
+  "claim": "Where automation was unavailable, standardized manual testing and deployment checks, including structured code testing and comparisons of deployment file sets.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-056",
+  "limitations": [
+    "The claim applies specifically to workflows where automation was unavailable and does not characterize the entire delivery environment as manual.",
+    "Structured code testing does not assert literal testing of every executable path, and no defect-rate or deployment outcome is claimed."
+  ],
+  "organizations": [
+    "Fiserv ISS"
+  ],
+  "period": {
+    "end": "2009",
+    "start": "2005"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Deployment controls",
+    "Operational controls",
+    "Quality assurance",
+    "Release management"
+  ],
+  "status": "historical",
+  "title": "Standardize manual testing and deployment controls",
+  "type": "experience",
+  "visibility": "public"
+}

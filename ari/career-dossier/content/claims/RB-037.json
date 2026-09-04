@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-04T02:42:50Z",
+  "asOf": "2026-09-03",
+  "claim": "Contributed to banking-product redesign for a company spinoff in which deposit-insurance considerations were a stated design objective.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-037",
+  "limitations": [
+    "The claim describes a product-design objective and does not make a legal conclusion, coverage guarantee, eligibility determination, or representation about regulatory approval.",
+    "No product structure, customer identity or data, coverage amount, achieved coverage, proprietary design detail, or quantified outcome is disclosed."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2012",
+    "start": "2009"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Banking products",
+    "Product design",
+    "Regulatory considerations",
+    "Spinoff support"
+  ],
+  "status": "historical",
+  "title": "Redesign banking products for a company spinoff",
+  "type": "experience",
+  "visibility": "public"
+}

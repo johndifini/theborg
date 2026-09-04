@@ -1,0 +1,30 @@
+{
+  "approvedAt": "2026-09-03T01:46:16Z",
+  "asOf": "2026-09-02",
+  "claim": "Served on the Architecture Team, reviewing system designs, evaluating application frameworks, setting standards, and providing technical guidance.",
+  "evidenceIds": [],
+  "evidenceLevel": "resume-sourced",
+  "id": "RB-034",
+  "limitations": [
+    "Architecture Team membership does not imply sole decision authority.",
+    "No quantified delivery or reliability outcome is attributed to this governance work."
+  ],
+  "organizations": [
+    "LT Trust"
+  ],
+  "period": {
+    "end": "2012",
+    "start": "2009"
+  },
+  "schemaVersion": 1,
+  "skills": [
+    "Architecture governance",
+    "Design review",
+    "Technical guidance",
+    "Technical standards"
+  ],
+  "status": "historical",
+  "title": "Serve on an enterprise architecture team",
+  "type": "leadership",
+  "visibility": "public"
+}

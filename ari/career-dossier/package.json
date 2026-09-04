@@ -12,7 +12,8 @@
     "check-generated": "node src/check-generated.ts",
     "test": "node --test tests/*.test.ts",
     "typecheck": "tsc --noEmit",
-    "verify": "npm run typecheck && npm test && npm run build && npm run check-generated"
+    "verify": "npm run typecheck && npm test && npm run build && npm run check-generated",
+    "verify-deployment": "npm run build && node --test tests/deployment.test.ts"
   },
   "dependencies": {
     "ajv": "8.18.0",
