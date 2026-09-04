@@ -121,7 +121,14 @@ STEP 3: If there is at least one finding, pipe a Markdown report into
 (reads from stdin), then STOP. Touch no files, open no backlog item, and attempt
 no remediation. John decides whether each identifier is acceptable. Format:
 - Header: `Borg privacy audit — {YYYY-MM-DD} — {total} finding(s)`
-- One bullet per finding: `<file>:<line> — <class>: <matched_text> — <context>
+- Immediately after the header, before any narrative:
+  `Severity: {C} critical | {H} high | {M} medium | {L} low | {total} total`
+  `New findings: {total}`
+- Classify every finding as exactly one of critical, high, medium, or low; the
+  four severity counts must sum to `{total}`. Every finding is new relative to
+  the last recorded clean audit because this job records state only after a
+  clean run.
+- One bullet per finding: `[<severity>] <file>:<line> — <class>: <matched_text> — <context>
   → <suggested_remediation>`
 - End with the two known limitations from STEP 2.
 
@@ -132,9 +139,13 @@ perform a git history rewrite.
 STEP 4: If there are no findings, pipe this Markdown body into
 `${BORG_ROOT}/.bin/notify-email.sh c4po "Borg privacy audit — {YYYY-MM-DD} — 0 finding(s)"`:
 
+`Borg privacy audit — {YYYY-MM-DD} — 0 finding(s)`
+`Severity: 0 critical | 0 high | 0 medium | 0 low | 0 total`
+`New findings: 0`
 `All clear — no findings. The two documented mrs-beast identity occurrences are allowlisted.`
 
 STEP 5: After the clean report only, create the state directory if needed and
 write `${BORG_ROOT}/c4po/.claude/scheduled/state/c4po-privacy-audit-monthly.json`
-with `{"date": "YYYY-MM-DD", "findings": 0}` so the run is not repeated this
-month. A findings run must never reach this step.
+with `{"date": "YYYY-MM-DD", "findings": 0, "critical": 0, "high": 0,
+"medium": 0, "low": 0, "new": 0}` so the run is not repeated this month. A
+findings run must never reach this step.
