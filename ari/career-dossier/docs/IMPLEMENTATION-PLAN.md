@@ -3,8 +3,9 @@
 **Architecture:** [ADR-0001](adr/0001-ari-career-dossier-publication-boundary.md)
 **Target:** `ari/career-dossier/`
 **Deployment:** Vercel at `agent.johndifini.com`
-**Status:** Phases 1–7 complete;
-Phase 8 preview audited pending Git connection, domain, DNS, and production
+**Status:** Phases 1–8 complete; production is live at
+`https://agent.johndifini.com`. Phase 9 (cross-assistant retrieval
+evaluation) is the only remaining phase.
 
 ## Objective
 
@@ -320,11 +321,14 @@ restored after verification.
 
 ## Phase 8 — Vercel domain configuration
 
-The tracked configuration, upload allowlist, route/header tests, and deployment
-runbook are implemented. An account-owned, deployment-protected preview passed
-the route, header, source-exposure, and generated-artifact audit. Connecting the
-GitHub repository, adding the custom domain, changing its DNS record, and
-verifying production remain external gates; see [DEPLOYMENT.md](DEPLOYMENT.md).
+**Complete 2026-09-05.** `https://agent.johndifini.com` serves the dossier over
+HTTPS from a Git-connected production deployment. All six routes return 200 with
+their declared media types and the full header contract; thirteen source and
+repository paths return 404; all six served files are byte-identical to local
+`dist/`; and two sibling commits outside the project directory produced no
+deployment, closing the skip criterion. Two defects were fixed to get there — a
+`.vercelignore` allowlist that stripped `.git` on Git-connected builds, and an
+untracked empty `content/evidence/`. See [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ### Tasks
 

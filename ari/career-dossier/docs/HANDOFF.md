@@ -1,10 +1,11 @@
 # Handoff: Career dossier
 
-**Prepared:** 2026-09-04
+**Prepared:** 2026-09-04; updated 2026-09-05
 **Immediate owner:** Ari
 **Next domain owner:** Ari
-**Current state:** Phases 1–7 complete; Phase 8 preview audited pending Git
-connection, domain, DNS, and production verification
+**Current state:** Phases 1–8 complete. `https://agent.johndifini.com` is live,
+audited, and serving the approved 70-claim corpus. Phase 9 — cross-assistant
+retrieval evaluation — is the only remaining phase and is now unblocked.
 
 ## Outcome
 
@@ -16,6 +17,89 @@ matches, partial matches, and gaps and cites dossier evidence.
 The substantive site is for AI retrieval. A recruiter who opens the URL
 directly sees only a simple, sleek landing page explaining that the page is for
 an AI assistant and providing a copyable prompt.
+
+## Start here — 2026-09-05
+
+Production is live. Everything below this section is implementation history,
+retained because it records why decisions were made; read it only when a
+specific question sends you there.
+
+### What is true right now
+
+- `https://agent.johndifini.com` serves the dossier from a Git-connected Vercel
+  production deployment built from `main`.
+- All six routes — `/`, `/agent`, `/career.json`, `/career.md`,
+  `/evidence.json`, `/llms.txt` — return 200 with their declared media types and
+  the full `vercel.json` header contract (CSP, `Referrer-Policy: no-referrer`,
+  `nosniff`, HSTS, bounded caching).
+- All six served files are byte-identical to local `dist/`. The preview's
+  platform feedback-script injection does not occur on production, so `/` and
+  `/agent` are identical.
+- Served `career.json` carries the John DiFini profile, exactly 70 claims, zero
+  `EX-*` ids, and zero evidence records. No private marker appears in any served
+  byte.
+- Thirteen source and repository paths return 404, including
+  `/content/claims/RB-002.json`, `/.git/config`, and `/AGENTS.md`.
+- TLS: Let's Encrypt `CN=agent.johndifini.com`, valid to 2026-12-03. `http://`
+  returns 308 to `https://`. The CNAME TTL is 600, GoDaddy's floor.
+- Sibling commits outside `ari/career-dossier/` produce no deployment; the
+  `ignoreCommand` skip path is proven, not assumed.
+
+`npm run verify` passes 29/29 with typecheck, build, privacy, and byte-for-byte
+determinism. `npm run verify-deployment` passes 6/6.
+
+### The next session's job: Phase 9
+
+Phase 9 is the cross-assistant retrieval evaluation, specified in
+[IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md). In short: select 10
+representative job descriptions spanning strong, partial, and weak fits; run the
+canonical recruiter prompt against at least three major AI assistants; and
+record retrieval success, factual accuracy, citation correctness, honest gap
+reporting, unsupported inference, and failures.
+
+Constraints that are easy to get wrong:
+
+- Job descriptions and raw evaluation inputs are private. They live under
+  `ari/.private/`, never in this tracked directory.
+- The recruiter prompt is canonical and shared with the resume. Do not reword it
+  for the evaluation; that would measure a different artifact than the one
+  recruiters will use.
+- Fix measured corpus, schema, or retrieval problems before proposing any new
+  infrastructure. ADR-0001 requires that a proposal for MCP, WebMCP, embeddings,
+  or an API cite a measured failure from this evaluation.
+- Nine sensitive current-employer claims are intentionally held and RB-065 is
+  retired. An assistant reporting a gap in those areas is behaving correctly,
+  not failing.
+
+### Two traps this deployment already fell into
+
+Both are fixed and recorded in [DEPLOYMENT.md](DEPLOYMENT.md); they are repeated
+here because both cost a failed production build and neither is obvious.
+
+1. **`.vercelignore` resolves against different roots on different deploy
+   paths.** Against the deployment root for a CLI deploy, but against the
+   repository root for a Git-connected build. An allowlist written for the former
+   swept the whole checkout including `.git` on the latter, and the build died in
+   one second. The file is now removed and ADR-0001 §8 is amended; do not
+   reintroduce it. Source exposure is controlled by Vercel serving
+   `outputDirectory` alone, which is the control the audits actually exercise.
+2. **`npm run verify` cannot catch a missing empty directory.**
+   `content/evidence/` is legitimately empty, Git does not track empty
+   directories, and so the local tree passed while the clone had no such path
+   and the build crashed in `assertDeployableSourcesSafe`. A tracked `.gitkeep`
+   fixes it. If a corpus directory is ever emptied again, add the placeholder in
+   the same commit.
+
+### Operational notes
+
+- The Vercel CLI is not installed. `npx vercel@latest` works and authenticates
+  from `~/Library/Application Support/com.vercel.cli/auth.json`.
+- `~/theborg` is a shared checkout with concurrent sessions. Stage by explicit
+  path (`git add -A -- ari/career-dossier`) and check what is left unstaged
+  before every commit; see `.claude/rules/shared-checkout-git-safety.md`.
+- Re-running the production audit is cheap and worth doing after any deployment
+  change: the six routes, the header contract, the source-exposure probes, and a
+  byte comparison against local `dist/`.
 
 ## Phase 7 browser gate complete
 
