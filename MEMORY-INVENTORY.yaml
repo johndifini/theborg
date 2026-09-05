@@ -108,7 +108,7 @@ artifacts:
     scope: workspace
     visibility: public
     canonicality: canonical
-    rationale: "The only text guaranteed loaded in every session in every directory: agent roster and routing, the read-only Cerebruh contract, scratch/private file placement, and the two scoped rules that must fire on a Write rather than a Read."
+    rationale: "The only text guaranteed loaded in every session in every directory: agent roster and routing, the read-only Cerebruh contract, scratch/private file placement, and the three scoped rules that must fire on a Write rather than a Read."
     introduced: 2026-07-12
     provenance:
       - kind: workspace_decision
