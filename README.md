@@ -24,6 +24,7 @@ This repo is my personal AI workspace, shared in case the patterns, structure, o
 - `repos/` — Where `architetto` parks the repos it initializes. Each is its own independent git repo; the workspace git-ignores the contents (structure only, via `.gitkeep`) so product code stays out of The Borg's history.
 - `jony-vibe/` — The graphic design and branding agent. Handles logos, color/type systems, layout, brand guidelines, and image-generation prompts.
 - `bernard/` — A case study, not an agent: the sanitized harness of a private health wiki and its family-facing WhatsApp companion agent (Bernard) — how it was built and what everything does.
+- `design/` — Design assets for The Borg repo itself, made by `jony-vibe` — right now that's the GitHub social preview, the card you see when someone drops a link to this repo in Slack. Design work for a repo under `repos/` lives inside that repo's own `design/` folder instead.
 - `tmp/` — Shared scratch space for any agent's working files. Git-ignored (structure only, via `.gitkeep`), so nobody's half-finished draft ends up in the history.
 - `LINT.md` — The lint rules every `AGENTS.md` in the workspace is held to. Reference data, not always-on context — `c4po` reads it when auditing. See `/lint-audit` above.
 - `SOURCE-DOCUMENTS.md` — How to read and cite an authoritative document — a contract, a filing, a statement, a scan — without confidently inventing what it says. Includes the `.docx` and scanned-PDF text-extraction recipes that actually work on a stock Mac (no `tesseract` required).

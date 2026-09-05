@@ -360,6 +360,37 @@ artifacts:
     related:
       - claude-md-best-practices-page
 
+  # ── design deliverable spec ──────────────────────────────────────────────
+
+  theborg-social-preview-spec:
+    path: design/README.md
+    type: design_decision
+    owner: jony-vibe
+    scope: design
+    visibility: public
+    canonicality: canonical
+    rationale: "Records the locked specification behind the repository's own Open Graph card - dimensions, palette, type stack, margins, and the optical centre the content block sits on - so the card can be revised or re-rendered without re-deriving those decisions by eye from the PNG. The rendered asset carries no reasoning of its own."
+    introduced: 2026-09-05
+    provenance:
+      - kind: workspace_decision
+        reference: "jony-vibe design session 2026-09-04. Placement follows jony-vibe/media/AGENTS.md, which routes design work aimed at a repository into that repository's own design/ directory."
+    load_mode: explicit
+    consumers: [claude-code, codex]
+    risk: low
+    review:
+      cadence: annual
+      method: [semantic]
+      last_reviewed: null
+    success_signals:
+      - "The committed PNG still matches the documented spec, and the recorded headless-Chrome command still reproduces it."
+      - "A change to the card updates this spec in the same commit."
+    retirement_triggers:
+      - "GitHub stops serving a custom social preview, or changes the required aspect ratio."
+      - "The card is superseded by a generated asset whose source of truth lives elsewhere."
+    remediation_policy: approval_required
+    related:
+      - root-agent-instructions
+
   # ── bootstrapped drafts — mechanically derived, NOT reviewed ───────────
   #
   # Emitted by `python3 .bin/build-memory-inventory.py bootstrap --write`
