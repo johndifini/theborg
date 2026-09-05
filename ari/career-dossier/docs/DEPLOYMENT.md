@@ -255,3 +255,23 @@ Still unproven: that an unrelated Borg commit produces no dossier deployment.
 `ignoreCommand` now runs without error, but every commit so far has touched the
 project directory, so the skip path has not been exercised. Confirm it the next
 time a sibling agent commits outside `ari/career-dossier/`.
+
+### Unrelated-commit skip proven — 2026-09-05
+
+The last open Phase 8 acceptance criterion is now closed by observation rather
+than assumption:
+
+```text
+1ac6e9d  2026-09-04 17:54:27  touched ari/career-dossier/docs/  -> build ddmof18zt 17:54:32
+0b58ba0  2026-09-05 08:54:10  AGENTS.md only                    -> no deployment
+4e08690  2026-09-05 08:54:25  AGENTS.md, README.md, design/     -> no deployment
+```
+
+Two sibling-agent commits outside the project directory produced no dossier
+deployment, while the commit inside it built within five seconds. `ignoreCommand`
+(`git diff --quiet HEAD^ HEAD ./`) resolves `HEAD^` in Vercel's clone and skips
+correctly. Phase 8 acceptance is complete.
+
+Production was re-verified against the newer `ddmof18zt` deployment after the
+alias moved: all six routes 200 and byte-identical to local `dist/`, serving the
+John DiFini profile with 70 claims.
