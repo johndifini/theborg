@@ -135,13 +135,13 @@
     }
 
     h1 {
-      max-width: 12ch;
+      max-width: 15ch;
       margin: 0;
-      font-size: clamp(3rem, 6.5vw, 5.75rem);
+      font-size: clamp(2.5rem, 4.25vw, 4rem);
       font-weight: 680;
-      letter-spacing: .015em;
-      line-height: .94;
-      word-spacing: .14em;
+      letter-spacing: .01em;
+      line-height: 1;
+      word-spacing: .1em;
     }
 
     .lede {
@@ -285,7 +285,6 @@
 
     @media (max-width: 52rem) {
       .hero { grid-template-columns: 1fr; }
-      h1 { max-width: 12ch; }
       .prompt-card { max-width: 42rem; }
     }
 
@@ -295,7 +294,7 @@
       .availability { font-size: 0; }
       .availability::after { content: "AI-ready"; font-size: .76rem; }
       main { padding-top: 1rem; }
-      h1 { max-width: 13ch; font-size: clamp(2.7rem, 15vw, 4.2rem); }
+      h1 { max-width: 15ch; font-size: clamp(2.25rem, 9vw, 2.75rem); }
       .prompt-card__footer { align-items: stretch; flex-direction: column; }
       .copy-status { order: 2; }
       button { width: 100%; }
