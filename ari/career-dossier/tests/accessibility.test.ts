@@ -30,13 +30,16 @@ test("landing page exposes semantic navigation and metadata", async () => {
   assert.match(html, /<a class="skip-link" href="#main-content">Skip to main content<\/a>/u);
   assert.match(html, /<main class="shell" id="main-content" tabindex="-1">/u);
   assert.equal(html.match(/<h1\b/gu)?.length, 1);
-  assert.match(html, /<button type="button" id="copy" aria-describedby="copy-status">/u);
+  assert.match(html, /<button type="button" id="copy" aria-describedby="job-description-step copy-status">/u);
   assert.match(html, /id="copy-status" aria-live="polite"/u);
   assert.match(html, /<nav class="shell resource-nav" aria-label="Machine-readable dossier files">/u);
   assert.match(html, /<link rel="canonical" href="https:\/\/agent\.johndifini\.com\/">/u);
   assert.match(html, /<link rel="icon" type="image\/png" href="\/favicon\.png">/u);
   assert.equal(html.match(/<link rel="alternate"/gu)?.length, 4);
-  assert.equal(html.match(/<li><div><strong>/gu)?.length, 2);
+  assert.match(html, /<ol class="steps">/u);
+  assert.match(html, /id="job-description-step"><div><strong>Attach your job description<\/strong>/u);
+  assert.match(html, /<li><div><strong>Copy and paste the prompt<\/strong>/u);
+  assert.ok(html.indexOf("Attach your job description") < html.indexOf('id="copy"'));
   assert.doesNotMatch(html, /Copy the dossier URL/u);
 });
 
