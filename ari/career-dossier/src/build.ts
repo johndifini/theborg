@@ -1,4 +1,4 @@
-import { mkdir, rm, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, rm, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { normalizeCorpus } from "./canonical.ts";
 import { assertDeployableSourcesSafe, assertDistSafe, assertOutputPath, assertPublicValuesSafe } from "./privacy.ts";
@@ -29,6 +29,7 @@ export async function build(outputDirectory = resolve(projectRoot, "dist")): Pro
   for (const name of Object.keys(files).sort((left, right) => left.localeCompare(right, "en"))) {
     await writeFile(resolve(outputDirectory, name), files[name] ?? "", "utf8");
   }
+  await copyFile(resolve(projectRoot, "assets/favicon.png"), resolve(outputDirectory, "favicon.png"));
   await assertDistSafe(outputDirectory);
 }
 

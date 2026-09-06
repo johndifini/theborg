@@ -4,7 +4,8 @@ import { basename, join, resolve, sep } from "node:path";
 import { projectRoot, readProjectText, withinProjectRoot } from "./paths.ts";
 import type { JsonValue } from "./types.ts";
 
-export const expectedDistFiles = ["agent.html", "career.json", "career.md", "evidence.json", "index.html", "llms.txt"];
+export const expectedDistFiles = ["agent.html", "career.json", "career.md", "evidence.json", "favicon.png", "index.html", "llms.txt"];
+const binaryDistFiles = new Set(["favicon.png"]);
 
 const forbidden: Array<[string, RegExp]> = [
   ["private path", /(?:^|[\\/])\.private(?:[\\/]|$)/iu],
@@ -70,6 +71,7 @@ export async function assertDistSafe(outputDirectory: string): Promise<void> {
     throw new Error(`dist inventory mismatch: expected ${expectedDistFiles.join(", ")}; received ${entries.join(", ")}`);
   }
   for (const name of entries) {
+    if (binaryDistFiles.has(name)) continue;
     assertPrivateSafe(`dist/${basename(name)}`, await readFile(join(outputDirectory, name), "utf8"));
   }
 }

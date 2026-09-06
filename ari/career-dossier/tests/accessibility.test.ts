@@ -34,6 +34,7 @@ test("landing page exposes semantic navigation and metadata", async () => {
   assert.match(html, /id="copy-status" aria-live="polite"/u);
   assert.match(html, /<nav class="shell resource-nav" aria-label="Machine-readable dossier files">/u);
   assert.match(html, /<link rel="canonical" href="https:\/\/agent\.johndifini\.com\/">/u);
+  assert.match(html, /<link rel="icon" type="image\/png" href="\/favicon\.png">/u);
   assert.equal(html.match(/<link rel="alternate"/gu)?.length, 4);
   assert.equal(html.match(/<li><div><strong>/gu)?.length, 2);
   assert.doesNotMatch(html, /Copy the dossier URL/u);
@@ -57,13 +58,13 @@ test("focus, reduced-motion, responsive, and contrast safeguards are present", a
   assert.match(html, /@media \(max-width: 34rem\)/u);
   assert.match(html, /letter-spacing: \.015em;/u);
   assert.match(html, /word-spacing: \.14em;/u);
-  assert.match(html, /--accent-bright: #1ec503ff;/u);
+  assert.match(html, /--accent-bright: #26ff00;/u);
   assert.ok(contrast("#191919", "#f4f2ec") >= 7, "light primary text contrast");
   assert.ok(contrast("#62615c", "#f4f2ec") >= 4.5, "light secondary text contrast");
   assert.ok(contrast("#006b20", "#f4f2ec") >= 4.5, "light accent-text contrast");
-  assert.ok(contrast("#191919", "#1ec503") >= 4.5, "light button contrast");
+  assert.ok(contrast("#191919", "#26ff00") >= 4.5, "light button contrast");
   assert.ok(contrast("#f3f1ea", "#11120f") >= 7, "dark primary text contrast");
   assert.ok(contrast("#b7b5ad", "#11120f") >= 4.5, "dark secondary text contrast");
-  assert.ok(contrast("#1ec503", "#11120f") >= 4.5, "dark accent-text contrast");
-  assert.ok(contrast("#11120f", "#1ec503") >= 4.5, "dark button contrast");
+  assert.ok(contrast("#26ff00", "#11120f") >= 4.5, "dark accent-text contrast");
+  assert.ok(contrast("#11120f", "#26ff00") >= 4.5, "dark button contrast");
 });
