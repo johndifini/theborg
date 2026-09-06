@@ -159,7 +159,8 @@
       box-shadow: 0 1.5rem 4rem rgb(25 25 25 / 8%);
     }
 
-    .prompt-card__header {
+    .prompt-card__header,
+    .prompt-card__prompt-label {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -171,10 +172,15 @@
       font-weight: 700;
     }
 
-    .prompt-card__header span:last-child {
+    .prompt-card__header span:last-child,
+    .prompt-card__prompt-label span:last-child {
       font-weight: 560;
       letter-spacing: .04em;
       text-transform: uppercase;
+    }
+
+    .prompt-card__prompt-label {
+      border-top: 1px solid var(--line);
     }
 
     pre {
@@ -225,10 +231,9 @@
 
     .steps {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 1rem;
-      margin: clamp(2.5rem, 6vw, 4.75rem) 0 0;
-      padding: 0;
+      gap: 0;
+      margin: 0;
+      padding: .5rem 1.25rem;
       list-style: none;
       counter-reset: steps;
     }
@@ -238,10 +243,11 @@
       grid-template-columns: 2rem 1fr;
       gap: .8rem;
       align-items: start;
-      padding: 1rem 0;
-      border-top: 1px solid var(--line);
+      padding: .85rem 0;
       counter-increment: steps;
     }
+
+    .steps li + li { border-top: 1px solid var(--line); }
 
     .steps li::before {
       display: grid;
@@ -280,8 +286,6 @@
     @media (max-width: 52rem) {
       .hero { grid-template-columns: 1fr; }
       h1 { max-width: 12ch; }
-      .steps { grid-template-columns: 1fr; gap: 0; }
-      .steps li { grid-template-columns: 2rem 1fr; }
       .prompt-card { max-width: 42rem; }
     }
 
@@ -341,26 +345,29 @@
       <div>
         <p class="eyebrow">For recruiters and hiring teams</p>
         <h1 id="page-title">Ask AI about John DiFini.</h1>
-        <p class="lede">This career dossier is designed for an AI assistant. Attach a job description, then use the prompt to assess strong matches, partial matches, and gaps using cited evidence.</p>
+        <p class="lede">To evaluate a role, attach your job description to your AI assistant, then copy and paste the prompt below.</p>
       </div>
 
       <section class="prompt-card" aria-labelledby="prompt-title">
         <div class="prompt-card__header">
-          <span id="prompt-title">Ready-to-use prompt</span>
+          <span id="prompt-title">Use this dossier in two steps</span>
+          <span>AI workflow</span>
+        </div>
+        <ol class="steps">
+          <li id="job-description-step"><div><strong>Attach your job description</strong><span>Attach or paste the complete job description into your AI assistant.</span></div></li>
+          <li><div><strong>Copy and paste the prompt</strong><span>Use it to assess evidence-backed matches, partial matches, and gaps.</span></div></li>
+        </ol>
+        <div class="prompt-card__prompt-label">
+          <span>Ready-to-use prompt</span>
           <span>Plain text</span>
         </div>
         <pre id="prompt" tabindex="0">Using the career dossier at https://agent.johndifini.com/career.json and the attached job description, identify strong matches, partial matches, and gaps. Cite the dossier claim and evidence IDs for every conclusion. Do not infer missing qualifications; state uncertainty explicitly.</pre>
         <div class="prompt-card__footer">
           <p class="copy-status" id="copy-status" aria-live="polite"></p>
-          <button type="button" id="copy" aria-describedby="copy-status">Copy prompt</button>
+          <button type="button" id="copy" aria-describedby="job-description-step copy-status">Copy prompt</button>
         </div>
       </section>
     </section>
-
-    <ol class="steps" aria-label="How to use this dossier">
-      <li><div><strong>Attach the job description</strong><span>Use the complete role description in your AI assistant.</span></div></li>
-      <li><div><strong>Paste the prompt</strong><span>Ask for evidence-backed matches, partial matches, and gaps.</span></div></li>
-    </ol>
   </main>
 
   <footer>
