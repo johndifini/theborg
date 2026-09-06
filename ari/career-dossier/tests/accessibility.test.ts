@@ -59,8 +59,10 @@ test("focus, reduced-motion, responsive, and contrast safeguards are present", a
   assert.match(html, /:focus-visible/u);
   assert.match(html, /@media \(prefers-reduced-motion: reduce\)/u);
   assert.match(html, /@media \(max-width: 34rem\)/u);
-  assert.match(html, /letter-spacing: \.015em;/u);
-  assert.match(html, /word-spacing: \.14em;/u);
+  assert.match(html, /font-size: clamp\(2\.5rem, 4\.25vw, 4rem\);/u);
+  assert.match(html, /font-size: clamp\(2\.25rem, 9vw, 2\.75rem\);/u);
+  assert.match(html, /letter-spacing: \.01em;/u);
+  assert.match(html, /word-spacing: \.1em;/u);
   assert.match(html, /--accent-bright: #26ff00;/u);
   assert.ok(contrast("#191919", "#f4f2ec") >= 7, "light primary text contrast");
   assert.ok(contrast("#62615c", "#f4f2ec") >= 4.5, "light secondary text contrast");
