@@ -65,8 +65,10 @@ chmod 600 ${HOME:?}/.zshenv
 Scheduled jobs report by email — it's the only notification channel, so a job with no email configured is a job you'll never hear from.
 
 ```bash
-cp .env.example .env
+cp -n .env.example .env
 ```
+
+The `-n` refuses to overwrite an existing `.env`. If you already have one — including a symlink pointing at a secret store outside the repo — `cp` exits 1 and leaves it alone; edit that file in place instead. Without `-n`, `cp` follows the symlink and overwrites your real credentials with the template's placeholders.
 
 ```bash
 chmod 600 .env
