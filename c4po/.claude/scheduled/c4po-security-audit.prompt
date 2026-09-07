@@ -4,6 +4,20 @@ Run the /security-review skill against the current state of ${BORG_ROOT}. Specif
 - .claude/settings*.json files in each agent's workspace
 - hooks configured in those settings
 - exposed paths and permission rules
+- c4po's `launchctl unload` allow rules must stay enumerated literal plist paths,
+  never a `com.theborg.*` glob. Permission matching happens on the command string
+  before the shell expands anything, so a glob allow admits a command written with
+  a literal asterisk while the exact-path deny does not match that string — and the
+  shell then expands it across every job, this audit included. A deny glob cannot
+  substitute: its own `*` would match every sibling job and deny the legitimate
+  single-job case, and the allow list has no negation syntax. Check the invariant
+  mechanically rather than by eye: the allow list holds exactly one entry per
+  `com.theborg.*` plist in ~/Library/LaunchAgents EXCEPT
+  com.theborg.c4po-security-audit.plist, which must be absent from allow and
+  present in deny. Report any difference and name the jobs on each side. A newly
+  installed job merely missing from allow is drift, not tampering — it fails safe,
+  since unloading it only prompts — so say which of the two it is instead of
+  reporting a bare count mismatch.
 - the consolidated secrets file at ${BORG_ROOT}/.env: must be chmod 600 and
   gitignored (`git check-ignore .env`), and no other filled-in .env / secret
   file may exist elsewhere in the workspace
