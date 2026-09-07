@@ -1,11 +1,13 @@
 # Handoff: Career dossier
 
-**Prepared:** 2026-09-04; updated 2026-09-05
+**Prepared:** 2026-09-04; updated 2026-09-07
 **Immediate owner:** Ari
 **Next domain owner:** Ari
-**Current state:** Phases 1–8 complete. `https://agent.johndifini.com` is live,
-audited, and serving the approved 70-claim corpus. Phase 9 — cross-assistant
-retrieval evaluation — is the only remaining phase and is now unblocked.
+**Current state:** Phases 1–9 complete and the MVP is closed.
+`https://agent.johndifini.com` is live, audited, and serving the approved
+70-claim corpus. Gemini retrieval is a documented product-specific limitation;
+the original strict Phase 9 acceptance gate remains failed rather than being
+revised after measurement.
 
 ## Outcome
 
@@ -18,7 +20,7 @@ The substantive site is for AI retrieval. A recruiter who opens the URL
 directly sees only a simple, sleek landing page explaining that the page is for
 an AI assistant and providing a copyable prompt.
 
-## Start here — 2026-09-05
+## Start here — 2026-09-07
 
 Production is live. Everything below this section is implementation history,
 retained because it records why decisions were made; read it only when a
@@ -48,28 +50,29 @@ specific question sends you there.
 `npm run verify` passes 29/29 with typecheck, build, privacy, and byte-for-byte
 determinism. `npm run verify-deployment` passes 6/6.
 
-### The next session's job: Phase 9
+### Phase 9 closeout
 
-Phase 9 is the cross-assistant retrieval evaluation, specified in
-[IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md). In short: select 10
-representative job descriptions spanning strong, partial, and weak fits; run the
-canonical recruiter prompt against at least three major AI assistants; and
-record retrieval success, factual accuracy, citation correctness, honest gap
-reporting, unsupported inference, and failures.
+The cross-assistant retrieval evaluation is complete. Thirty canonical-prompt
+runs covered ten representative job descriptions in ChatGPT, Claude, and
+Gemini. ChatGPT and Claude retrieved the canonical JSON in all 20 of their
+runs; Gemini retrieved it in 0 of 10. The strict per-run score was 12/30.
+All cited `RB-*` IDs were valid, no evidence ID was fabricated, and no
+unsupported inference was recorded. The strict acceptance gate failed on
+retrieval, material-gap reporting, and unresolved high-severity failures.
 
-Constraints that are easy to get wrong:
+Twenty-seven supplemental route probes then tested `/`, `/career.md`, and
+`/career.json` across the three assistants. ChatGPT and Claude succeeded in
+18/18; Gemini failed in 9/9. A supplemental Grok check succeeded on all three
+routes. Read-only inspection of the Vercel project found no active or draft WAF
+configuration, no custom rules or IP blocks, no Bot Protection or AI Bots
+managed ruleset, no attack anomalies, and no recorded firewall actions.
 
-- Job descriptions and raw evaluation inputs are private. They live under
-  `ari/.private/`, never in this tracked directory.
-- The recruiter prompt is canonical and shared with the resume. Do not reword it
-  for the evaluation; that would measure a different artifact than the one
-  recruiters will use.
-- Fix measured corpus, schema, or retrieval problems before proposing any new
-  infrastructure. ADR-0001 requires that a proposal for MCP, WebMCP, embeddings,
-  or an API cite a measured failure from this evaluation.
-- Nine sensitive current-employer claims are intentionally held and RB-065 is
-  retired. An assistant reporting a gap in those areas is behaving correctly,
-  not failing.
+The candidate approved closing the MVP with Gemini documented as a known
+product-specific interoperability limitation. This is an exception disposition,
+not a retroactive pass or a change to the measured threshold. Do not add
+`robots.txt`, change the canonical route, or propose MCP, WebMCP, embeddings, or
+an API unless a future evaluation establishes a reproducible need that the
+existing static routes can solve.
 
 ### Two traps this deployment already fell into
 
