@@ -3,9 +3,10 @@
 **Architecture:** [ADR-0001](adr/0001-ari-career-dossier-publication-boundary.md)
 **Target:** `ari/career-dossier/`
 **Deployment:** Vercel at `agent.johndifini.com`
-**Status:** Phases 1–8 complete; production is live at
-`https://agent.johndifini.com`. Phase 9 (cross-assistant retrieval
-evaluation) is the only remaining phase.
+**Status:** Phases 1–9 complete; production is live at
+`https://agent.johndifini.com`, and the MVP closed on 2026-09-07 with Gemini
+retrieval documented as a known product-specific limitation. The original
+strict Phase 9 acceptance gate remains failed and unchanged.
 
 ## Objective
 
@@ -36,6 +37,11 @@ The MVP is complete only when all of the following are true:
    a job-alignment assessment with evidence citations and explicit gaps.
 10. No MCP server, vector database, authentication system, or live scraper is
     required for the MVP.
+
+At closeout, criterion 9 remained unmet: ChatGPT and Claude retrieved the
+canonical dossier in all baseline runs, while Gemini retrieved it in none. The
+candidate approved closing the MVP with that measured limitation rather than
+revising the criterion or presenting the gate as passed.
 
 ## Target structure
 
@@ -362,6 +368,22 @@ untracked empty `content/evidence/`. See [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ## Phase 9 — agent retrieval evaluation
 
+**Complete 2026-09-07 with a documented exception.** Thirty canonical-prompt
+runs completed across ChatGPT, Claude, and Gemini. ChatGPT and Claude retrieved
+the canonical JSON in 20/20 combined runs; Gemini retrieved it in 0/10. The
+strict per-run score was 12/30. All cited claim IDs were valid, no evidence ID
+was fabricated, and no unsupported inference was recorded. The strict gate
+failed on retrieval, material-gap reporting, and unresolved high-severity
+failures.
+
+Twenty-seven supplemental route probes showed ChatGPT and Claude succeeding in
+18/18 across HTML, Markdown, and JSON while Gemini failed in 9/9; Grok then
+retrieved all three routes. Vercel inspection found no project WAF, bot-managed
+ruleset, attack anomaly, or firewall action capable of explaining Gemini's
+failure. The MVP therefore closes with a product-specific Gemini limitation,
+without changing the measured results or justifying new retrieval
+infrastructure.
+
 ### Tasks
 
 1. Select 10 representative job descriptions spanning strong, partial, and weak
@@ -429,5 +451,6 @@ complete.
 - [x] Jony Vibe landing-page review complete
 - [x] Vercel preview deployment inventory inspected
 - [x] Custom domain and production TLS verified
-- [ ] Three-assistant retrieval evaluation complete
+- [x] Three-assistant retrieval evaluation complete; strict acceptance failed
+  and Gemini is documented as a known product-specific limitation
 - [x] Deferred features remain absent
