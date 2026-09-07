@@ -61,6 +61,11 @@ identifier in it:
 - `.claude/rules/tracked-agent-files-are-public.md`: the `johndifini/theborg`
   occurrence is load-bearing because naming the public repository is the rule's
   premise.
+- `design/`: the `johndifini/theborg` occurrences in `README.md` and
+  `src/social-preview.html` are load-bearing because the deliverable is the
+  public repository's own Open Graph card, which has to render the repository's
+  real name. This is value-scoped, not a directory exemption: any other
+  identifier under `design/` is still a finding.
 - `ari/career-dossier/` identity values: `John DiFini`, `agent.johndifini.com`,
   and `johndifini.com` are load-bearing wherever they appear in a tracked file,
   because the dossier is a deliberately attributed public corpus served from that
