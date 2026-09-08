@@ -20,8 +20,10 @@ Six overrides for interactive invocation:
    because the result stays in this user-visible session. Keep private material
    out of tracked files, generated public snapshot data, and unrelated tool
    output; do not reveal more than the review requires.
-3. In **STAGE 5 — SELECT**, the user may request a larger or narrower candidate
-   cohort. Otherwise keep the scheduled run's bounded selection policy.
+3. In **STAGE 5 — SELECT**, an exact `--bootstrap-review` argument activates the
+   temporary weekly bootstrap cohort defined in the scheduled prompt. The user
+   may otherwise request a larger or narrower one-off cohort; without either,
+   keep the scheduled run's bounded selection policy.
 4. In **STAGE 9 — REPORT**, do NOT pipe to `notify-email.sh`. Instead, output the report
    directly into this session, including assumptions that are STILL VALID, so
    the run is legible.
