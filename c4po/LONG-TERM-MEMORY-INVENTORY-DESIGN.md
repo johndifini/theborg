@@ -451,6 +451,129 @@ and exits 0, and nothing about the check writes. Coverage is not review, a
 canonical source stays unregistered by design — the honest finding — rather than
 being papered over with a record pointing nowhere.
 
+### Step 6 in detail
+
+Step 5 made the audit capable of reading every private overlay. Step 6 is the
+step that checks it never says what it read. The privacy rule has been an
+assertion since principle 5 was written; here it becomes a measurement, taken
+against this workspace's real private material rather than a fixture.
+
+**Two modes, because the two modes have different rules.** A scheduled run
+emails a report and writes durable state, and must never open a private
+artifact's contents. An interactive run reports into a session the user is
+already looking at, may open private contents, and writes no state at all.
+Proving one proves nothing about the other, so both are exercised:
+`.bin/dry-run-memory-audit.sh` drives the scheduled path headlessly, and
+`/audit-assumptions` in a session is the interactive path — run as itself rather
+than simulated.
+
+**What the harness keeps real, and what it redirects.** `BORG_ROOT` stays the
+live workspace: a dry run against a synthetic tree would prove nothing about the
+private data that is the whole question. Discovery, the join across every
+overlay, coverage enforcement, validation, the candidate snapshot, the
+mechanical checks, and both of the orchestrator's own privacy scans therefore
+run against real artifacts. Only publication is redirected — the report goes to
+a capture stub instead of `notify-email.sh`, and STAGE 10 writes its two files
+into the run's output directory instead of `c4po/.claude/scheduled/state/`. The
+network allowlist holds `api.anthropic.com` alone, so `smtp.gmail.com` is
+unreachable and nothing can be sent even if the redirect were ignored; STAGE 7
+still researches normally, because WebSearch is served through that same API
+rather than by the client.
+
+**The gate is tested by being obeyed, not bypassed.** `--mode full` seeds no
+state file so the orchestrator runs; `--mode gate` seeds one dated this month
+and the run must stop at STAGE 1 having produced nothing at all. Without the
+second mode, the first mode's gate override would be the only evidence about a
+guard whose entire job is to stop a second run in one month.
+
+**The scanner derives its needles from the live overlays.**
+`.bin/tests/audit-privacy-scan.py` reads every
+`<owner>/.private/memory-inventory.yaml` through the inventory tool's own YAML
+reader — the parser guaranteed to agree with the writer that produced them, and
+one that needs no PyYAML — and builds seven categories of needle: private ids,
+private paths in relative and absolute form, private judgment text, distinctive
+content lines lifted from the private artifacts themselves, a concrete
+`<owner>/.private/` marker, the `CLAUDE.local.md` wrapper name, and the
+home-directory prefix. It never prints a needle: a finding is a category, a line
+number, and twelve hex characters of the needle's SHA-256, so the failure report
+cannot become the leak it is reporting.
+
+Three profiles decide what is fatal, because the destinations differ. `email`
+and `snapshot` fail on everything, including a home-directory fragment, matching
+the orchestrator's own STAGE 9 and STAGE 10 scans. `log` demotes the
+home-directory category to advisory, since every command line in an execution
+trace contains the repository root, and keeps private material fatal.
+
+**A scanner that cannot fail is not evidence.** `--self-test` builds a synthetic
+tree with a fake overlay and a fake private artifact, confirms all seven
+categories detect in a deliberately leaky file, and confirms none fires on a
+clean report that legitimately names the generic `<owner>/.private/…` overlay
+shape. That last case is why the marker category matches a concrete owner
+directory rather than the bare string: the design and the report are both
+required to describe where overlays live, and a scanner that failed on correct
+documentation would get trained away instead of fixed. Live data supplies the
+second control — `discover --show-private` produces output the scanner fails,
+while the same command without the flag passes, so the default redaction is
+doing work rather than having nothing to redact.
+
+**The one channel live data cannot exercise.** Every private record here is
+still `status: draft`, and a draft carries none of the six judgment fields by
+design, so `private_judgment` has zero needles from real data. The synthetic
+self-test covers the detector and the interactive run covers the behaviour, by
+forming private verdicts in-session and confirming they reach no durable
+artifact. The gap closes on its own as private drafts are promoted.
+
+**What the dry run found.** Three defects, none of which an argument would have
+caught.
+
+The first was in the harness's own claim. Claude Code's sandbox
+`filesystem.allowWrite` *adds* to the writable set rather than narrowing it —
+the project root is writable by default — so listing only the output directory
+and `tmp/` left the entire workspace writable while reading as though it did
+not. The blanket repair fails too: `denyWrite` beats `allowWrite` even for a
+subpath, so denying `$BORG_ROOT` and allowing `$BORG_ROOT/tmp` takes away the
+one directory STAGE 2 needs. What works is denying every top-level entry except
+`tmp/`, since deny is recursive. One gap survives by construction — a brand-new
+top-level entry is on no deny list — which is why the harness treats its
+before/after manifest, not the sandbox, as the proof that nothing changed.
+`--mode probe` writes five disposable files, two inside the writable roots and
+three outside, and reads its verdict from the filesystem rather than from the
+model's account of what happened. The manifest earned its place on the second
+run, which reported the workspace changed: the changed file was this design
+document, edited from the session driving the run while the run was in flight
+and denied to the run itself. A dry run in a shared checkout has to distinguish
+what it did from what happened around it, and only the manifest can.
+
+The second was a contradiction inside the orchestrator. Its per-assumption
+"Where to update if flagged" pointers are written `${BORG_ROOT}/LINT.md` so the
+run can open the file, and STAGE 9 then requires a pre-delivery scan for
+home-directory fragments in the body. The first full dry run resolved that
+conflict by copying the pointers verbatim and reporting its own scan clean; the
+independent scanner found the fragment the run had missed. STAGE 9 now states
+that report paths are workspace-relative and says why the two conventions
+differ, since the model was not choosing carelessly — it was following the more
+specific instruction.
+
+The third was a false finding manufactured by the harness, and it took two
+attempts to diagnose. `sync-codex-rule-skills.sh --check` compares a rendered
+stub against the file on disk with `diff -q - FILE`, and `diff` spools stdin to
+a temp file; with temp denied, every comparison failed `Operation not permitted`
+and the script reported all 25 bridges stale. The run caught its own error and
+re-derived the comparison by hand, but a dry run that fabricates a
+`GENERATED_DRIFT` finding is worse than none, because the finding is
+indistinguishable from a real one. The first repair added the outer `$TMPDIR`
+and changed nothing, because the CLI sets its own `TMPDIR` for the sandboxed
+run; allowing `/tmp` and `/private/tmp` as well is what fixed it. The lesson
+generalises past this script: a sandbox tight enough to prove the report-only
+invariant is also tight enough to make ordinary tools fail in ways that read as
+audit findings, so a dry run has to be able to tell its own breakage from the
+workspace's.
+
+**What step 6 does not settle.** It exercises the report-only path only. Nothing
+here validates `--apply`, which step 7 gates on fixtures, idempotence tests,
+diff checks, and rollback verification, and the harness deliberately offers no
+way to turn it on.
+
 ## Acceptance criteria
 
 - Every in-scope durable memory artifact resolves to exactly one inventory
