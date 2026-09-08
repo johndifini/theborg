@@ -1,0 +1,8 @@
+{
+  "enabledPlugins": {
+    "vercel@claude-plugins-official": true
+  },
+  "env": {
+    "VERCEL_PLUGIN_TELEMETRY": "off"
+  }
+}

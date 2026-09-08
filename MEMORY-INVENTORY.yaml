@@ -391,6 +391,72 @@ artifacts:
     related:
       - root-agent-instructions
 
+  vercel-plugin-guidance-is-advisory-rule:
+    path: ari/career-dossier/.claude/rules/vercel-plugin-guidance-is-advisory.md
+    type: scoped_rule
+    owner: ari
+    scope: ari/career-dossier
+    visibility: public
+    canonicality: canonical
+    rationale: "The Vercel plugin injects vendor context that claims authority over the model's priors and directs it to provision marketplace integrations before asking and to migrate vercel.json to vercel.ts. Both breach this project's change-control contract, so the conflict needs a standing resolution rather than a per-session judgment call."
+    introduced: 2026-09-07
+    provenance:
+      - kind: upstream_feature
+        reference: "vercel@claude-plugins-official 0.48.0 (11c3258) SessionStart hook injects skills/knowledge-update/SKILL.md wherever vercel.json or .vercel/ is present."
+      - kind: user_request
+        reference: "2026-09-07 pre-install vet of the Vercel plugin for ari/career-dossier; the injected-guidance conflict was flagged as the one item left open after installation."
+    load_mode: always
+    consumers: [claude-code, codex]
+    risk: medium
+    review:
+      cadence: on_vercel_plugin_update
+      method: [semantic, source_verification]
+      last_reviewed: 2026-09-07
+    success_signals:
+      - "Dossier sessions ask before provisioning an external service, rather than running the marketplace skill's discover first and confirming afterward."
+      - "vercel.json remains the project's configuration, and no vercel.ts migration is proposed without an ADR."
+      - "The four passages it quotes still appear verbatim in the installed knowledge-update skill."
+    retirement_triggers:
+      - "The Vercel plugin is uninstalled from ari/career-dossier, or its project-scope enablement is removed."
+      - "Upstream drops the provisioning-before-asking directive and the vercel.ts recommendation, leaving nothing to override."
+      - "The dossier stops deploying to Vercel, so the plugin's activation markers no longer match."
+    remediation_policy: propose_patch
+    related:
+      - vercel-plugin-guidance-is-advisory-codex-bridge
+      - ari-career-dossier-agents
+
+  vercel-plugin-guidance-is-advisory-codex-bridge:
+    path: ari/career-dossier/.agents/skills/vercel-plugin-guidance-is-advisory/SKILL.md
+    type: generated_rule_bridge
+    owner: ari
+    scope: ari/career-dossier
+    visibility: public
+    canonicality: generated
+    canonical_ref: vercel-plugin-guidance-is-advisory-rule
+    rationale: "Codex does not read .claude/rules/, and the Vercel plugin supports Codex as a harness, so without this generated stub the override would bind Claude Code sessions in this directory and silently not bind Codex ones."
+    introduced: 2026-09-07
+    provenance:
+      - kind: upstream_feature
+        reference: "Codex discovers .agents/skills/*/SKILL.md from the working directory up to the repo root."
+      - kind: workspace_decision
+        reference: "AGENTS.md Scoped rules — generate stubs with .bin/sync-codex-rule-skills.sh, never duplicate a rule's text."
+    load_mode: explicit
+    consumers: [codex]
+    risk: low
+    review:
+      cadence: each_audit
+      method: [drift_only]
+      last_reviewed: 2026-09-07
+    success_signals:
+      - "Its frontmatter description still matches the canonical rule, and its relative path still resolves."
+      - ".bin/sync-codex-rule-skills.sh regenerates it with no change."
+    retirement_triggers:
+      - "Codex reads .claude/rules/ natively, making the bridge redundant."
+      - "The canonical rule is retired, at which point this file must be removed with it."
+    remediation_policy: auto_safe
+    related:
+      - vercel-plugin-guidance-is-advisory-rule
+
   # ── bootstrapped drafts — mechanically derived, NOT reviewed ───────────
   #
   # Emitted by `python3 .bin/build-memory-inventory.py bootstrap --write`

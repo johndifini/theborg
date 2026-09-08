@@ -15,6 +15,7 @@ Third-party plugins that ship an MCP server which is **not currently registered*
 | Plugin | Bundled server | Reviewed version | Notes |
 |---|---|---|---|
 | `last30days@last30days-skill` (GitHub `mvanhorn/last30days-skill`) | `last30days-pp-mcp` (Go binary, outbound web search) | skill 3.8.3 / mcp manifest 3.6.0 (reviewed 2026-07-05) | Installed intentionally by the user. Currently inert — the skill runs via CLI, not the MCP server. Also ships a **SessionStart hook** (`hooks/scripts/check-config.sh`) that runs in every session: inspected 2026-07-05, non-malicious (status banner, Keychain presence check, chmod-600 of loose config). Promote to **Approved servers** if the MCP server is ever registered. |
+| `vercel@claude-plugins-official` (GitHub `vercel/vercel-plugin`) | `vercel` (HTTP, `https://mcp.vercel.com`, OAuth, read-only in initial release) | plugin 0.48.0 @ `11c3258` (reviewed 2026-09-07) | Installed 2026-09-07 at **project scope only** (`ari/career-dossier`), for that project's Vercel deployment surface. Inert here: the server is declared in the repo's root `.mcp.json`, but the plugin manifest has no `mcpServers` key, so Claude Code never registers it. Ships **SessionStart/SessionEnd hooks** gated on Vercel/Next.js markers or an empty directory; subprocess calls are fixed-arg `vercel --version` and `npm view vercel version`. Telemetry disabled via `VERCEL_PLUGIN_TELEMETRY=off` in the project's `.claude/settings.json`. Promote to **Approved servers** if the MCP server is ever registered. |
 
 ## Out of scope
 
