@@ -1,0 +1,1 @@
+stale command bridge

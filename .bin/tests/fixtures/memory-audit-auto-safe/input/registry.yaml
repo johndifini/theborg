@@ -1,0 +1,28 @@
+version: 1
+
+artifacts:
+  fixture-rule:
+    path: .claude/rules/fixture.md
+    type: scoped_rule
+    visibility: public
+    canonicality: canonical
+  fixture-rule-bridge:
+    path: .agents/skills/fixture/SKILL.md
+    type: generated_rule_bridge
+    visibility: public
+    canonicality: generated
+    canonical_ref: fixture-rule
+    remediation_policy: auto_safe
+  fixture-command:
+    path: .claude/commands/fixture-command.md
+    type: command
+    visibility: public
+    canonicality: canonical
+  fixture-command-bridge:
+    path_root: codex_home
+    path: skills/fixture-command/SKILL.md
+    type: generated_command_bridge
+    visibility: public
+    canonicality: generated
+    canonical_ref: fixture-command
+    remediation_policy: auto_safe

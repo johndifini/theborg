@@ -1,0 +1,9 @@
+version: 1
+artifacts:
+  synthetic-private-note:
+    path: syntheticagent/.private/note.md
+    type: private_memory
+    visibility: private
+    rationale: "Synthetic judgment text used only by the apply-tier fixture."
+    retirement_triggers:
+      - "Synthetic retirement condition used only by the apply-tier fixture."
