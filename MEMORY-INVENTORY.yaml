@@ -9,7 +9,12 @@
 # Schema:       MEMORY-INVENTORY.schema.json
 # Validate:     python3 .bin/build-memory-inventory.py validate
 #
-# Migration status: step 3 of the design's migration sequence. Coverage is now
+# Migration status: step 6 of the design's migration sequence complete — the
+# registry is bootstrapped (step 3), the LINT.md coverage rule is live (step 4),
+# the monthly audit is the ten-stage report-only orchestrator (step 5), and both
+# audit modes have been dry-run with the privacy boundary measured rather than
+# asserted (step 6). Step 7 — interactive `--apply` — is not implemented, so
+# nothing in this pipeline writes to a memory artifact. Coverage is now
 # complete — every artifact `python3 .bin/build-memory-inventory.py discover`
 # finds has a record — but coverage is NOT review. The hand-written records at
 # the top of `artifacts:` are the step-1 representative set: one artifact of each
@@ -21,9 +26,10 @@
 # fields — rationale, provenance, risk, success_signals, retirement_triggers,
 # remediation_policy — and setting `status: reviewed`. `validate` prints both
 # numbers on every run; `validate --require-reviewed` fails while any draft
-# remains. The LINT.md coverage rule stays unwritten until that gate is green
-# (step 4), per the design's instruction not to run a knowingly red audit
-# during migration.
+# remains. The LINT.md coverage rule is live and deliberately gates only
+# registration; the separate review gate stays red while the human-review
+# cohorts are promoted, so the lint audit is never knowingly red during the
+# migration.
 #
 # `review.last_reviewed: null` throughout is literal, not a placeholder: no
 # artifact has yet had a substantive review under this scheme, which correctly
