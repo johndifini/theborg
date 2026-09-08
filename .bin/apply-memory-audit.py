@@ -4,7 +4,8 @@
 The input is a JSON plan. Outputs are derived again from unchanged canonical
 sources, generated manifest state, or a privacy-scanned snapshot candidate.
 Every action carries before/after hashes, making the proposed diff a
-precondition rather than an assertion made after the write.
+precondition rather than an assertion made after the write. The sole creation
+case is an explicitly approved first-run snapshot bootstrap.
 """
 
 from __future__ import annotations
@@ -241,10 +242,10 @@ def privacy_scan(root: str, candidate: str):
         raise Refusal("candidate snapshot failed the privacy scan")
 
 
-def derive(action, root_map, records):
+def derive(action, root_map, records, approve_first_run_snapshot=False):
     if action.get("tier") != "auto_safe":
         raise Refusal("action %r is not tier auto_safe" % action.get("id"))
-    if set(action) - {"id", "tier", "kind", "target", "source", "candidate"}:
+    if set(action) - {"id", "tier", "kind", "target", "source", "candidate", "bootstrap"}:
         raise Refusal("action %r has unsupported fields" % action.get("id"))
     target = action.get("target")
     if not isinstance(target, dict) or set(target) != {"path_root", "path", "before_sha256", "after_sha256"}:
@@ -252,8 +253,22 @@ def derive(action, root_map, records):
     if target["path_root"] not in root_map:
         raise Refusal("action %r uses an unsupported target root" % action.get("id"))
     target_abs = safe_path(root_map[target["path_root"]], target["path"])
-    before = read_bytes(target_abs)
     kind = action.get("kind")
+    bootstrap = action.get("bootstrap", False)
+    if bootstrap is not False and bootstrap is not True:
+        raise Refusal("action %r has an invalid bootstrap value" % action.get("id"))
+    if "bootstrap" in action and (kind != "generated_snapshot" or bootstrap is not True):
+        raise Refusal("bootstrap is valid only for first-run generated snapshots")
+    if bootstrap:
+        if kind != "generated_snapshot" or target.get("before_sha256") is not None:
+            raise Refusal("only an absent generated snapshot may be bootstrapped")
+        if not approve_first_run_snapshot:
+            raise Refusal("first-run snapshot creation requires --approve-first-run-snapshot")
+        before = read_bytes(target_abs) if os.path.exists(target_abs) else None
+    else:
+        if not isinstance(target.get("before_sha256"), str):
+            raise Refusal("action %r needs a before_sha256" % action.get("id"))
+        before = read_bytes(target_abs)
 
     if kind in ("generated_rule_bridge", "generated_command_bridge"):
         source = action.get("source")
@@ -305,8 +320,11 @@ def derive(action, root_map, records):
     if sha(after) != target["after_sha256"]:
         raise Refusal("derived output does not match proposed after_sha256 for %r"
                       % action.get("id"))
-    current = sha(before)
-    if current not in (target["before_sha256"], target["after_sha256"]):
+    current = sha(before) if before is not None else None
+    if bootstrap:
+        if current not in (None, target["after_sha256"]):
+            raise Refusal("snapshot target appeared outside the bootstrap plan")
+    elif current not in (target["before_sha256"], target["after_sha256"]):
         raise Refusal("target changed outside the plan for action %r" % action.get("id"))
     return target_abs, before, after
 
@@ -325,6 +343,35 @@ def atomic_write(path: str, data: bytes):
     finally:
         if os.path.exists(temporary):
             os.unlink(temporary)
+
+
+def atomic_create(path: str, data: bytes):
+    """Create a complete file without ever replacing a concurrently made target."""
+    directory = os.path.dirname(path)
+    fd, temporary = tempfile.mkstemp(prefix=".memory-audit-", dir=directory)
+    linked = False
+    try:
+        os.fchmod(fd, 0o600)
+        with os.fdopen(fd, "wb") as handle:
+            handle.write(data)
+            handle.flush()
+            os.fsync(handle.fileno())
+        try:
+            os.link(temporary, path, follow_symlinks=False)
+            linked = True
+        except FileExistsError as exc:
+            raise Refusal("snapshot target appeared before atomic creation") from exc
+    finally:
+        if os.path.exists(temporary):
+            try:
+                os.unlink(temporary)
+            except OSError:
+                # Once the complete inode has been linked at the allowlisted
+                # destination, failure to remove its temporary alias must not
+                # turn a successful publication into an apparent failed apply.
+                # The destination is still verified by the caller.
+                if not linked:
+                    raise
 
 
 def diff_text(label: str, before: bytes, after: bytes) -> str:
@@ -430,15 +477,20 @@ def cmd_plan(args):
             raise Refusal("snapshot candidate is not valid JSON") from exc
         privacy_scan(root_map["borg_root"], candidate_abs)
         target_abs = safe_path(root_map["borg_root"], SNAPSHOT_TARGET)
-        before = read_bytes(target_abs)
+        target_exists = os.path.exists(target_abs)
+        if not target_exists and not args.approve_first_run_snapshot:
+            raise Refusal("first-run snapshot creation requires --approve-first-run-snapshot")
+        before = read_bytes(target_abs) if target_exists else None
         if before != candidate:
             actions.append({
                 "id": "refresh-memory-inventory-snapshot",
                 "tier": "auto_safe", "kind": "generated_snapshot",
                 "target": {"path_root": "borg_root", "path": SNAPSHOT_TARGET,
-                           "before_sha256": sha(before), "after_sha256": sha(candidate)},
+                           "before_sha256": sha(before) if before is not None else None,
+                           "after_sha256": sha(candidate)},
                 "candidate": {"path_root": "borg_root", "path": args.candidate_snapshot,
                               "sha256": sha(candidate)},
+                **({"bootstrap": True} if before is None else {}),
             })
     output = receipt_path(root_map["borg_root"], args.output)
     os.makedirs(os.path.dirname(output), exist_ok=True)
@@ -460,12 +512,13 @@ def cmd_apply(args):
     derived = []
     targets = set()
     for action in plan["actions"]:
-        target, before, after = derive(action, root_map, records)
+        target, before, after = derive(
+            action, root_map, records, args.approve_first_run_snapshot)
         if target in targets:
             raise Refusal("two actions target the same file")
         targets.add(target)
         derived.append((action, target, before, after))
-    states = [sha(before) == action["target"]["after_sha256"]
+    states = [before is not None and sha(before) == action["target"]["after_sha256"]
               for action, _target, before, _after in derived]
     if any(states) and not all(states):
         raise Refusal("plan is partially applied; roll it back before retrying")
@@ -475,13 +528,16 @@ def cmd_apply(args):
 
     receipt = {"version": 1, "status": "applied", "actions": []}
     for action, _target, before, after in derived:
-        print(diff_text(action["id"], before, after), end="")
-        receipt["actions"].append({
+        print(diff_text(action["id"], before or b"", after), end="")
+        item = {
             "id": action["id"], "kind": action["kind"], "target": action["target"],
             "applied_sha256": sha(after),
-            "original_sha256": sha(before),
-            "original_base64": base64.b64encode(before).decode("ascii"),
-        })
+            "original_state": "present" if before is not None else "absent",
+        }
+        if before is not None:
+            item["original_sha256"] = sha(before)
+            item["original_base64"] = base64.b64encode(before).decode("ascii")
+        receipt["actions"].append(item)
     receipt_bytes = (json.dumps(receipt, indent=2, sort_keys=True) + "\n").encode("utf-8")
     if os.path.exists(receipt_file):
         raise Refusal("receipt already exists: %s" % receipt_file)
@@ -490,7 +546,10 @@ def cmd_apply(args):
     written = []
     try:
         for _action, target, _before, after in derived:
-            atomic_write(target, after)
+            if _before is None:
+                atomic_create(target, after)
+            else:
+                atomic_write(target, after)
             written.append(target)
         for _action, target, _before, after in derived:
             if read_bytes(target) != after:
@@ -498,7 +557,10 @@ def cmd_apply(args):
     except Exception:
         for _action, target, before, _after in reversed(derived):
             if target in written:
-                atomic_write(target, before)
+                if before is None:
+                    os.unlink(target)
+                else:
+                    atomic_write(target, before)
         receipt["status"] = "rolled_back"
         receipt["failure"] = "apply failed; completed writes were restored"
         atomic_write(receipt_file,
@@ -522,9 +584,21 @@ def cmd_rollback(args):
     if receipt.get("status") != "applied":
         raise Refusal("rollback receipt is not in applied state")
     restores = []
+    seen_targets = set()
     for item in receipt["actions"]:
+        if not isinstance(item, dict):
+            raise Refusal("rollback receipt contains a malformed action")
         target = item.get("target", {})
         kind = item.get("kind")
+        if not isinstance(target, dict) or set(target) != {
+                "path_root", "path", "before_sha256", "after_sha256"}:
+            raise Refusal("rollback receipt contains an invalid target")
+        target_key = (target.get("path_root"), target.get("path"))
+        if target_key in seen_targets:
+            raise Refusal("rollback receipt contains a duplicate target")
+        seen_targets.add(target_key)
+        if item.get("applied_sha256") != target.get("after_sha256"):
+            raise Refusal("receipt applied hash does not match its target plan")
         if target.get("path_root") not in root_map:
             raise Refusal("receipt uses an unsupported target root")
         if kind == "generated_snapshot":
@@ -546,19 +620,40 @@ def cmd_rollback(args):
         else:
             raise Refusal("receipt contains an unsupported action kind")
         absolute = safe_path(root_map[target["path_root"]], target.get("path"))
-        current = read_bytes(absolute)
-        original = base64.b64decode(item.get("original_base64", ""), validate=True)
-        if sha(original) != item.get("original_sha256") or sha(original) != target.get("before_sha256"):
-            raise Refusal("receipt original does not match the applied plan")
-        if sha(current) == sha(original):
-            restores.append((absolute, original, False))
-        elif sha(current) == item.get("applied_sha256"):
-            restores.append((absolute, original, True))
+        original_state = item.get("original_state", "present")
+        if original_state == "absent":
+            if kind != "generated_snapshot" or target.get("before_sha256") is not None:
+                raise Refusal("only a generated snapshot may have an absent original")
+            if "original_sha256" in item or "original_base64" in item:
+                raise Refusal("an absent original may not contain original bytes")
+            if not args.approve_first_run_snapshot:
+                raise Refusal("removing a bootstrapped snapshot requires --approve-first-run-snapshot")
+            if os.path.exists(absolute):
+                current = read_bytes(absolute)
+                if sha(current) != item.get("applied_sha256"):
+                    raise Refusal("target changed after apply; refusing rollback: %s" % target.get("path"))
+                restores.append((absolute, None, True))
+            else:
+                restores.append((absolute, None, False))
+        elif original_state == "present":
+            current = read_bytes(absolute)
+            original = base64.b64decode(item.get("original_base64", ""), validate=True)
+            if sha(original) != item.get("original_sha256") or sha(original) != target.get("before_sha256"):
+                raise Refusal("receipt original does not match the applied plan")
+            if sha(current) == sha(original):
+                restores.append((absolute, original, False))
+            elif sha(current) == item.get("applied_sha256"):
+                restores.append((absolute, original, True))
+            else:
+                raise Refusal("target changed after apply; refusing rollback: %s" % target.get("path"))
         else:
-            raise Refusal("target changed after apply; refusing rollback: %s" % target.get("path"))
+            raise Refusal("receipt has an invalid original_state")
     for absolute, original, needed in restores:
         if needed:
-            atomic_write(absolute, original)
+            if original is None:
+                os.unlink(absolute)
+            else:
+                atomic_write(absolute, original)
     receipt["status"] = "rolled_back"
     atomic_write(receipt_file,
                  (json.dumps(receipt, indent=2, sort_keys=True) + "\n").encode("utf-8"))
@@ -574,15 +669,21 @@ def main(argv=None):
     plan_parser = sub.add_parser("plan", help="derive an exact plan from owned generators")
     plan_parser.add_argument("--candidate-snapshot",
                              help="workspace-relative candidate under tmp/ to include")
+    plan_parser.add_argument("--approve-first-run-snapshot", action="store_true",
+                             help="explicitly approve creating the absent generated snapshot")
     plan_parser.add_argument("--output", required=True,
                              help="plan path under the workspace tmp/ directory")
     plan_parser.set_defaults(func=cmd_plan)
     apply_parser = sub.add_parser("apply", help="apply an allowlisted plan transactionally")
     apply_parser.add_argument("--plan", required=True)
     apply_parser.add_argument("--receipt", required=True)
+    apply_parser.add_argument("--approve-first-run-snapshot", action="store_true",
+                              help="confirm an approved first-run snapshot creation plan")
     apply_parser.set_defaults(func=cmd_apply)
     rollback_parser = sub.add_parser("rollback", help="restore targets from an apply receipt")
     rollback_parser.add_argument("--receipt", required=True)
+    rollback_parser.add_argument("--approve-first-run-snapshot", action="store_true",
+                                 help="approve removing a snapshot whose recorded original was absent")
     rollback_parser.set_defaults(func=cmd_rollback)
     args = parser.parse_args(argv)
     try:

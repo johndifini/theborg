@@ -48,19 +48,31 @@ python3 ${BORG_ROOT}/.bin/apply-memory-audit.py \
   --receipt ${BORG_ROOT}/tmp/<run>/auto-safe-receipt.json
 ```
 
+If the durable snapshot does not exist yet, stop and obtain explicit user
+approval for a first-run bootstrap. After approval, add
+`--approve-first-run-snapshot` to both `plan` and `apply`. This exception may
+create only the allowlisted snapshot, records its original state as absent, and
+uses an atomic no-replace creation so a target that appears concurrently is not
+clobbered. The ordinary refresh path does not use this flag.
+
 The helper derives bridges from unchanged canonical sources, updates their
 existing managed-manifest entries, requires public inventory records whose
 effective remediation policy is `auto_safe`, permits the privacy-scanned
 snapshot/review ledger at its one generated-state path, prints the exact
 proposed diffs, verifies the written bytes, and refuses every other target or
-action kind. It never creates or deletes a target. Report each action as applied
-or refused and retain the work directory so rollback remains available:
+action kind. Except for the explicitly approved first-run snapshot, it never
+creates or deletes a target. Report each action as applied or refused and retain
+the work directory so rollback remains available:
 
 ```sh
 python3 ${BORG_ROOT}/.bin/apply-memory-audit.py \
   --root ${BORG_ROOT} rollback \
   --receipt ${BORG_ROOT}/tmp/<run>/auto-safe-receipt.json
 ```
+
+For a first-run receipt whose original snapshot state was absent, rollback also
+requires `--approve-first-run-snapshot`; it removes the snapshot only when its
+bytes still match the receipt, and retains the receipt as `rolled_back`.
 
 Do not run either bridge's broad sync mode from this audit: orphan removal is a
 deletion and therefore remains `approval_required`. The scheduled prompt stays
