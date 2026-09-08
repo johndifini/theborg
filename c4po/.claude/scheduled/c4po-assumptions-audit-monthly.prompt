@@ -131,6 +131,38 @@ not open their contents. Count new, changed, due, draft, and failing private
 units separately and direct the user to the interactive audit for their semantic
 review.
 
+TEMPORARY INTERACTIVE BOOTSTRAP-REVIEW POLICY. This paragraph never enlarges a
+scheduled run: scheduled mode remains capped at 12 public semantic units and 6
+knowledge pages/sources. It applies only when the interactive command receives
+the exact `--bootstrap-review` argument.
+
+- Use ISO weeks in UTC. A successful bootstrap cohort records
+  `run: bootstrap-review YYYY-Www` on each new review-ledger entry. If the
+  durable snapshot already contains any entry with that run marker for the
+  current ISO week, report that the week's cohort is complete and do not select
+  another bootstrap cohort. Later content changes do not reopen that weekly
+  capacity; normal changed-artifact priority handles them in a later run.
+- Select exactly 15 eligible public canonical semantic units when at least 15
+  remain, or every remaining unit otherwise. A unit is eligible when its
+  current content hash has no successful semantic-review ledger entry.
+- Preserve the priority order above. Within it, select at least 12 knowledge
+  pages/sources when that many eligible knowledge units remain; fill unused
+  knowledge slots and the other 3 slots from the next eligible canonical units.
+  This knowledge minimum does not displace new, changed, critical, high-risk,
+  failing, or overdue units.
+- Report the selected count, remaining current-hash-unreviewed count, current
+  ISO week, and whether the 15-unit target and 12-unit knowledge minimum were
+  met. A report-only run does not consume the week's cohort because it records
+  no durable ledger entry.
+- `--bootstrap-review` does not imply `--apply`. With both arguments, only the
+  privacy-scanned generated snapshot/review ledger may advance through the
+  existing `auto_safe` transaction and retained rollback receipt. Proposed
+  registry draft promotions remain `approval_required` and report-only until a
+  later explicit approval; never treat a ledger entry as registry promotion.
+- The temporary campaign ends when no eligible public canonical semantic unit
+  remains. Remove this paragraph and the interactive command's flag routing at
+  that point; do not alter the ordinary scheduled cap.
+
 STAGE 6 — SEMANTIC REVIEW AND RETIREMENT TRIGGERS. Read the complete content of
 each selected public canonical audit unit and only the directly needed sources,
 dependencies, or companions. Judge relevance, correct context layer,
