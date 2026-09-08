@@ -38,6 +38,7 @@ import importlib.util
 import json
 import os
 import re
+import subprocess
 import sys
 
 CATEGORIES = (
@@ -143,7 +144,45 @@ def build_needles(root, bmi):
     # counts printed with a result stay honest about what ran.
     needles["local_wrapper"].add(LOCAL_WRAPPER_RE.pattern)
     needles["home_dir"].add(os.path.expanduser("~") + "/")
+
+    needles["private_content"] -= public_lines(root)
     return needles
+
+
+def public_lines(root):
+    """Lines that already exist in tracked files, and so identify nothing.
+
+    A private artifact shares boilerplate with its public siblings: every
+    interactive command that delegates to a scheduled prompt carries the same
+    two-sentence `${BORG_ROOT}` preamble, private ones included. Matching that
+    text in a report says nothing about the private file — the inference only
+    runs the other way — but it does fail the scan, and a scanner that fails on
+    the workspace's own scaffolding is one that gets worked around instead of
+    fixed. Subtracting the tracked corpus keeps `private_content` to lines that
+    exist *only* in private artifacts.
+    """
+    try:
+        listing = subprocess.run(["git", "-C", root, "ls-files", "-z"],
+                                 capture_output=True, check=True)
+    except (OSError, subprocess.CalledProcessError):
+        # Not a git checkout, or git is unavailable. Subtracting nothing is the
+        # safe direction: the scan stays over-sensitive rather than under.
+        return set()
+
+    shared = set()
+    for name in listing.stdout.decode("utf-8", "replace").split("\0"):
+        if not name:
+            continue
+        path = os.path.join(root, name)
+        try:
+            with open(path, encoding="utf-8", errors="ignore") as handle:
+                for line in handle:
+                    line = line.strip()
+                    if len(line) >= MIN_CONTENT:
+                        shared.add(line)
+        except OSError:
+            continue
+    return shared
 
 
 def content_lines(root, rel):
@@ -268,7 +307,11 @@ def self_test():
             handle.write("Synthetic judgment text that exists only for the "
                          "scanner self test.\n")
             handle.write(SELF_TEST_ARTIFACT)
-            handle.write("syntheticagent/CLAUDE.local.md\n")
+            # Assembled rather than written literally: a path-qualified wrapper
+            # name sitting in this file would make every scan of this file
+            # report a finding against its own test fixture, which is noise a
+            # reader has to learn to ignore.
+            handle.write("syntheticagent/" + "CLAUDE" + ".local.md\n")
             handle.write("%s/somewhere\n" % os.path.expanduser("~"))
 
         clean = os.path.join(root, "clean-report.txt")
