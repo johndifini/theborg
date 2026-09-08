@@ -134,6 +134,18 @@ def targets(root, codex):
             os.path.join(root, "c4po/.claude/scheduled/state/memory-inventory.json")]
 
 
+def converge_generated_except_snapshot(root, codex):
+    expected = os.path.join(FIXTURE, "expected")
+    rule_target, command_target, manifest, snapshot = targets(root, codex)
+    shutil.copy(os.path.join(expected, "rule-SKILL.md"), rule_target)
+    shutil.copy(os.path.join(expected, "command-SKILL.md"), command_target)
+    command_source = os.path.join(root, ".claude/commands/fixture-command.md")
+    with open(manifest, "w", encoding="utf-8") as handle:
+        handle.write("fixture-command\t%s\t%s\n" %
+                     (command_source, digest(command_target)))
+    os.unlink(snapshot)
+
+
 def test_fixtures_diff_idempotence_and_rollback():
     with tempfile.TemporaryDirectory() as base:
         root, codex = materialize(base)
@@ -212,6 +224,11 @@ def test_refusal_gates_are_pre_write():
                                 if action["kind"] != "generated_command_manifest"]
         cases.append(("command repair without its manifest repair", uncoupled))
 
+        wrong_bootstrap = build_plan(root, codex)
+        wrong_bootstrap["actions"][0]["bootstrap"] = True
+        wrong_bootstrap["actions"][0]["target"]["before_sha256"] = None
+        cases.append(("bootstrap marker on a non-snapshot target", wrong_bootstrap))
+
         for index, (name, plan) in enumerate(cases):
             plan_path = os.path.join(base, "bad-%d.json" % index)
             write_json(plan_path, plan)
@@ -274,10 +291,128 @@ def test_snapshot_privacy_and_rollback_conflict():
               code == 1 and "changed after apply" in out, out)
 
 
+def test_first_run_snapshot_bootstrap():
+    with tempfile.TemporaryDirectory() as base:
+        root, codex = materialize(base)
+        converge_generated_except_snapshot(root, codex)
+        snapshot = targets(root, codex)[-1]
+        candidate = "tmp/candidate-memory-inventory.json"
+        plan_path = os.path.join(root, "tmp/bootstrap-plan.json")
+        receipt = os.path.join(root, "tmp/bootstrap-receipt.json")
+
+        code, out = cli(root, codex, "plan", "--candidate-snapshot", candidate,
+                        "--output", plan_path)
+        check("bootstrap gate: planning an absent snapshot requires explicit approval",
+              code == 1 and "--approve-first-run-snapshot" in out, out)
+        check("bootstrap gate: refusal creates neither target nor plan",
+              not os.path.exists(snapshot) and not os.path.exists(plan_path))
+
+        code, out = cli(root, codex, "plan", "--candidate-snapshot", candidate,
+                        "--approve-first-run-snapshot", "--output", plan_path)
+        check("bootstrap: approved planning succeeds", code == 0, out)
+        plan = json.load(open(plan_path, encoding="utf-8"))
+        check("bootstrap: plan is one allowlisted absent-snapshot action",
+              len(plan["actions"]) == 1 and
+              plan["actions"][0]["kind"] == "generated_snapshot" and
+              plan["actions"][0].get("bootstrap") is True and
+              plan["actions"][0]["target"]["before_sha256"] is None, plan)
+
+        code, out = cli(root, codex, "apply", "--plan", plan_path,
+                        "--receipt", receipt)
+        check("bootstrap gate: applying the approved plan requires confirmation",
+              code == 1 and "--approve-first-run-snapshot" in out, out)
+        check("bootstrap gate: unconfirmed apply writes no target or receipt",
+              not os.path.exists(snapshot) and not os.path.exists(receipt))
+
+        code, out = cli(root, codex, "apply", "--plan", plan_path,
+                        "--receipt", receipt, "--approve-first-run-snapshot")
+        check("bootstrap: confirmed apply creates exactly the candidate bytes",
+              code == 0 and read(snapshot) == read(os.path.join(root, candidate)), out)
+        check("bootstrap diff: creation prints the exact before/after diff",
+              "--- refresh-memory-inventory-snapshot.before" in out and
+              "+++ refresh-memory-inventory-snapshot.after" in out, out)
+        check("bootstrap permissions: the created snapshot is owner-only",
+              os.stat(snapshot).st_mode & 0o777 == 0o600,
+              oct(os.stat(snapshot).st_mode & 0o777))
+        receipt_doc = json.load(open(receipt, encoding="utf-8"))
+        check("bootstrap: receipt records that the original target was absent",
+              receipt_doc["status"] == "applied" and
+              receipt_doc["actions"][0]["original_state"] == "absent" and
+              "original_base64" not in receipt_doc["actions"][0], receipt_doc)
+
+        forged_receipt = os.path.join(root, "tmp/forged-bootstrap-receipt.json")
+        forged = copy.deepcopy(receipt_doc)
+        forged["actions"][0]["applied_sha256"] = "0" * 64
+        write_json(forged_receipt, forged)
+        code, out = cli(root, codex, "rollback", "--receipt", forged_receipt,
+                        "--approve-first-run-snapshot")
+        check("bootstrap rollback: a receipt whose applied hash disagrees with its plan is refused",
+              code == 1 and "applied hash" in out and os.path.exists(snapshot), out)
+
+        second_plan = os.path.join(root, "tmp/bootstrap-second-plan.json")
+        code, out = cli(root, codex, "plan", "--candidate-snapshot", candidate,
+                        "--output", second_plan)
+        check("bootstrap idempotence: normal replanning finds zero actions",
+              code == 0 and json.load(open(second_plan, encoding="utf-8"))["actions"] == [], out)
+
+        code, out = cli(root, codex, "rollback", "--receipt", receipt)
+        check("bootstrap rollback gate: deleting the created snapshot requires confirmation",
+              code == 1 and "--approve-first-run-snapshot" in out and os.path.exists(snapshot), out)
+        code, out = cli(root, codex, "rollback", "--receipt", receipt,
+                        "--approve-first-run-snapshot")
+        check("bootstrap rollback: receipt removes only the newly created snapshot",
+              code == 0 and not os.path.exists(snapshot), out)
+        check("bootstrap rollback: receipt is retained and marked rolled_back",
+              json.load(open(receipt, encoding="utf-8"))["status"] == "rolled_back")
+        code, out = cli(root, codex, "rollback", "--receipt", receipt,
+                        "--approve-first-run-snapshot")
+        check("bootstrap rollback: a second rollback is idempotent",
+              code == 0 and "Nothing to roll back" in out, out)
+
+    with tempfile.TemporaryDirectory() as base:
+        root, codex = materialize(base)
+        converge_generated_except_snapshot(root, codex)
+        plan_path = os.path.join(root, "tmp/bootstrap-plan.json")
+        receipt = os.path.join(root, "tmp/bootstrap-receipt.json")
+        cli(root, codex, "plan", "--candidate-snapshot",
+            "tmp/candidate-memory-inventory.json", "--approve-first-run-snapshot",
+            "--output", plan_path)
+        snapshot = targets(root, codex)[-1]
+        with open(snapshot, "w", encoding="utf-8") as handle:
+            handle.write('{"appeared":"after planning"}\n')
+        appeared = read(snapshot)
+        code, out = cli(root, codex, "apply", "--plan", plan_path,
+                        "--receipt", receipt, "--approve-first-run-snapshot")
+        check("bootstrap precondition: a target appearing after plan is refused",
+              code == 1 and "appeared outside" in out, out)
+        check("bootstrap precondition: the appearing target is not clobbered",
+              read(snapshot) == appeared and not os.path.exists(receipt))
+
+    with tempfile.TemporaryDirectory() as base:
+        root, codex = materialize(base)
+        converge_generated_except_snapshot(root, codex)
+        plan_path = os.path.join(root, "tmp/bootstrap-plan.json")
+        receipt = os.path.join(root, "tmp/bootstrap-receipt.json")
+        cli(root, codex, "plan", "--candidate-snapshot",
+            "tmp/candidate-memory-inventory.json", "--approve-first-run-snapshot",
+            "--output", plan_path)
+        code, out = cli(root, codex, "apply", "--plan", plan_path,
+                        "--receipt", receipt, "--approve-first-run-snapshot")
+        check("bootstrap conflict setup applies", code == 0, out)
+        snapshot = targets(root, codex)[-1]
+        with open(snapshot, "w", encoding="utf-8") as handle:
+            handle.write('{"changed":"after bootstrap"}\n')
+        code, out = cli(root, codex, "rollback", "--receipt", receipt,
+                        "--approve-first-run-snapshot")
+        check("bootstrap rollback: post-apply edits are never deleted",
+              code == 1 and "changed after apply" in out and os.path.exists(snapshot), out)
+
+
 def main():
     test_fixtures_diff_idempotence_and_rollback()
     test_refusal_gates_are_pre_write()
     test_snapshot_privacy_and_rollback_conflict()
+    test_first_run_snapshot_bootstrap()
     failed = [result for result in RESULTS if not result[1]]
     for name, ok, detail in RESULTS:
         if not ok:
