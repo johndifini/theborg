@@ -16,7 +16,13 @@ Observed 2026-09-02: the burndown ran to 06:34 and exhausted the window
 `c4po-lint-audit-monthly`, `c4po-assumptions-audit-monthly`,
 `warren-bot-fett-ai-sleeve-monthly`, and `waiq-tts-watch`. Three of those
 have a state gate and simply retried later. `waiq-tts-watch` does not: it
-exited 1 after two seconds, produced nothing, and no email said so.
+exited 1 after two seconds, produced nothing, and no email said so — its
+stdout, and with it the limit message, went to its dated report rather than
+its log, so the runner could only report a bare `FAILED (exit 1)`. Since
+2026-09-09 `.bin/run-scheduled-task.sh` scans both streams and sends a
+distinct `STARVED (usage limit)` mail naming the reset time, so a starved run
+announces itself. That is detection only — it does not make this window
+schedulable, and the guidance below still stands.
 
 Respacing jobs relative to each other does not fix this on its own. The
 six-hour grid added to the monthly rows on 2026-09-02 addressed
