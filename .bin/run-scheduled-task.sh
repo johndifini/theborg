@@ -339,8 +339,10 @@ AGENT_NAME="$(basename "$AGENT_DIR")"
 # `end` marker moves outside the block so it always records, pass or fail
 # (previously a failed run left no end line in the log).
 STATUS=0
+START_STAMP="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+START_SECONDS=$SECONDS
 {
-  echo "===== $(date -u +%Y-%m-%dT%H:%M:%SZ) start $TASK_NAME (cwd=$AGENT_DIR, cli=$HARNESS, session=${SESSION_ID:-codex-assigned}) ====="
+  echo "===== $START_STAMP start $TASK_NAME (cwd=$AGENT_DIR, cli=$HARNESS, session=${SESSION_ID:-codex-assigned}) ====="
   if [[ "$HARNESS" == codex ]]; then
     # The Codex desktop app injects these only for its current interactive
     # thread. A launchd task must never inherit them: otherwise `codex exec`
@@ -362,7 +364,9 @@ STATUS=0
     "$HARNESS_BIN" -p "$PROMPT_CONTENT" --session-id "$SESSION_ID" --strict-mcp-config --model "$MODEL" --effort "$EFFORT" ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"} < /dev/null
   fi
 } >> "$LOG_FILE" 2>&1 || STATUS=$?
-echo "===== $(date -u +%Y-%m-%dT%H:%M:%SZ) end $TASK_NAME (exit $STATUS) =====" >> "$LOG_FILE" 2>&1
+END_STAMP="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+RUN_SECONDS=$(( SECONDS - START_SECONDS ))
+echo "===== $END_STAMP end $TASK_NAME (exit $STATUS) =====" >> "$LOG_FILE" 2>&1
 
 # codex prints its self-assigned session id in the run header; now that the run
 # is over, upgrade the failure email's resume footer from `--last` to the exact
@@ -396,24 +400,97 @@ notify_failed() {
 # On any non-zero exit, email the user. A scheduled run is fired once by launchd
 # (no KeepAlive, no retry loop), so a failure means this run's work is dropped
 # until the next scheduled fire — including usage-limit misses, which do NOT
-# self-heal. Notify on every failure; the subject distinguishes a usage-limit
-# miss (re-runnable now once the cap resets) from a hard failure, without
+# self-heal. Notify on every failure; the subject distinguishes a starved run
+# (nothing to fix, wait for the budget to reset) from a hard failure, without
 # suppressing either.
 if [[ $STATUS -ne 0 ]]; then
   LOG_TAIL="$(tail -n 25 "$LOG_FILE" 2>/dev/null || true)"
-  if grep -qiE 'hit your (session|usage) limit|session limit|usage limit' <<<"$LOG_TAIL"; then
-    SUBJECT="[Borg/$AGENT_NAME] scheduled task hit usage limit: $TASK_NAME"
+
+  # A REPORT=1 task's stdout is redirected to $REPORT_FILE — and stdout is
+  # exactly where the harness prints its session-limit line — so for those tasks
+  # the log holds nothing but the start/end markers and a scan of the log alone
+  # cannot tell starvation from a hard failure. Scan both streams.
+  #
+  # That was the actual gap, verified on disk: on 2026-08-26 and 2026-09-02 the
+  # REPORT=1 task waiq-tts-watch left reports/<date>.md containing exactly
+  # "You've hit your session limit · resets 11:10am (America/Denver)" while its
+  # log for those runs has no line at all between the markers — so it was
+  # reported as an ordinary FAILED with an empty-looking excerpt. The two
+  # non-REPORT tasks starved on the same days (c4po-security-audit,
+  # c4po-lint-audit-monthly) kept the marker in their logs and classified fine.
+  REPORT_TAIL=""
+  if [[ -n "$REPORT_FILE" && -f "$REPORT_FILE" ]]; then
+    REPORT_TAIL="$(tail -n 25 "$REPORT_FILE" 2>/dev/null || true)"
+  fi
+
+  # Which signal is reliable: NEITHER alone, both together. `claude -p` prints
+  # the marker on stdout AND exits 1 (confirmed on the three tasks above), but a
+  # non-zero exit is what every ordinary failure returns, and the marker text can
+  # legitimately appear inside a task's own output — the security audit's own
+  # report discusses usage limits in prose. So the test is: non-zero exit (this
+  # branch) AND the marker in the harness's output.
+  #
+  # That still misreads one case: a task that fails hard WHILE its output
+  # discusses a usage limit is labelled STARVED. Deliberate — the email goes out
+  # either way carrying the exit code, the log tail and the matched line, so an
+  # over-broad match costs a misleading subject on a mail the user still reads,
+  # while an over-narrow one costs the silence this whole branch exists to end.
+  # The codex phrasing is UNVERIFIED — nothing on disk has ever caught
+  # `codex exec` at its limit — so this matches on text: a codex message
+  # carrying any of these phrases is classified as starved, and one worded
+  # differently degrades to the ordinary FAILED subject rather than being
+  # mislabelled.
+  LIMIT_LINE="$(grep -ihE 'hit your (session|usage|weekly) limit|reached your (session|usage|weekly) limit|(session|usage|weekly) limit (reached|exceeded)|session limit|usage limit|weekly limit' \
+    <<<"$LOG_TAIL"$'\n'"$REPORT_TAIL" | head -1 | tr -d '\r\n' | cut -c 1-200 || true)"
+
+  if [[ -n "$LIMIT_LINE" ]]; then
+    # Lexically distinct from a hard failure, and the subject carries the verdict
+    # so it can be acted on without opening the mail: STARVED means the budget is
+    # gone and re-running now dies the same way, whereas FAILED means something
+    # broke and a re-run is worth trying. The harness usually names the reset
+    # clock in the same line; lift it into the subject when it does.
+    RESET_HINT="$(sed -n 's/.*[Rr]esets \(.*\)$/\1/p' <<<"$LIMIT_LINE" | cut -c 1-60)"
+    if [[ -n "$RESET_HINT" ]]; then
+      SUBJECT="[Borg/$AGENT_NAME] scheduled task STARVED (usage limit), no output: $TASK_NAME — wait for reset $RESET_HINT"
+    else
+      SUBJECT="[Borg/$AGENT_NAME] scheduled task STARVED (usage limit), no output: $TASK_NAME — wait for the reset"
+    fi
   else
     SUBJECT="[Borg/$AGENT_NAME] scheduled task FAILED: $TASK_NAME (exit $STATUS)"
   fi
+
   {
-    echo "Scheduled task '$TASK_NAME' exited $STATUS."
+    if [[ -n "$LIMIT_LINE" ]]; then
+      echo "Scheduled task '$TASK_NAME' was STARVED: it hit the harness usage limit"
+      echo "and terminated before doing any work. It produced no result."
+      echo
+      echo "    $LIMIT_LINE"
+      echo
+      echo "This is not a task failure — nothing is broken and there is nothing to"
+      echo "fix. Re-running before the budget resets will die exactly the same way."
+      echo "launchd fires each job once with no retry, so this run is simply lost:"
+      echo "a task with a state gate will pick the work up at its next firing, and a"
+      echo "task without one (a pure report) has lost this period's run for good."
+      echo
+    else
+      echo "Scheduled task '$TASK_NAME' exited $STATUS."
+      echo
+    fi
     echo "  agent:   $AGENT_NAME"
+    echo "  harness: $HARNESS"
     echo "  session: ${SESSION_ID:-${CODEX_SESSION:-unknown}}"
+    echo "  started: $START_STAMP"
+    echo "  ended:   $END_STAMP (ran ${RUN_SECONDS}s)"
     echo "  log:     $LOG_FILE"
+    [[ -n "$REPORT_FILE" ]] && echo "  report:  $REPORT_FILE"
     echo
     echo "Last lines of the log:"
     echo "$LOG_TAIL"
+    if [[ -n "$REPORT_TAIL" ]]; then
+      echo
+      echo "Last lines of the captured report (this task's stdout):"
+      echo "$REPORT_TAIL"
+    fi
   } | "$BORG_ROOT/.bin/notify-email.sh" "$AGENT_NAME" "$SUBJECT" \
     || notify_failed "failure alert"
 fi
