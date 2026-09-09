@@ -78,7 +78,7 @@ TASKS=(
   "c4po|c4po-retro|weekly-wed-thu-12-00|prompt"
   "c4po|c4po-backlog-burndown|weekly-wed-01-00-06-10|prompt"
   "c4po|c4po-cli-update|weekly-sun-06-00|cli-update"
-  "mrs-beast|mrs-beast-social-media-drafts|weekly-sun-wed-16-00|prompt"
+  "mrs-beast|mrs-beast-social-media-drafts|weekly-sun-mon-wed-16-00|prompt"
   # Paused 2026-08-06 for a ~4-month account rebalance: the label is `launchctl
   # disable`d in the gui domain, so --load writes its plist but skips the
   # bootstrap (see the disabled check below) rather than failing with EIO. The
@@ -177,9 +177,9 @@ schedule_xml() {
       for d in 6 7 8 9 10; do cal_entry "Day=$d" "Hour=11" "Minute=0"; done
       printf '    </array>\n'
       ;;
-    weekly-sun-wed-16-00)
+    weekly-sun-mon-wed-16-00)
       printf '    <key>StartCalendarInterval</key>\n    <array>\n'
-      for w in 0 1 2 3; do cal_entry "Weekday=$w" "Hour=16" "Minute=0"; done
+      for w in 0 1 3; do cal_entry "Weekday=$w" "Hour=16" "Minute=0"; done
       printf '    </array>\n'
       ;;
     weekly-tue-wed-17-30)
