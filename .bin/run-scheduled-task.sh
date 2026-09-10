@@ -3,6 +3,22 @@
 # Usage: run-scheduled-task.sh <agent-dir> <prompt-file>
 set -euo pipefail
 
+# The whole body lives in main() so bash parses it before executing any of it.
+# Bash reads a top-level script incrementally, keeping a byte offset and seeking
+# back to it after each external command -- so a script rewritten while it runs
+# resumes at an offset that now points into shifted text. This runner is the one
+# most exposed to that: it hands a model a prompt and waits, and the weekly
+# backlog burndown implements workspace tooling items, which land in .bin/. On
+# 2026-09-09 a burndown child committed to this very file mid-run (1e619be).
+# Reproduced deterministically before this fix: the victim re-executed commands
+# and resumed one byte into a token ("leep: command not found"). Note the call
+# below MUST keep `exit` on the same line -- a bare `main "$@"` still lets bash
+# seek past it and misparse, which reproduced at 5/5.
+#
+# The body is deliberately NOT re-indented, so this stays a three-line diff that
+# can be reviewed against the previous version rather than a 500-line reflow.
+main() {
+
 AGENT_DIR="$1"
 PROMPT_FILE="$2"
 
@@ -504,3 +520,6 @@ fi
 
 # Re-exit with the task's own code so `launchctl list` reflects reality.
 exit $STATUS
+
+}
+main "$@"; exit $?

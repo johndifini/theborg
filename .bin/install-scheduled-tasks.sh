@@ -14,6 +14,19 @@
 #   .bin/install-scheduled-tasks.sh --load    write, then (re)register with launchd
 set -euo pipefail
 
+# Body wrapped in main() for the same reason as run-scheduled-task.sh: bash reads
+# a top-level script incrementally and seeks back to a saved byte offset after
+# each external command, so a script rewritten while it runs resumes mid-token.
+# This one's window is short and it is not driven by a model, so it is far less
+# exposed than the runner -- but it writes and bootstraps launchd plists for
+# jobs with hard deadlines, so a stray re-execution is expensive, and the wrapper
+# costs three lines. The call below MUST keep `exit` on the same line; a bare
+# `main "$@"` is not sufficient.
+#
+# The body is deliberately NOT re-indented, to keep this a reviewable diff rather
+# than a 470-line reflow.
+main() {
+
 MODE="write"
 case "${1:-}" in
   --print) MODE="print" ;;
@@ -470,3 +483,6 @@ if (( ${#bootstrap_failures[@]} > 0 )); then
   failed=1
 fi
 (( failed == 0 )) || exit 1
+
+}
+main "$@"; exit $?
