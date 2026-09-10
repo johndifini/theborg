@@ -50,8 +50,10 @@ STAGE 2 — DISCOVER AND JOIN. Create a unique work directory under
   overlay path into the report.
 
 Do not run `validate --require-reviewed` as an integrity check. Drafts are
-registered but awaiting human judgment; count them and feed them into candidate
-selection instead of treating each draft as a mechanical failure.
+registered but awaiting human judgment; count them instead of treating each as
+a mechanical failure. They enter semantic selection only through the ordinary
+risk, change, finding, and rotating-knowledge priorities below; cadence applies
+after a record has received a substantive review.
 
 If discovery, coverage enforcement, or validation cannot complete, record a
 mechanical finding and continue with any independent Assumptions A-H checks that
@@ -94,8 +96,8 @@ where applicable:
 - `BROKEN_REFERENCE` for unresolved declared canonical relationships or
   registry references;
 - `REVIEW_OVERDUE` from the record's cadence and last successful substantive
-  review; drafts with no substantive review are candidate work, not hundreds of
-  duplicate overdue findings;
+  review; a draft may become candidate work under STAGE 5, but its missing first
+  review is not one of hundreds of duplicate overdue findings;
 - `SOURCE_STALE` and `SOURCE_UNRESOLVED` when a registered source exceeds its
   stated cadence or its recorded reference cannot be resolved;
 - `OVER_BUDGET` when fixed always-loaded context materially exceeds the prior
@@ -115,8 +117,7 @@ public canonical artifacts in this order:
 1. new or materially changed since the prior successful snapshot;
 2. critical/high-risk records and artifacts implicated by a mechanical finding;
 3. reviewed records whose cadence or event trigger makes review due;
-4. drafts awaiting their first human-quality record, oldest introduced first;
-5. a rotating cohort of lower-risk knowledge pages so every page remains within
+4. a rotating cohort of lower-risk knowledge pages so every page remains within
    its maximum substantive-review interval.
 
 Generated bridges and compatibility wrappers receive drift review only; select
@@ -130,38 +131,6 @@ Private artifacts receive mechanical/metadata checks in scheduled mode, but do
 not open their contents. Count new, changed, due, draft, and failing private
 units separately and direct the user to the interactive audit for their semantic
 review.
-
-TEMPORARY INTERACTIVE BOOTSTRAP-REVIEW POLICY. This paragraph never enlarges a
-scheduled run: scheduled mode remains capped at 12 public semantic units and 6
-knowledge pages/sources. It applies only when the interactive command receives
-the exact `--bootstrap-review` argument.
-
-- Use ISO weeks in UTC. A successful bootstrap cohort records
-  `run: bootstrap-review YYYY-Www` on each new review-ledger entry. If the
-  durable snapshot already contains any entry with that run marker for the
-  current ISO week, report that the week's cohort is complete and do not select
-  another bootstrap cohort. Later content changes do not reopen that weekly
-  capacity; normal changed-artifact priority handles them in a later run.
-- Select exactly 15 eligible public canonical semantic units when at least 15
-  remain, or every remaining unit otherwise. A unit is eligible when its
-  current content hash has no successful semantic-review ledger entry.
-- Preserve the priority order above. Within it, select at least 12 knowledge
-  pages/sources when that many eligible knowledge units remain; fill unused
-  knowledge slots and the other 3 slots from the next eligible canonical units.
-  This knowledge minimum does not displace new, changed, critical, high-risk,
-  failing, or overdue units.
-- Report the selected count, remaining current-hash-unreviewed count, current
-  ISO week, and whether the 15-unit target and 12-unit knowledge minimum were
-  met. A report-only run does not consume the week's cohort because it records
-  no durable ledger entry.
-- `--bootstrap-review` does not imply `--apply`. With both arguments, only the
-  privacy-scanned generated snapshot/review ledger may advance through the
-  existing `auto_safe` transaction and retained rollback receipt. Proposed
-  registry draft promotions remain `approval_required` and report-only until a
-  later explicit approval; never treat a ledger entry as registry promotion.
-- The temporary campaign ends when no eligible public canonical semantic unit
-  remains. Remove this paragraph and the interactive command's flag routing at
-  that point; do not alter the ordinary scheduled cap.
 
 STAGE 6 — SEMANTIC REVIEW AND RETIREMENT TRIGGERS. Read the complete content of
 each selected public canonical audit unit and only the directly needed sources,

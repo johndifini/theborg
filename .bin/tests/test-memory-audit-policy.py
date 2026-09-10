@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Contract tests for /remember and the temporary semantic-review campaign."""
+"""Contract tests for /remember and memory-audit review policy."""
 
 from __future__ import annotations
 
@@ -65,51 +65,36 @@ def test_remember_contract_and_generated_bridge() -> None:
                 "generated Codex bridge must carry routing and privacy rules")
 
 
-def test_bootstrap_policy_is_bounded_and_temporary() -> None:
+def test_bulk_bootstrap_review_is_retired() -> None:
     command = read(AUDIT_COMMAND)
     prompt = read(AUDIT_PROMPT)
     design = read(DESIGN)
     readme = read(README)
 
-    require("exact `--bootstrap-review` argument" in command,
-            "interactive command must require the exact campaign opt-in")
-    require("Exact opt-in `--bootstrap-review`" in readme and
-            "weekly 15-unit first-review cohort" in readme,
-            "README must advertise the exact bootstrap-review mode")
-    require("scheduled mode remains capped at 12 public semantic units and 6\n"
-            "knowledge pages/sources" in prompt,
-            "campaign must not enlarge scheduled audit limits")
-    require("Select exactly 15 eligible public canonical semantic units" in prompt,
-            "campaign must select a 15-unit cohort")
-    require("select at least 12 knowledge\n  pages/sources" in prompt,
-            "campaign must preserve its knowledge-throughput floor")
-    require("bootstrap-review YYYY-Www" in prompt,
-            "campaign must record an ISO-week idempotence marker")
-    require("contains any entry with that run marker" in prompt and
-            "Later content changes do not reopen that weekly\n  capacity" in prompt,
-            "weekly guard must remain closed even if reviewed content changes")
-    require("does not imply `--apply`" in prompt,
-            "campaign selection must remain report-only without --apply")
-    require("registry draft promotions remain `approval_required`" in prompt,
-            "campaign must not bypass approval for canonical records")
-    require("campaign ends when no eligible public canonical semantic unit\n"
-            "  remains" in prompt,
-            "campaign must have an explicit retirement condition")
-
-    for phrase in (
-        "one cohort per ISO week",
-        "exactly 15 current-hash-unreviewed public canonical semantic units",
-        "at least 12 selected units are knowledge pages/sources",
-        "Rollback verifies the applied hash",
-        "never delete or merge them automatically",
-    ):
-        require(phrase in design, "design is missing policy/rollback text: " + phrase)
+    for surface, body in (("command", command), ("prompt", prompt),
+                          ("README", readme)):
+        require("--bootstrap-review" not in body,
+                surface + " must not expose the retired bulk-review mode")
+    require("at most 12 public semantic" in prompt and
+            "at most 6 knowledge pages/sources" in prompt,
+            "ordinary scheduled audit limits must remain bounded")
+    require("bulk first-review campaign" in command and
+            "registered draft remains honestly marked" in command,
+            "interactive command must preserve honest draft status")
+    require("Complete first-review coverage is not an invariant" in design,
+            "design must state that exhaustive bootstrap review is not required")
+    require("first-review bootstrap campaign was retired by user decision" in design,
+            "design must preserve why the campaign ended")
+    require("not bulk-promoted" in design and "historical evidence" in design,
+            "design must preserve draft and review-ledger integrity")
+    require("Registered drafts are not treated as failures or bulk-promoted" in readme,
+            "README must describe the current draft disposition")
 
 
 def main() -> int:
     tests = (
         test_remember_contract_and_generated_bridge,
-        test_bootstrap_policy_is_bounded_and_temporary,
+        test_bulk_bootstrap_review_is_retired,
     )
     for test in tests:
         test()

@@ -226,49 +226,21 @@ registry intentionally imports it.
 | External/platform assumptions | Monthly | Monthly web/source verification, preserving current Assumptions A–H |
 
 Every artifact therefore participates in every inventory scan, while expensive
-semantic review is bounded and eventually covers the entire inventory. A
-`critical` artifact can override the class cadence with a shorter interval.
+semantic review is bounded and driven by risk, change, cadence, and a rotating
+knowledge cohort. Complete first-review coverage is not an invariant: a draft
+is an honest registered state, not a mechanical failure. A `critical` artifact
+can override the class cadence with a shorter interval.
 
-### Temporary first-review bootstrap campaign
+### Draft-record disposition
 
-The monthly scheduled audit remains bounded at 12 public canonical semantic
-units, including at most 6 knowledge pages/sources. That steady-state bound is
-not sufficient to clear the mechanically bootstrapped first-review queue before
-the initial rolling-annual deadline, so an explicit interactive campaign runs
-alongside it temporarily:
-
-- `/audit-assumptions --bootstrap-review` selects one cohort per ISO week in
-  UTC: exactly 15 current-hash-unreviewed public canonical semantic units when
-  available, or all remaining units otherwise;
-- at least 12 selected units are knowledge pages/sources when that many eligible
-  knowledge units remain, without displacing new, changed, critical, high-risk,
-  failing, or overdue work;
-- a completed cohort is identified in the public snapshot review ledger by
-  `run: bootstrap-review YYYY-Www`; a report-only run consumes no cohort;
-- `--apply` remains a separate exact opt-in and may update only generated state
-  through `.bin/apply-memory-audit.py`; registry draft promotions remain
-  `approval_required`; and
-- the campaign ends when every public canonical semantic unit has a successful
-  ledger entry for its current content hash. Its command routing and prompt
-  policy are then removed without changing the monthly 12/6 limits.
-
-**Rollback.** Retain each applied cohort's unique `tmp/` work directory and
-receipt. Before any later cohort changes the snapshot, reverse the latest cohort
-with:
-
-```sh
-python3 ${BORG_ROOT}/.bin/apply-memory-audit.py \
-  --root ${BORG_ROOT} rollback \
-  --receipt ${BORG_ROOT}/tmp/<run>/auto-safe-receipt.json
-```
-
-Rollback verifies the applied hash and refuses to overwrite later snapshot
-changes. To retire or reverse the policy itself, restore the preceding versions
-of `.claude/commands/audit-assumptions.md`,
-`c4po/.claude/scheduled/c4po-assumptions-audit-monthly.prompt`, and this section,
-plus the corresponding slash-command row in `README.md`, then regenerate only
-the managed command bridge. Successful review evidence is historical data and
-is not deleted merely because the campaign policy ends.
+The one-off first-review bootstrap campaign was retired by user decision on
+2026-09-09 after its first cohort. The remaining mechanically registered records
+stay `status: draft`; they are not bulk-promoted and are not represented as
+semantically reviewed. Ordinary audits may still select a draft when change,
+risk, a finding, or the rotating knowledge cohort makes that artifact worth
+reviewing. Cadence applies after substantive review. Existing review-ledger
+entries and retained transactional receipts remain historical evidence and are
+not deleted.
 
 The `/remember` contract follows the same conservative rollback principle:
 restore the prior canonical command and regenerate its managed bridge. Topic
@@ -504,11 +476,10 @@ reads as a finding rather than as a memory. Whether to restore the source or
 delete the bridge is a judgment call. Those artifacts are reported by path with
 a reason and left `UNREGISTERED`, so coverage stays honest about them.
 
-The remaining half of step 3 is human and is not code: promoting each draft to
-`reviewed` by supplying the six judgment fields. It proceeds by cohort, and is
-independent of step 4 — the coverage rule is gated on registration reaching
-100%, which bootstrap achieved, not on review reaching 100%, which would keep
-the rule unwritten for as long as the cohorts take.
+The remaining half of step 3 is human and is not code: a draft may be promoted
+to `reviewed` only by supplying the six judgment fields after substantive
+review. Promotion is independent of step 4 — the coverage rule is gated on
+registration reaching 100%, not on eventual review coverage.
 
 ### Step 4 in detail
 
