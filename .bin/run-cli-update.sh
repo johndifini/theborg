@@ -252,6 +252,13 @@ main() {
   exit "$status"
 }
 
+# `exit` stays on the same line as the call, and inside the guard. Bash reads a
+# top-level script incrementally and seeks back to a saved byte offset after each
+# external command, so a script rewritten mid-run resumes at an offset pointing
+# into shifted text -- see the note in run-scheduled-task.sh, where that actually
+# happened. main() already protects this script's body; without the exit, bash
+# still reads past `fi` and misparses. Keeping it inside the guard preserves the
+# sourcing case, where exiting would kill the caller's shell.
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
-  main "$@"
+  main "$@"; exit $?
 fi
