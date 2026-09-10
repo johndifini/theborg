@@ -39,8 +39,9 @@ produces the difference:
   9. the YAML writer round-trips through this tool's own reader and refuses the
      shapes it cannot express rather than stringifying them;
  10. bootstrap is a dry run by default, is idempotent, defers artifacts it
-     cannot honestly describe, and — over the fixture and over the live
-     workspace — puts no private path in a tracked file.
+     cannot honestly describe, can scope an authoring write to one canonical
+     artifact plus its generated companions, and — over the fixture and over
+     the live workspace — puts no private path in a tracked file.
 
 Step 4 — the LINT.md `Memory inventory` coverage rule, in its mechanical form:
 
@@ -1008,6 +1009,45 @@ def test_bootstrap_over_fixture():
               out.strip()[:400])
 
 
+def test_bootstrap_artifact_scope():
+    with tempfile.TemporaryDirectory() as base:
+        root, codex_home, home = build_fixture(base)
+        private_overlay = os.path.join(root, "agentx/.private/memory-inventory.yaml")
+        os.unlink(private_overlay)
+        fubar = os.path.join(root, ".claude/commands/fubar.md")
+        with open(fubar, "w", encoding="utf-8") as fh:
+            fh.write("# fubar\n")
+        manifest = os.path.join(codex_home, "skills/.theborg-managed-skills.tsv")
+        with open(manifest, "a", encoding="utf-8") as fh:
+            fh.write("fubar\t%s\tfeedface\n" % fubar)
+
+        code, out = _bootstrap(root, home, codex_home, "--artifact",
+                               ".claude/commands/fubar.md", "--write")
+        check("bootstrap --artifact: a scoped write exits 0", code == 0,
+              out.strip()[:600])
+        registry = bmi.load_yaml(open(os.path.join(root, "MEMORY-INVENTORY.yaml"),
+                                      encoding="utf-8").read(),
+                                 "MEMORY-INVENTORY.yaml")["artifacts"]
+        paths = {(record.get("path_root", "borg_root"), record["path"])
+                 for record in registry.values()}
+        check("bootstrap --artifact: includes the canonical command and generated bridge",
+              paths == {("borg_root", ".claude/commands/fubar.md"),
+                        ("codex_home", "skills/fubar/SKILL.md")}, sorted(paths))
+        bridge = next(record for record in registry.values()
+                      if record["type"] == "generated_command_bridge")
+        command_id = next(aid for aid, record in registry.items()
+                          if record["type"] == "command")
+        check("bootstrap --artifact: resolves the bridge to the selected canonical record",
+              bridge.get("canonical_ref") == command_id, repr(bridge))
+        check("bootstrap --artifact: does not create unrelated private overlays",
+              not os.path.exists(private_overlay)
+              and not os.path.exists(os.path.join(root, "c4po/.private/memory-inventory.yaml")))
+
+        code, out = _bootstrap(root, home, codex_home, "--artifact", "not/a-memory.md")
+        check("bootstrap --artifact: rejects a typo instead of silently doing nothing",
+              code == 2 and "was not discovered" in out, out.strip()[:400])
+
+
 def test_bootstrap_over_this_workspace():
     """The live workspace, where the private/tracked split actually matters."""
     code, out = cli("bootstrap")
@@ -1192,7 +1232,8 @@ def main():
                test_discovery_is_read_only, test_discovery_withholds_private_paths,
                test_discovery_cli, test_discovery_over_this_workspace,
                test_draft_status, test_emitter_round_trips,
-               test_bootstrap_over_fixture, test_bootstrap_over_this_workspace,
+               test_bootstrap_over_fixture, test_bootstrap_artifact_scope,
+               test_bootstrap_over_this_workspace,
                test_required_fields_come_from_the_schema, test_coverage_enforcement,
                test_coverage_enforcement_over_this_workspace):
         fn()

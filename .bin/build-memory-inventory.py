@@ -2260,7 +2260,56 @@ artifacts:
 """
 
 
-def plan_bootstrap(root, result, join, registries, today):
+def _artifact_scope(result, requested):
+    """Discovery keys selected by workspace-relative canonical paths.
+
+    Authoring-time registration must not sweep in artifacts another session
+    created concurrently.  A selected canonical artifact nevertheless needs
+    its generated bridges (and selecting a bridge needs its canonical source),
+    so the scope is the complete canonical/derived component containing each
+    requested workspace path.
+    """
+    if not requested:
+        return None, []
+
+    artifacts = result["artifacts"]
+    by_key = {(r["path_root"], r["path"]): r for r in artifacts}
+    normalized, errors = [], []
+    for raw in requested:
+        value = os.path.normpath(raw)
+        if (not raw or os.path.isabs(raw) or value in ("", ".", "..") or
+                value.startswith(".." + os.sep)):
+            errors.append("--artifact must be a workspace-relative path without '..': %r"
+                          % raw)
+            continue
+        value = value.replace(os.sep, "/")
+        key = ("borg_root", value)
+        if key not in by_key:
+            errors.append("--artifact %r was not discovered as a durable memory artifact"
+                          % raw)
+            continue
+        normalized.append(key)
+    if errors:
+        return set(), errors
+
+    selected = set(normalized)
+    changed = True
+    while changed:
+        changed = False
+        for record in artifacts:
+            key = (record["path_root"], record["path"])
+            canonical = (record.get("canonical_path_root") or "borg_root",
+                         record.get("canonical_path"))
+            if canonical[1] and (key in selected or canonical in selected):
+                before = len(selected)
+                selected.add(key)
+                if canonical in by_key:
+                    selected.add(canonical)
+                changed = changed or len(selected) != before
+    return selected, []
+
+
+def plan_bootstrap(root, result, join, registries, today, selected=None):
     """Draft records grouped by destination file. Pure computation; no writes."""
     roots_by_id = {}
     for reg in registries:
@@ -2275,6 +2324,8 @@ def plan_bootstrap(root, result, join, registries, today):
 
     pending = sorted(join["unregistered"],
                      key=lambda r: (r["type"], r["path_root"], r["path"]))
+    if selected is not None:
+        pending = [r for r in pending if (r["path_root"], r["path"]) in selected]
     for record in pending:
         aid = make_id(record["path_root"], record["path"], taken)
         taken.add(aid)
@@ -2586,9 +2637,19 @@ def cmd_bootstrap(args) -> int:
         root, registry_path, _overlays_in_play(root, result, args.overlay))
     join = join_registry(result["artifacts"], registries)
 
-    plan, deferred = plan_bootstrap(root, result, join, registries, today)
+    selected, scope_errors = _artifact_scope(result, args.artifact)
+    if scope_errors:
+        for message in scope_errors:
+            print("error: %s" % message, file=sys.stderr)
+        return EXIT_USAGE
+
+    plan, deferred = plan_bootstrap(root, result, join, registries, today, selected)
     if not plan:
-        print("Nothing to bootstrap: every discovered artifact already has a record.")
+        if args.artifact:
+            print("Nothing to bootstrap: the selected artifact(s) and their derived "
+                  "companions already have records.")
+        else:
+            print("Nothing to bootstrap: every discovered artifact already has a record.")
         _print_deferred(deferred, args.show_private)
         return EXIT_OK
 
@@ -2649,6 +2710,9 @@ def cmd_bootstrap(args) -> int:
     out = []
     out.append("Memory inventory bootstrap — %s" % ("WRITE" if args.write else "dry run"))
     out.append("Root: %s" % root)
+    if args.artifact:
+        out.append("Scope: %d requested workspace artifact(s), including derived companions"
+                   % len(args.artifact))
     out.append("")
     out.append("%d draft record(s) for unregistered artifacts: %d public, %d private."
                % (total, public_total, private_total))
@@ -2766,6 +2830,10 @@ def main(argv=None) -> int:
     b.add_argument("--today", help="treat this YYYY-MM-DD as today (for reproducible runs)")
     b.add_argument("--write", action="store_true",
                    help="write the drafts; without it this is a dry run")
+    b.add_argument("--artifact", action="append", default=[], metavar="PATH",
+                   help="limit registration to this workspace-relative artifact and its "
+                        "canonical/generated companions (repeatable); intended for safe "
+                        "same-change authoring in a shared checkout")
     b.add_argument("--show-private", action="store_true",
                    help="print private ids and paths; never use in a scheduled or emailed run")
     b.set_defaults(func=cmd_bootstrap)
