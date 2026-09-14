@@ -45,6 +45,18 @@ Run the /security-review skill against the current state of ${BORG_ROOT}. Specif
   repo's history (reachable plus unreachable/dangling objects, which catches
   committed-then-rewritten), and whether the path sits under the Google Drive
   mirror root (read the mirror's own roots; do not assume the mirror's scope).
+  DRIVE PRESENCE IS SCOPE, NOT SEVERITY. The Drive mirror is the user's own
+  backup, inside their trust boundary — confirmed by them on 2026-09-13. Report
+  that a value reached the mirror, but do NOT rate a finding critical on that
+  basis and do not describe it as a third-party disclosure. Rate on what
+  actually varies: world-readable or not, whether it reached a genuinely PUBLIC
+  place (a pushed git remote, a published site), how long it sat, and whether
+  the credential is still live. Git history and public remotes remain critical
+  paths; this narrows the Drive dimension only.
+  Run that history scan WITHOUT WRITING THE VALUES ANYWHERE — see the hard rule
+  on credential values in scratch files below. Pipe `git cat-file --batch` into
+  a python process, hold the values in variables, and print only variable NAMES
+  and match counts.
 - any new MCP servers added since last audit
 - `${BORG_ROOT}/tmp/notify-failures.log` — the sentinel `run-scheduled-task.sh`
   writes when `notify-email.sh` fails. Email is the only outbound channel, so
@@ -92,7 +104,39 @@ a diff between consecutive runs stays meaningful. Never silently drop an
 `accepted_risks` entry the user approved — carry it forward, or say explicitly
 in the report why it no longer applies.
 
+CLEAN UP — the last step of every run, scheduled or interactive, and the one
+step no override skips. Delete any scratch directory this run created under
+`${BORG_ROOT}/tmp/`. Keep only the report
+(`tmp/security-audit-{YYYY-MM-DD}.md`), which carries variable names and never
+values. This is a backstop for the hard rule on credential values below: the
+sweep runs at the start of the audit and cannot see litter the audit drops
+afterwards, so the run that made the mess is the only one that can clear it,
+and the next run will find it a day late.
+
 Tooling constraints that have silently voided a run before — treat as hard rules:
+- NEVER WRITE AN EXTRACTED CREDENTIAL VALUE TO A FILE UNDER `${BORG_ROOT}`. To
+  scan git objects by variable name you have to read live values out of the
+  secret stores, and the obvious move is to stage them in a scratch file. Do not.
+  `${BORG_ROOT}/tmp/` is inside the Google Drive mirror root and new files there
+  default to 0644, so a value staged there is world-readable AND uploaded to
+  Google Drive within minutes. On 2026-09-12 this audit did exactly that and left
+  four live credentials in three world-readable files for 24 hours; the 2026-09-13
+  run reproduced the same mistake before its own sweep caught it. The sweep does
+  not protect you here — it runs at the START of the audit and cannot see litter
+  the audit drops afterwards.
+  Hold values in a process instead: pipe `git cat-file --batch` output into a
+  `python3 - <<'PY'` heredoc, keep the values in local variables, and print only
+  variable names and counts. If a file is genuinely unavoidable, put it under
+  `$TMPDIR` (which is outside the mirror root), create it under `umask 077`, and
+  unlink it from an EXIT trap:
+
+      umask 077
+      work="$(mktemp -d "${TMPDIR:-/tmp}/c4po-secaudit.XXXXXX")"
+      trap 'rm -rf "$work"' EXIT
+
+  Ordinary scratch that holds no credential values — sweep output, blob hash
+  lists, keyword hits — may stay under `${BORG_ROOT}/tmp/`. The prohibition is on
+  the values themselves. Before finishing the run, confirm you left none behind.
 - Pin every sweep to `/usr/bin/grep`. The interactive `grep` here is a ugrep shim
   that honours `--ignore-files` and can skip gitignored paths, which is exactly
   where secrets live.
