@@ -6520,3 +6520,25 @@ artifacts:
     review:
       last_reviewed: null
     related: []
+
+  agents-skills-codex-browser-over-ssh-skill:
+    path: ".agents/skills/codex-browser-over-ssh/SKILL.md"
+    type: generated_rule_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-rules-codex-browser-over-ssh
+    introduced: 2026-09-14    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  claude-rules-codex-browser-over-ssh:
+    path: ".claude/rules/codex-browser-over-ssh.md"
+    type: scoped_rule
+    status: draft
+    scope: workspace
+    introduced: 2026-09-14    # file mtime (untracked; not a history fact)
+    consumers: [claude-code, codex]
+    review:
+      last_reviewed: null
+    related: []

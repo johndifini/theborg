@@ -37,6 +37,13 @@ The Borg is a standardized AI workspace that turns prompts, institutional knowle
   merely repeat a short or simple answer. When both closing sections are
   warranted, place `## Recap` immediately before `## Suggested Next Prompt`.
 - When a useful follow-up exists, end with a `## Suggested Next Prompt` header followed by a separate line containing only a directly reusable prompt. Omit the section when the task is complete or no meaningful next step exists.
+- When work is a repeating loop, say how long the loop is before the user has to
+  ask. State the number of iterations remaining, and offer the largest batch you
+  can defend rather than the smallest one that is obviously correct — approval
+  gates protect the user from unreviewed changes, not from a big review. If a
+  `## Suggested Next Prompt` describes something that will need running again
+  next week, propose automating it (a scheduled job) instead of handing back a
+  recurring manual chore.
 
 ## Design, taste, and UI
 

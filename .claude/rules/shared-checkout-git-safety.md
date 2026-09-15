@@ -43,6 +43,22 @@ in the same turn you act on the answer. Never carry a branch fact forward from
 earlier in a session, including one you derived yourself minutes ago. This is the
 same hazard `backlog-write-safety` covers for file contents.
 
+`git status -sb` and `origin/main` are *local* refs. A sibling's push does not
+update them, so "ahead 2 / nothing pushed" can be false the moment it is
+printed. Any claim about what is *published* must come from the remote in the
+same turn:
+
+```sh
+git ls-remote origin refs/heads/main
+git branch -r --contains <sha>   # only after a fetch
+```
+
+This matters most in the direction that feels safe. "Nothing pushed" is the
+belief under which amend, rebase and reset feel free — and it is the claim a
+stale ref most readily produces. On 2026-09-05 two sessions stated it about
+commits that were already public; a sibling caught both, and one amend cleared
+the push by two minutes.
+
 ## 3. Coordinate rather than assume
 
 When a sibling session owns the work, message it (`SendMessage`) and wait rather
@@ -50,3 +66,13 @@ than guessing its intent — whether a branch is finished, whether work is ready
 publish. Committing or merging another agent's work without asking is a judgment
 call that usually belongs to them or to the user. Their independent verification
 is also worth having: on 2026-08-16 the sibling caught both errors above.
+
+Delivery is not guaranteed. The desktop `send_message` MCP tool reaches only
+desktop sessions, and a `SendMessage` tool is not present in every build — a
+peer running as a CLI session on a unix socket may be unreachable from where you
+are. `ListAgents` showing a session does not mean you can message it.
+
+When you cannot reach the session that needs to know, escalate to the user in
+the same turn and say plainly what they need to relay and to whom. Do not bury a
+time-critical correction in a status report; a stale belief about push state or
+file ownership is acted on within minutes.
