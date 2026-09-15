@@ -31,7 +31,7 @@
 #            output directory instead of c4po/.claude/scheduled/state/.
 #
 # Usage:
-#   dry-run-memory-audit.sh [--mode full|gate] [--cohort N] [--outdir DIR]
+#   dry-run-memory-audit.sh [--mode full|gate|probe] [--cohort N] [--outdir DIR]
 #                           [--model M] [--effort E] [--timeout SECONDS]
 #
 #   --mode full   (default) seed no state file, so STAGE 1 opens and the whole
@@ -40,11 +40,12 @@
 #                 run with no output, no email, and no state write. This is the
 #                 cheap half of the dry run and it tests the once-per-month
 #                 guard that `--mode full` has to bypass.
-#   --mode probe  run neither the gate nor the audit: write four disposable
-#                 files, two inside the writable roots and two outside them, and
-#                 report which the sandbox actually blocked. This is the check
-#                 that keeps the write-boundary claim honest, and it is cheap
-#                 enough to run before every dry run.
+#   --mode probe  run neither the gate nor the audit: write five disposable
+#                 files, two inside the writable roots and three outside them —
+#                 the scheduled state directory, an agent directory, and a
+#                 private overlay — and report which the sandbox actually
+#                 blocked. This is the check that keeps the write-boundary claim
+#                 honest, and it is cheap enough to run before every dry run.
 #   --cohort N    cap STAGE 5's public semantic cohort at N audit units
 #                 (default 2). Bounding the cohort bounds runtime; it does not
 #                 touch any stage that decides what reaches the report.
@@ -70,7 +71,9 @@ while [[ $# -gt 0 ]]; do
     --model)   MODEL="$2"; shift 2 ;;
     --effort)  EFFORT="$2"; shift 2 ;;
     --timeout) TIMEOUT="$2"; shift 2 ;;
-    -h|--help) sed -n '2,40p' "$0"; exit 0 ;;
+    # Range is derived, not hard-coded: the usage block grew past a literal
+    # '2,40p' once already, truncating --mode probe and --cohort out of --help.
+    -h|--help) sed -n '2,/^$/p' "$0" | sed '$d'; exit 0 ;;
     *) echo "unknown argument: $1" >&2; exit 64 ;;
   esac
 done
