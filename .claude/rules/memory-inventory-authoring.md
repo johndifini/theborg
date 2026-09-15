@@ -34,6 +34,20 @@ For a new artifact:
    Do not invent or copy the six semantic fields, and do not promote a draft to
    `reviewed`, without substantive review and explicit approval.
 
+`--artifact` resolves only against `borg_root`. An artifact whose record carries
+`path_root: home` (Auto Memory under `~/.claude/projects/`) or
+`path_root: codex_home` (a generated skill under `~/.codex/`) cannot be named by
+it in any form — workspace-relative, `$HOME`-absolute, `~`-prefixed and bare all
+return `error: ... was not discovered as a durable memory artifact`. That is the
+addressing limit, not a "nothing to do": an already-registered `borg_root`
+artifact instead reports `Nothing to bootstrap`.
+
+For those, the unscoped `bootstrap` is the only path, so substitute a dry run for
+the missing scope: run it without `--write`, confirm the summary names exactly
+the record count and destinations you intend, and re-run with `--write` in the
+same turn. A sibling session creating an artifact between the two runs would
+widen the write, which is what `--artifact` would otherwise have prevented.
+
 For a move, preserve the stable record id and update its `path`; update paths and
 relationships for generated companions after regenerating them. Do not create a
 second record for the relocated artifact. For permanent retirement, remove the
@@ -45,6 +59,28 @@ Public artifacts belong in `MEMORY-INVENTORY.yaml`. If an artifact's path or
 rationale is sensitive, its record belongs only in the owning agent's gitignored
 `<owner>/.private/memory-inventory.yaml` overlay; never copy those facts into the
 tracked registry.
+
+## Do not leave a dated backup in a memory-bearing directory
+
+A gitignored overlay has no git safety net, so copying it before a write is
+sound — but `discover --require-coverage` reports the copy as `UNCLASSIFIED` and
+exits 1. Only the **final** extension is consulted: `SKIPPED_PATTERNS` anchors
+on end-of-name, so appending anything after a known extension stops the skip
+from matching and the file becomes an unclassified candidate.
+
+Measured in `c4po/.private/`, same contents in every case:
+
+| Name | Coverage |
+|---|---|
+| `x.yaml`, `x.bak`, `x.yaml.bak`, `x.orig` | passes |
+| `x.bak-20260914`, `x.tmp`, `x.yaml.save` | **fails, unclassified** |
+| `x.bak-20260914.yaml` | passes — known extension is last |
+
+The trap rewards the careful habit: `cp x x.bak` is fine, while making the
+backup name unique with a timestamp breaks the gate. Put the stamp before the
+extension (`x.bak-20260914.yaml`), or keep the copy out of the directory
+entirely. Either way delete it once the write is verified — the gate is not
+satisfied until it is gone.
 
 Before considering the change complete, run the relevant bridge `--check`, then:
 
