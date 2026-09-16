@@ -6422,11 +6422,10 @@ artifacts:
     related: []
 
   c4po-agents-skills-scheduled-state-writes-skill:
-    path: c4po/.agents/skills/scheduled-state-writes/SKILL.md
+    path: .agents/skills/scheduled-state-writes/SKILL.md
     type: generated_rule_bridge
     status: draft
-    owner: c4po
-    scope: c4po
+    scope: workspace
     canonical_ref: c4po-claude-rules-scheduled-state-writes
     introduced: 2026-09-02    # file mtime (untracked; not a history fact)
     review:
@@ -6446,11 +6445,10 @@ artifacts:
     related: []
 
   c4po-claude-rules-scheduled-state-writes:
-    path: c4po/.claude/rules/scheduled-state-writes.md
+    path: .claude/rules/scheduled-state-writes.md
     type: scoped_rule
     status: draft
-    owner: c4po
-    scope: c4po
+    scope: workspace
     introduced: 2026-09-02    # file mtime (untracked; not a history fact)
     consumers: [claude-code, codex]
     review:
