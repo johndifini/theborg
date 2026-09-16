@@ -136,6 +136,11 @@ no remediation. John decides whether each identifier is acceptable. Format:
 - One bullet per finding: `[<severity>] <file>:<line> — <class>: <matched_text> — <context>
   → <suggested_remediation>`
 - End with the two known limitations from STEP 2.
+- Close with a `## Suggested Next Prompt` section per the workspace `AGENTS.md`
+  communication style, naming the specific highest-severity finding to triage
+  (e.g. remediating one `<file>:<line>`), so the email is actionable without
+  re-deriving what to do. Since this job reports only and never remediates, a
+  findings run always has a meaningful next step.
 
 A finding may mention that the same string also appears in git history if that
 context is useful, but history is outside remediation scope. Never propose or
@@ -148,6 +153,11 @@ STEP 4: If there are no findings, pipe this Markdown body into
 `Severity: 0 critical | 0 high | 0 medium | 0 low | 0 total`
 `New findings: 0`
 `All clear — no findings. The two documented mrs-beast identity occurrences are allowlisted.`
+
+Send exactly that body: a clean audit leaves no meaningful next step, so per the
+workspace `AGENTS.md` communication style it carries NO `## Suggested Next Prompt`
+section. Do not manufacture one — the section's absence is what makes it
+informative when a findings run does carry it.
 
 STEP 5: After the clean report only, create the state directory if needed and
 write `${BORG_ROOT}/c4po/.claude/scheduled/state/c4po-privacy-audit-monthly.json`

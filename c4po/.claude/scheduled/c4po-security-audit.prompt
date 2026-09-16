@@ -90,6 +90,12 @@ accepted risks do not count as active findings or in the severity totals.
 - If anything critical is found (auth weakness, dangerous permission, broken access policy, suspicious MCP server, leaked secret), include each finding and a recommended fix.
 - If clean, follow the two summary lines with: `All clear — no findings.`
 
+End the emailed body with a `## Suggested Next Prompt` section per the workspace
+`AGENTS.md` communication style, naming the specific highest-severity active
+finding to remediate. This audit reports only, so any run with an active finding
+has a meaningful next step. A run that is clean — or whose only entries are
+already-accepted risks — omits the section entirely rather than inventing one.
+
 RECORD STATE — write the run's state file, after the email has gone out so the
 delivery result can be recorded with it.
 

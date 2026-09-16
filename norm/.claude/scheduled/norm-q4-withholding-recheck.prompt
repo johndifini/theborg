@@ -62,6 +62,14 @@ job ran. Format:
 - The per-installment table from STEP 3.
 - The capital-gain headroom finding from STEP 4.
 - Any open items from §8 of the workpaper that are still unresolved.
+- Last, a `## Suggested Next Prompt` section per the workspace `AGENTS.md`
+  communication style: a prompt that acts on THIS run's verdict — the specific
+  installment to pay and confirm, the harvesting decision to make before
+  December 31, or the open workpaper item to take to the CPA. Cite private
+  figures by reference to the workpaper section, never inline in this prompt
+  file. This job is a one-shot that removes itself in STEP 7, so never suggest
+  scheduling or re-running it. Keep this section last: the STEP 7 self-removal
+  confirmation line goes immediately BEFORE it, not after.
 Specifics belong in the email — it goes only to the user's own address — but never in a
 tracked file.
 
@@ -79,7 +87,8 @@ again on 2026-12-07 + 1 year. In order:
 4. Delete `${BORG_ROOT}/norm/.claude/scheduled/norm-q4-withholding-recheck.prompt`,
    `${BORG_ROOT}/norm/.claude/commands/q4-withholding-recheck.md`, and the
    `once-2026-12-07-09-00` case from `${BORG_ROOT}/.bin/install-scheduled-tasks.sh`
-Confirm the removal in the STEP 5 email body (append a final line) so a silent failure to
+Confirm the removal in the STEP 5 email body (a line immediately before the closing
+`## Suggested Next Prompt` section, so that section stays last) so a silent failure to
 self-remove is visible.
 
 Boundaries: this is preparation for CPA review, not a filing determination. The character of

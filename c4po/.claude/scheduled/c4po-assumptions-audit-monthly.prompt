@@ -484,6 +484,15 @@ STAGE 9 — REPORT. Always pipe one report into
 (reads message body from stdin) — even when the inventory is healthy and every
 assumption is STILL VALID
 (subject reads "— 0 flagged"), so the user can confirm the job ran.
+
+End the emailed body with a `## Suggested Next Prompt` section per the workspace
+`AGENTS.md` communication style, naming the single highest-value item this run
+surfaced — the specific flagged assumption to act on, the named artifact to
+register, or the draft record to review. This run never applies an action itself,
+so a run with any flagged assumption, mechanical finding, or proposed promotion
+has a meaningful next step. A run that is fully healthy and STILL VALID
+throughout omits the section rather than inventing one.
+
 Format:
 
   Borg assumptions audit - {YYYY-MM-DD}

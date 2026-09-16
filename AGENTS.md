@@ -44,6 +44,14 @@ The Borg is a standardized AI workspace that turns prompts, institutional knowle
   `## Suggested Next Prompt` describes something that will need running again
   next week, propose automating it (a scheduled job) instead of handing back a
   recurring manual chore.
+- **Both closing sections belong to the delivered response, whatever the
+  channel.** When a scheduled job's result is an email piped to
+  `.bin/notify-email.sh`, the emailed body *is* the response: end it with the
+  same sections rather than emitting them only to the session log, where the
+  user never sees them. The suggested prompt is tailored to that run's result,
+  so `notify-email.sh` deliberately does not synthesize one — only the job knows
+  what its own findings imply (see that script's header). A job that finished
+  clean with nothing to follow up omits the section rather than inventing a step.
 
 ## Design, taste, and UI
 
