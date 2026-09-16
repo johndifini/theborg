@@ -88,7 +88,7 @@ three:
   Bash, not `Write`/`Edit`.** The harness treats the path as sensitive and stalls
   waiting for a permission no one is there to grant; that is a generic heuristic,
   not a policy decision, so do not conclude the job may not update its own state
-  (`c4po/.claude/rules/scheduled-state-writes.md`).
+  (`.claude/rules/scheduled-state-writes.md`).
 
 ## Lint
 
