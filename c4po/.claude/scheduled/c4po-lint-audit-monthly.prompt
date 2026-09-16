@@ -11,6 +11,7 @@ STEP 3: Always pipe a report into `${BORG_ROOT}/.bin/notify-email.sh c4po "Borg 
 - Header (body): `Borg lint audit — {YYYY-MM-DD} — {total} finding(s)`
 - Group findings by the Lint subsection they violate (Coverage, Size, Cross-references, Repo design folders, README, Paths, Imports, MCP servers, Slash commands, Scoped rules, Memory inventory, Scheduled tasks). Within each group, one line per finding: `<file>: <detail> → <suggested_fix>`.
 - Omit empty groups.
-- If the audit is clean, the body is a one-liner: `All clear — no findings.`
+- If the audit is clean, the body is a one-liner: `All clear — no findings.` — and, having no meaningful next step, it carries no `## Suggested Next Prompt` section.
+- Otherwise end the emailed body with a `## Suggested Next Prompt` section per the workspace `AGENTS.md` communication style, naming the specific finding to fix (`<file>` and its Lint subsection). This audit never auto-fixes, so a run with findings always has a meaningful next step.
 
 STEP 4: Write `${BORG_ROOT}/c4po/.claude/scheduled/state/c4po-lint-audit-monthly.json` with `{"date": "YYYY-MM-DD", "findings": <count>}` so the run isn't repeated this month. `mkdir -p` the state directory first if it doesn't exist.

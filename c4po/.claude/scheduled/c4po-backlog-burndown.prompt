@@ -82,3 +82,5 @@ Continue until no actionable items remain — or the run dies with the weekly bu
 
 WRAP — only reached if the plan empties before the weekly budget does.
 Pipe a summary (items completed / skipped / needs-user, with commit hashes) into `${BORG_ROOT}/.bin/notify-email.sh c4po "Borg backlog burndown — {YYYY-MM-DD} — {C} done, {S} skipped"`. Body header: same as the subject.
+
+End this emailed body with a `## Suggested Next Prompt` section per the workspace `AGENTS.md` communication style, naming the single most useful follow-up this run produced: the top needs-user item to decide, or the specific skipped item to retry. Only this WRAP email carries the section — the NOTIFY PLAN email above deliberately omits it, because the plan's next step is the burn this same run is about to perform, and two emails from one run must not hand back the same follow-up twice. A run that finished every item with nothing skipped and nothing needing the user omits the section rather than inventing one.

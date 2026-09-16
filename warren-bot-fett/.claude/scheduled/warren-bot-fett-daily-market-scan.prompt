@@ -30,4 +30,6 @@ STEP 7: Always email the result by piping the message into `${BORG_ROOT}/.bin/no
 - Why NOW is a good entry point (not just that drift exists)
 - For sells: explain why the position being trimmed is elevated/overvalued, not beaten down
 
-If no compelling opportunities exist, the message is a brief summary: allocations vs. targets per portfolio and a one-line `No action recommended` with the reason (e.g. within bands, or drifted but no good entry). Do NOT recommend selling beaten-down positions to buy bonds during a selloff. That is the opposite of good investing.
+When an opportunity IS flagged, end the emailed body with a `## Suggested Next Prompt` section per the workspace `AGENTS.md` communication style — a prompt that acts on that specific trade (size it against the account, or check the entry against a limit price), naming the ticker and account.
+
+If no compelling opportunities exist, the message is a brief summary: allocations vs. targets per portfolio and a one-line `No action recommended` with the reason (e.g. within bands, or drifted but no good entry). Do NOT recommend selling beaten-down positions to buy bonds during a selloff. That is the opposite of good investing. A no-action body — and the STEP 1 holiday one-liner — carries NO `## Suggested Next Prompt` section: this job runs DAILY, so a suggestion on a quiet day is a recurring manual chore by definition, which that convention forbids, and the scan already re-runs tomorrow without being asked.

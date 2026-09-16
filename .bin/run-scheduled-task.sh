@@ -507,6 +507,19 @@ if [[ $STATUS -ne 0 ]]; then
       echo "Last lines of the captured report (this task's stdout):"
       echo "$REPORT_TAIL"
     fi
+    # Closing section per the workspace AGENTS.md communication style. A real
+    # failure has an obvious next step, so this caller supplies a static one
+    # rather than notify-email.sh synthesizing it (see that script's header).
+    # The STARVED branch deliberately gets none: it says above that nothing is
+    # broken and nothing needs fixing, and the convention omits the section when
+    # no meaningful next step exists. Suggesting a re-run there would also be
+    # wrong on the facts — it would die the same way until the budget resets.
+    if [[ -z "$LIMIT_LINE" ]]; then
+      echo
+      echo "## Suggested Next Prompt"
+      echo
+      echo "Diagnose why the scheduled task '$TASK_NAME' exited $STATUS on $END_STAMP: read $LOG_FILE, identify the cause, and propose a fix."
+    fi
   } | "$BORG_ROOT/.bin/notify-email.sh" "$AGENT_NAME" "$SUBJECT" \
     || notify_failed "failure alert"
 fi

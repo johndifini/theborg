@@ -38,6 +38,19 @@
 # Claude-driven runs, $BORG_SESSION_ID is pinned before launch. Either tells the
 # user how to continue the exact headless session. It remains unchanged in the
 # plain part and becomes a muted, separated footer with a code block in HTML.
+#
+# Why there is no --next-prompt flag (decided 2026-09-16). Job emails end with a
+# `## Suggested Next Prompt` section per the workspace AGENTS.md communication
+# style, but each CALLER composes that section into the body it pipes in; this
+# script neither adds nor validates one. The resume footer above is centralized
+# because it is derived from environment this script can see, is identical every
+# run, and the caller cannot know it. The suggested prompt is the opposite on all
+# three counts: it is unique per run, it depends on findings only the caller has,
+# and the convention requires OMITTING it when a run leaves no meaningful next
+# step — a judgment no shell can make. A flag would therefore be pure pass-through
+# of model-authored multi-line Markdown through an argv slot, when the body
+# already travels safely on stdin. Callers with no model (run-cli-update.sh,
+# run-scheduled-task.sh's failure alert) append a static section themselves.
 set -euo pipefail
 
 AGENT="${1:?usage: notify-email.sh <agent> [subject] < body}"

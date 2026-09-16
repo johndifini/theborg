@@ -236,6 +236,22 @@ main() {
     # Preserve the updater's existing emailed detail without duplicating the raw
     # doctor report; doctor findings above are the intentionally concise summary.
     sed '/^--- Claude Code doctor (raw output) ---$/,$d' "$RUN_OUTPUT"
+    # Closing section per the workspace AGENTS.md communication style. This
+    # caller has no model, so it supplies a static prompt rather than
+    # notify-email.sh synthesizing one (see that script's header). Emitted only
+    # when the run actually left something to do: a clean update with no new
+    # doctor findings has no meaningful next step, and the convention omits the
+    # section rather than handing back a weekly chore this job already automates.
+    if [[ $status -ne 0 || ${new_count:-0} -gt 0 ]]; then
+      echo
+      echo "## Suggested Next Prompt"
+      echo
+      if [[ $status -ne 0 ]]; then
+        echo "Weekly CLI maintenance failed with exit $status — read $LOG_FILE, diagnose the failure, and propose a fix."
+      else
+        echo "Triage the ${new_count} new Claude doctor finding(s) from this week's CLI maintenance in $LOG_FILE and propose a fix for each."
+      fi
+    fi
   } | "$BORG_ROOT/.bin/notify-email.sh" c4po "$subject"; then
     local msg="notify-email.sh FAILED for $TASK_NAME"
     echo "$msg" | tee -a "$LOG_FILE" >&2

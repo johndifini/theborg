@@ -166,6 +166,13 @@ Do NOT fail silently: if both repos were quiet, or every candidate was already
 in the topics log, or a git command failed, say so in one or two lines and send
 that instead of a draft.
 
+When a draft WAS produced, end the emailed body with a `## Suggested Next Prompt`
+section per the workspace `AGENTS.md` communication style — a prompt that acts on
+this specific draft, naming its topic (revise the angle, adapt it for another
+platform, or draft the follow-up post). A "nothing qualified" or failed-tooling
+body omits the section: there is no draft to act on, and the next attempt is this
+job's own next scheduled run rather than something for the user to type.
+
 RECORD STATE — log the topic.
 Only when a draft was actually sent, append one line to
 `${BORG_ROOT}/mrs-beast/.claude/scheduled/state/mrs-beast-social-media-topics.md`:

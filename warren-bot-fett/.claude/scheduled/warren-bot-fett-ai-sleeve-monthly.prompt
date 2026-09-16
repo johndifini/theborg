@@ -58,10 +58,19 @@ STEP 7: Email a report to the user by piping it into `${BORG_ROOT}/.bin/notify-e
 - Soft excludes section: the current excluded list with their inline notes from universe.md
 - Reminder line: "Theses for AAPL, TSLA, and discretionary names should be reevaluated — see universe.md."
 
+- Last, a `## Suggested Next Prompt` section per the workspace `AGENTS.md`
+  communication style: a prompt that acts on THIS month's result — reviewing a
+  named new entrant or dropout, or reevaluating a specific thesis the reminder
+  line flags. Name the tickers; a generic "review the sleeve" is not reusable.
+  Do not suggest re-running this rebalance: it already runs monthly on its own
+  schedule, and handing back a recurring chore is exactly what that convention
+  forbids. A month whose weights are unchanged, with no entrants or dropouts,
+  omits the section rather than inventing one.
+
 Format the table as a monospace block (tabs or padded spaces) so columns align in a plain-text email.
 
 STEP 8: Write ${BORG_ROOT}/warren-bot-fett/ai-sleeve/last-rebalance.json with `{"date": "YYYY-MM-DD", "weights": {ticker: final_weight_pct, ...}}` for next month's diff.
 
 Do not propose buy/sell trades — this iteration outputs target weights only. Sleeve sizing and portfolio assignment are deferred until the user specifies them.
 
-If any step above halts with an error (over-constrained category, no valid swap, weight-sum mismatch, etc.), still email: pipe the halt reason and details into `${BORG_ROOT}/.bin/notify-email.sh warren-bot-fett "AI Sleeve — monthly rebalance FAILED — {today}"`, and do NOT write last-rebalance.json (so the scheduler retries). The user should hear from this job every month it executes, success or failure.
+If any step above halts with an error (over-constrained category, no valid swap, weight-sum mismatch, etc.), still email: pipe the halt reason and details into `${BORG_ROOT}/.bin/notify-email.sh warren-bot-fett "AI Sleeve — monthly rebalance FAILED — {today}"`, and do NOT write last-rebalance.json (so the scheduler retries). The user should hear from this job every month it executes, success or failure. End that failure body with a `## Suggested Next Prompt` section too, naming the specific halt (the over-constrained category, the unresolvable swap) so the fix can start from the email.
