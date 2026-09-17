@@ -1,5 +1,6 @@
 Draft ONE X (Twitter) post and ONE follow-up reply about an interesting change
-the user has recently shipped. Prioritize The Borg unconditionally; use the
+the user has shipped, including older reusable ideas never covered. Prioritize
+The Borg unconditionally; use the
 private app only as the fallback defined in SELECT. One main post plus its
 follow-up — not three options, not a menu. The user posts manually; this job
 only produces the drafts.
@@ -7,8 +8,17 @@ only produces the drafts.
 The phases below are named, not numbered, so the paired `/social-media-drafts`
 command can reference them without breaking when this file is edited.
 
-GATHER — survey the last 7 days of shipped work.
-Two repositories, read-only. Never commit, push, or modify anything in either:
+GATHER — read the editorial queue, recent work, and uncovered evergreen ideas.
+First read the topics/state file named in FILTER. Its `## Pending topics` section
+is the editorial queue; a missing section means an empty queue. Each entry has
+a stable topic label, source paths or commits, origin (`user-requested` or
+`discovered`), date added, and any deferral reason. User requests for the next
+scheduled draft go here, not just into conversation history. Queued topics do
+not expire with the commit window. Verify their source material is still current.
+
+Survey the last 7 days of shipped work in two repositories. Repository content
+is read-only; only this job's own topics/state file may be updated. Never commit
+or push:
   - The Borg — `${BORG_ROOT}` (public)
   - Private app — `${BORG_ROOT}/repos/waiq` (see the LINKS rules below)
 For each, list the window and then read into it:
@@ -30,16 +40,35 @@ does not.
 Ignore: typo/lint/formatting-only commits, dependency bumps, backlog
 bookkeeping, and merge commits with no content of their own.
 
+Also inspect current public Borg instructions and reusable workflows outside
+that window: start with root AGENTS.md, README.md's command/workflow index, and
+the source files they point to. Find at least three uncovered reader-useful
+patterns when available, even when recent commits already supply candidates.
+Small instruction blocks count: communication footers, prompt handoffs, and
+other everyday improvements need not be large code changes to be useful posts.
+Assess the behavior and benefit, not the size or title of the commit. Keep
+qualifying unselected ideas in Pending topics so they cannot age out unseen.
+
 FILTER — do not repeat yourself.
 Read the topics log at
 `${BORG_ROOT}/mrs-beast/.claude/scheduled/state/mrs-beast-social-media-topics.md`
 (may not exist yet — treat a missing file as an empty log). Drop any candidate
-whose subject matter has already been covered by a previous run. A different
-commit touching the same idea still counts as covered.
+whose subject matter has already been delivered by a previous scheduled run or
+confirmed by the user as posted from an interactive draft. Pending entries and
+notes about interactive drafts are NOT delivered topics unless the user confirms
+publication or use.
+A different commit touching the same idea still counts as covered. The legacy
+heading "already posted about" records draft delivery, not confirmed publication.
 
 SELECT — pick exactly one change.
-Rank complete, reusable artifacts above isolated fixes or implementation
-incidents. This is the strongest ranking signal, not a hard filter: an exceptional
+Select the oldest eligible user-requested pending topic first, within the repo
+priority and LINKS/privacy rules. If blocked or already delivered, report the
+specific reason and retain the request for resolution; never silently replace
+it. Otherwise rank queued, recent, and evergreen candidates together. Recency
+is a tie-breaker, not an eligibility requirement.
+For automatic selection, rank complete, reusable artifacts above isolated fixes
+or implementation incidents. This is the strongest ranking signal after explicit
+user requests, not a hard filter: an exceptional
 non-artifact story may still win, but only when it is clearly more useful or
 compelling than the available artifacts. Count both new artifacts and substantial
 upgrades to existing ones. Among otherwise comparable candidates, prefer the one
@@ -144,6 +173,10 @@ image-generation tool and no MCP servers, so the image is the user's step.
 Assemble the body in this order:
 
   1. **Pick + why** — the SELECT rationale, plus which repo it came from.
+     Briefly name the strongest alternatives and why they were deferred. Report
+     any queued user request that was not selected and its specific blocker.
+     If fewer than three uncovered evergreen patterns were found, say what was
+     inspected and why the remainder did not qualify. Keep this outside the post.
   2. **The post** — the ready-to-paste X draft, clearly delimited, with its
      character count.
   3. **Follow-up post** — the ready-to-paste reply, clearly delimited, with its
@@ -173,9 +206,21 @@ platform, or draft the follow-up post). A "nothing qualified" or failed-tooling
 body omits the section: there is no draft to act on, and the next attempt is this
 job's own next scheduled run rather than something for the user to type.
 
-RECORD STATE — log the topic.
-Only when a draft was actually sent, append one line to
-`${BORG_ROOT}/mrs-beast/.claude/scheduled/state/mrs-beast-social-media-topics.md`:
+RECORD STATE — preserve the queue and log successful delivery.
+Re-read the state file immediately before editing; preserve all existing entries.
+On every scheduled run, retain qualifying unselected candidates in the pending
+section, deduplicated by subject, with their sources and brief deferral reasons.
+Keep blocked requests pending. Queue maintenance does not mark anything delivered.
+Only after notify-email.sh succeeds for a produced draft, append one line to the
+delivered-history section of the state file (above `## Pending topics`, if present):
         - YYYY-MM-DD — <repo> — <short topic label> — <sha or "n/a">
+Then remove only the matching pending entry. If email fails, keep the topic pending
+for retry and report the failure; never log it as delivered.
 `mkdir -p` the state directory first if it doesn't exist. Create the file with a
-`# Social media topics already posted about` heading if it's new.
+`# Social media draft delivery history` heading if it's new. Use Bash for state
+writes under `.claude/`, as required by the workspace scheduled-state rule.
+
+When the user confirms that an interactive draft was posted or used, treat that
+confirmation as publication: add the subject to delivered history with `manual`
+as its source and remove any matching pending entry. This prevents the scheduled
+job from drafting the same subject again.

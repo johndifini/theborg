@@ -22,6 +22,13 @@ referenced by phase name:
 2. In the **OUTPUT** phase — do NOT pipe to `notify-email.sh`. Output the full
    body (pick + why, the post, the follow-up post, and the image prompt) directly
    into this session.
-3. Skip the **RECORD STATE** phase entirely — do not create or append to the
-   topics log. An interactive run must not mark a topic as spent for the next
-   scheduled run.
+3. Do not record scheduled delivery or consume pending entries in **RECORD
+   STATE**. An interactive draft must not mark a topic as spent for the next
+   scheduled run. When the user requests a topic for the next or a future
+   scheduled draft, save it in the same state's `## Pending topics` section as
+   `user-requested`, with date and source references. Re-read before editing,
+   deduplicate by subject, and note any draft already supplied in this session.
+   A request to draft something here alone does not queue scheduled delivery.
+   If the user later says an interactive draft was posted or used, add the topic
+   to delivered history as `manual` and remove its pending entry so the scheduled
+   job cannot propose it again.
