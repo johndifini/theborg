@@ -20,6 +20,8 @@ dist/
 ├── career.json
 ├── career.md
 ├── evidence.json
+├── interop-test.html
+├── interop-test.json
 └── llms.txt
 ```
 
@@ -29,7 +31,13 @@ The canonical inputs are `content/profile.json`,
 JSON records are schema-validated. The recruiter prompt is shared public copy:
 any prompt printed on a résumé must match it exactly. Generation is offline and
 stable: records sort by ID, object keys use lexical order, JSON uses two-space
-indentation and a trailing newline, and Markdown/HTML use fixed templates.
+indentation and a trailing newline, and Markdown/HTML use deterministic
+renderers and fixed templates.
+
+The paired `/interop-test` and `/interop-test.json` artifacts are generated from
+`examples/synthetic/interop-test-corpus.json`. They contain only conspicuously
+fictional sentinel claims for local HTML-versus-JSON retrieval testing; they do
+not alter the production dossier schema or recruiter prompt.
 
 `npm run check-generated` rebuilds into a temporary directory and compares
 every path and byte with `dist/`. Privacy checks scan deployable inputs and the

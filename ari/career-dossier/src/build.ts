@@ -6,6 +6,7 @@ import { projectRoot } from "./paths.ts";
 import { renderCareerJson } from "./render-career-json.ts";
 import { renderCareerMarkdown } from "./render-career-markdown.ts";
 import { renderEvidence } from "./render-evidence.ts";
+import { loadInteropTestCorpus, renderInteropTestHtml, renderInteropTestJson } from "./render-interop-test.ts";
 import { renderLandingPage } from "./render-landing-page.ts";
 import { renderLlmsTxt } from "./render-llms-txt.ts";
 import { loadAndValidateCorpus } from "./validate.ts";
@@ -14,7 +15,9 @@ export async function build(outputDirectory = resolve(projectRoot, "dist")): Pro
   assertOutputPath(outputDirectory);
   await assertDeployableSourcesSafe();
   const corpus = normalizeCorpus(await loadAndValidateCorpus());
+  const interopTestCorpus = await loadInteropTestCorpus();
   assertPublicValuesSafe(corpus);
+  assertPublicValuesSafe(interopTestCorpus);
   const landing = await renderLandingPage(corpus);
   const files: Record<string, string> = {
     "agent.html": landing,
@@ -22,6 +25,8 @@ export async function build(outputDirectory = resolve(projectRoot, "dist")): Pro
     "career.md": renderCareerMarkdown(corpus),
     "evidence.json": renderEvidence(corpus),
     "index.html": landing,
+    "interop-test.html": renderInteropTestHtml(interopTestCorpus),
+    "interop-test.json": renderInteropTestJson(interopTestCorpus),
     "llms.txt": renderLlmsTxt(corpus)
   };
   await rm(outputDirectory, { force: true, recursive: true });

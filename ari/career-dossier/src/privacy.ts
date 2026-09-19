@@ -4,7 +4,7 @@ import { basename, join, resolve, sep } from "node:path";
 import { projectRoot, readProjectText, withinProjectRoot } from "./paths.ts";
 import type { JsonValue } from "./types.ts";
 
-export const expectedDistFiles = ["agent.html", "career.json", "career.md", "evidence.json", "favicon.png", "index.html", "llms.txt"];
+export const expectedDistFiles = ["agent.html", "career.json", "career.md", "evidence.json", "favicon.png", "index.html", "interop-test.html", "interop-test.json", "llms.txt"];
 const binaryDistFiles = new Set(["favicon.png"]);
 
 const forbidden: Array<[string, RegExp]> = [
@@ -48,6 +48,7 @@ export async function assertDeployableSourcesSafe(): Promise<void> {
   for (const path of [
     "content/profile.json",
     "content/recruiter-prompt.txt",
+    "examples/synthetic/interop-test-corpus.json",
     ...(await sourceFiles("content/claims")),
     ...(await sourceFiles("content/evidence")),
     "templates/landing-page.html"

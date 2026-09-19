@@ -1,0 +1,79 @@
+{
+  "claims": [
+    {
+      "asOf": "2026-09-19",
+      "claim": "Led a 13-person platform-engineering group operating across two time zones.",
+      "evidenceIds": [],
+      "evidenceLevel": "synthetic-test",
+      "id": "TEST-Q7M-101",
+      "limitations": [
+        "No direct-report breakdown or budget authority is claimed."
+      ],
+      "title": "Platform-engineering leadership"
+    },
+    {
+      "asOf": "2026-09-19",
+      "claim": "Reduced rollback-detection time from 47 minutes to 11 minutes through the Cobalt Kestrel telemetry pipeline.",
+      "evidenceIds": [],
+      "evidenceLevel": "synthetic-test",
+      "id": "TEST-Q7M-102",
+      "limitations": [
+        "No cost, incident-count, or customer-impact result is claimed."
+      ],
+      "title": "Rollback-detection telemetry"
+    },
+    {
+      "asOf": "2026-09-19",
+      "claim": "Operated production services using Go and Kubernetes; no production Rust experience is claimed.",
+      "evidenceIds": [],
+      "evidenceLevel": "synthetic-test",
+      "id": "TEST-Q7M-103",
+      "limitations": [
+        "The claim supports Go and Kubernetes only, not production Rust experience."
+      ],
+      "title": "Production service operation"
+    },
+    {
+      "asOf": "2026-09-19",
+      "claim": "Migrated 28 services from Jenkins to GitHub Actions: 26 completed and 2 deferred.",
+      "evidenceIds": [],
+      "evidenceLevel": "synthetic-test",
+      "id": "TEST-Q7M-104",
+      "limitations": [
+        "Two services were deferred; full migration completion is not claimed."
+      ],
+      "title": "Continuous-delivery migration"
+    },
+    {
+      "asOf": "2026-09-19",
+      "claim": "Supported SOC 2 evidence collection but did not own the compliance program.",
+      "evidenceIds": [],
+      "evidenceLevel": "synthetic-test",
+      "id": "TEST-Q7M-105",
+      "limitations": [
+        "Participation in evidence collection does not establish SOC 2 program ownership."
+      ],
+      "title": "SOC 2 evidence support"
+    },
+    {
+      "asOf": "2026-09-19",
+      "claim": "Mentored seven engineers, three of whom were later promoted to senior engineer.",
+      "evidenceIds": [],
+      "evidenceLevel": "synthetic-test",
+      "id": "TEST-Q7M-106",
+      "limitations": [
+        "The claim does not attribute the promotions solely to mentoring."
+      ],
+      "title": "Engineer development"
+    }
+  ],
+  "corpusType": "synthetic-retrieval-test",
+  "disclaimer": "This is fictional test data created solely to measure AI-assistant retrieval. It does not describe the site owner or any real person.",
+  "profile": {
+    "headline": "Synthetic platform-engineering leader",
+    "name": "Avery Northstar",
+    "summary": "A fictional profile containing distinctive claims and limitations for same-origin HTML-versus-JSON retrieval tests.",
+    "website": "https://agent.johndifini.com/interop-test"
+  },
+  "schemaVersion": 1
+}

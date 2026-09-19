@@ -1,6 +1,6 @@
 # Handoff: Career dossier
 
-**Prepared:** 2026-09-04; updated 2026-09-07
+**Prepared:** 2026-09-04; updated 2026-09-19
 **Immediate owner:** Ari
 **Next domain owner:** Ari
 **Current state:** Phases 1–9 complete and the MVP is closed.
@@ -13,6 +13,20 @@ revised after measurement.
 recruiter prompt. `content/recruiter-prompt.txt` remains the canonical source.
 The Phase 9 evaluation records retain the longer prompt verbatim because it was
 the fixed input used for those completed measurements.
+
+## Synthetic interop experiment — approved for publication
+
+The same-origin HTML-versus-JSON experiment passed its local gate on 2026-09-19.
+The fictional disclaimer refers only to "the site owner"; the source and both
+generated artifacts contain no real candidate name. Desktop (1440 × 900),
+mobile (390 × 844), light/dark, keyboard, JavaScript-disabled, and horizontal
+overflow checks all passed. `npm run verify` passes 31/31 tests and
+`npm run verify-deployment` passes 6/6.
+
+The candidate approved production publication, deployment audit, and Bing
+submission for `/interop-test` and `/interop-test.json` on 2026-09-19. Follow
+the scoped procedure in `docs/DEPLOYMENT.md`. IndexNow remains separately
+approval-gated.
 
 ## Outcome
 

@@ -47,6 +47,8 @@ test("every public route has an explicit media type and bounded caching", async 
     ["/career.json", "application/json; charset=utf-8"],
     ["/career.md", "text/markdown; charset=utf-8"],
     ["/evidence.json", "application/json; charset=utf-8"],
+    ["/interop-test", "text/html; charset=utf-8"],
+    ["/interop-test.json", "application/json; charset=utf-8"],
     ["/favicon.png", "image/png"],
     ["/llms.txt", "text/plain; charset=utf-8"]
   ]);
@@ -94,7 +96,7 @@ test("only the generated output directory is served", async () => {
   assert.equal(config.framework, null);
 });
 
-test("the deployment output inventory is the public seven-file contract", () => {
+test("the deployment output inventory is the public nine-file contract", () => {
   assert.deepEqual(expectedDistFiles, [
     "agent.html",
     "career.json",
@@ -102,6 +104,8 @@ test("the deployment output inventory is the public seven-file contract", () => 
     "evidence.json",
     "favicon.png",
     "index.html",
+    "interop-test.html",
+    "interop-test.json",
     "llms.txt"
   ]);
 });

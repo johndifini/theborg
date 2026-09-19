@@ -17,8 +17,135 @@ npm run verify-deployment
 ```
 
 The second command verifies the corpus. The third rebuilds `dist/` and verifies
-the Vercel build contract, route headers, upload allowlist, and exact six-file
-served inventory.
+the Vercel build contract, route headers, upload allowlist, and exact generated
+inventory. The local synthetic interoperability experiment expands that
+inventory from seven files to nine while it is present.
+
+## Synthetic interoperability experiment — approval-gated procedure
+
+**Prepared:** 2026-09-19
+
+**Approval:** the candidate approved production publication, audit, and Bing
+submission on 2026-09-19. IndexNow remains separately approval-gated.
+
+The experiment adds paired `/interop-test` HTML and `/interop-test.json`
+artifacts generated from one fictional six-claim source. The production
+recruiter prompt and real dossier schema remain unchanged. Do not execute any
+release or indexing step in this section without a new, explicit candidate
+approval.
+
+### Pre-release gates closed — 2026-09-19
+
+The source-level review passed type checking, privacy scanning, deterministic
+generation, HTML/JSON claim parity, sentinel preservation, route-header checks,
+and exact generated-inventory checks. `npm run verify` passes 31/31 tests and
+`npm run verify-deployment` passes 6/6 tests.
+
+The two remaining gates closed in the local ChatGPT Desktop session:
+
+1. **Synthetic disclaimer corrected.** The source and both generated artifacts
+   now say, "It does not describe the site owner or any real person." The
+   rendering test rejects the real candidate's full name in both HTML and JSON.
+2. **Rendered browser review passed.** At 1440 × 900 and 390 × 844, all six
+   claims and limitations remained visible and readable with no clipping,
+   overlap, or horizontal scroll range. Mobile definition lists rendered as a
+   single column. Both footer links received visible focus indicators in
+   logical keyboard order. Light and dark schemes preserved readable text,
+   borders, disclaimer, claim IDs, and focus indicators. With JavaScript
+   disabled and the page reloaded, the complete profile, disclaimer, claims,
+   limitations, and links remained present.
+
+At gate closure the experiment remained local only. Production publication,
+audit, and Bing submission were subsequently approved on 2026-09-19; IndexNow
+remains separately approval-gated below.
+
+### Approval boundary
+
+Candidate approval authorizes only the following experiment release:
+
+- publish the two synthetic routes and the clearly labeled landing-page link;
+- verify the resulting production deployment; and
+- submit the two experiment URLs to Bing after the deployment passes audit.
+
+It does not authorize changing the real dossier, recruiter prompt, DNS,
+Squarespace, Vercel project topology, or any other public route.
+
+### Release steps after approval
+
+1. Re-read `git status --short` and the scoped dossier diff. The checkout is
+   shared; never stash, reset, clean, or stage unrelated work.
+2. Close both pre-release gates above.
+3. Run `npm run verify`, `npm run verify-deployment`, and
+   `git diff --check -- ari/career-dossier` from the appropriate repository
+   root.
+4. Confirm the generated inventory is exactly the expected nine files and that
+   `dist/interop-test.html` and `dist/interop-test.json` contain six unique
+   `TEST-Q7M-*` claims, zero `RB-*` claims, zero `EX-*` claims, and no private
+   path, contact, or source-document marker.
+5. Stage only explicit paths below `ari/career-dossier/`. Review the staged diff
+   and commit the experiment as one scoped change.
+6. Immediately before publishing, re-derive the branch and remote relationship.
+   Push the approved commit to the Git-connected production branch. Do not run
+   a separate CLI deployment; the push is the deployment trigger.
+7. Wait for Vercel to report the commit's production deployment `Ready` and the
+   alias assigned to `agent.johndifini.com`.
+
+### Production audit before Bing submission
+
+Require HTTP 200 and the declared content type for all eight routes:
+
+```text
+/  /agent  /career.json  /career.md  /evidence.json  /llms.txt
+/interop-test  /interop-test.json
+```
+
+Then verify:
+
+- `/interop-test` is `text/html; charset=utf-8`, includes `index,follow`, has a
+  self-referential canonical URL, visibly contains all six fictional claims and
+  limitations, and links to `/interop-test.json`;
+- `/interop-test.json` is `application/json; charset=utf-8` and is semantically
+  identical to the HTML rendering;
+- both routes receive the global CSP, `Referrer-Policy: no-referrer`,
+  `X-Content-Type-Options: nosniff`, HSTS, and bounded cache headers;
+- the seven sentinel values appear in both representations;
+- the real `/career.json` remains the approved 70-claim corpus and the public
+  recruiter prompt is byte-identical to the pre-experiment version;
+- representative source paths still return 404; and
+- every served artifact is byte-identical to the corresponding local `dist/`
+  file.
+
+If any check fails, stop before Bing submission and restore the last known-good
+Vercel production deployment. Record the failed deployment URL and audit output
+before changing anything.
+
+### Bing submission and observation
+
+Begin only after the production audit passes:
+
+1. Open the existing site property in Bing Webmaster Tools. If the property is
+   absent, verify `agent.johndifini.com` using an account-owned method; do not
+   change DNS without separate approval.
+2. Use URL Inspection on both `/interop-test` and `/interop-test.json`. Record
+   the initial crawl and index status for each route.
+3. Submit both URLs through Bing's URL-submission interface. HTML indexing is
+   the required gate; JSON indexing is recorded but is not required because raw
+   JSON handling is the control being measured.
+4. Recheck URL Inspection until Bing reports that `/interop-test` has been
+   successfully crawled and is index-eligible or indexed. A `site:` search is a
+   useful secondary observation, not the acceptance authority.
+5. If Bing has not crawled the HTML route after the agreed observation window,
+   stop and request approval before adding IndexNow. IndexNow requires a new
+   public key file and therefore a second reviewed deployment. A successful
+   IndexNow response only confirms receipt, not indexing.
+6. Start Microsoft 365 Copilot trials only after recording the HTML route's
+   successful Bing crawl. Preserve the account license state, route, prompt,
+   exact response, citations, sentinel accuracy, and any substituted source for
+   every fresh-chat run.
+
+Removing the experiment later is a separate production change. Do not delete
+the routes, internal link, or indexing artifacts without approval and a final
+capture of the results.
 
 ## Vercel project settings
 

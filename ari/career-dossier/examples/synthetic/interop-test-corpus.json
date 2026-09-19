@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "corpusType": "synthetic-retrieval-test",
+  "disclaimer": "This is fictional test data created solely to measure AI-assistant retrieval. It does not describe the site owner or any real person.",
+  "profile": {
+    "name": "Avery Northstar",
+    "headline": "Synthetic platform-engineering leader",
+    "summary": "A fictional profile containing distinctive claims and limitations for same-origin HTML-versus-JSON retrieval tests.",
+    "website": "https://agent.johndifini.com/interop-test"
+  },
+  "claims": [
+    {
+      "id": "TEST-Q7M-101",
+      "title": "Platform-engineering leadership",
+      "claim": "Led a 13-person platform-engineering group operating across two time zones.",
+      "asOf": "2026-09-19",
+      "evidenceLevel": "synthetic-test",
+      "evidenceIds": [],
+      "limitations": ["No direct-report breakdown or budget authority is claimed."]
+    },
+    {
+      "id": "TEST-Q7M-102",
+      "title": "Rollback-detection telemetry",
+      "claim": "Reduced rollback-detection time from 47 minutes to 11 minutes through the Cobalt Kestrel telemetry pipeline.",
+      "asOf": "2026-09-19",
+      "evidenceLevel": "synthetic-test",
+      "evidenceIds": [],
+      "limitations": ["No cost, incident-count, or customer-impact result is claimed."]
+    },
+    {
+      "id": "TEST-Q7M-103",
+      "title": "Production service operation",
+      "claim": "Operated production services using Go and Kubernetes; no production Rust experience is claimed.",
+      "asOf": "2026-09-19",
+      "evidenceLevel": "synthetic-test",
+      "evidenceIds": [],
+      "limitations": ["The claim supports Go and Kubernetes only, not production Rust experience."]
+    },
+    {
+      "id": "TEST-Q7M-104",
+      "title": "Continuous-delivery migration",
+      "claim": "Migrated 28 services from Jenkins to GitHub Actions: 26 completed and 2 deferred.",
+      "asOf": "2026-09-19",
+      "evidenceLevel": "synthetic-test",
+      "evidenceIds": [],
+      "limitations": ["Two services were deferred; full migration completion is not claimed."]
+    },
+    {
+      "id": "TEST-Q7M-105",
+      "title": "SOC 2 evidence support",
+      "claim": "Supported SOC 2 evidence collection but did not own the compliance program.",
+      "asOf": "2026-09-19",
+      "evidenceLevel": "synthetic-test",
+      "evidenceIds": [],
+      "limitations": ["Participation in evidence collection does not establish SOC 2 program ownership."]
+    },
+    {
+      "id": "TEST-Q7M-106",
+      "title": "Engineer development",
+      "claim": "Mentored seven engineers, three of whom were later promoted to senior engineer.",
+      "asOf": "2026-09-19",
+      "evidenceLevel": "synthetic-test",
+      "evidenceIds": [],
+      "limitations": ["The claim does not attribute the promotions solely to mentoring."]
+    }
+  ]
+}
