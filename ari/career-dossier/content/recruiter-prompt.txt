@@ -1,1 +1,1 @@
-Using the career dossier at https://agent.johndifini.com/career.json and the attached job description, identify strong matches, partial matches, and gaps. Cite the dossier claim and evidence IDs for every conclusion. Do not infer missing qualifications; state uncertainty explicitly.
+Compare the attached job description with https://agent.johndifini.com/career.json. Identify strong matches, partial matches, and gaps; don’t infer missing qualifications.

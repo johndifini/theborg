@@ -9,6 +9,11 @@
 the original strict Phase 9 acceptance gate remains failed rather than being
 revised after measurement.
 
+**Prompt update — 2026-09-19:** The candidate approved a shorter production
+recruiter prompt. `content/recruiter-prompt.txt` remains the canonical source.
+The Phase 9 evaluation records retain the longer prompt verbatim because it was
+the fixed input used for those completed measurements.
+
 ## Outcome
 
 Create an AI-first, evidence-backed career corpus under
