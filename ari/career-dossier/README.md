@@ -15,6 +15,7 @@ Install with `npm ci`, then run `npm run verify`. The build emits only:
 
 ```text
 dist/
+├── 5aa51b23de7a6a0e2b96d261c66a1d11.txt   (IndexNow ownership key; see src/indexnow.ts)
 ├── index.html
 ├── agent.html
 ├── career.json

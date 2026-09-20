@@ -92,11 +92,11 @@ Squarespace, Vercel project topology, or any other public route.
 
 ### Production audit before Bing submission
 
-Require HTTP 200 and the declared content type for all eight routes:
+Require HTTP 200 and the declared content type for all nine routes:
 
 ```text
 /  /agent  /career.json  /career.md  /evidence.json  /llms.txt
-/interop-test  /interop-test.json
+/interop-test  /interop-test.json  /5aa51b23de7a6a0e2b96d261c66a1d11.txt
 ```
 
 Then verify:
@@ -134,10 +134,26 @@ Begin only after the production audit passes:
 4. Recheck URL Inspection until Bing reports that `/interop-test` has been
    successfully crawled and is index-eligible or indexed. A `site:` search is a
    useful secondary observation, not the acceptance authority.
-5. If Bing has not crawled the HTML route after the agreed observation window,
-   stop and request approval before adding IndexNow. IndexNow requires a new
-   public key file and therefore a second reviewed deployment. A successful
-   IndexNow response only confirms receipt, not indexing.
+5. IndexNow was approved by the candidate on 2026-09-20, ahead of the original
+   observation window, because a live application send date made the crawl
+   wait costly. The build emits the public key file named in `src/indexnow.ts`
+   and `vercel.json` serves it as `text/plain`; shipping it is a second
+   reviewed production deployment. After that deployment, confirm the key URL
+   returns 200 with the bare key, then submit the public routes in one POST:
+
+   ```sh
+   curl --fail --silent --show-error --output /dev/null --write-out '%{http_code}\n' \
+     "https://agent.johndifini.com/5aa51b23de7a6a0e2b96d261c66a1d11.txt"
+   curl --silent --show-error --write-out '\n%{http_code}\n' \
+     --request POST https://api.indexnow.org/indexnow \
+     --header 'Content-Type: application/json' \
+     --data '{"host":"agent.johndifini.com","key":"5aa51b23de7a6a0e2b96d261c66a1d11","keyLocation":"https://agent.johndifini.com/5aa51b23de7a6a0e2b96d261c66a1d11.txt","urlList":["https://agent.johndifini.com/","https://agent.johndifini.com/career.json","https://agent.johndifini.com/career.md","https://agent.johndifini.com/llms.txt","https://agent.johndifini.com/interop-test","https://agent.johndifini.com/interop-test.json"]}'
+   ```
+
+   `200` and `202` both mean received (202 = key validation pending); `403`
+   means the key file was not fetchable, `422` a URL outside the host, `429`
+   rate-limited. Receipt is not indexing. IndexNow reaches Bing, Yandex,
+   Seznam, and Naver; it does nothing for Google.
 6. Start Microsoft 365 Copilot trials only after recording the HTML route's
    successful Bing crawl. Preserve the account license state, route, prompt,
    exact response, citations, sentinel accuracy, and any substituted source for

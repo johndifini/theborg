@@ -1,6 +1,6 @@
 # Handoff: Career dossier
 
-**Prepared:** 2026-09-04; updated 2026-09-19
+**Prepared:** 2026-09-04; updated 2026-09-20
 **Immediate owner:** Ari
 **Next domain owner:** Ari
 **Current state:** Phases 1–9 complete and the MVP is closed.
@@ -14,19 +14,157 @@ recruiter prompt. `content/recruiter-prompt.txt` remains the canonical source.
 The Phase 9 evaluation records retain the longer prompt verbatim because it was
 the fixed input used for those completed measurements.
 
-## Synthetic interop experiment — approved for publication
+## Active handoff: synthetic interop indexing experiment — 2026-09-19
 
-The same-origin HTML-versus-JSON experiment passed its local gate on 2026-09-19.
+The same-origin HTML-versus-JSON experiment is live. Commit `d7e8e6a` published
+the fictional experiment; commit `9d37523` added the Bing site-verification
+meta tag. Vercel reported both production deployments successful. The complete
+post-deployment audit passed: all public routes returned their declared media
+types and security/cache headers, all nine served artifacts were byte-identical
+to local `dist/`, representative source paths returned 404, the real dossier
+remained at 70 claims, and the production recruiter prompt was unchanged.
+
+Public experiment routes:
+
+- `https://agent.johndifini.com/interop-test`
+- `https://agent.johndifini.com/interop-test.json`
+
 The fictional disclaimer refers only to "the site owner"; the source and both
 generated artifacts contain no real candidate name. Desktop (1440 × 900),
 mobile (390 × 844), light/dark, keyboard, JavaScript-disabled, and horizontal
-overflow checks all passed. `npm run verify` passes 31/31 tests and
+overflow checks passed. `npm run verify` passes 31/31 tests and
 `npm run verify-deployment` passes 6/6.
 
-The candidate approved production publication, deployment audit, and Bing
-submission for `/interop-test` and `/interop-test.json` on 2026-09-19. Follow
-the scoped procedure in `docs/DEPLOYMENT.md`. IndexNow remains separately
-approval-gated.
+### Bing state at handoff
+
+The candidate verified the `https://agent.johndifini.com` Bing Webmaster Tools
+site property with the `msvalidate.01` meta tag. Keep that tag live throughout
+the experiment. The candidate submitted both experiment URLs for indexing on
+2026-09-19 and inspected them at approximately 19:46 (`/interop-test`) and 19:49
+(`/interop-test.json`) in the Bing UI.
+
+The latest captured HTML status is **Discovered but not crawled**, discovered
+on 2026-09-19. Bing currently says the URL cannot appear because it has not
+reached the crawl/index stages. No specific HTTP, robots, `noindex`, canonical,
+or fetch error is reported. This is currently treated as a pending crawl state,
+not a proven site defect, because the production audit independently confirmed
+HTTP 200, `index,follow`, a self-referential canonical URL, and no crawl-blocking
+headers. The JSON route's detailed Bing status has not yet been captured.
+
+**Day-1 observation — 2026-09-20.** The Bing Index tab still reported
+**Discovered but not crawled** for both routes, with the generic red-flagged
+copy "The inspected URL is known to Bing but has some issues which are
+preventing indexation." That string is Bing's catch-all for the pre-crawl
+state and names no specific defect; every field Bing populates for a real
+blocker was empty. The **Live URL** test for `/interop-test`, run at 07:42,
+returned **"URL can be indexed by Bing"** with **no SEO/GEO issues found**,
+which resolves next action 1 in favour of the pending-crawl reading. ("No
+markup found" is informational: the page carries no structured data, which
+was never a requirement.) An independent re-check the same day confirmed both
+routes at HTTP 200 with their declared media types to a bingbot user-agent,
+`index,follow`, a self-referential canonical, an `http` → `https` 308, an
+`/interop-test.html` → `/interop-test` 308, and an absent (permissive)
+`robots.txt`. The alarming wording is therefore not a site defect and needs no
+remediation; the constraint is Bing's crawl queue for a new origin with no
+inbound links, consistent with the `site:` query returning nothing for any
+route on this host. Minor, non-causal: `/interop-test/` serves 200 rather than
+redirecting, a trailing-slash duplicate the canonical already resolves.
+
+### Immediate next actions
+
+1. ~~Run the HTML route's **Live URL** test.~~ Done 2026-09-20: passed, see the
+   day-1 observation above. Only the crawl queue remains.
+2. Capture the detailed Bing Index and Live URL results for the JSON route as
+   an observation. JSON indexing is not an acceptance requirement, and Bing
+   largely does not index bare `application/json` URLs, so that route holding
+   at Discovered-but-not-crawled is close to its expected steady state.
+3. Reinspect the HTML route once daily through 2026-09-26. Do not repeatedly
+   resubmit it, and do not read the generic "some issues" copy as a new fault.
+4. Treat the Bing gate as passed when `/interop-test` has been successfully
+   crawled and is index-eligible or indexed with no blocking issue. "URL is
+   indexed" or "URL is on Bing" is the strongest completion state. A `site:`
+   search is secondary evidence only.
+5. ~~Wait seven days before raising IndexNow.~~ The candidate approved IndexNow
+   on 2026-09-20 because of a live application send date. The key file is wired
+   through the build (`src/indexnow.ts`, `expectedDistFiles`, `vercel.json`,
+   `tests/deployment.test.ts`) and awaits a reviewed deployment; the
+   post-deploy verification and submission commands are in `DEPLOYMENT.md`
+   under "Bing submission and observation", step 5.
+
+### Pre-index Copilot baseline
+
+Run the direct-retrieval baseline while Bing indexing is pending. Use fresh
+chats and change only the URL between the HTML and JSON conditions:
+
+```text
+Retrieve the synthetic career dossier at [URL]. Using only that source:
+
+1. Give the profile name.
+2. List all six claim IDs.
+3. Report the rollback-detection metric and telemetry-pipeline name.
+4. Report the completed and deferred migration counts.
+5. Summarize the limitations concerning Rust experience and SOC 2 ownership.
+6. Cite the URL you actually used.
+
+If you cannot retrieve the source, state the exact failure and do not infer or
+substitute information.
+```
+
+Run both route conditions in fresh chats on each available account:
+
+- personal Microsoft 365 Copilot;
+- work Microsoft 365 Copilot with the add-on license; and
+- work Microsoft 365 Copilot without the add-on license.
+
+For every run, preserve the date/time, account and license state, route, exact
+prompt, exact response, citations, and whether Copilot substituted another
+source. Do not put work-account identifiers or private responses in tracked
+files; store those records in Ari's private area if a durable record is needed.
+
+Synthetic grading truth:
+
+- profile: Avery Northstar;
+- claim IDs: `TEST-Q7M-101` through `TEST-Q7M-106`;
+- rollback detection: 47 minutes to 11 minutes via Cobalt Kestrel;
+- migration: 26 completed and 2 deferred;
+- Rust: no production Rust experience is claimed; and
+- SOC 2: supported evidence collection but did not own the compliance program.
+
+### Baseline status — 2026-09-19 22:00 UTC
+
+HTML route, pre-index: **0/3 accounts retrieved it.** Personal Copilot, the
+work account with the add-on, and the work account without the add-on all
+failed in fresh chats on 2026-09-19. The exact tool failure was "No relevant
+content could be retrieved"; Copilot stated the failure and declined to infer,
+substitute, or fabricate, so sentinel accuracy is not applicable. No citation
+was displayed and no alternate source was substituted. The JSON route has not
+been run yet on any account. Per-run records, including the verbatim response,
+live in Ari's private evaluation area (`Dossier Evaluation/`), not here.
+
+Independent checks in the same session: both routes still return HTTP 200 with
+the declared media types to a browser user-agent and to a bingbot user-agent;
+`/robots.txt` is absent (permissive); the HTML canonical and `index,follow`
+directives are unchanged. A Bing `site:agent.johndifini.com` query returned no
+results for any route on this origin, including the real dossier — the domain
+is new to Bing's index as a whole. The failure is therefore consistent with
+Copilot's web tool depending on Bing's index for URL retrieval rather than
+fetching live, but that is a hypothesis until the JSON-route baseline and the
+post-index repeat are in. The Bing Live URL test (next action 1) has not been
+run; it needs the Bing Webmaster Tools UI, which this session could not reach.
+
+Two controls would sharpen the pre-index reading and cost one fresh chat each:
+run the same prompt on one account against a page that is known to be in
+Bing's index (proves the tool works at all), and against the real dossier
+route `/career.json` (shows whether the whole unindexed origin fails, not just
+the experiment routes). Neither changes the experiment routes or prompt.
+
+After the HTML Bing gate passes, repeat the identical fresh-chat matrix. The
+pre/post comparison is intended to separate direct URL retrieval, representation
+effects, and Bing-index availability. Do not change the synthetic routes,
+prompt, sentinels, real dossier, or recruiter prompt during the comparison.
+
+The full release, audit, and observation procedure remains in
+`docs/DEPLOYMENT.md`.
 
 ## Outcome
 
@@ -49,13 +187,14 @@ specific question sends you there.
 
 - `https://agent.johndifini.com` serves the dossier from a Git-connected Vercel
   production deployment built from `main`.
-- All six routes — `/`, `/agent`, `/career.json`, `/career.md`,
-  `/evidence.json`, `/llms.txt` — return 200 with their declared media types and
-  the full `vercel.json` header contract (CSP, `Referrer-Policy: no-referrer`,
-  `nosniff`, HSTS, bounded caching).
-- All six served files are byte-identical to local `dist/`. The preview's
-  platform feedback-script injection does not occur on production, so `/` and
-  `/agent` are identical.
+- All eight routed resources — `/`, `/agent`, `/career.json`, `/career.md`,
+  `/evidence.json`, `/llms.txt`, `/interop-test`, and `/interop-test.json` —
+  return 200 with their declared media types and the full `vercel.json` header
+  contract (CSP, `Referrer-Policy: no-referrer`, `nosniff`, HSTS, bounded
+  caching).
+- All nine served artifacts, including the favicon, are byte-identical to local
+  `dist/`. The preview's platform feedback-script injection does not occur on
+  production, so `/` and `/agent` are identical.
 - Served `career.json` carries the John DiFini profile, exactly 70 claims, zero
   `EX-*` ids, and zero evidence records. No private marker appears in any served
   byte.
@@ -66,7 +205,7 @@ specific question sends you there.
 - Sibling commits outside `ari/career-dossier/` produce no deployment; the
   `ignoreCommand` skip path is proven, not assumed.
 
-`npm run verify` passes 29/29 with typecheck, build, privacy, and byte-for-byte
+`npm run verify` passes 31/31 with typecheck, build, privacy, and byte-for-byte
 determinism. `npm run verify-deployment` passes 6/6.
 
 ### Phase 9 closeout
