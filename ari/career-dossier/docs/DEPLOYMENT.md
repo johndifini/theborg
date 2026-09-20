@@ -453,3 +453,30 @@ headers, the expected bounded cache policy, and a body byte-identical to local
 `dist/`. All thirteen established source-exposure probes returned 404. The
 served corpus remained at 70 claims, zero `EX-*` IDs, and zero public evidence
 records.
+
+### Simplified download workflow release — 2026-09-20
+
+Commit `8509433` refined the download affordance after candidate review. The
+main lede no longer assumes the prompt is physically below it, the original
+concise recruiter prompt is restored, and the recovery path now appears after
+the Copy Prompt control. Markdown is the single attachment fallback because it
+is compact plain text that remains directly readable without structured-file
+parsing; JSON remains available in the technical footer. The homepage footer
+no longer links to the empty evidence index or the synthetic retrieval test.
+Those routes remain public because removing or retiring the indexing experiment
+is a separate change.
+
+`llms.txt` remains semantically aligned rather than textually identical to the
+homepage prompt. Tests require both artifacts to preserve strong-match,
+partial-match, gap, and unsupported-inference guidance while allowing the
+machine index to retain its broader retrieval and evidence instructions.
+
+Before release, `npm run verify` passed 32/32 tests, `npm run
+verify-deployment` passed 7/7 tests, and rendered desktop and mobile QA passed
+with no horizontal overflow. Vercel deployment
+`career-dossier-kzc8icbmd-johndifini-6117.vercel.app` reached `Ready` with the
+production alias. The post-deployment audit again found all ten public
+artifacts at HTTP 200 with their declared media types, four required security
+headers, bounded cache policies, and byte equality with local `dist/`. All
+thirteen source-exposure probes returned 404, and the corpus remained 70 claims
+with zero `EX-*` IDs and zero public evidence records.
