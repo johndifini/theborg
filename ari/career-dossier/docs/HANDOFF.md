@@ -127,6 +127,19 @@ with the expected media type, security and cache headers, and exact local byte
 parity; thirteen source-exposure probes returned 404; the real corpus remained
 70 claims with no `EX-*` IDs or public evidence records.
 
+**Simplified follow-up — 2026-09-20.** Commit `8509433` is live in Vercel
+production deployment `career-dossier-kzc8icbmd`. It restores the original
+concise recruiter prompt, removes the aspect-ratio-dependent "prompt below"
+copy, moves the fallback beneath Copy Prompt, and offers Markdown as the single
+attachment fallback. JSON and `llms.txt` remain in the technical footer;
+Evidence JSON and the synthetic retrieval-test link do not. The underlying
+evidence and experiment routes remain public. `llms.txt` is semantically, not
+textually, aligned with the homepage prompt, with test coverage for their core
+evaluation and non-inference guidance. The release passed 32/32 source tests,
+7/7 deployment tests, desktop/mobile rendered QA, the ten-artifact production
+audit, all thirteen source-exposure probes, and the 70-claim corpus-integrity
+check.
+
 ### Immediate next actions
 
 1. ~~Run the HTML route's **Live URL** test.~~ Done 2026-09-20: passed, see the
