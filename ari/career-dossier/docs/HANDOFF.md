@@ -152,8 +152,12 @@ shows that section as the release's entire change surface; the recruiter
 prompt is byte-identical. The release passed 32/32 source tests, 7/7
 deployment tests, the ten-artifact production audit, all thirteen
 source-exposure probes, and the 70-claim corpus-integrity check. Rendered
-browser QA was **not** performed — the releasing session ran over SSH on the
-Mac Studio, where no browser bridge is reachable.
+browser QA was closed the same day against the live page, driving Chrome
+headless over the DevTools protocol because no interactive browser bridge was
+reachable: no overflow or clipping at 1440 × 900 or 390 × 844 in either scheme,
+the link reachable on the 4th Tab press with the `:focus-visible` ring applied,
+and the underline carrying the affordance at AA contrast. Stress-tested to
+320 × 568, where the link wraps and the focus ring splits correctly.
 
 ### Immediate next actions
 

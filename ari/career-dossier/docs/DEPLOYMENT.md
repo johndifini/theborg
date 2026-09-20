@@ -498,14 +498,34 @@ were staged; the shared checkout's unrelated sibling work was left untouched.
 The remote was re-derived in the same turn as the push, which was a one-commit
 fast-forward from `7650676`.
 
-**Rendered QA was not performed for this release.** The releasing session ran
-over SSH on the Mac Studio, where the browser bridge is unreachable
-(`list_connected_browsers` returned `[]`) — see
-`.claude/rules/codex-browser-over-ssh.md`. The change removes a fixed-width
-control and its flex row, so it strictly reduces the mobile-overflow surface
-the previous QA cleared, but that is an argument, not an observation. Confirm
-the section at 1440 × 900 and 390 × 844 from a session on the machine with the
-GUI.
+**Rendered QA — closed 2026-09-20, against the live production page.** The
+interactive browser bridge was unreachable (`list_connected_browsers` returned
+`[]`, and the session ran over SSH on the Mac Studio), so the check was run by
+driving the installed Chrome headless over the DevTools protocol instead —
+`Emulation.setDeviceMetricsOverride` for the viewport,
+`Emulation.setEmulatedMedia` for `prefers-color-scheme`, and real
+`Input.dispatchKeyEvent` Tab presses for focus. That is a rendered observation,
+not a source argument. Measured at 1440 × 900 and 390 × 844 in both schemes:
+
+- no horizontal overflow at any size (`scrollWidth == clientWidth`);
+- `.dossier-fallback` fully within the viewport, with neither the section nor
+  its paragraph clipped (`scrollHeight`/`scrollWidth` within bounds);
+- the link reachable on the 4th Tab press, in logical order after the Copy
+  Prompt control, with the global `:focus-visible` ring applied — `3px solid`
+  at `3px` offset, `#d43e00` light and `#ff9c73` dark;
+- link text colour identical to the surrounding paragraph, so the underline is
+  the sole non-colour cue (WCAG 1.4.1), at 6.21:1 contrast in light and 8.34:1
+  in dark — both clear AA for body text.
+
+Because an inline link can wrap where the old fixed-width button could not, the
+layout was also stress-tested below the gate at 360 × 640 and 320 × 568. At both
+the link wraps to a second line and the focus ring splits into two boxes, which
+is correct inline behaviour; there is still no overflow and no clipping. The
+narrowest case was confirmed visually as well as by measurement.
+
+The check ran on the Mac Studio rather than the MacBook. Both are macOS, and the
+page loads no web font — `font-family: Inter, ui-sans-serif, -apple-system, …`
+resolves through the same system fallback on either — so the metrics transfer.
 
 The production audit covered all ten generated artifacts: `/`, `/agent`,
 `/career.json`, `/career.md`, `/evidence.json`, `/llms.txt`, `/interop-test`,
