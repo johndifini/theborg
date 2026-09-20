@@ -181,7 +181,7 @@
     }
 
     .prompt-card__prompt-label {
-      border-top: 0;
+      border-top: 1px solid var(--line);
     }
 
     pre {
@@ -268,24 +268,18 @@
     .steps span { color: var(--muted); font-size: .88rem; }
     .steps code { font-size: .78rem; }
 
-    .dossier-downloads {
+    .dossier-fallback {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
       padding: 1rem 1.25rem;
-      border-block: 1px solid var(--line);
-      background: var(--surface-subtle);
+      border-top: 1px solid var(--line);
+      background: var(--surface);
     }
 
-    .dossier-downloads h2 { margin: 0; font-size: .95rem; }
-    .dossier-downloads p { margin: .2rem 0 0; color: var(--muted); font-size: .86rem; }
-
-    .dossier-downloads__actions {
-      display: flex;
-      flex: 0 0 auto;
-      gap: .65rem;
-    }
+    .dossier-fallback h2 { margin: 0; font-size: .95rem; }
+    .dossier-fallback p { max-width: 34rem; margin: .2rem 0 0; color: var(--muted); font-size: .86rem; }
 
     .download-link {
       display: inline-flex;
@@ -300,14 +294,6 @@
       font-weight: 720;
       text-decoration: none;
     }
-
-    .download-link--primary {
-      border-color: var(--accent-bright);
-      color: var(--accent-ink);
-      background: var(--accent-bright);
-    }
-
-    .download-link--primary:hover { color: var(--accent-ink); }
 
     footer {
       padding: 1.15rem 0 2.25rem;
@@ -340,8 +326,7 @@
       .prompt-card__footer { align-items: stretch; flex-direction: column; }
       .copy-status { order: 2; }
       button { width: 100%; }
-      .dossier-downloads { align-items: stretch; flex-direction: column; }
-      .dossier-downloads__actions { flex-direction: column; }
+      .dossier-fallback { align-items: stretch; flex-direction: column; }
       .download-link { width: 100%; }
       .resource-nav { align-items: flex-start; flex-direction: column; }
       .resource-nav p { margin-bottom: .25rem; }
@@ -389,7 +374,7 @@
       <div>
         <p class="eyebrow">For recruiters and hiring teams</p>
         <h1 id="page-title">Ask AI about {{NAME}}.</h1>
-        <p class="lede">To evaluate a role, attach your job description to your AI assistant, then copy and paste the prompt below.</p>
+        <p class="lede">Attach or paste a job description into your AI assistant, then use the ready-to-copy prompt.</p>
       </div>
 
       <section class="prompt-card" aria-labelledby="prompt-title">
@@ -401,16 +386,6 @@
           <li id="job-description-step"><div><strong>Attach your job description</strong><span>Attach or paste the complete job description into your AI assistant.</span></div></li>
           <li><div><strong>Copy and paste the prompt</strong><span>Use it to assess matches, partial matches, and gaps against claims with stated evidence levels and limits.</span></div></li>
         </ol>
-        <section class="dossier-downloads" aria-labelledby="dossier-downloads-title">
-          <div>
-            <h2 id="dossier-downloads-title">Can’t open the dossier link?</h2>
-            <p>Download one format and attach it with the job description.</p>
-          </div>
-          <div class="dossier-downloads__actions">
-            <a class="download-link download-link--primary" href="/career.json" download="career.json">Download JSON</a>
-            <a class="download-link" href="/career.md" download="career.md">Download Markdown</a>
-          </div>
-        </section>
         <div class="prompt-card__prompt-label">
           <span>Ready-to-use prompt</span>
           <span>Plain text</span>
@@ -420,6 +395,13 @@
           <p class="copy-status" id="copy-status" aria-live="polite"></p>
           <button type="button" id="copy" aria-describedby="job-description-step copy-status">Copy prompt</button>
         </div>
+        <section class="dossier-fallback" aria-labelledby="dossier-fallback-title">
+          <div>
+            <h2 id="dossier-fallback-title">Can’t open the dossier link?</h2>
+            <p>If your AI assistant can’t access agent.johndifini.com, download the dossier and attach it with the job description.</p>
+          </div>
+          <a class="download-link" href="/career.md" download="career.md">Download dossier (.md)</a>
+        </section>
       </section>
     </section>
   </main>
@@ -429,9 +411,7 @@
       <p>Machine-readable resources</p>
       <a href="/career.json">Career JSON</a>
       <a href="/career.md">Career Markdown</a>
-      <a href="/evidence.json">Evidence JSON</a>
       <a href="/llms.txt">LLM index</a>
-      <a href="/interop-test">Synthetic retrieval test</a>
     </nav>
   </footer>
 

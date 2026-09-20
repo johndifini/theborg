@@ -14,11 +14,16 @@ import { fixture } from "./helpers.ts";
 test("all renderers expose retrieval routes and bounded guidance", async () => {
   const corpus = normalizeCorpus(await loadAndValidateCorpus());
   const html = await renderLandingPage(corpus);
+  const llms = renderLlmsTxt(corpus);
   assert.match(html, /\/career\.json/u);
-  assert.match(html, /\/interop-test/u);
-  assert.match(html, /strong matches, partial matches, and gaps/u);
-  assert.match(renderLlmsTxt(corpus), /Do not infer qualifications/u);
-  assert.doesNotMatch(renderLlmsTxt(corpus), /ignore (?:all|previous) instructions/iu);
+  assert.doesNotMatch(html, /href="\/interop-test"/u);
+  for (const artifact of [html, llms]) {
+    assert.match(artifact, /strong matches/iu);
+    assert.match(artifact, /partial matches/iu);
+    assert.match(artifact, /gaps/iu);
+    assert.match(artifact, /infer (?:missing )?qualifications/iu);
+  }
+  assert.doesNotMatch(llms, /ignore (?:all|previous) instructions/iu);
   assert.equal(JSON.parse(renderEvidence(corpus)).evidence.length, corpus.evidence.length);
 });
 
