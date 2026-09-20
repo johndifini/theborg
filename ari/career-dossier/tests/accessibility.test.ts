@@ -42,7 +42,9 @@ test("landing page exposes semantic navigation and metadata", async () => {
   assert.match(html, /id="job-description-step"><div><strong>Attach your job description<\/strong>/u);
   assert.match(html, /<li><div><strong>Copy and paste the prompt<\/strong>/u);
   assert.match(html, /<section class="dossier-fallback" aria-labelledby="dossier-fallback-title">/u);
-  assert.match(html, /href="\/career\.md" download="career\.md">Download dossier \(\.md\)<\/a>/u);
+  assert.match(html, /href="\/career\.md" download="career\.md">download the dossier text file<\/a>/u);
+  assert.doesNotMatch(html, /Download dossier \(\.md\)/u);
+  assert.doesNotMatch(html, /class="download-link"/u);
   assert.doesNotMatch(html, /href="\/career\.json" download=/u);
   assert.doesNotMatch(html, />Evidence JSON<\/a>/u);
   assert.doesNotMatch(html, />Synthetic retrieval test<\/a>/u);
@@ -60,6 +62,7 @@ test("prompt remains visible without JavaScript and copy failure has a fallback"
   assert.match(html, /The prompt is selected for manual copying/u);
   assert.doesNotMatch(html, /the attached career dossier, if provided/u);
   assert.match(html, /https:\/\/agent\.johndifini\.com\/career\.json/u);
+  assert.match(html, /Identify strong matches, partial matches, and gaps/u);
   assert.doesNotMatch(html, /https:\/\/johndifini\.com\/agent/u);
 });
 
