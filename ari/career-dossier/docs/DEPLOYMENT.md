@@ -430,3 +430,26 @@ Manager container, DNS change, or dossier deployment was required.
 The existing domain-provider verification is the ownership mechanism to
 preserve. Indexing requests and their later inspection results are separate
 from ownership verification and must be recorded when performed.
+
+### Download affordance release and production audit — 2026-09-20
+
+Commit `34cb684` added the candidate-approved, Jony Vibe-reviewed download
+fallback to the production landing page. The prompt card now offers the
+canonical JSON corpus as the primary download and Markdown as a secondary
+format, and its prompt works with either an attached dossier or live URL
+retrieval. Both links are native same-origin downloads and remain usable
+without JavaScript.
+
+Before release, `npm run verify` passed 32/32 tests, `npm run
+verify-deployment` passed 7/7 tests, and rendered QA passed at 1440 × 900 and
+390 × 844 with no mobile horizontal overflow. After the push, the production
+alias served the new affordance and prompt.
+
+The production audit covered all ten generated artifacts: `/`, `/agent`,
+`/career.json`, `/career.md`, `/evidence.json`, `/llms.txt`, `/interop-test`,
+`/interop-test.json`, `/favicon.png`, and the IndexNow key file. Every route
+returned HTTP 200 with its declared media type, all four required security
+headers, the expected bounded cache policy, and a body byte-identical to local
+`dist/`. All thirteen established source-exposure probes returned 404. The
+served corpus remained at 70 claims, zero `EX-*` IDs, and zero public evidence
+records.
