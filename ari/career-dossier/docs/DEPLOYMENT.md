@@ -480,3 +480,58 @@ artifacts at HTTP 200 with their declared media types, four required security
 headers, bounded cache policies, and byte equality with local `dist/`. All
 thirteen source-exposure probes returned 404, and the corpus remained 70 claims
 with zero `EX-*` IDs and zero public evidence records.
+
+### Inline fallback-link release and production audit — 2026-09-20
+
+Commit `ce16793` replaced the button-styled `Download dossier (.md)` control
+with an inline link inside the recovery sentence: "download the dossier text
+file". The heading and sentence now carry the affordance, so `.dossier-fallback`
+no longer needs its flex row, the `.download-link` rule, or the mobile stacking
+override. The `href`, `download` attribute, and no-JavaScript behaviour are
+unchanged; the link inherits the page's established inline treatment — inherited
+colour plus underline, with the global `:focus-visible` outline — which is what
+the footer resource links already use.
+
+Before release, `npm run verify` passed 32/32 tests, `npm run verify-deployment`
+passed 7/7 tests, and `git diff --check` was clean. Only the four project paths
+were staged; the shared checkout's unrelated sibling work was left untouched.
+The remote was re-derived in the same turn as the push, which was a one-commit
+fast-forward from `7650676`.
+
+**Rendered QA was not performed for this release.** The releasing session ran
+over SSH on the Mac Studio, where the browser bridge is unreachable
+(`list_connected_browsers` returned `[]`) — see
+`.claude/rules/codex-browser-over-ssh.md`. The change removes a fixed-width
+control and its flex row, so it strictly reduces the mobile-overflow surface
+the previous QA cleared, but that is an argument, not an observation. Confirm
+the section at 1440 × 900 and 390 × 844 from a session on the machine with the
+GUI.
+
+The production audit covered all ten generated artifacts: `/`, `/agent`,
+`/career.json`, `/career.md`, `/evidence.json`, `/llms.txt`, `/interop-test`,
+`/interop-test.json`, `/favicon.png`, and the IndexNow key file. Every route
+returned HTTP 200 with its declared media type, the reviewed Content Security
+Policy, `Referrer-Policy: no-referrer`, `X-Content-Type-Options: nosniff`, HSTS,
+the expected bounded `Cache-Control`, and a body byte-identical to local
+`dist/`. `Vercel-CDN-Cache-Control` is consumed by the CDN and not echoed to the
+client, as in previous runs. All thirteen established source-exposure probes
+returned 404. `http://` returned 308 to `https://`, `/agent/` resolved 200 via
+`cleanUrls`, and the Let's Encrypt certificate for `CN=agent.johndifini.com`
+remains valid through 2026-12-03.
+
+Content — the served corpus held exactly 70 unique claims, all `RB-*`, with zero
+`EX-*` IDs and zero public evidence records. A scan of all eight text artifacts
+for `.private`, absolute home paths, private directory names, document hashes,
+and the retired `Alex Example` fixture found nothing. `/interop-test` and
+`/interop-test.json` still carry the same six `TEST-Q7M-*` claims with zero
+`RB-*` leakage, a self-referential canonical URL, `index,follow`, and the link
+to the JSON representation.
+
+Change surface — diffing the served page against the previous production build
+(`7650676`) shows the fallback section as the release's only delta. The public
+recruiter prompt is byte-identical to the pre-release version, so no indexing or
+Bing resubmission step follows from this release.
+
+The Vercel deployment name was not captured: the Vercel CLI is not installed on
+the releasing host, and no response header exposes it. The commit SHA above is
+the deployment identity of record.

@@ -140,6 +140,21 @@ evaluation and non-inference guidance. The release passed 32/32 source tests,
 audit, all thirteen source-exposure probes, and the 70-claim corpus-integrity
 check.
 
+**Inline fallback link — 2026-09-20.** Commit `ce16793` is live on the
+production alias. The button-styled "Download dossier (.md)" control is now an
+inline link inside the recovery sentence — "download the dossier text file" —
+so the heading and sentence carry the affordance. The href, `download`
+attribute, and no-JavaScript behaviour are unchanged, and the link inherits the
+page's existing inline-link treatment rather than a bespoke rule, which
+retired `.download-link` and the section's flex row and mobile stacking
+override. A diff of the served page against the previous production build
+shows that section as the release's entire change surface; the recruiter
+prompt is byte-identical. The release passed 32/32 source tests, 7/7
+deployment tests, the ten-artifact production audit, all thirteen
+source-exposure probes, and the 70-claim corpus-integrity check. Rendered
+browser QA was **not** performed — the releasing session ran over SSH on the
+Mac Studio, where no browser bridge is reachable.
+
 ### Immediate next actions
 
 1. ~~Run the HTML route's **Live URL** test.~~ Done 2026-09-20: passed, see the
