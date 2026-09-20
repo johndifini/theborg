@@ -269,10 +269,6 @@
     .steps code { font-size: .78rem; }
 
     .dossier-fallback {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
       padding: 1rem 1.25rem;
       border-top: 1px solid var(--line);
       background: var(--surface);
@@ -280,20 +276,6 @@
 
     .dossier-fallback h2 { margin: 0; font-size: .95rem; }
     .dossier-fallback p { max-width: 34rem; margin: .2rem 0 0; color: var(--muted); font-size: .86rem; }
-
-    .download-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 2.85rem;
-      padding: .65rem 1.05rem;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-small);
-      background: var(--surface);
-      font-size: .9rem;
-      font-weight: 720;
-      text-decoration: none;
-    }
 
     footer {
       padding: 1.15rem 0 2.25rem;
@@ -326,8 +308,6 @@
       .prompt-card__footer { align-items: stretch; flex-direction: column; }
       .copy-status { order: 2; }
       button { width: 100%; }
-      .dossier-fallback { align-items: stretch; flex-direction: column; }
-      .download-link { width: 100%; }
       .resource-nav { align-items: flex-start; flex-direction: column; }
       .resource-nav p { margin-bottom: .25rem; }
     }
@@ -396,11 +376,8 @@
           <button type="button" id="copy" aria-describedby="job-description-step copy-status">Copy prompt</button>
         </div>
         <section class="dossier-fallback" aria-labelledby="dossier-fallback-title">
-          <div>
-            <h2 id="dossier-fallback-title">Can’t open the dossier link?</h2>
-            <p>If your AI assistant can’t access agent.johndifini.com, download the dossier and attach it with the job description.</p>
-          </div>
-          <a class="download-link" href="/career.md" download="career.md">Download dossier (.md)</a>
+          <h2 id="dossier-fallback-title">Can’t open the dossier link?</h2>
+          <p>If your AI assistant can’t access agent.johndifini.com, <a href="/career.md" download="career.md">download the dossier text file</a> and attach it with the job description.</p>
         </section>
       </section>
     </section>
