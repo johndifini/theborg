@@ -6540,3 +6540,32 @@ artifacts:
     review:
       last_reviewed: null
     related: []
+
+  claude-commands-handoff:
+    path: ".claude/commands/handoff.md"
+    type: command
+    status: draft
+    owner: workspace
+    scope: workspace
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-09-20    # file mtime (untracked; not a history fact)
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  codex-home-skills-handoff-skill:
+    path: skills/handoff/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-commands-handoff
+    introduced: 2026-09-20    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
