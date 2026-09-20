@@ -70,6 +70,23 @@ inbound links, consistent with the `site:` query returning nothing for any
 route on this host. Minor, non-causal: `/interop-test/` serves 200 rather than
 redirecting, a trailing-slash duplicate the canonical already resolves.
 
+**IndexNow submission — 2026-09-20.** Commit `e6263ba` added the public key
+file (`src/indexnow.ts`; 32 hex characters, leading digit — the constraints are
+explained in that file) to the build, `expectedDistFiles`, `vercel.json`, and
+`tests/deployment.test.ts`; `npm run verify` passed 32/32 before the push. The
+Git-connected Vercel production deployment served the key URL within 30 seconds
+of the push: HTTP 200, `text/plain; charset=utf-8`, body exactly the 32-byte
+key with no trailing newline, and the full security/cache header contract. The
+post-deploy spot check found all eight other public routes at HTTP 200 with
+their declared media types and `/career.json` still at 70 claims. A single
+POST to `https://api.indexnow.org/indexnow` then submitted `/`, `/career.json`,
+`/career.md`, `/llms.txt`, `/interop-test`, and `/interop-test.json`; the
+response was **HTTP 202 — accepted, key validation pending**, the normal
+first-submission state while Bing fetches the key file. 202 confirms receipt
+only; it is not a crawl and not an index entry. IndexNow reaches Bing, Yandex,
+Seznam, and Naver and does nothing for Google. Continue the daily Bing URL
+Inspection through 2026-09-26 to see whether the crawl date moves.
+
 ### Immediate next actions
 
 1. ~~Run the HTML route's **Live URL** test.~~ Done 2026-09-20: passed, see the
@@ -84,12 +101,11 @@ redirecting, a trailing-slash duplicate the canonical already resolves.
    crawled and is index-eligible or indexed with no blocking issue. "URL is
    indexed" or "URL is on Bing" is the strongest completion state. A `site:`
    search is secondary evidence only.
-5. ~~Wait seven days before raising IndexNow.~~ The candidate approved IndexNow
-   on 2026-09-20 because of a live application send date. The key file is wired
-   through the build (`src/indexnow.ts`, `expectedDistFiles`, `vercel.json`,
-   `tests/deployment.test.ts`) and awaits a reviewed deployment; the
-   post-deploy verification and submission commands are in `DEPLOYMENT.md`
-   under "Bing submission and observation", step 5.
+5. ~~Wait seven days before raising IndexNow.~~ Done 2026-09-20: the candidate
+   approved IndexNow because of a live application send date, commit `e6263ba`
+   shipped the key file, and the submission returned **HTTP 202** — see the
+   IndexNow record above. Nothing further to do here unless the JSON route's
+   Bing status or the next daily reinspection shows a regression.
 
 ### Pre-index Copilot baseline
 
