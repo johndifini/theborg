@@ -87,6 +87,34 @@ only; it is not a crawl and not an index entry. IndexNow reaches Bing, Yandex,
 Seznam, and Naver and does nothing for Google. Continue the daily Bing URL
 Inspection through 2026-09-26 to see whether the crawl date moves.
 
+### Google Search Console state — 2026-09-20
+
+The URL-prefix property `https://agent.johndifini.com/` is active, and Google
+Search Console reports the candidate as a verified owner through the domain
+name provider method. Search Console automatically accepted the existing
+domain-provider verification; no dossier or DNS change was required.
+
+The candidate submitted `/`, `/career.json`, `/career.md`, and `/llms.txt`.
+Google's URL Inspection results captured on 2026-09-20 were:
+
+- `/` — **URL is on Google / Page is indexed**. Last crawl: 11:39:38 AM by
+  Googlebot smartphone; crawl allowed, fetch successful, and indexing allowed.
+  The user-declared canonical is the inspected root URL, which Google selected.
+- `/career.json` — **URL is not on Google / Crawled - currently not indexed**.
+  Last crawl: 11:41:48 AM by Googlebot smartphone; crawl allowed and fetch
+  successful. Indexing allowed and both canonical fields display `N/A`.
+- `/career.md` — the same non-indexed result and crawl details as
+  `/career.json`, including the 11:41:48 AM crawl.
+- `/llms.txt` — **URL is not on Google / Crawled - currently not indexed**.
+  Last crawl: 11:41:49 AM by Googlebot smartphone; crawl allowed and fetch
+  successful. Indexing allowed and both canonical fields display `N/A`.
+
+The three machine-readable resources have been fetched successfully, so their
+current state is an indexing-selection outcome rather than a crawl failure. Do
+not repeatedly resubmit them. Recheck later if their inclusion in human search
+results becomes operationally important; the indexed HTML homepage is the
+primary Google Search discovery surface.
+
 ### Immediate next actions
 
 1. ~~Run the HTML route's **Live URL** test.~~ Done 2026-09-20: passed, see the
