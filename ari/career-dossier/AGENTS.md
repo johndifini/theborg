@@ -44,8 +44,9 @@ controller.
   project root.
 - `dist/` is generated. Never hand-edit it. Its allowed inventory is exactly
   `index.html`, `agent.html`, `career.json`, `career.md`, `evidence.json`,
-  `favicon.png`, `interop-test.html`, `interop-test.json`, and `llms.txt` while
-  the approved synthetic interoperability experiment is active.
+  `favicon.png`, `interop-test.html`, `interop-test.json`, `llms.txt`, and the
+  IndexNow key file named in `src/indexnow.ts` while the approved synthetic
+  interoperability experiment is active.
 
 ## Change control
 

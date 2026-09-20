@@ -5,6 +5,7 @@ import { assertDeployableSourcesSafe, assertDistSafe, assertOutputPath, assertPu
 import { projectRoot } from "./paths.ts";
 import { renderCareerJson } from "./render-career-json.ts";
 import { renderCareerMarkdown } from "./render-career-markdown.ts";
+import { indexNowKey, indexNowKeyFile } from "./indexnow.ts";
 import { renderEvidence } from "./render-evidence.ts";
 import { loadInteropTestCorpus, renderInteropTestHtml, renderInteropTestJson } from "./render-interop-test.ts";
 import { renderLandingPage } from "./render-landing-page.ts";
@@ -20,6 +21,7 @@ export async function build(outputDirectory = resolve(projectRoot, "dist")): Pro
   assertPublicValuesSafe(interopTestCorpus);
   const landing = await renderLandingPage(corpus);
   const files: Record<string, string> = {
+    [indexNowKeyFile]: indexNowKey,
     "agent.html": landing,
     "career.json": renderCareerJson(corpus),
     "career.md": renderCareerMarkdown(corpus),

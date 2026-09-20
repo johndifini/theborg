@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { indexNowKey, indexNowKeyFile } from "../src/indexnow.ts";
 import { expectedDistFiles } from "../src/privacy.ts";
 import { readProjectText } from "../src/paths.ts";
 
@@ -50,7 +51,8 @@ test("every public route has an explicit media type and bounded caching", async 
     ["/interop-test", "text/html; charset=utf-8"],
     ["/interop-test.json", "application/json; charset=utf-8"],
     ["/favicon.png", "image/png"],
-    ["/llms.txt", "text/plain; charset=utf-8"]
+    ["/llms.txt", "text/plain; charset=utf-8"],
+    [`/${indexNowKeyFile}`, "text/plain; charset=utf-8"]
   ]);
 
   for (const [route, mediaType] of mediaTypes) {
@@ -96,8 +98,17 @@ test("only the generated output directory is served", async () => {
   assert.equal(config.framework, null);
 });
 
-test("the deployment output inventory is the public nine-file contract", () => {
+test("the IndexNow key is a valid public key that the privacy guard accepts", () => {
+  // IndexNow allows 8–128 of [A-Za-z0-9-]; a 64-hex key would trip the
+  // artifact-hash pattern in `privacy.ts` and fail every build.
+  assert.match(indexNowKey, /^[A-Za-z0-9-]{8,128}$/u);
+  assert.doesNotMatch(indexNowKey, /^[a-f0-9]{64}$/u);
+  assert.equal(indexNowKeyFile, `${indexNowKey}.txt`);
+});
+
+test("the deployment output inventory is the public ten-file contract", () => {
   assert.deepEqual(expectedDistFiles, [
+    indexNowKeyFile,
     "agent.html",
     "career.json",
     "career.md",

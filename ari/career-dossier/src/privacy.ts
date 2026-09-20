@@ -1,10 +1,11 @@
 import { readdir, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, join, resolve, sep } from "node:path";
+import { indexNowKeyFile } from "./indexnow.ts";
 import { projectRoot, readProjectText, withinProjectRoot } from "./paths.ts";
 import type { JsonValue } from "./types.ts";
 
-export const expectedDistFiles = ["agent.html", "career.json", "career.md", "evidence.json", "favicon.png", "index.html", "interop-test.html", "interop-test.json", "llms.txt"];
+export const expectedDistFiles = [indexNowKeyFile, "agent.html", "career.json", "career.md", "evidence.json", "favicon.png", "index.html", "interop-test.html", "interop-test.json", "llms.txt"];
 const binaryDistFiles = new Set(["favicon.png"]);
 
 const forbidden: Array<[string, RegExp]> = [
