@@ -37,13 +37,17 @@ test("landing page exposes semantic navigation and metadata", async () => {
   assert.match(html, /<link rel="icon" type="image\/png" href="\/favicon\.png">/u);
   assert.equal(html.match(/<link rel="alternate"/gu)?.length, 4);
   assert.match(html, /<ol class="steps">/u);
+  assert.match(html, /then use the ready-to-copy prompt/u);
+  assert.doesNotMatch(html, /prompt below/u);
   assert.match(html, /id="job-description-step"><div><strong>Attach your job description<\/strong>/u);
   assert.match(html, /<li><div><strong>Copy and paste the prompt<\/strong>/u);
-  assert.match(html, /<section class="dossier-downloads" aria-labelledby="dossier-downloads-title">/u);
-  assert.match(html, /href="\/career\.json" download="career\.json">Download JSON<\/a>/u);
-  assert.match(html, /href="\/career\.md" download="career\.md">Download Markdown<\/a>/u);
+  assert.match(html, /<section class="dossier-fallback" aria-labelledby="dossier-fallback-title">/u);
+  assert.match(html, /href="\/career\.md" download="career\.md">Download dossier \(\.md\)<\/a>/u);
+  assert.doesNotMatch(html, /href="\/career\.json" download=/u);
+  assert.doesNotMatch(html, />Evidence JSON<\/a>/u);
+  assert.doesNotMatch(html, />Synthetic retrieval test<\/a>/u);
   assert.ok(html.indexOf("Attach your job description") < html.indexOf('id="copy"'));
-  assert.ok(html.indexOf('class="dossier-downloads"') < html.indexOf('id="prompt"'));
+  assert.ok(html.indexOf('class="dossier-fallback"') > html.indexOf('id="copy"'));
   assert.doesNotMatch(html, /Copy the dossier URL/u);
 });
 
@@ -54,8 +58,7 @@ test("prompt remains visible without JavaScript and copy failure has a fallback"
   assert.ok(promptAt > 0 && promptAt < scriptAt);
   assert.match(html, /navigator\.clipboard\.writeText/u);
   assert.match(html, /The prompt is selected for manual copying/u);
-  assert.match(html, /the attached career dossier, if provided/u);
-  assert.match(html, /otherwise retrieve https:\/\/agent\.johndifini\.com\/career\.json/u);
+  assert.doesNotMatch(html, /the attached career dossier, if provided/u);
   assert.match(html, /https:\/\/agent\.johndifini\.com\/career\.json/u);
   assert.doesNotMatch(html, /https:\/\/johndifini\.com\/agent/u);
 });
