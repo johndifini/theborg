@@ -115,6 +115,18 @@ not repeatedly resubmit them. Recheck later if their inclusion in human search
 results becomes operationally important; the indexed HTML homepage is the
 primary Google Search discovery surface.
 
+### Download fallback release — 2026-09-20
+
+Commit `34cb684` is live in production. The candidate-approved, Jony
+Vibe-reviewed prompt-card fallback offers native downloads of `/career.json`
+and `/career.md`; the canonical recruiter prompt now accepts an attached
+dossier and otherwise retrieves the JSON URL. The release passed 32/32 source
+tests, 7/7 deployment-contract tests, desktop and mobile rendered QA, and a
+post-deployment audit of all ten public artifacts. Every artifact returned 200
+with the expected media type, security and cache headers, and exact local byte
+parity; thirteen source-exposure probes returned 404; the real corpus remained
+70 claims with no `EX-*` IDs or public evidence records.
+
 ### Immediate next actions
 
 1. ~~Run the HTML route's **Live URL** test.~~ Done 2026-09-20: passed, see the
