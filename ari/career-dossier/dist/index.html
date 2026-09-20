@@ -181,7 +181,7 @@
     }
 
     .prompt-card__prompt-label {
-      border-top: 1px solid var(--line);
+      border-top: 0;
     }
 
     pre {
@@ -268,6 +268,47 @@
     .steps span { color: var(--muted); font-size: .88rem; }
     .steps code { font-size: .78rem; }
 
+    .dossier-downloads {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      border-block: 1px solid var(--line);
+      background: var(--surface-subtle);
+    }
+
+    .dossier-downloads h2 { margin: 0; font-size: .95rem; }
+    .dossier-downloads p { margin: .2rem 0 0; color: var(--muted); font-size: .86rem; }
+
+    .dossier-downloads__actions {
+      display: flex;
+      flex: 0 0 auto;
+      gap: .65rem;
+    }
+
+    .download-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.85rem;
+      padding: .65rem 1.05rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-small);
+      background: var(--surface);
+      font-size: .9rem;
+      font-weight: 720;
+      text-decoration: none;
+    }
+
+    .download-link--primary {
+      border-color: var(--accent-bright);
+      color: var(--accent-ink);
+      background: var(--accent-bright);
+    }
+
+    .download-link--primary:hover { color: var(--accent-ink); }
+
     footer {
       padding: 1.15rem 0 2.25rem;
       border-top: 1px solid var(--line);
@@ -299,6 +340,9 @@
       .prompt-card__footer { align-items: stretch; flex-direction: column; }
       .copy-status { order: 2; }
       button { width: 100%; }
+      .dossier-downloads { align-items: stretch; flex-direction: column; }
+      .dossier-downloads__actions { flex-direction: column; }
+      .download-link { width: 100%; }
       .resource-nav { align-items: flex-start; flex-direction: column; }
       .resource-nav p { margin-bottom: .25rem; }
     }
@@ -357,11 +401,21 @@
           <li id="job-description-step"><div><strong>Attach your job description</strong><span>Attach or paste the complete job description into your AI assistant.</span></div></li>
           <li><div><strong>Copy and paste the prompt</strong><span>Use it to assess matches, partial matches, and gaps against claims with stated evidence levels and limits.</span></div></li>
         </ol>
+        <section class="dossier-downloads" aria-labelledby="dossier-downloads-title">
+          <div>
+            <h2 id="dossier-downloads-title">Can’t open the dossier link?</h2>
+            <p>Download one format and attach it with the job description.</p>
+          </div>
+          <div class="dossier-downloads__actions">
+            <a class="download-link download-link--primary" href="/career.json" download="career.json">Download JSON</a>
+            <a class="download-link" href="/career.md" download="career.md">Download Markdown</a>
+          </div>
+        </section>
         <div class="prompt-card__prompt-label">
           <span>Ready-to-use prompt</span>
           <span>Plain text</span>
         </div>
-        <pre id="prompt" tabindex="0">Compare the attached job description with https://agent.johndifini.com/career.json. Identify strong matches, partial matches, and gaps; don’t infer missing qualifications.</pre>
+        <pre id="prompt" tabindex="0">Compare the attached job description with the attached career dossier, if provided; otherwise retrieve https://agent.johndifini.com/career.json. Identify strong matches, partial matches, and gaps; don’t infer missing qualifications.</pre>
         <div class="prompt-card__footer">
           <p class="copy-status" id="copy-status" aria-live="polite"></p>
           <button type="button" id="copy" aria-describedby="job-description-step copy-status">Copy prompt</button>

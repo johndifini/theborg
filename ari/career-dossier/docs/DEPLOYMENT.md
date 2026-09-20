@@ -418,3 +418,15 @@ correctly. Phase 8 acceptance is complete.
 Production was re-verified against the newer `ddmof18zt` deployment after the
 alias moved: all six routes 200 and byte-identical to local `dist/`, serving the
 John DiFini profile with 70 claims.
+
+### Google Search Console verification — 2026-09-20
+
+The URL-prefix property `https://agent.johndifini.com/` is active in Google
+Search Console, and Search Console reports the candidate as a verified owner.
+The property was automatically verified using the domain name provider method.
+No additional HTML file, HTML meta tag, Google Analytics tag, Google Tag
+Manager container, DNS change, or dossier deployment was required.
+
+The existing domain-provider verification is the ownership mechanism to
+preserve. Indexing requests and their later inspection results are separate
+from ownership verification and must be recorded when performed.

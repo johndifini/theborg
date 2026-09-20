@@ -1,1 +1,1 @@
-Compare the attached job description with https://agent.johndifini.com/career.json. Identify strong matches, partial matches, and gaps; don’t infer missing qualifications.
+Compare the attached job description with the attached career dossier, if provided; otherwise retrieve https://agent.johndifini.com/career.json. Identify strong matches, partial matches, and gaps; don’t infer missing qualifications.
