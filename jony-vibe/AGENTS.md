@@ -30,6 +30,7 @@ Use this default system for slide decks unless a project provides its own brand 
 - Use the social-media palette in this priority order: green (`#00F604`), orange (`#F67F00`), then blue (`#0077F6`). Use one dominant accent per slide and reserve accents for emphasis and data.
 - Use one clean sans-serif typeface, with bold headings and regular-weight body copy. Keep margins generous and alignment consistent.
 - Give each slide one main idea. Apply the **Rule of 36**: aim for no more than 36 words per slide, including the title, body copy, and labels. Treat this as a rule of thumb; speaker notes do not count.
+- Never include a footer, including page or slide numbers.
 - Prefer purposeful images, simple charts, and direct data labels. Avoid decorative clutter.
 - When content does not fit, simplify the message, split the slide, or move supporting detail to speaker notes before reducing the font size.
 
