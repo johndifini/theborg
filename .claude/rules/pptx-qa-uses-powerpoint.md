@@ -8,7 +8,7 @@ The `pptx` skill's visual QA assumes LibreOffice. The Mac Studio has no
 LibreOffice, but it has **Microsoft PowerPoint** — the app the deck is for. When
 `soffice` is missing, render with PowerPoint. Do not improvise with Keynote or
 Quick Look: both open files PowerPoint repairs or refuses, so a clean Keynote
-render proves nothing. `repos/atm` commit `a5f576f` ("Fix deck table cells that
+render proves nothing. `repos/atm` commit `28eab53` ("Fix deck table cells that
 made PowerPoint offer repair") shipped after passing Keynote QA.
 
 Export to PDF, then rasterize the pages to inspect them:
