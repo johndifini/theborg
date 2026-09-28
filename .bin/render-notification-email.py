@@ -250,22 +250,26 @@ def render_code(value: str) -> str:
     )
 
 
-FOOTER_MARKER = "\n\n— To continue this session, SSH into the Mac Studio and run:\n"
+# notify-email.sh appends one of two footers: a resume line for model runs, or
+# a provenance line naming the launchd job for model-less runs. Both end with
+# the same phrase and an indented command, so one pattern splits either.
+FOOTER_RE = re.compile(r"\n\n(— [^\n]*SSH into the Mac Studio and run:)\n")
 
 
 def render_document(markdown: str) -> str:
-    if FOOTER_MARKER in markdown:
-        main, command = markdown.rsplit(FOOTER_MARKER, 1)
-        command = command.strip()
+    matches = list(FOOTER_RE.finditer(markdown))
+    if matches:
+        last = matches[-1]
+        main, lead, command = markdown[: last.start()], last.group(1), markdown[last.end():].strip()
     else:
-        main, command = markdown, ""
+        main, lead, command = markdown, "", ""
 
     footer = ""
     if command:
         footer = (
             f'<div style="margin:26px 0 0;padding:18px 0 0;border-top:1px solid {BORDER};">'
             f'<p style="margin:0 0 8px;font-family:{FONT};font-size:13px;line-height:1.5;'
-            f'color:{MUTED};">— To continue this session, SSH into the Mac Studio and run:</p>'
+            f'color:{MUTED};">{html.escape(lead)}</p>'
             f'<pre style="margin:0;padding:10px 12px;white-space:pre-wrap;overflow-wrap:anywhere;'
             f'background:{SURFACE};border:1px solid {BORDER};border-radius:4px;'
             f'font-family:{MONO};font-size:12px;line-height:1.5;color:{TEXT};">'

@@ -38,6 +38,8 @@
 # Claude-driven runs, $BORG_SESSION_ID is pinned before launch. Either tells the
 # user how to continue the exact headless session. It remains unchanged in the
 # plain part and becomes a muted, separated footer with a code block in HTML.
+# Model-less launchd jobs have no session, so they get a provenance footer
+# instead: the job's Label (from $XPC_SERVICE_NAME) and how to open the agent.
 #
 # Why there is no --next-prompt flag (decided 2026-09-16). Job emails end with a
 # `## Suggested Next Prompt` section per the workspace AGENTS.md communication
@@ -109,6 +111,17 @@ if [[ -n "${CODEX_THREAD_ID:-}" || -n "${BORG_RESUME_CMD:-}" || -n "${BORG_SESSI
 
 — To continue this session, SSH into the Mac Studio and run:
     cd $AGENT_DIR && $RESUME_CMD"
+elif [[ "${XPC_SERVICE_NAME:-}" == com.theborg.* ]]; then
+  # Provenance footer — model-less launchd jobs have no session to resume, so
+  # name the job instead. launchd sets XPC_SERVICE_NAME to the job's Label;
+  # outside launchd it is unset, "0", or an app's name, so only our namespace
+  # counts. Interactive and ad-hoc sends therefore get no footer.
+  AGENT_DIR="${BORG_ROOT:-$HOME/theborg}/$AGENT"
+  [[ -d "$AGENT_DIR" ]] || AGENT_DIR="${BORG_ROOT:-$HOME/theborg}/repos/$AGENT"
+  BODY="$BODY
+
+— Sent by launchd job $XPC_SERVICE_NAME (no model session to resume). To follow up, SSH into the Mac Studio and run:
+    cd $AGENT_DIR && claude"
 fi
 
 PYTHON_BIN="${BORG_PYTHON_BIN:-python3}"
