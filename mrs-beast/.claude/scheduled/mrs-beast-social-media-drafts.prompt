@@ -1,4 +1,5 @@
-Draft ONE X (Twitter) post and ONE follow-up reply about an interesting change
+Draft ONE post (the same text goes on LinkedIn and X) and ONE follow-up
+reply/first comment about an interesting change
 the user has shipped, including older reusable ideas never covered. Prioritize
 The Borg unconditionally; use the
 private app only as the fallback defined in SELECT. One main post plus its
@@ -57,6 +58,10 @@ whose subject matter has already been delivered by a previous scheduled run or
 confirmed by the user as posted from an interactive draft. Pending entries and
 notes about interactive drafts are NOT delivered topics unless the user confirms
 publication or use.
+Also drop anything from the resume/job-search agent: `ari/`, including the
+career dossier, its commands, workflows, and scheduled jobs. The user is not
+publicizing it yet. This is a hard exclusion until the user lifts it in
+`${BORG_ROOT}/mrs-beast/USER.md`; do not queue such candidates in Pending.
 A different commit touching the same idea still counts as covered. The legacy
 heading "already posted about" records draft delivery, not confirmed publication.
 
@@ -83,15 +88,25 @@ problem it solves and the transferable idea behind it. First, choose the best
 qualifying The Borg candidate, even if a private-app candidate seems more
 interesting. Only when no The Borg candidate qualifies after FILTER may a
 private-app change be chosen, and then only if it can support a generic post
-under the LINKS privacy rules. If the best candidate cannot make a stranger care
-in a couple hundred characters, take the next qualifying candidate from the same
-priority tier. Write a 1–2 line rationale naming the artifact, what it enables,
+under the LINKS privacy rules. The audience is people who use AI tools, not
+engineers: if the best candidate cannot be explained in plain English to
+someone who uses ChatGPT or Claude but has never read a shell script — or
+cannot make that stranger care in a few short sentences — take the next
+qualifying candidate from the same priority tier. Sandboxes, byte offsets,
+launchd, hash-pinned plans, and similar internals fail this test unless the
+story survives with every one of those words removed. Write a 1–2 line rationale naming the artifact, what it enables,
 and why it outranked the alternatives.
 
 COMPOSE — write the post, follow-up, and image prompt.
-Voice: friendly, funny, informative; punchy and platform-native; the user's
-voice (CTO, 24+ years, hands-on builder), not corporate. Lead with the insight
-or practical payoff, not with "I shipped X." Make the artifact the subject:
+Voice: read `${BORG_ROOT}/mrs-beast/USER.md` first and match its Voice
+section — the "tiny workflow upgrade" format is the default shape here. Short,
+plain-English, warm, a little wry; the user's voice (CTO, hands-on builder),
+not corporate and not an engineering changelog. Aim for 300–600 characters.
+Open with a relatable moment or a small habit, give the payoff in everyday
+words, land one dry line, and optionally close with a question to readers.
+Name the tool or command (e.g. `/handoff`, Claude Code, Codex) but never commit
+SHAs, internal file paths, or implementation jargon in the main post. Lead with
+the insight or practical payoff, not with "I shipped X." Make the artifact the subject:
 explain what it enables and give the reader enough of the method to see how they
 could reuse or adapt it. A bug, failure mode, or implementation lesson may
 support that story, but should not displace the artifact unless SELECT found no
@@ -177,7 +192,7 @@ Assemble the body in this order:
      any queued user request that was not selected and its specific blocker.
      If fewer than three uncovered evergreen patterns were found, say what was
      inspected and why the remainder did not qualify. Keep this outside the post.
-  2. **The post** — the ready-to-paste X draft, clearly delimited, with its
+  2. **The post** — the ready-to-paste LinkedIn/X draft, clearly delimited, with its
      character count.
   3. **Follow-up post** — the ready-to-paste reply, clearly delimited, with its
      character count and verified learn-more URL.

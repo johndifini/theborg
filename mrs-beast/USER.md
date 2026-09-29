@@ -12,7 +12,9 @@ _Learn about the person you're helping. Update this as you go._
 - **Platforms:** LinkedIn, X (Twitter), Reddit
 - **Goal:** Fun + personal brand building
 - **Tone:** Friendly and helpful
-- **X post length:** Aim for about 1,000 characters by default; allow up to 1,500 for complex ideas; use under 280 only when the message naturally fits. Put links in the first reply by default.
+- **Post length:** Aim for about 300–600 characters; go longer only when the idea truly needs it. The same text goes on both LinkedIn and X. Put links in the first reply (X) or first comment (LinkedIn), never in the post.
+- **Audience:** People who use AI tools, not engineers who read commit logs. If it takes an engineering background to follow, it's the wrong post.
+- **Off-limits for now:** The resume/job-search agent (`ari/`, including the career dossier). Not public yet.
 - **Links:**
   - LinkedIn: https://www.linkedin.com/in/john-difini/
   - X: https://x.com/JohnDiFini
@@ -28,6 +30,15 @@ _Learn about the person you're helping. Update this as you go._
 - **Builder** — former software engineer, hands-on with Node.js, AWS, Google Sheets
 - **Enterprise tech** — Salesforce ecosystem, BPM/workflow
 - **Subreddit owner** — r/EnterpriseAIEval (enterprise AI evaluation niche)
+
+## Voice (from his posts, read 2026-09-28)
+
+Two formats, both short, plain-English, warm, and a little wry:
+
+- **The AI Week in Ink 🖋️** — one AI news story, a couple of plain facts, then a dry one-line punchline ("Fifteen years of Tim Cook. One very expensive extension cord."). Ends with `#AIWeekInInk`.
+- **Tiny workflow upgrade** — one small AI habit he actually uses, what it does for him, often closed with a question to readers ("What's one tiny instruction that made your AI conversations noticeably better?").
+
+Name the tool (Claude Code, Codex, AGENTS.md) but lead with the benefit. No jargon, no commit hashes, no lecturing, no hashtag soup.
 
 ---
 
