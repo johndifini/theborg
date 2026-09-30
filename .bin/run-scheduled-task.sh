@@ -518,7 +518,9 @@ if [[ $STATUS -ne 0 ]]; then
       echo
       echo "## Suggested Next Prompt"
       echo
+      echo '```text'
       echo "Diagnose why the scheduled task '$TASK_NAME' exited $STATUS on $END_STAMP: read $LOG_FILE, identify the cause, and propose a fix."
+      echo '```'
     fi
   } | "$BORG_ROOT/.bin/notify-email.sh" "$AGENT_NAME" "$SUBJECT" \
     || notify_failed "failure alert"

@@ -36,7 +36,25 @@ The Borg is a standardized AI workspace that turns prompts, institutional knowle
   takeaways or decisions most useful to retain. Omit the recap when it would
   merely repeat a short or simple answer. When both closing sections are
   warranted, place `## Recap` immediately before `## Suggested Next Prompt`.
-- When a useful follow-up exists, end with a `## Suggested Next Prompt` header followed by a separate line containing only a directly reusable prompt. Omit the section when the task is complete or no meaningful next step exists.
+- When a useful follow-up exists, end with a `## Suggested Next Prompt` section.
+  Omit it when the task is complete or no meaningful next step exists. This is
+  the one canonical shape for the section, in every channel. Every command,
+  prompt, and script that emits it follows this shape rather than restating it:
+
+  ````markdown
+  ## Suggested Next Prompt
+
+  ```text
+  <one directly reusable prompt>
+  ```
+  ````
+
+  The fence is what makes the prompt copyable in one action: rich renderers
+  such as Claude Desktop and GitHub put a copy icon on a code block. The `text`
+  tag stops renderers from syntax-highlighting prose. Keep the prompt to a single
+  line of plain text: no Markdown or backticks, no line breaks, and nothing else
+  inside the fence. That way a triple-click also selects exactly the prompt. Put
+  no preface, explanation, or alternatives around the fence.
 - When work is a repeating loop, say how long the loop is before the user has to
   ask. State the number of iterations remaining, and offer the largest batch you
   can defend rather than the smallest one that is obviously correct — approval

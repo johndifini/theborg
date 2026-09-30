@@ -246,11 +246,13 @@ main() {
       echo
       echo "## Suggested Next Prompt"
       echo
+      echo '```text'
       if [[ $status -ne 0 ]]; then
         echo "Weekly CLI maintenance failed with exit $status — read $LOG_FILE, diagnose the failure, and propose a fix."
       else
         echo "Triage the ${new_count} new Claude doctor finding(s) from this week's CLI maintenance in $LOG_FILE and propose a fix for each."
       fi
+      echo '```'
     fi
   } | "$BORG_ROOT/.bin/notify-email.sh" c4po "$subject"; then
     local msg="notify-email.sh FAILED for $TASK_NAME"
