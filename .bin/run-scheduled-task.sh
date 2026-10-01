@@ -141,19 +141,53 @@ esac
 # in by setting REPORT=1 in its .conf sidecar (sourced below).
 REPORT_FILE=""
 
+# Per-task wall-clock limit. The harness call has no limit of its own: on
+# 2026-09-29 mrs-beast-ai-week-image-prompt stalled right after a Bash call
+# returned and hung for 26 hours until something outside the runner SIGKILLed
+# it. While it hung, launchd skipped Wednesday's firing as "still running", so
+# the hang silently ate a retry too. On expiry the watchdog below kills the
+# whole process tree, logs it, and the failure email reports TIMED OUT.
+#
+# Format: <n>s, <n>m or <n>h; a bare number means MINUTES; 0 disables. Every
+# job but one finished well inside 20 minutes as of 2026-09-30. The exception
+# is the burndown, which fans out a child per item: a codex burndown ran 209
+# minutes on 2026-08-15 and exited 0, so it gets its own longer default here.
+TIMEOUT=60m
+case "$TASK_NAME" in
+  c4po-backlog-burndown) TIMEOUT=6h ;;
+esac
+# Between SIGTERM and SIGKILL, so a harness can flush its transcript on exit.
+TIMEOUT_GRACE_SECONDS=30
+
 # Optional per-task config sidecar. Any task may have one — repo-hosted tasks
 # (under repos/*) use it to keep runner settings in their own repo instead of
 # hard-coding them here, and a Borg agent's task uses it to override a default.
 # Drop a <task>.conf beside the <task>.prompt. Sourced last, so it overrides the
 # defaults above. Recognized keys: HARNESS (claude|codex), MODEL, EFFORT,
-# EXTRA_ARGS (a bash array), and REPORT=1 (capture stdout as a dated report and
-# email it).
+# EXTRA_ARGS (a bash array), REPORT=1 (capture stdout as a dated report and
+# email it), and TIMEOUT (the wall-clock limit above, e.g. TIMEOUT=2h).
 CONF_FILE="$AGENT_DIR/.claude/scheduled/$TASK_NAME.conf"
 if [[ -f "$CONF_FILE" ]]; then
   REPORT=0
   # shellcheck disable=SC1090
   source "$CONF_FILE"
   [[ "${REPORT:-0}" == 1 ]] && REPORT_FILE="$AGENT_DIR/.claude/scheduled/reports/$(date +%Y-%m-%d).md"
+fi
+
+# Resolve TIMEOUT to seconds. A malformed value falls back to 60m with a warning
+# in the log rather than aborting: refusing to run would turn a typo into a
+# silent missed job, and running unbounded would reopen the hang this guards.
+TIMEOUT_WARNING=""
+if [[ "$TIMEOUT" =~ ^([0-9]+)([smh]?)$ ]]; then
+  case "${BASH_REMATCH[2]}" in
+    s)  TIMEOUT_SECONDS=$(( 10#${BASH_REMATCH[1]} )) ;;
+    h)  TIMEOUT_SECONDS=$(( 10#${BASH_REMATCH[1]} * 3600 )) ;;
+    *)  TIMEOUT_SECONDS=$(( 10#${BASH_REMATCH[1]} * 60 )) ;;
+  esac
+else
+  TIMEOUT_WARNING="invalid TIMEOUT '$TIMEOUT' in $CONF_FILE (expected e.g. 45m, 2h, 90s, or 0); using 60m"
+  TIMEOUT=60m
+  TIMEOUT_SECONDS=3600
 fi
 
 # Scheduled-run preamble. Every .prompt has a paired interactive slash command
@@ -350,15 +384,43 @@ fi
 # is the first arg notify-email.sh expects.
 AGENT_NAME="$(basename "$AGENT_DIR")"
 
+# Process-tree helpers for the timeout watchdog. macOS ships no GNU `timeout`,
+# and killing only the harness pid is not enough: its tool subprocesses (a Bash
+# call, an MCP server, a nested child session) are reparented to launchd and
+# keep running. So walk the tree by parent pid and signal every member at once.
+# The walk is taken BEFORE any signal is sent, because a killed parent orphans
+# its children and they can no longer be found through it.
+descendant_pids() {
+  local child
+  for child in $(pgrep -P "$1" 2>/dev/null); do
+    descendant_pids "$child"
+    echo "$child"
+  done
+}
+signal_tree() {
+  # $1 = signal, $2 = root pid, remaining args = extra pids to include.
+  local sig="$1" root="$2"
+  shift 2
+  # shellcheck disable=SC2046
+  kill -"$sig" $(descendant_pids "$root") "$root" "$@" 2>/dev/null || true
+}
+
 # Run the task, capturing its exit code instead of letting `set -e` abort here:
 # on failure we still need to notify and to preserve the code for launchd. The
 # `end` marker moves outside the block so it always records, pass or fail
 # (previously a failed run left no end line in the log).
+#
+# The block runs in the background so a watchdog can bound it (see TIMEOUT
+# above); `wait` then collects its exit code exactly as `|| STATUS=$?` did.
 STATUS=0
+TIMED_OUT=0
 START_STAMP="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 START_SECONDS=$SECONDS
 {
-  echo "===== $START_STAMP start $TASK_NAME (cwd=$AGENT_DIR, cli=$HARNESS, session=${SESSION_ID:-codex-assigned}) ====="
+  echo "===== $START_STAMP start $TASK_NAME (cwd=$AGENT_DIR, cli=$HARNESS, session=${SESSION_ID:-codex-assigned}, timeout=$TIMEOUT) ====="
+  if [[ -n "$TIMEOUT_WARNING" ]]; then
+    echo "WARNING: $TIMEOUT_WARNING"
+  fi
   if [[ "$HARNESS" == codex ]]; then
     # The Codex desktop app injects these only for its current interactive
     # thread. A launchd task must never inherit them: otherwise `codex exec`
@@ -379,10 +441,54 @@ START_SECONDS=$SECONDS
   else
     "$HARNESS_BIN" -p "$PROMPT_CONTENT" --session-id "$SESSION_ID" --strict-mcp-config --model "$MODEL" --effort "$EFFORT" ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"} < /dev/null
   fi
-} >> "$LOG_FILE" 2>&1 || STATUS=$?
+} >> "$LOG_FILE" 2>&1 &
+TASK_PID=$!
+
+# Watchdog: sleep out the limit, then TERM the task's whole tree, give it
+# $TIMEOUT_GRACE_SECONDS, and KILL whatever is left — including members of the
+# first snapshot that were orphaned out of the tree by the TERM. The marker file
+# is how the main shell learns the watchdog fired; an exit code alone cannot
+# tell a timeout from a harness that died of its own SIGTERM.
+WATCHDOG_PID=""
+TIMEOUT_MARK=""
+if (( TIMEOUT_SECONDS > 0 )); then
+  TIMEOUT_MARK="$(mktemp "${TMPDIR:-/tmp}/borg-timeout.XXXXXX")"
+  (
+    sleep "$TIMEOUT_SECONDS"
+    echo fired > "$TIMEOUT_MARK"
+    echo "===== $(date -u +%Y-%m-%dT%H:%M:%SZ) TIMEOUT $TASK_NAME: wall-clock limit $TIMEOUT reached; sending SIGTERM to the process tree =====" >> "$LOG_FILE" 2>&1
+    # shellcheck disable=SC2207
+    first_wave=($(descendant_pids "$TASK_PID"))
+    signal_tree TERM "$TASK_PID"
+    sleep "$TIMEOUT_GRACE_SECONDS"
+    signal_tree KILL "$TASK_PID" ${first_wave[@]+"${first_wave[@]}"}
+  ) &
+  WATCHDOG_PID=$!
+fi
+
+# 2>/dev/null: when the watchdog kills the block, bash reports the job with
+# its full source text ("Terminated: 15 { echo ... }") on stderr.
+wait "$TASK_PID" 2>/dev/null || STATUS=$?
+if [[ -n "$WATCHDOG_PID" ]]; then
+  if [[ -s "$TIMEOUT_MARK" ]]; then
+    # Fired: let it finish the KILL pass for anything that ignored the TERM.
+    wait "$WATCHDOG_PID" 2>/dev/null || true
+    TIMED_OUT=1
+    STATUS=124  # GNU timeout's convention, so `launchctl list` reads the same
+  else
+    # Task finished first: stop the watchdog and its pending `sleep`.
+    signal_tree TERM "$WATCHDOG_PID"
+    wait "$WATCHDOG_PID" 2>/dev/null || true
+  fi
+  rm -f "$TIMEOUT_MARK"
+fi
 END_STAMP="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 RUN_SECONDS=$(( SECONDS - START_SECONDS ))
-echo "===== $END_STAMP end $TASK_NAME (exit $STATUS) =====" >> "$LOG_FILE" 2>&1
+if (( TIMED_OUT )); then
+  echo "===== $END_STAMP end $TASK_NAME (exit $STATUS, TIMED OUT: killed after exceeding the $TIMEOUT limit; ran ${RUN_SECONDS}s) =====" >> "$LOG_FILE" 2>&1
+else
+  echo "===== $END_STAMP end $TASK_NAME (exit $STATUS) =====" >> "$LOG_FILE" 2>&1
+fi
 
 # codex prints its self-assigned session id in the run header; now that the run
 # is over, upgrade the failure email's resume footer from `--last` to the exact
@@ -456,10 +562,19 @@ if [[ $STATUS -ne 0 ]]; then
   # carrying any of these phrases is classified as starved, and one worded
   # differently degrades to the ordinary FAILED subject rather than being
   # mislabelled.
-  LIMIT_LINE="$(grep -ihE 'hit your (session|usage|weekly) limit|reached your (session|usage|weekly) limit|(session|usage|weekly) limit (reached|exceeded)|session limit|usage limit|weekly limit' \
-    <<<"$LOG_TAIL"$'\n'"$REPORT_TAIL" | head -1 | tr -d '\r\n' | cut -c 1-200 || true)"
+  #
+  # A timeout is never starvation — a starved run dies at its first API call,
+  # not an hour in — so it skips the scan: a hung task's log tail can mention a
+  # usage limit in passing and must not be relabelled STARVED.
+  LIMIT_LINE=""
+  if (( ! TIMED_OUT )); then
+    LIMIT_LINE="$(grep -ihE 'hit your (session|usage|weekly) limit|reached your (session|usage|weekly) limit|(session|usage|weekly) limit (reached|exceeded)|session limit|usage limit|weekly limit' \
+      <<<"$LOG_TAIL"$'\n'"$REPORT_TAIL" | head -1 | tr -d '\r\n' | cut -c 1-200 || true)"
+  fi
 
-  if [[ -n "$LIMIT_LINE" ]]; then
+  if (( TIMED_OUT )); then
+    SUBJECT="[Borg/$AGENT_NAME] scheduled task TIMED OUT, did not complete: $TASK_NAME (killed after $TIMEOUT)"
+  elif [[ -n "$LIMIT_LINE" ]]; then
     # Lexically distinct from a hard failure, and the subject carries the verdict
     # so it can be acted on without opening the mail: STARVED means the budget is
     # gone and re-running now dies the same way, whereas FAILED means something
@@ -476,7 +591,18 @@ if [[ $STATUS -ne 0 ]]; then
   fi
 
   {
-    if [[ -n "$LIMIT_LINE" ]]; then
+    if (( TIMED_OUT )); then
+      echo "Scheduled task '$TASK_NAME' DID NOT COMPLETE: it was still running when"
+      echo "its wall-clock limit of $TIMEOUT ran out, so the runner killed its whole"
+      echo "process tree (SIGTERM, then SIGKILL after ${TIMEOUT_GRACE_SECONDS}s)."
+      echo
+      echo "Whatever the run was doing is unfinished: an email it would have sent was"
+      echo "not sent, and a state write it would have made was not made. launchd will"
+      echo "not retry before the next scheduled firing, so if this period's result is"
+      echo "still wanted, rerun the job by hand. If the task legitimately needs longer,"
+      echo "raise TIMEOUT= in its .conf sidecar instead."
+      echo
+    elif [[ -n "$LIMIT_LINE" ]]; then
       echo "Scheduled task '$TASK_NAME' was STARVED: it hit the harness usage limit"
       echo "and terminated before doing any work. It produced no result."
       echo
@@ -514,7 +640,14 @@ if [[ $STATUS -ne 0 ]]; then
     # broken and nothing needs fixing, and the convention omits the section when
     # no meaningful next step exists. Suggesting a re-run there would also be
     # wrong on the facts — it would die the same way until the budget resets.
-    if [[ -z "$LIMIT_LINE" ]]; then
+    if (( TIMED_OUT )); then
+      echo
+      echo "## Suggested Next Prompt"
+      echo
+      echo '```text'
+      echo "Diagnose why the scheduled task '$TASK_NAME' hung past its $TIMEOUT limit and was killed at $END_STAMP: read $LOG_FILE and the session ${SESSION_ID:-${CODEX_SESSION:-transcript}}, find the last action before the stall, and propose a fix; then rerun the job if this period's result is still needed."
+      echo '```'
+    elif [[ -z "$LIMIT_LINE" ]]; then
       echo
       echo "## Suggested Next Prompt"
       echo
