@@ -68,6 +68,17 @@ unset _caller_root
 BORG_ROOT="${BORG_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 export BORG_ROOT
 
+# Keep last30days out of macOS's TCC-protected folders. Its save directory
+# defaults to ~/Documents/Last30Days, and ~/.zshenv (sourced above) points it at
+# ~/Downloads. Headless claude holds no Files and Folders grant for either. So the
+# first touch does not fail; it raises a consent dialog on the Studio's screen
+# and blocks until someone answers. On 2026-09-29 the mrs-beast image job did
+# exactly that and sat for a day. Override unconditionally, because the process
+# env beats ~/.config/last30days/.env in the engine. The directory sits per agent
+# and under .claude/scheduled/, which the memory inventory classifies as
+# generated report input; gitignore each one an agent adds.
+export LAST30DAYS_MEMORY_DIR="$AGENT_DIR/.claude/scheduled/last30days-raw"
+
 # Harness default. The Borg is harness-agnostic: a scheduled job may run on
 # Claude Code or on Codex, and the choice is per-task rather than baked in here.
 # Resolution order, last wins:

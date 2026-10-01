@@ -152,3 +152,19 @@ Tooling constraints that have silently voided a run before — treat as hard rul
   Redirect to a file and inspect grep's own exit code.
 - A full credential sweep takes several minutes across all roots. Let it finish;
   a truncated sweep that reports clean is worse than no sweep.
+- NEVER TOUCH A TCC-PROTECTED FOLDER: ~/Documents, ~/Desktop, ~/Downloads, or
+  anything beneath them. No `ls`, `test -e`, `stat`, `find`, Read, or Glob,
+  and leave them out of every sweep root. Headless `claude` has no Files and
+  Folders grant for these, so the first touch does not fail. It raises a
+  macOS consent dialog on the Studio's screen and blocks the call until someone
+  answers it. On 2026-09-29 the mrs-beast image job blocked this way on
+  last30days' default `~/Documents/Last30Days` and sat for a day, and its
+  retro misread that as a model that never replied. A tolerant read cannot
+  help, because the call blocks rather than failing. `|| true` and `2>/dev/null`
+  only engage after the call returns.
+  This bites the Codex trust-grant check. `~/.codex/config.toml` lists trusted
+  project paths, some under `~/Documents/Codex/`. Audit those entries from the
+  config text alone: report the count, and flag any change against the prior
+  state's `codex_trust_grants`. Record each protected path's existence as
+  `unverified (TCC-protected)`. Never report it as dangling or present. Check
+  existence only for paths outside the protected folders.
