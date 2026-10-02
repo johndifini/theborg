@@ -45,6 +45,15 @@ work will actually depend on. At minimum:
 - **Backlog write safety.** Re-read `BACKLOG.md` from disk immediately before
   writing it, and make the narrowest edit that does the job — a stale whole-file
   write silently reverts a concurrent writer and still looks like a clean diff.
+- **Closing sections.** End substantial responses with `## Recap` and, when a
+  follow-up exists, `## Suggested Next Prompt` in the canonical fenced shape
+  given in the workspace `AGENTS.md` → Communication style. Copy that shape
+  into the repo, because the workspace file does not load there.
+- **Deck QA, if the repo generates slide decks.** Render and check decks in
+  Microsoft PowerPoint, never in Keynote or Quick Look
+  (`../.claude/rules/pptx-qa-uses-powerpoint.md`). Before any rebuild, back up
+  the built deck and diff it for the user's hand edits
+  (`../.claude/rules/generated-deck-hand-edits.md`, if that rule is approved).
 
 Say in each restated line that the workspace rule it comes from lives outside the
 repo and does not load there, so a later session does not delete it as a duplicate.

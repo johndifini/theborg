@@ -26,14 +26,32 @@ EOF
 ```
 
 - Run it unsandboxed; Claude's sandbox blocks Apple Events to PowerPoint.
-- Allow about three minutes. The first export on 2026-09-26 took two, and a
-  60-second watchdog killed the script before PowerPoint finished writing.
+- Allow up to ten minutes: wrap the script in `with timeout of 600 seconds`
+  … `end timeout`. The first export on 2026-09-26 took two minutes; one on
+  2026-09-27 took five and outlived a 240-second AppleEvent timeout. macOS
+  has no `timeout` command.
 - Close only the reference captured right after `open`. **Never** close by
   `whose name is …`: on 2026-09-26 that filter closed the user's open
   `atm-deck.pptx` window instead of the QA copy.
+- If the AppleEvent times out anyway, the captured reference is gone. Close
+  the QA copy by matching both its `path` and its `name` to the scratch copy —
+  never by name alone (`full name` returned error -2763 on 2026-09-27).
 - An export that hangs with no file means PowerPoint is showing a dialog on the
   Studio (a repair prompt or a sandbox file-access grant). A repair prompt is
   itself a QA failure: fix the generator.
+- PowerPoint is sandboxed and asks for file access once per folder. Over SSH
+  that Grant Access dialog appears on the Studio's screen, where nobody sees
+  it, and the export just hangs. Export from one stable QA folder (for
+  example `${BORG_ROOT}/tmp/pptx-qa/`) so the grant is given once, via Screen
+  Sharing to the Studio. Do not try PowerPoint's container folders
+  (`~/Library/Containers/com.microsoft.Powerpoint/…`): the sandbox refuses
+  them. Four sessions each lost turns retrying them on 2026-09-26/27.
+- Rasterize the PDF with the Swift PDFKit recipe in `SOURCE-DOCUMENTS.md` →
+  "Rendering a page as an image". The Studio has no `pdftoppm`, ImageMagick,
+  PyMuPDF, or Python Quartz, and `qlmanage` renders only page 1.
+- Computer use, `screencapture`, and System Events are not a fallback. The app
+  has no Screen Recording or Accessibility permission (five sessions,
+  2026-09-26/27).
 
 If PowerPoint cannot run (no GUI session, or no permission to run unsandboxed),
 report the visual check as **blocked**. Do not substitute Keynote or a

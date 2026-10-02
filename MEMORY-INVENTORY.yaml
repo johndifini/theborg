@@ -6623,3 +6623,25 @@ artifacts:
       last_reviewed: null
       method: [mechanical, semantic]
     related: []
+
+  agents-skills-generated-deck-hand-edits-skill:
+    path: ".agents/skills/generated-deck-hand-edits/SKILL.md"
+    type: generated_rule_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-rules-generated-deck-hand-edits
+    introduced: 2026-10-01    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  claude-rules-generated-deck-hand-edits:
+    path: ".claude/rules/generated-deck-hand-edits.md"
+    type: scoped_rule
+    status: draft
+    scope: workspace
+    introduced: 2026-10-01    # file mtime (untracked; not a history fact)
+    consumers: [claude-code, codex]
+    review:
+      last_reviewed: null
+    related: []
