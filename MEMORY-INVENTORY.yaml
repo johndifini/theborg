@@ -6430,3 +6430,196 @@ artifacts:
     review:
       last_reviewed: null
     related: []
+
+  cerebruh-wikis-personal-finance-agents:
+    path: cerebruh/wikis/personal-finance/AGENTS.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/personal-finance
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-template-agents
+    introduced: 2026-08-14    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-wikis-personal-finance-claude:
+    path: cerebruh/wikis/personal-finance/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/personal-finance
+    visibility: public
+    canonicality: mirror
+    canonical_ref: cerebruh-wikis-personal-finance-agents
+    introduced: 2026-09-16    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-ai-assistant-static-site-7d982ab:
+    path: cerebruh/wikis/harness-engineering/wiki/ai-assistant-static-site-retrieval.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-09-16    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-assistant-retrieval-cont-13f9538:
+    path: cerebruh/wikis/harness-engineering/wiki/assistant-retrieval-content-formats.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-09-16    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-empty-directories-in-cle-30b4a24:
+    path: cerebruh/wikis/harness-engineering/wiki/empty-directories-in-clean-builds.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-09-16    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-vercel-static-sites-and-ca39d23:
+    path: cerebruh/wikis/harness-engineering/wiki/vercel-static-sites-and-ai-assistant-retrieval-2026-09.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-09-16    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-wiki-vercelignore-deployment-aae3b44:
+    path: cerebruh/wikis/harness-engineering/wiki/vercelignore-deployment-root-mismatch.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-09-16    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-finance-wiki-529-education-savings-plans:
+    path: cerebruh/wikis/personal-finance/wiki/529-education-savings-plans.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-finance
+    introduced: 2026-09-16    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-finance-wiki-child-savings-funding-order:
+    path: cerebruh/wikis/personal-finance/wiki/child-savings-funding-order.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-finance
+    introduced: 2026-09-16    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-finance-wiki-colorado-529-deduction-2026:
+    path: cerebruh/wikis/personal-finance/wiki/colorado-529-deduction-2026.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-finance
+    introduced: 2026-09-16    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-finance-wiki-education-savings-wrapper-c-107c26b:
+    path: cerebruh/wikis/personal-finance/wiki/education-savings-wrapper-comparison.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-finance
+    introduced: 2026-09-16    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-finance-wiki-log:
+    path: cerebruh/wikis/personal-finance/wiki/log.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-finance
+    introduced: 2026-09-16    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-finance-wiki-trump-accounts-vs-529-educa-4845882:
+    path: cerebruh/wikis/personal-finance/wiki/trump-accounts-vs-529-education-savings-2026-09.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-finance
+    introduced: 2026-09-16    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-finance-wiki-trump-accounts:
+    path: cerebruh/wikis/personal-finance/wiki/trump-accounts.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-finance
+    introduced: 2026-09-16    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-harness-engineering-raw-vercel-static-sites-and-a-ef561ba:
+    path: cerebruh/wikis/harness-engineering/raw/vercel-static-sites-and-ai-assistant-retrieval-2026-09.md
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/harness-engineering
+    introduced: 2026-09-09    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-finance-raw-trump-accounts-vs-529-educat-83dcb26:
+    path: cerebruh/wikis/personal-finance/raw/trump-accounts-vs-529-education-savings-2026-09.md
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/personal-finance
+    introduced: 2026-09-16    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-finance-wiki-index:
+    path: cerebruh/wikis/personal-finance/wiki/index.md
+    type: retrieval_index
+    status: draft
+    owner: cerebruh
+    scope: cerebruh/wikis/personal-finance
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-09-16    # frontmatter created:
+    load_mode: retrieved
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [mechanical, semantic]
+    related: []
