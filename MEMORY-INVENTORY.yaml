@@ -2016,7 +2016,7 @@ artifacts:
     related: []
 
   c4po-agents-skills-last30days-x-cookie-health-skill:
-    path: c4po/.agents/skills/last30days-x-cookie-health/SKILL.md
+    path: c4po/.agents/skills/last30days-x-backend-health/SKILL.md
     type: generated_rule_bridge
     status: draft
     owner: c4po
@@ -6136,7 +6136,7 @@ artifacts:
     related: []
 
   c4po-claude-rules-last30days-x-cookie-health:
-    path: c4po/.claude/rules/last30days-x-cookie-health.md
+    path: c4po/.claude/rules/last30days-x-backend-health.md
     type: scoped_rule
     status: draft
     owner: c4po
