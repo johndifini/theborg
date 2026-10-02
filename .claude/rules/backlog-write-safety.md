@@ -28,6 +28,13 @@ Before writing any `BACKLOG.md`:
 
 Never resolve a surprising count by assuming your copy is the correct one.
 
+**The workspace root `BACKLOG.md` is gitignored** (`.gitignore:69`, commit
+`7a0f90b` "Stop publishing BACKLOG.md"). Your edit lands on disk and there is
+nothing to commit; `git diff` showing no change is correct, not a failed
+write. Verify with `git check-ignore -v BACKLOG.md` rather than concluding the
+edit was lost, and do not force-add it. Each `repos/*/BACKLOG.md` is the
+opposite — tracked in its own repository, and committed there.
+
 **Why this exists.** On 2026-08-15 `repos/waiq/BACKLOG.md` was found holding a
 stale whole-file copy that deleted 18 Done records and resurrected the finished
 items into the Open tiers — an entire completed P3 tier among them, erasing
