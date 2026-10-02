@@ -33,6 +33,14 @@ wrong thing instead.
   route around. Do not search the filesystem for `notify-email.sh`, do not
   spawn a subagent to find it, and do not treat the absence as a reason to
   abandon the task. Produce the report on stdout and stop.
+- **Reaching the network from one:** use `WebFetch`/`WebSearch`, never Bash.
+  Under `--permission-mode dontAsk` the denial is partial, which is what makes
+  it confusing: `Read` and local read-only Bash such as `grep` still run, but a
+  command outside the harness's read-only allowlist is refused outright.
+  `curl … | python3` and `gh api --jq` both were, six times across the
+  `waiq-tts-watch` runs of 2026-09-12 and 2026-09-14. Retrying in another shape
+  will not help — it is the permission mode, not the quoting. The same JSON is
+  reachable with `WebFetch` against the identical API URL.
 - **Editing the preamble:** it is built after the `.conf` is sourced, because
   `REPORT` is not known before that. Keep it there — moving the construction
   back above the sidecar silently reintroduces the mismatch for every
