@@ -43,5 +43,20 @@ When the user adds a new source to `ingest/` and asks you to ingest it:
     1. source or page
     1. one-word action taken
     1. description of action taken (include `injection-flagged` in the description if the prompt injection scan found anything)
+1. Register every file this ingest created in the workspace memory inventory. That
+   includes the moved `raw/` sources, each new wiki page, and, for a new sub-wiki,
+   its `AGENTS.md`, `CLAUDE.md`, `index.md`, and `log.md`. Pages you only updated
+   already have records. From the workspace root (`..`), for each new path:
+   1. dry-run `python3 .bin/build-memory-inventory.py bootstrap --artifact <workspace-relative-path>`;
+   1. confirm it names exactly the records you expect;
+   1. repeat with `--write`.
+
+   Then run `python3 .bin/build-memory-inventory.py validate` and
+   `python3 .bin/build-memory-inventory.py discover --require-coverage`. The ingest is
+   not finished until both exit zero. Commit `MEMORY-INVENTORY.yaml`, staged by path;
+   the wiki files themselves are gitignored. Records stay `status: draft`.
+   `../.claude/rules/memory-inventory-authoring.md` has the full procedure. The ingests
+   of 2026-09-16 and 2026-10-01 both skipped this step and left the coverage check red
+   for whichever session ran it next.
 
 A single source may touch 10-15 wiki pages. That is normal.
