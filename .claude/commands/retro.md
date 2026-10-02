@@ -55,7 +55,13 @@ If a candidate fails either test, drop it. Writing nothing is the correct outcom
    - The proposed change (exact text, exact file path)
    - Why you think it clears the bar
    Then wait for approval, rejection, or edits.
-4. **Apply approved changes only.** Don't batch silently.
+4. **Apply approved changes only.** Don't batch silently. Then commit what you
+   applied in the same turn. Include the edited file, any generated bridge stub,
+   and the `MEMORY-INVENTORY.yaml` records for both, staged by path. Skip this
+   only if the user says not to commit. In this shared checkout every other
+   session correctly refuses to commit a change it did not make, so an
+   applied-but-uncommitted change has no other owner. Two changes applied on
+   2026-09-16 were still uncommitted on 2026-09-30.
 
 ## Output shape
 
