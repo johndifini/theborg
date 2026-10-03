@@ -198,16 +198,13 @@ If you cannot retrieve the source, state the exact failure and do not infer or
 substitute information.
 ```
 
-Run both route conditions in fresh chats on each available account:
-
-- personal Microsoft 365 Copilot;
-- work Microsoft 365 Copilot with the add-on license; and
-- work Microsoft 365 Copilot without the add-on license.
-
-For every run, preserve the date/time, account and license state, route, exact
-prompt, exact response, citations, and whether Copilot substituted another
-source. Do not put work-account identifiers or private responses in tracked
-files; store those records in Ari's private area if a durable record is needed.
+Run both route conditions in fresh chats on each of the three Microsoft 365
+Copilot configurations listed in the run matrix of Ari's private evaluation
+record (`Dossier Evaluation/`). For every run, preserve the date/time,
+configuration, route, exact prompt, exact response, citations, and whether
+Copilot substituted another source. Keep every per-run detail in that private
+record, including which accounts and licenses were used, their identifiers, and
+the responses. This file reports route-level totals only.
 
 Synthetic grading truth:
 
@@ -220,14 +217,13 @@ Synthetic grading truth:
 
 ### Baseline status — 2026-09-19 22:00 UTC
 
-HTML route, pre-index: **0/3 accounts retrieved it.** Personal Copilot, the
-work account with the add-on, and the work account without the add-on all
+HTML route, pre-index: **0/3 Copilot configurations retrieved it.** All three
 failed in fresh chats on 2026-09-19. The exact tool failure was "No relevant
 content could be retrieved"; Copilot stated the failure and declined to infer,
 substitute, or fabricate, so sentinel accuracy is not applicable. No citation
 was displayed and no alternate source was substituted. The JSON route has not
-been run yet on any account. Per-run records, including the verbatim response,
-live in Ari's private evaluation area (`Dossier Evaluation/`), not here.
+been run yet on any configuration. Per-run records, including the verbatim
+response, live in Ari's private evaluation area (`Dossier Evaluation/`), not here.
 
 Independent checks in the same session: both routes still return HTTP 200 with
 the declared media types to a browser user-agent and to a bingbot user-agent;
@@ -241,7 +237,7 @@ post-index repeat are in. The Bing Live URL test (next action 1) has not been
 run; it needs the Bing Webmaster Tools UI, which this session could not reach.
 
 Two controls would sharpen the pre-index reading and cost one fresh chat each:
-run the same prompt on one account against a page that is known to be in
+run the same prompt on one configuration against a page that is known to be in
 Bing's index (proves the tool works at all), and against the real dossier
 route `/career.json` (shows whether the whole unindexed origin fails, not just
 the experiment routes). Neither changes the experiment routes or prompt.

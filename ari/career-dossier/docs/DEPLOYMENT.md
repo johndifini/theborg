@@ -155,7 +155,7 @@ Begin only after the production audit passes:
    rate-limited. Receipt is not indexing. IndexNow reaches Bing, Yandex,
    Seznam, and Naver; it does nothing for Google.
 6. Start Microsoft 365 Copilot trials only after recording the HTML route's
-   successful Bing crawl. Preserve the account license state, route, prompt,
+   successful Bing crawl. Preserve the Copilot configuration, route, prompt,
    exact response, citations, sentinel accuracy, and any substituted source for
    every fresh-chat run.
 
