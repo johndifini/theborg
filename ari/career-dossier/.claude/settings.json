@@ -4,5 +4,10 @@
   },
   "env": {
     "VERCEL_PLUGIN_TELEMETRY": "off"
-  }
+  },
+  "deniedMcpServers": [
+    {
+      "serverName": "plugin:vercel:vercel"
+    }
+  ]
 }
