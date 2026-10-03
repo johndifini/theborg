@@ -540,11 +540,14 @@ FIXTURE_FILES = {
 
     # Cerebruh.
     "cerebruh/wikis/index.md": "# index\n",
-    "cerebruh/wikis/w1/CLAUDE.md": "@AGENTS.md\n",
-    "cerebruh/wikis/w1/wiki/index.md": "# w1 index\n",
-    "cerebruh/wikis/w1/wiki/page.md": "# page\n",
-    "cerebruh/wikis/w1/raw/Source.pdf": "%PDF-fake\n",
-    "cerebruh/wikis/w1/raw/.DS_Store": "noise\n",
+    "cerebruh/wikis/codex-ecosystem/CLAUDE.md": "@AGENTS.md\n",
+    "cerebruh/wikis/codex-ecosystem/wiki/index.md": "# public index\n",
+    "cerebruh/wikis/codex-ecosystem/wiki/page.md": "# page\n",
+    "cerebruh/wikis/codex-ecosystem/raw/Source.pdf": "%PDF-fake\n",
+    "cerebruh/wikis/codex-ecosystem/raw/.DS_Store": "noise\n",
+    # An unlisted sub-wiki: its page names could disclose its subject.
+    "cerebruh/wikis/unlisted-wiki/wiki/sensitive-page.md": "# page\n",
+    "cerebruh/wikis/unlisted-wiki/raw/Sensitive Source.pdf": "%PDF-fake\n",
     "cerebruh/ingest/pending.md": "# not yet knowledge\n",
 
     # Excluded subtrees.
@@ -580,11 +583,13 @@ EXPECTED = {
     "agentx/.private/CLAUDE.md": ("compatibility_wrapper", "mirror", "private"),
     "agentx/.private/note.md": ("private_memory", "canonical", "private"),
     "cerebruh/wikis/index.md": ("retrieval_index", "canonical", "public"),
-    "cerebruh/wikis/w1/AGENTS.md": ("compatibility_wrapper", "mirror", "public"),
-    "cerebruh/wikis/w1/CLAUDE.md": ("compatibility_wrapper", "mirror", "public"),
-    "cerebruh/wikis/w1/wiki/index.md": ("retrieval_index", "canonical", "public"),
-    "cerebruh/wikis/w1/wiki/page.md": ("knowledge_page", "canonical", "public"),
-    "cerebruh/wikis/w1/raw/Source.pdf": ("knowledge_source", "source", "public"),
+    "cerebruh/wikis/codex-ecosystem/AGENTS.md": ("compatibility_wrapper", "mirror", "public"),
+    "cerebruh/wikis/codex-ecosystem/CLAUDE.md": ("compatibility_wrapper", "mirror", "public"),
+    "cerebruh/wikis/codex-ecosystem/wiki/index.md": ("retrieval_index", "canonical", "public"),
+    "cerebruh/wikis/codex-ecosystem/wiki/page.md": ("knowledge_page", "canonical", "public"),
+    "cerebruh/wikis/codex-ecosystem/raw/Source.pdf": ("knowledge_source", "source", "public"),
+    "cerebruh/wikis/unlisted-wiki/wiki/sensitive-page.md": ("knowledge_page", "canonical", "private"),
+    "cerebruh/wikis/unlisted-wiki/raw/Sensitive Source.pdf": ("knowledge_source", "source", "private"),
 }
 
 
@@ -600,7 +605,7 @@ def build_fixture(base):
     # A sub-wiki AGENTS.md is a symlink to the canonical template, and a
     # directory symlink points back into the tree the way repos/waiq's
     # .claude/commands does.
-    os.symlink("../../template/AGENTS.md", os.path.join(root, "cerebruh/wikis/w1/AGENTS.md"))
+    os.symlink("../../template/AGENTS.md", os.path.join(root, "cerebruh/wikis/codex-ecosystem/AGENTS.md"))
     os.symlink("../../.claude/commands", os.path.join(root, "agentx/.claude/borrowed"))
 
     codex_home = os.path.join(base, "codex")
@@ -667,12 +672,12 @@ def test_discovery_classification():
                           (".claude/settings.local.json", "harness configuration"),
                           ("agentx/.private/contract.docx", "domain document"),
                           ("agentx/.private/scheduled-tasks/jobs.tasks", "registration table"),
-                          ("cerebruh/wikis/w1/raw/.DS_Store", "OS noise")):
+                          ("cerebruh/wikis/codex-ecosystem/raw/.DS_Store", "OS noise")):
             check("discover: skips %s" % name, name in skipped, sorted(skipped))
         check("discover: a raw/ capture is a source despite its format, "
               "but OS noise beside it is not",
-              "cerebruh/wikis/w1/raw/Source.pdf" in workspace
-              and "cerebruh/wikis/w1/raw/.DS_Store" in skipped)
+              "cerebruh/wikis/codex-ecosystem/raw/Source.pdf" in workspace
+              and "cerebruh/wikis/codex-ecosystem/raw/.DS_Store" in skipped)
 
         check("discover: nothing in a memory-bearing location is left unclassified",
               result["unclassified"] == [], result["unclassified"])
@@ -693,8 +698,8 @@ def test_discovery_pairs_and_companions():
             (".agents/skills/beta.local/SKILL.md", ".claude/rules/beta.local.md"),
             ("CLAUDE.md", "AGENTS.md"),
             ("agentx/CLAUDE.local.md", "agentx/.private/AGENTS.md"),
-            ("cerebruh/wikis/w1/AGENTS.md", "cerebruh/template/AGENTS.md"),
-            ("cerebruh/wikis/w1/CLAUDE.md", "cerebruh/wikis/w1/AGENTS.md"),
+            ("cerebruh/wikis/codex-ecosystem/AGENTS.md", "cerebruh/template/AGENTS.md"),
+            ("cerebruh/wikis/codex-ecosystem/CLAUDE.md", "cerebruh/wikis/codex-ecosystem/AGENTS.md"),
         ]
         for derived, canonical in pairs:
             record = by_path[("borg_root", derived)]
@@ -970,6 +975,16 @@ def test_bootstrap_over_fixture():
         check("bootstrap: the agent's private records land in its overlay",
               all(p in body for p in private_paths if p.startswith("agentx/")),
               [p for p in private_paths if p.startswith("agentx/") and p not in body])
+        c4po_body = open(os.path.join(root, "c4po/.private/memory-inventory.yaml"),
+                         encoding="utf-8").read()
+        unlisted = [p for p in private_paths if p.startswith("cerebruh/wikis/unlisted-wiki/")]
+        check("bootstrap: an unlisted sub-wiki's records land in C4PO's overlay",
+              len(unlisted) == 2 and all(p in c4po_body for p in unlisted),
+              [p for p in unlisted if p not in c4po_body])
+        check("bootstrap: and never in a cerebruh/.private/ overlay",
+              not os.path.exists(os.path.join(root, "cerebruh/.private")))
+        check("bootstrap: a listed sub-wiki's records stay in the tracked registry",
+              "cerebruh/wikis/codex-ecosystem/wiki/page.md" in tracked)
         check("bootstrap: an overlay it creates is owner-readable only",
               oct(os.stat(os.path.join(root, "c4po/.private/memory-inventory.yaml")).st_mode
                   & 0o777) == "0o600")

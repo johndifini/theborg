@@ -55,6 +55,12 @@ When the user adds a new source to `ingest/` and asks you to ingest it:
    `python3 .bin/build-memory-inventory.py discover --require-coverage`. The ingest is
    not finished until both exit zero. Commit `MEMORY-INVENTORY.yaml`, staged by path;
    the wiki files themselves are gitignored. Records stay `status: draft`.
+
+   A sub-wiki not named in `PUBLIC_WIKIS` in `../.bin/build-memory-inventory.py` is
+   private. Its records go to C4PO's gitignored overlay, and there is nothing to
+   commit. This includes every new sub-wiki. Ask the user before adding one to that
+   list, and only when every page name it will ever hold is safe to publish. A wiki
+   of the household's own records (medical, accounts, family) stays off the list.
    `../.claude/rules/memory-inventory-authoring.md` has the full procedure. The ingests
    of 2026-09-16 and 2026-10-01 both skipped this step and left the coverage check red
    for whichever session ran it next.

@@ -1023,8 +1023,36 @@ OVERLAY_BASENAME = "memory-inventory.yaml"
 CODEX_MANIFEST = "skills/.theborg-managed-skills.tsv"
 
 
+# Cerebruh sub-wikis whose records may appear in the tracked registry. Every
+# sub-wiki is gitignored (`cerebruh/wikis/*`), so ignore status cannot tell a
+# public-topic wiki from a personal one — yet a page name alone can disclose a
+# diagnosis, a medication, or a visit date. So a sub-wiki is PRIVATE unless it
+# is listed here: an unlisted one fails closed into the c4po overlay instead of
+# publishing its page names. Default-public is how the medical-records wiki's
+# pages reached the public registry (privacy audit, 2026-10-02). Listed
+# individually so each entry is a decision; add a sub-wiki only when every page
+# name it will ever hold is safe to publish.
+PUBLIC_WIKIS = frozenset({
+    "ai-native-engineering",
+    "claude-code-ecosystem",
+    "codex-ecosystem",
+    "document-generation",
+    "fixed-income-investing",
+    "harness-engineering",
+    "home-network-security",
+    "local-ai-apple-silicon",
+    "personal-ai-workflows",
+    "personal-finance",
+    "personal-knowledge-mgmt",
+    "spec-driven-development",
+})
+
+
 def _is_private(rel: str) -> bool:
     if rel in PRIVATE_PATHS:
+        return True
+    parts = rel.split("/")
+    if len(parts) >= 4 and parts[:2] == ["cerebruh", "wikis"] and parts[2] not in PUBLIC_WIKIS:
         return True
     return any(re.search(pat, rel) for pat in PRIVATE_PATTERNS)
 
@@ -2042,8 +2070,13 @@ WORKSPACE_OVERLAY_OWNER = "c4po"
 
 
 def overlay_path_for(owner: str) -> str:
-    """Where a private record for this owner has to live. Never tracked."""
-    if owner == "workspace":
+    """Where a private record for this owner has to live. Never tracked.
+
+    Cerebruh is not an agent and is read-only from every other directory, so a
+    private sub-wiki's records go to C4PO's overlay rather than opening a
+    `cerebruh/.private/`. The record's `owner` stays `cerebruh`.
+    """
+    if owner in ("workspace", "cerebruh"):
         owner = WORKSPACE_OVERLAY_OWNER
     return "%s/.private/%s" % (owner, OVERLAY_BASENAME)
 

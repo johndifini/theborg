@@ -450,7 +450,15 @@ discovers this workspace's private artifacts and checks each path's absence from
 the tracked registry. Workspace-scoped private records — shared Auto Memory,
 which belongs to no single agent — go to C4PO's overlay, because C4PO owns this
 inventory and `AGENTS.md` places durable confidential material under an owning
-agent's `.private/`, not at the workspace root. Overlays are created `0600` and
+agent's `.private/`, not at the workspace root. Private Cerebruh records go there
+too: Cerebruh is not an agent and is read-only from elsewhere, so it gets no
+`.private/` of its own, and the record keeps `owner: cerebruh`. Every sub-wiki is
+gitignored, so ignore status cannot separate a public-topic wiki from a personal
+one, and a page name alone can disclose a diagnosis or a visit date. A sub-wiki
+is therefore private unless it is named in the builder's `PUBLIC_WIKIS` list. An
+unlisted one fails closed into the overlay. The opposite default published the
+medical-records wiki's page names until the 2026-10-02 privacy audit caught it.
+Overlays are created `0600` and
 carry no `defaults:` block, so a class-wide policy can never end up written down
 only in a gitignored file.
 
