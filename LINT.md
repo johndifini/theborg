@@ -12,7 +12,7 @@ ephemeral values written here — today the **Size** ceiling. C4PO owns
 enforcement (see `c4po/AGENTS.md`).
 ### Scope
 - The lint audit walks every AGENTS.md in the workspace tree **and** recurses into each independent repo under `repos/*` (enumerate the filesystem — `repos/` is git-ignored, so its children never appear in workspace git status).
-- `repos/*` inherit the **generic** rules — Coverage, Size, Cross-references, Paths, Imports — with each repo's root AGENTS.md treated like the workspace root (no parent-directory mention required).
+- `repos/*` inherit the **generic** rules — Coverage, Size, Cross-references, Paths, Imports. A repo's root AGENTS.md is **not** treated like the workspace root: it mentions its parent like any other AGENTS.md (see Cross-references). The exemption it used to have was dropped on 2026-10-02 at the user's direction.
 - The **workspace-specific** rules — Repo design folders, README, MCP servers, Slash commands, Scheduled tasks, Memory inventory — bind The Borg itself, not `repos/*`; a repo documents its own commands and automation in its own README. (MCP servers loaded from a repo's config are still covered by the registry rule via the daily security audit.)
 ### Coverage
 - AGENTS.md is required at **context boundaries** — places where an agent's operating rules, role, or domain changes. Concretely: the workspace root, each top-level directory (e.g., `cerebruh/`), and any subdirectory with rules that meaningfully differ from its parent.
@@ -23,7 +23,8 @@ enforcement (see `c4po/AGENTS.md`).
 - AGENTS.md files should stay under **150 lines**. This ceiling is a moving target — C4PO's monthly assumptions audit re-evaluates the number against current OpenAI, Anthropic, and community guidance and updates it here; the lint audit enforces conformance to whatever number is written above.
 - Content that is durable, reusable, or domain-specific — procedures, multi-step workflows, knowledge that doesn't need to load every session — belongs in a skill or a scoped rule, not in AGENTS.md. When a file approaches the ceiling, relocate such content rather than padding the file.
 ### Cross-references
-- With the exception of the root-level `AGENTS.md`, every AGENTS.md file mentions its parent directory.
+- With the exception of the workspace's root-level `AGENTS.md`, every AGENTS.md file mentions its parent directory.
+- A `repos/*` root AGENTS.md has a `## Directory Structure` section near the top. It names the parent, the workspace's `repos/` directory (`../`), and the workspace root (`../../`). It notes that neither exists in a standalone clone. Then it lists the repo's meaningful children by the rules below. The authoritative Markdown files count: `BACKLOG.md`, `README.md`, `SPEC.md`/`PLAN.md`, and the ADR index. So do the repo's own `.claude/rules/` and `.claude/skills/`. Linking a child elsewhere in the file does not count as listing it.
 - Every AGENTS.md lists its meaningful children. A child is "meaningful" if it shapes the agent's context or behavior — regardless of file format. Specifically:
    - A subdirectory is meaningful if it either contains its own AGENTS.md, or holds files the agent is expected to read, update, or treat as authoritative (e.g., ai-sleeve/ holding rebalance snapshots and the investable universe).
    - A file is meaningful if the agent is expected to read, update, or treat it as authoritative (e.g., USER.md, persona/soul files, role definitions).
