@@ -6828,3 +6828,23 @@ artifacts:
     review:
       last_reviewed: null
     related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-raw-apple-foundation-model-5dde1d4:
+    path: cerebruh/wikis/local-ai-apple-silicon/raw/apple-foundation-models-ios27-access-and-pricing.md
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-10-04    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-ios27-foundation-mode-0f4f370:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/ios27-foundation-models-access-and-pricing.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-10-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
