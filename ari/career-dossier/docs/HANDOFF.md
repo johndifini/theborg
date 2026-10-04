@@ -16,8 +16,8 @@ the fixed input used for those completed measurements.
 
 ## Active handoff: synthetic interop indexing experiment — 2026-09-19
 
-The same-origin HTML-versus-JSON experiment is live. Commit `d7e8e6a` published
-the fictional experiment; commit `9d37523` added the Bing site-verification
+The same-origin HTML-versus-JSON experiment is live. Commit `616bbd1` published
+the fictional experiment; commit `9d94d1d` added the Bing site-verification
 meta tag. Vercel reported both production deployments successful. The complete
 post-deployment audit passed: all public routes returned their declared media
 types and security/cache headers, all nine served artifacts were byte-identical
@@ -70,7 +70,7 @@ inbound links, consistent with the `site:` query returning nothing for any
 route on this host. Minor, non-causal: `/interop-test/` serves 200 rather than
 redirecting, a trailing-slash duplicate the canonical already resolves.
 
-**IndexNow submission — 2026-09-20.** Commit `e6263ba` added the public key
+**IndexNow submission — 2026-09-20.** Commit `0812fdd` added the public key
 file (`src/indexnow.ts`; 32 hex characters, leading digit — the constraints are
 explained in that file) to the build, `expectedDistFiles`, `vercel.json`, and
 `tests/deployment.test.ts`; `npm run verify` passed 32/32 before the push. The
@@ -117,7 +117,7 @@ primary Google Search discovery surface.
 
 ### Download fallback release — 2026-09-20
 
-Commit `34cb684` is live in production. The candidate-approved, Jony
+Commit `73adde4` is live in production. The candidate-approved, Jony
 Vibe-reviewed prompt-card fallback offers native downloads of `/career.json`
 and `/career.md`; the canonical recruiter prompt now accepts an attached
 dossier and otherwise retrieves the JSON URL. The release passed 32/32 source
@@ -127,7 +127,7 @@ with the expected media type, security and cache headers, and exact local byte
 parity; thirteen source-exposure probes returned 404; the real corpus remained
 70 claims with no `EX-*` IDs or public evidence records.
 
-**Simplified follow-up — 2026-09-20.** Commit `8509433` is live in Vercel
+**Simplified follow-up — 2026-09-20.** Commit `426bc7d` is live in Vercel
 production deployment `career-dossier-kzc8icbmd`. It restores the original
 concise recruiter prompt, removes the aspect-ratio-dependent "prompt below"
 copy, moves the fallback beneath Copy Prompt, and offers Markdown as the single
@@ -140,7 +140,7 @@ evaluation and non-inference guidance. The release passed 32/32 source tests,
 audit, all thirteen source-exposure probes, and the 70-claim corpus-integrity
 check.
 
-**Inline fallback link — 2026-09-20.** Commit `ce16793` is live on the
+**Inline fallback link — 2026-09-20.** Commit `a2048f4` is live on the
 production alias. The button-styled "Download dossier (.md)" control is now an
 inline link inside the recovery sentence — "download the dossier text file" —
 so the heading and sentence carry the affordance. The href, `download`
@@ -174,7 +174,7 @@ and the underline carrying the affordance at AA contrast. Stress-tested to
    indexed" or "URL is on Bing" is the strongest completion state. A `site:`
    search is secondary evidence only.
 5. ~~Wait seven days before raising IndexNow.~~ Done 2026-09-20: the candidate
-   approved IndexNow because of a live application send date, commit `e6263ba`
+   approved IndexNow because of a live application send date, commit `0812fdd`
    shipped the key file, and the submission returned **HTTP 202** — see the
    IndexNow record above. Nothing further to do here unless the JSON route's
    Bing status or the next daily reinspection shows a regression.

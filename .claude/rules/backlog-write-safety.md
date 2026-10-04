@@ -29,7 +29,7 @@ Before writing any `BACKLOG.md`:
 Never resolve a surprising count by assuming your copy is the correct one.
 
 **The workspace root `BACKLOG.md` is gitignored** (`.gitignore:69`, commit
-`7a0f90b` "Stop publishing BACKLOG.md"). Your edit lands on disk and there is
+`5740162` "Stop publishing BACKLOG.md"). Your edit lands on disk and there is
 nothing to commit; `git diff` showing no change is correct, not a failed
 write. Verify with `git check-ignore -v BACKLOG.md` rather than concluding the
 edit was lost, and do not force-add it. Each `repos/*/BACKLOG.md` is the

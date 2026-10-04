@@ -6,6 +6,9 @@ profile and remaining corpus, landing-page visual and keyboard QA, and the
 domain decisions below. Never place private corpus data in Vercel settings or
 environment variables.
 
+Commit SHAs here were remapped after the 2026-10-03 history rewrite. Vercel's
+deployment records still show the pre-rewrite SHAs.
+
 ## Local gate
 
 From `ari/career-dossier/`, run:
@@ -280,7 +283,7 @@ empty. Assigning a custom domain points it at the production alias, which
 resolves to nothing.
 
 Blocking prerequisite discovered during this audit: the approved corpus has
-never been committed. At `3a251e1`, `main` still contains the nine-claim
+never been committed. At `90c9e9b`, `main` still contains the nine-claim
 synthetic corpus with the `Alex Example` profile and the `EX-*` records, while
 the 70-claim John DiFini build exists only as uncommitted working-tree changes.
 A Git-connected production build from `main` in this state would publish
@@ -299,10 +302,10 @@ Required order before re-running this audit:
 
 ### Build failure and `.vercelignore` removal — 2026-09-04
 
-The first Git-connected production build of `2e31828` failed in one second:
+The first Git-connected production build of `b4f8df3` failed in one second:
 
 ```text
-Cloning github.com/johndifini/theborg (Branch: main, Commit: 2e31828)
+Cloning github.com/johndifini/theborg (Branch: main, Commit: b4f8df3)
 Found .vercelignore
 Removed 415 ignored files defined in .vercelignore
 Running "git diff --quiet HEAD^ HEAD ./"
@@ -356,7 +359,7 @@ project.
 
 ### Production audit result — 2026-09-04: PASSED
 
-Deployment `career-dossier-9hhwn6vw6` built from `177d2cd`, status `Ready`,
+Deployment `career-dossier-9hhwn6vw6` built from `3366aaa`, status `Ready`,
 target Production, aliased to `agent.johndifini.com`.
 
 Routes — all 200:
@@ -405,9 +408,9 @@ The last open Phase 8 acceptance criterion is now closed by observation rather
 than assumption:
 
 ```text
-1ac6e9d  2026-09-04 17:54:27  touched ari/career-dossier/docs/  -> build ddmof18zt 17:54:32
-0b58ba0  2026-09-05 08:54:10  AGENTS.md only                    -> no deployment
-4e08690  2026-09-05 08:54:25  AGENTS.md, README.md, design/     -> no deployment
+2921a1d  2026-09-04 17:54:27  touched ari/career-dossier/docs/  -> build ddmof18zt 17:54:32
+338ac1c  2026-09-05 08:54:10  AGENTS.md only                    -> no deployment
+16196d5  2026-09-05 08:54:25  AGENTS.md, README.md, design/     -> no deployment
 ```
 
 Two sibling-agent commits outside the project directory produced no dossier
@@ -433,7 +436,7 @@ from ownership verification and must be recorded when performed.
 
 ### Download affordance release and production audit — 2026-09-20
 
-Commit `34cb684` added the candidate-approved, Jony Vibe-reviewed download
+Commit `73adde4` added the candidate-approved, Jony Vibe-reviewed download
 fallback to the production landing page. The prompt card now offers the
 canonical JSON corpus as the primary download and Markdown as a secondary
 format, and its prompt works with either an attached dossier or live URL
@@ -456,7 +459,7 @@ records.
 
 ### Simplified download workflow release — 2026-09-20
 
-Commit `8509433` refined the download affordance after candidate review. The
+Commit `426bc7d` refined the download affordance after candidate review. The
 main lede no longer assumes the prompt is physically below it, the original
 concise recruiter prompt is restored, and the recovery path now appears after
 the Copy Prompt control. Markdown is the single attachment fallback because it
@@ -483,7 +486,7 @@ with zero `EX-*` IDs and zero public evidence records.
 
 ### Inline fallback-link release and production audit — 2026-09-20
 
-Commit `ce16793` replaced the button-styled `Download dossier (.md)` control
+Commit `a2048f4` replaced the button-styled `Download dossier (.md)` control
 with an inline link inside the recovery sentence: "download the dossier text
 file". The heading and sentence now carry the affordance, so `.dossier-fallback`
 no longer needs its flex row, the `.download-link` rule, or the mobile stacking
@@ -496,7 +499,7 @@ Before release, `npm run verify` passed 32/32 tests, `npm run verify-deployment`
 passed 7/7 tests, and `git diff --check` was clean. Only the four project paths
 were staged; the shared checkout's unrelated sibling work was left untouched.
 The remote was re-derived in the same turn as the push, which was a one-commit
-fast-forward from `7650676`.
+fast-forward from `534bd62`.
 
 **Rendered QA — closed 2026-09-20, against the live production page.** The
 interactive browser bridge was unreachable (`list_connected_browsers` returned
@@ -548,7 +551,7 @@ and the retired `Alex Example` fixture found nothing. `/interop-test` and
 to the JSON representation.
 
 Change surface — diffing the served page against the previous production build
-(`7650676`) shows the fallback section as the release's only delta. The public
+(`534bd62`) shows the fallback section as the release's only delta. The public
 recruiter prompt is byte-identical to the pre-release version, so no indexing or
 Bing resubmission step follows from this release.
 

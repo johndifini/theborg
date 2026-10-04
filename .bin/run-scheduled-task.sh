@@ -9,7 +9,7 @@ set -euo pipefail
 # resumes at an offset that now points into shifted text. This runner is the one
 # most exposed to that: it hands a model a prompt and waits, and the weekly
 # backlog burndown implements workspace tooling items, which land in .bin/. On
-# 2026-09-09 a burndown child committed to this very file mid-run (1e619be).
+# 2026-09-09 a burndown child committed to this very file mid-run (932d684).
 # Reproduced deterministically before this fix: the victim re-executed commands
 # and resumed one byte into a token ("leep: command not found"). Note the call
 # below MUST keep `exit` on the same line -- a bare `main "$@"` still lets bash
