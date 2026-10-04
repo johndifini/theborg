@@ -6798,3 +6798,33 @@ artifacts:
       last_reviewed: null
       method: [mechanical, semantic]
     related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-raw-apple-just-put-claude-e6a0421:
+    path: "cerebruh/wikis/local-ai-apple-silicon/raw/Apple Just Put Claude Inside Every iPhone.md"
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-10-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-apple-claude-iphone-article:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/apple-claude-iphone-article.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-10-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-foundation-models-lan-bd02dcb:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/foundation-models-language-model-protocol.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-10-04    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
