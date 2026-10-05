@@ -51,6 +51,12 @@ Enumerate the backlogs by scanning the filesystem, never from memory or from a p
 
 To exclude another backlog, add a line here with the date and the reason. To stop excluding one, delete its line. This list is the only place an exclusion lives, so a future run cannot find a second rule contradicting it.
 
+**DEMOTED — rank these owners' items last, below every other open item, until the user lifts the rule.** Unlike an exclusion, a demoted owner's items are still reordered, planned, and dispatchable; they simply sort after everything else. This overrides the priority rubric in both PRIORITIZE (each file's order) and CONSOLIDATE (the cross-source union). Among themselves, demoted items keep rubric order. If the plan has no other actionable item, a demoted actionable item may still be burned. An item is owned by an agent when its owner tag says so (for example `(ari, added …)` in the workspace backlog).
+
+- `ari` — demoted 2026-10-04 at the user's direction, until they say otherwise.
+
+To demote another owner, add a line here with the date and the reason. To lift a demotion, delete its line. This list is the only place a demotion lives.
+
 After exclusions the scan currently resolves to exactly two files — the workspace backlog and `repos/waiq/BACKLOG.md` — but that is an observation, not a target.
 
 Record the enumerated paths and each file's open-item count before reordering anything; CONSOLIDATE must account for every one of them. Reorder each file's open items by priority, preserving that file's own format and conventions (the workspace file is a flat checkbox list — reorder it highest-priority-first; a repo file with priority tiers keeps its tiers, moving items between tiers only when clearly warranted). Priority rubric: user pain in active use > bugs > security/correctness > features > nice-to-haves; weigh what unblocks other items. Do not rewrite item content. Commit each reordered *repo* file in its own repository. The workspace `${BORG_ROOT}/BACKLOG.md` is gitignored and cannot be committed; its reorder is a disk-only change, which is expected — say so rather than reporting a failed commit.
