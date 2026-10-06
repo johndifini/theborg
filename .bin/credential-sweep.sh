@@ -34,6 +34,17 @@
 #      so a Vercel token leaking into a build cache would have swept clean. JSON
 #      stores are now a first-class store class with the same rules: keys matching
 #      the credential-name regex, values long enough to be real, names-only output.
+#   6. LARGE FILES GO TO A CHUNKED SCANNER, NOT GREP. Added 2026-10-05 for
+#      security-audit finding 38. An Xcode GUI build created sparse files in
+#      DerivedData/CompilationCache.noindex with 37 GB of apparent size but ~16 KB
+#      allocated each. grep reads every zero (about 10 s/GB, worse on the 24 GB
+#      file), so the sweep ran past the audit's time budget, was killed, and
+#      produced no verdict. APFS reports the whole file as one data region, so
+#      SEEK_DATA cannot skip the holes. Files above LARGE_BYTES are therefore
+#      scanned in chunks by Python, which discards all-zero chunks cheaply. They
+#      are SCANNED, not skipped, and each one is listed in the output so the
+#      scope stays visible. Any grep, find, or scanner error now makes the exit
+#      code 2. It used to print a warning and still exit 0.
 #
 # It also self-tests before trusting itself (see CANARY): a sweep that cannot
 # see into a gitignored path must fail loudly, not return clean.
@@ -44,7 +55,11 @@
 # path, including signals.
 #
 # Usage:   .bin/credential-sweep.sh [--quiet] [extra-root ...]
+# Env:     CREDSWEEP_LARGE_BYTES  size above which a file goes to the chunked
+#          scanner instead of grep (default 268435456 = 256 MiB)
 # Exit:    0 = clean   1 = credentials found   2 = sweep could not be trusted
+#          (2 wins over 1: credentials found during an untrusted sweep are
+#          still listed, but the run is reported as untrusted)
 set -uo pipefail
 
 GREP=/usr/bin/grep
@@ -163,6 +178,136 @@ fi
 say "patterns: $NPAT credential value(s) from $(( ${#SECRET_FILES[@]} + ${#JSON_SECRET_FILES[@]} )) candidate store(s)"
 
 # ---------------------------------------------------------------------------
+# 1c. Scan engines. The canary below runs both of them before any real root.
+#
+#     grep_root  — every regular file at or below LARGE_BYTES, through
+#                  /usr/bin/grep in fixed-size batches. Each batch is a direct
+#                  call, so its rc is grep's own. There is no xargs, which folds
+#                  "no match" and "error" into a single code.
+#     scan_large — every file above LARGE_BYTES, read in 64 MiB chunks by
+#                  Python. All-zero chunks are discarded before matching, which
+#                  is what makes sparse caches cheap. Values are read from the
+#                  0600 name file outside the mirror and held in memory only.
+#
+#     Both return 2 when anything they ran was not trustworthy.
+# ---------------------------------------------------------------------------
+LARGE_BYTES="${CREDSWEEP_LARGE_BYTES:-268435456}"
+[[ "$LARGE_BYTES" =~ ^[0-9]+$ ]] || { echo "FATAL: CREDSWEEP_LARGE_BYTES must be a byte count" >&2; exit 2; }
+BATCH=400
+# Provider-prefix second net: catches credentials that live nowhere in the env
+# files and so have no value to match. Reported separately — a hit here is a
+# lead to investigate, not automatically a live secret.
+PREFIX_RE='sk-ant-(oat|api)[A-Za-z0-9_-]{20,}|sk-proj-[A-Za-z0-9_-]{40,}|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36}|xox[baprs]-[0-9A-Za-z-]{10,}|-----BEGIN [A-Z ]*PRIVATE KEY-----'
+
+# grep_batch ROOT OUTFILE GREP-MATCH-ARGS...  — greps the caller's ${batch[@]}.
+# The workspace is edited concurrently, so a file can vanish between find and
+# grep, and grep then returns 2 for a file that no longer exists. A vanished
+# file cannot hold a credential, so on rc>1 the batch is retried once with only
+# the files that still exist. A second failure is real: grep's own error lines
+# (paths, never values) are printed and the root is marked untrustworthy.
+grep_batch() {
+  local root=$1 out=$2; shift 2
+  local err tout rc f kept=()
+  err=$(mktemp -t credsweepe); chmod 600 "$err"
+  tout=$(mktemp -t credsweepo); chmod 600 "$tout"
+  "$GREP" -la "$@" -- "${batch[@]}" > "$tout" 2> "$err"; rc=$?
+  if [[ $rc -gt 1 ]]; then
+    for f in "${batch[@]}"; do [[ -e "$f" ]] && kept+=("$f"); done
+    if [[ ${#kept[@]} -lt ${#batch[@]} ]]; then
+      say "  note: $(( ${#batch[@]} - ${#kept[@]} )) file(s) under $root vanished mid-sweep; batch retried"
+    fi
+    rc=1
+    if [[ ${#kept[@]} -gt 0 ]]; then
+      "$GREP" -la "$@" -- "${kept[@]}" > "$tout" 2> "$err"; rc=$?
+    else
+      : > "$tout"
+    fi
+    if [[ $rc -gt 1 ]]; then
+      echo "WARN: grep returned rc=$rc under $root, after a retry:" >&2
+      sed -n '1,5s/^/       /p' "$err" >&2
+    fi
+  fi
+  cat "$tout" >> "$out"
+  rm -f "$err" "$tout"
+  [[ $rc -le 1 ]]
+}
+
+# grep_root ROOT OUTFILE GREP-MATCH-ARGS...  (appends matching paths to OUTFILE)
+grep_root() {
+  local root=$1 out=$2; shift 2
+  local list rc bad=0 f
+  local batch=()
+  list=$(mktemp -t credsweepl); chmod 600 "$list"
+  /usr/bin/find "$root" -type f ! -size +"${LARGE_BYTES}"c -print0 > "$list" 2>/dev/null; rc=$?
+  [[ $rc -ne 0 ]] && { echo "WARN: find returned rc=$rc under $root — listing is incomplete" >&2; bad=1; }
+  while IFS= read -r -d '' f; do
+    batch+=("$f")
+    if [[ ${#batch[@]} -ge $BATCH ]]; then
+      grep_batch "$root" "$out" "$@" || bad=1
+      batch=()
+    fi
+  done < "$list"
+  if [[ ${#batch[@]} -gt 0 ]]; then
+    grep_batch "$root" "$out" "$@" || bad=1
+  fi
+  rm -f "$list"
+  [[ $bad -eq 0 ]] || return 2
+}
+
+# scan_large ROOT THRESHOLD NAMEFILE VALOUT PREFIXOUT LISTOUT
+#   VALOUT    gets "path<TAB>NAME,NAME" per file holding a known value
+#   PREFIXOUT gets the paths that match PREFIX_RE
+#   LISTOUT   gets every file it scanned, so the report can show the scope
+scan_large() {
+  local root=$1 thr=$2 names=$3 vout=$4 pout=$5 lout=$6 list rc
+  list=$(mktemp -t credsweepl); chmod 600 "$list"
+  /usr/bin/find "$root" -type f -size +"${thr}"c -print0 > "$list" 2>/dev/null; rc=$?
+  if [[ $rc -ne 0 ]]; then
+    echo "WARN: find returned rc=$rc under $root (large files) — listing is incomplete" >&2
+    rm -f "$list"; return 2
+  fi
+  python3 - "$names" "$list" "$vout" "$pout" "$lout" "$PREFIX_RE" <<'PY'
+import re,sys
+namef,listf,vout,pout,lout,prefix=sys.argv[1:7]
+vals=[]
+for line in open(namef,'rb'):
+    line=line.rstrip(b'\n')
+    if b'\t' not in line: continue
+    n,v=line.split(b'\t',1)
+    if v.strip(): vals.append((n.decode(errors='replace'),v))
+if not vals:
+    sys.stderr.write("WARN: large-file scanner loaded no values\n"); sys.exit(2)
+rx=re.compile(prefix.encode())
+CH=64<<20
+OV=max(4096,max(len(v) for _,v in vals))   # overlap so no match straddles a chunk edge
+bad=0
+with open(vout,'ab') as V, open(pout,'ab') as P, open(lout,'ab') as L:
+    for p in [x for x in open(listf,'rb').read().split(b'\0') if x]:
+        hit=set(); pre=False; tail=b''
+        try:
+            with open(p,'rb') as fh:
+                while True:
+                    b=fh.read(CH)
+                    if not b: break
+                    buf=tail+b; tail=buf[-OV:]
+                    if not buf.strip(b'\0'): continue   # sparse hole or zero fill
+                    for n,v in vals:
+                        if v in buf: hit.add(n)
+                    if not pre and rx.search(buf): pre=True
+        except OSError as e:
+            sys.stderr.write("WARN: large-file scanner could not read %s (%s)\n"
+                             % (p.decode(errors='replace'),e.__class__.__name__))
+            bad=1; continue
+        L.write(p+b'\n')
+        if hit: V.write(p+b'\t'+','.join(sorted(hit)).encode()+b'\n')
+        if pre: P.write(p+b'\n')
+sys.exit(2 if bad else 0)
+PY
+  rc=$?; rm -f "$list"
+  [[ $rc -eq 0 ]] || { echo "WARN: large-file scanner returned rc=$rc under $root" >&2; return 2; }
+}
+
+# ---------------------------------------------------------------------------
 # 2. CANARY. Prove the sweep can see into a gitignored path BEFORE trusting a
 #    clean result. This is the check that fails loudly instead of silently.
 # ---------------------------------------------------------------------------
@@ -170,8 +315,9 @@ say "patterns: $NPAT credential value(s) from $(( ${#SECRET_FILES[@]} + ${#JSON_
 # into $BORG_ROOT/tmp, and that path is inside the Google Drive mirror root — a
 # live value planted there, even for the second before it is deleted, is a
 # candidate for upload. Testing the mechanism does not require testing it with
-# a real secret: what is under test is whether /usr/bin/grep -rlaF -f can see
-# into a gitignored directory at all.
+# a real secret: what is under test is whether each scan engine can see into a
+# gitignored directory at all. Both engines are tested, because a root's files
+# are split between them by size.
 CANARY_DIR="$BORG_ROOT/tmp/.credsweep-canary-$$"
 mkdir -p "$CANARY_DIR" 2>/dev/null || { echo "FATAL: cannot create canary dir" >&2; exit 2; }
 CANARY_VAL="CREDSWEEP-CANARY-SENTINEL-$$-do-not-treat-as-a-secret"
@@ -183,13 +329,22 @@ if git -C "$BORG_ROOT" check-ignore -q "$CANARY_DIR/canary.txt" 2>/dev/null; the
 else
   say "canary: WARNING — target path is not gitignored; test is weaker than intended"
 fi
-"$GREP" -rlaF -f "$CANARY_PAT" "$CANARY_DIR/canary.txt" >/dev/null 2>&1; crc=$?
-if [[ $crc -ne 0 ]]; then
-  echo "FATAL: canary MISSED — the sweep cannot see a known value in a gitignored path." >&2
+CANARY_NAMES="$CANARY_DIR/.names"
+printf 'CREDSWEEP_CANARY\t%s\n' "$CANARY_VAL" > "$CANARY_NAMES"
+CG=$(mktemp -t credsweepc); CV=$(mktemp -t credsweepc); CX=$(mktemp -t credsweepc); CL=$(mktemp -t credsweepc)
+grep_root "$CANARY_DIR" "$CG" -F -f "$CANARY_PAT"; grc=$?
+# Threshold 0 forces every canary file through the large-file engine too.
+scan_large "$CANARY_DIR" 0 "$CANARY_NAMES" "$CV" "$CX" "$CL"; lrc=$?
+"$GREP" -qxF "$CANARY_DIR/canary.txt" "$CG"; gseen=$?
+"$GREP" -qF "$CANARY_DIR/canary.txt"$'\t'"CREDSWEEP_CANARY" "$CV"; lseen=$?
+rm -f "$CG" "$CV" "$CX" "$CL"
+if [[ $grc -ne 0 || $gseen -ne 0 || $lrc -ne 0 || $lseen -ne 0 ]]; then
+  echo "FATAL: canary MISSED — the sweep cannot see a known value in a gitignored path" >&2
+  echo "       (grep engine rc=$grc seen=$((gseen==0)); large-file engine rc=$lrc seen=$((lseen==0)))." >&2
   echo "       Every clean result from this tool is untrustworthy until fixed." >&2
   exit 2
 fi
-say "canary: PASSED"
+say "canary: PASSED (grep engine and large-file engine)"
 rm -rf "$CANARY_DIR"; CANARY_DIR=""
 
 # ---------------------------------------------------------------------------
@@ -259,57 +414,71 @@ for r in "${ROOTS[@]}"; do say "  - $r"; done
 # 4. Sweep. rc captured directly from grep — never through a pipe, never with
 #    `timeout` (which does not exist here and would exit 127 looking clean).
 # ---------------------------------------------------------------------------
-HITFILE=$(mktemp -t credsweeph); chmod 600 "$HITFILE"
-TOTAL=0
+HITFILE=$(mktemp -t credsweeph); chmod 600 "$HITFILE"   # grep-engine value hits
+LHIT=$(mktemp -t credsweeph); chmod 600 "$LHIT"          # large-file value hits: path<TAB>names
+PFILE=$(mktemp -t credsweepp); chmod 600 "$PFILE"        # provider-prefix leads, both engines
+LLIST=$(mktemp -t credsweepl); chmod 600 "$LLIST"        # every large file scanned
+UNTRUSTED=0
 for r in "${ROOTS[@]}"; do
-  OUT=$(mktemp -t credsweepo); chmod 600 "$OUT"
-  "$GREP" -rlaF -f "$PATFILE" "$r" > "$OUT" 2>/dev/null; rc=$?
-  if [[ $rc -gt 1 ]]; then
-    echo "WARN: grep returned rc=$rc for $r — result for this root is NOT trustworthy" >&2
-  fi
-  n=$(wc -l < "$OUT" | tr -d ' ')
-  TOTAL=$((TOTAL+n))
-  say "  swept $r -> $n hit(s) (rc=$rc)"
-  cat "$OUT" >> "$HITFILE"; rm -f "$OUT"
+  hb=$(wc -l < "$HITFILE"); lb=$(wc -l < "$LHIT"); sb=$(wc -l < "$LLIST")
+  ok=1
+  grep_root "$r" "$HITFILE" -F -f "$PATFILE"                       || ok=0
+  scan_large "$r" "$LARGE_BYTES" "$NAMEFILE" "$LHIT" "$PFILE" "$LLIST" || ok=0
+  grep_root "$r" "$PFILE" -E -e "$PREFIX_RE"                       || ok=0
+  n=$(( $(wc -l < "$HITFILE") - hb + $(wc -l < "$LHIT") - lb ))
+  big=$(( $(wc -l < "$LLIST") - sb ))
+  if [[ $ok -eq 1 ]]; then state="trusted"; else state="NOT TRUSTWORTHY"; UNTRUSTED=1; fi
+  say "  swept $r -> $n hit(s), $big large file(s) chunk-scanned ($state)"
 done
 
-# Provider-prefix second net: catches credentials that live nowhere in the env
-# files and so have no value to match. Reported separately — a hit here is a
-# lead to investigate, not automatically a live secret.
-PREFIX_RE='sk-ant-(oat|api)[A-Za-z0-9_-]{20,}|sk-proj-[A-Za-z0-9_-]{40,}|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36}|xox[baprs]-[0-9A-Za-z-]{10,}|-----BEGIN [A-Z ]*PRIVATE KEY-----'
-PFILE=$(mktemp -t credsweepp); chmod 600 "$PFILE"
-for r in "${ROOTS[@]}"; do
-  "$GREP" -rlaE "$PREFIX_RE" "$r" >> "$PFILE" 2>/dev/null
-done
 sort -u "$PFILE" -o "$PFILE"
-# Anything already caught by value is not news here.
 sort -u "$HITFILE" -o "$HITFILE"
-PONLY=$(comm -23 "$PFILE" "$HITFILE" | wc -l | tr -d ' ')
+ALLHITS=$(mktemp -t credsweeph); chmod 600 "$ALLHITS"
+{ cat "$HITFILE"; cut -f1 "$LHIT"; } | sort -u > "$ALLHITS"
+TOTAL=$(wc -l < "$ALLHITS" | tr -d ' ')
+# Anything already caught by value is not news here.
+PONLY=$(comm -23 "$PFILE" "$ALLHITS" | wc -l | tr -d ' ')
 
 # ---------------------------------------------------------------------------
 # 5. Report. Variable NAMES and paths only — never a value.
 # ---------------------------------------------------------------------------
 echo
+NBIG=$(wc -l < "$LLIST" | tr -d ' ')
+echo "=== large files scanned in chunks instead of grep (> $LARGE_BYTES bytes): $NBIG ==="
+while IFS= read -r big; do
+  [[ -n "$big" ]] || continue
+  echo "  $(stat -f '%z bytes apparent, %b blocks' "$big" 2>/dev/null)  $big"
+done < "$LLIST"
 echo "=== credential sweep: $TOTAL file(s) containing live credential values ==="
 if [[ $TOTAL -gt 0 ]]; then
   while IFS= read -r hit; do
     [[ -n "$hit" ]] || continue
     mode=$(stat -f "%Sp" "$hit" 2>/dev/null)
-    which=""
-    while IFS=$'\t' read -r nm val; do
-      [[ -n "$val" ]] || continue
-      "$GREP" -qaF "$val" "$hit" 2>/dev/null && which="${which:+$which,}$nm"
-    done < "$NAMEFILE"
+    # Large files were already attributed by the chunked scanner; re-grepping
+    # them per value would reintroduce the stall this split exists to avoid.
+    which=$(awk -F'\t' -v p="$hit" '$1==p {print $2; exit}' "$LHIT")
+    if [[ -z "$which" ]]; then
+      while IFS=$'\t' read -r nm val; do
+        [[ -n "$val" ]] || continue
+        "$GREP" -qaF "$val" "$hit" 2>/dev/null && which="${which:+$which,}$nm"
+      done < "$NAMEFILE"
+    fi
     world=""
     case "$mode" in *r--r--|*rw-r--r--|*r-xr-xr-x) world=" [WORLD-READABLE]";; esac
     echo "  $mode$world  $hit"
     echo "      exposes: ${which:-<unresolved>}"
-  done < "$HITFILE"
+  done < "$ALLHITS"
 fi
 echo "=== provider-pattern leads not explained by a known value: $PONLY ==="
-[[ $PONLY -gt 0 ]] && comm -23 "$PFILE" "$HITFILE" | sed 's/^/  /'
-rm -f "$HITFILE" "$PFILE"
+[[ $PONLY -gt 0 ]] && comm -23 "$PFILE" "$ALLHITS" | sed 's/^/  /'
+rm -f "$HITFILE" "$LHIT" "$PFILE" "$LLIST" "$ALLHITS"
 
+if [[ $UNTRUSTED -ne 0 ]]; then
+  echo
+  echo "RESULT: UNTRUSTED — at least one root could not be swept reliably (see WARN lines)."
+  [[ $TOTAL -gt 0 || $PONLY -gt 0 ]] && echo "        Credential material WAS also found above; treat it as real."
+  exit 2
+fi
 if [[ $TOTAL -gt 0 || $PONLY -gt 0 ]]; then
   echo
   echo "RESULT: NOT CLEAN — credential material found on disk."

@@ -31,15 +31,22 @@ Run the /security-review skill against the current state of ${BORG_ROOT}. Specif
   pins /usr/bin/grep, matches the real values read from the secret stores rather
   than provider prefixes, and self-tests before trusting a clean result.
   Interpret its exit code literally:
-    0 = clean. Report the root count it swept, so scope drift is visible in the
+    0 = clean. Report the root count it swept and the number of large files it
+        chunk-scanned instead of grepping, so scope drift is visible in the
         report rather than invisible.
     1 = credentials found. CRITICAL. It prints variable name, file path, and
         mode; any file marked WORLD-READABLE is the most urgent. Report the
         exposing variable NAME and never the value — this report is emailed.
     2 = the sweep could not be trusted (canary missed, empty pattern set, or a
-        grep that errored). This is NOT a clean result and must never be
-        reported as one. Escalate as a finding in its own right: the audit was
-        blind for this run.
+        find, grep, or large-file scan that errored). This is NOT a clean result
+        and must never be reported as one. Escalate as a finding in its own
+        right: the audit was blind for this run. Any credentials it lists are
+        still real; report them as well.
+  Run the sweep in the foreground, or give a backgrounded run at least 30
+  minutes. It finishes in about 10 minutes today. A run killed before its
+  RESULT line has no exit code, and that is not a result. On 2026-10-05 a
+  37 GB sparse Xcode cache stalled the old grep-only sweep past the run's
+  budget. The script now chunk-scans files above 256 MiB instead.
   If a credential is found, also check whether it reached anywhere durable
   before recommending rotation urgency: pickaxe AND all-object scan of every
   repo's history (reachable plus unreachable/dangling objects, which catches
