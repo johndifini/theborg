@@ -37,6 +37,10 @@ The Borg is a standardized AI workspace that turns prompts, institutional knowle
   takeaways or decisions most useful to retain. Omit the recap when it would
   merely repeat a short or simple answer. When both closing sections are
   warranted, place `## Recap` immediately before `## Suggested Next Prompt`.
+  Count a reply as substantial whenever it reports work done (edits, commits,
+  pushes), gives a diagnosis, or carries more than one list or table; only a
+  short direct answer skips it. Work left uncommitted, unpushed, or unverified
+  is a follow-up, so that reply also ends with `## Suggested Next Prompt`.
 - When a useful follow-up exists, end with a `## Suggested Next Prompt` section.
   Omit it when the task is complete or no meaningful next step exists. This is
   the one canonical shape for the section, in every channel. Every command,
