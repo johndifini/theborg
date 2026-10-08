@@ -31,4 +31,7 @@ referenced by phase name:
    A request to draft something here alone does not queue scheduled delivery.
    If the user later says an interactive draft was posted or used, add the topic
    to delivered history as `manual` and remove its pending entry so the scheduled
-   job cannot propose it again.
+   job cannot propose it again. If the user rejects a drafted topic or the
+   candidates offered, re-read the topics log and mark each rejected subject in
+   `## Pending topics` as `user-rejected` with the date. A rejection is not a
+   delivery.

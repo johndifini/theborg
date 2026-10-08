@@ -62,6 +62,8 @@ Also drop anything from the resume/job-search agent: `ari/`, including the
 career dossier, its commands, workflows, and scheduled jobs. The user is not
 publicizing it yet. This is a hard exclusion until the user lifts it in
 `${BORG_ROOT}/mrs-beast/USER.md`; do not queue such candidates in Pending.
+Also drop any candidate marked `user-rejected` in the topics log, including a
+different commit on the same idea, unless the user later asks for it again.
 A different commit touching the same idea still counts as covered. The legacy
 heading "already posted about" records draft delivery, not confirmed publication.
 

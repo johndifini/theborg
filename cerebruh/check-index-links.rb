@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+Encoding.default_external = Encoding::UTF_8
+
 # Validate local Markdown links in every wiki index. A target must resolve exactly as
 # written; extensionless links are rejected even if adding `.md` would find a page.
 
