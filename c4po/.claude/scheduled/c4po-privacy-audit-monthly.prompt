@@ -144,7 +144,10 @@ no remediation. John decides whether each identifier is acceptable. Format:
 
 A finding may mention that the same string also appears in git history if that
 context is useful, but history is outside remediation scope. Never propose or
-perform a git history rewrite.
+perform a git history rewrite. That limit is this job's scope, not advice. If
+health or other personal data that cannot be rotated is publicly reachable in
+history, say so and flag it for the user's decision. The user's standard
+(2026-10-03): such data must not be publicly accessible, history included.
 
 STEP 4: If there are no findings, pipe this Markdown body into
 `${BORG_ROOT}/.bin/notify-email.sh c4po "Borg privacy audit — {YYYY-MM-DD} — 0 finding(s)"`:
