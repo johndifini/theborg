@@ -6848,3 +6848,27 @@ artifacts:
     review:
       last_reviewed: null
     related: []
+
+  c4po-agents-skills-git-history-rewrite-skill:
+    path: c4po/.agents/skills/git-history-rewrite/SKILL.md
+    type: generated_rule_bridge
+    status: draft
+    owner: c4po
+    scope: c4po
+    canonical_ref: c4po-claude-rules-git-history-rewrite
+    introduced: 2026-10-07    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  c4po-claude-rules-git-history-rewrite:
+    path: c4po/.claude/rules/git-history-rewrite.md
+    type: scoped_rule
+    status: draft
+    owner: c4po
+    scope: c4po
+    introduced: 2026-10-07    # file mtime (untracked; not a history fact)
+    consumers: [claude-code, codex]
+    review:
+      last_reviewed: null
+    related: []
