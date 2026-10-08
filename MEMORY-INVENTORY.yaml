@@ -6872,3 +6872,27 @@ artifacts:
     review:
       last_reviewed: null
     related: []
+
+  c4po-agents-skills-headless-tcc-consent-hang-skill:
+    path: c4po/.agents/skills/headless-tcc-consent-hang/SKILL.md
+    type: generated_rule_bridge
+    status: draft
+    owner: c4po
+    scope: c4po
+    canonical_ref: c4po-claude-rules-headless-tcc-consent-hang
+    introduced: 2026-10-07    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  c4po-claude-rules-headless-tcc-consent-hang:
+    path: c4po/.claude/rules/headless-tcc-consent-hang.md
+    type: scoped_rule
+    status: draft
+    owner: c4po
+    scope: c4po
+    introduced: 2026-10-07    # file mtime (untracked; not a history fact)
+    consumers: [claude-code, codex]
+    review:
+      last_reviewed: null
+    related: []
