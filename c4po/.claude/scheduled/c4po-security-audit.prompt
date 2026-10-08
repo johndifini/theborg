@@ -84,6 +84,11 @@ Run the /security-review skill against the current state of ${BORG_ROOT}. Specif
   below. Preserve any `accepted_risks` entries and treat them as resolved, not
   findings, unless the current facts materially exceed the scope the user
   accepted. Carry the entries forward when RECORD STATE writes the new state.
+- When a finding's remaining step is an external request (a support ticket, a
+  form, a takedown), its state entry must carry the receipt: ticket number,
+  date, and channel. A missing receipt means the status is unknown, not that
+  nothing was filed. Ask the user before telling them to file again. Codex
+  Desktop can submit web forms itself while the user is signed in.
 
 Always email the result by piping it into `${BORG_ROOT}/.bin/notify-email.sh c4po "Borg security audit — {YYYY-MM-DD} — {N} finding(s)"` (reads the message from stdin and emails it to the user) — even when the audit is clean, so the user can confirm the job ran. Body header: same as the subject. Immediately after that header, before any narrative, include this compact scan summary:
 
