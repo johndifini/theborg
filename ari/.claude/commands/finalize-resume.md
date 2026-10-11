@@ -20,7 +20,7 @@ the method.
 2. Resolve the source with:
 
        python3 "${BORG_ROOT}/ari/.bin/resume_corpus.py" resolve \
-         --resume-dir "${BORG_ROOT}/ari/.private/Resumes" \
+         --resume-dir "${BORG_ROOT}/ari/.private/Resumes and References" \
          "$ARGUMENTS"
 
 3. Stop on a missing or ambiguous match. Never accept an archive, directory,

@@ -26,7 +26,7 @@ class DossierPublicationTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
         self.private = self.root / "private"
-        self.resumes = self.private / "Resumes"
+        self.resumes = self.private / "Resumes and References"
         self.project = self.root / "career-dossier"
         (self.project / "content" / "claims").mkdir(parents=True)
         self.resumes.mkdir(parents=True)
@@ -37,7 +37,7 @@ class DossierPublicationTests(unittest.TestCase):
             "# Bank\n\n### RB-001 — Synthetic example\n\n"
             "- **Status:** verified\n"
             "- **Canonical evidence:** A private synthetic fact.\n"
-            "- **Source:** `.private/Resumes/example.docx`\n\n"
+            "- **Source:** `.private/Resumes and References/example.docx`\n\n"
             "### RB-002 — Retired example\n\n"
             "- **Status:** retired\n"
             "- **Source:** RB-001\n",

@@ -37,7 +37,7 @@ Use this file as a curated evidence bank for tailoring resumes to specific job d
 - **Metrics and scope:** 40% reduction; example team of 12; synthetic values only.
 - **Skills/themes:** Process improvement, cross-functional coordination, workflow design, change management
 - **Best-fit targets:** Operations, program management
-- **Source:** `Resumes/example-current-resume.docx`, page or section reference
+- **Source:** `Resumes and References/example-current-resume.docx`, page or section reference
 - **Candidate confirmation:** YYYY-MM-DD, if applicable
 - **Constraints:** Do not imply ownership of software engineering or organization-wide deployment.
 - **Approved variants:**
@@ -55,7 +55,7 @@ Use this file as a curated evidence bank for tailoring resumes to specific job d
 - **Metrics and scope:** Reported improvement of approximately 8%; baseline and measurement period not yet confirmed.
 - **Skills/themes:** Customer success, relationship management, retention
 - **Best-fit targets:** Account management, customer success
-- **Source:** `Resumes/Older Resumes/example-older-resume.pdf`, page or section reference
+- **Source:** `Resumes and References/Older Resumes/example-older-resume.pdf`, page or section reference
 - **Candidate confirmation:** Pending
 - **Constraints:** Do not use the percentage until its definition and timeframe are confirmed.
 - **Approved variants:** None until confirmed.

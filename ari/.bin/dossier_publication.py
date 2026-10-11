@@ -29,7 +29,7 @@ SCHEMA_VERSION = 1
 CLAIM_ID_RE = re.compile(r"^RB-[0-9]{3,}$")
 HEADING_RE = re.compile(r"^### (RB-[0-9]{3,}) — (.+)$", re.MULTILINE)
 FIELD_RE = re.compile(r"^- \*\*(.+?):\*\*\s*(.*)$", re.MULTILINE)
-PRIVATE_PATH_RE = re.compile(r"`\.private/Resumes/([^`]+\.(?:docx|pdf))`")
+PRIVATE_PATH_RE = re.compile(r"`\.private/Resumes and References/([^`]+\.(?:docx|pdf))`")
 DATE_RE = re.compile(r"\b(20[0-9]{2}-[0-9]{2}-[0-9]{2})\b")
 DIGEST_RE = re.compile(r"^sha256:[a-f0-9]{64}$")
 
@@ -591,7 +591,7 @@ def add_common(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--project-dir", default=str(ari_root / "career-dossier"))
     parser.add_argument("--bullet-bank", default=str(private / "Resume Bullet Bank.md"))
     parser.add_argument("--resume-manifest", default=str(private / "Resume Corpus Manifest.json"))
-    parser.add_argument("--resumes-dir", default=str(private / "Resumes"))
+    parser.add_argument("--resumes-dir", default=str(private / "Resumes and References"))
     parser.add_argument("--provenance", default=str(private / "Career Claim Provenance.json"))
     parser.add_argument("--publication-manifest", default=str(private / "Dossier Publication Manifest.json"))
 

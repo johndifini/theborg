@@ -98,7 +98,7 @@ ari/.private/
 ├── Career Claim Provenance.json
 ├── Dossier Publication Manifest.json
 ├── Resume Corpus Manifest.json
-└── Resumes/
+└── Resumes and References/
 ```
 
 ## Foundation choices

@@ -13,7 +13,7 @@ esac
 BORG_ROOT_DIR="${BORG_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
 ARI_DIR="$BORG_ROOT_DIR/ari"
 SCANNER="$ARI_DIR/.bin/resume_corpus.py"
-RESUME_DIR="$ARI_DIR/.private/Resumes"
+RESUME_DIR="$ARI_DIR/.private/Resumes and References"
 MANIFEST="$ARI_DIR/.private/Resume Corpus Manifest.json"
 REPORT_FILE="$(mktemp "${TMPDIR:-/tmp}/resume-harvest-report.XXXXXX")"
 trap 'rm -f "$REPORT_FILE"' EXIT
