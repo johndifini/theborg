@@ -79,6 +79,22 @@ export BORG_ROOT
 # generated report input; gitignore each one an agent adds.
 export LAST30DAYS_MEMORY_DIR="$AGENT_DIR/.claude/scheduled/last30days-raw"
 
+# last30days needs Python 3.12+, but launchd's PATH puts /usr/bin ahead of
+# Homebrew, so bare `python3` is the system 3.9 and the engine exits on it.
+# The skill's Runtime Preflight honors LAST30DAYS_PYTHON before its own search,
+# so resolve a versioned interpreter here. On 2026-10-13 the image job only
+# reached 3.12+ because the model happened to try python3.14 after the failure.
+if [[ -z "${LAST30DAYS_PYTHON:-}" ]]; then
+  for _py in python3.14 python3.13 python3.12; do
+    if command -v "$_py" >/dev/null 2>&1; then
+      LAST30DAYS_PYTHON="$(command -v "$_py")"
+      export LAST30DAYS_PYTHON
+      break
+    fi
+  done
+  unset _py
+fi
+
 # Harness default. The Borg is harness-agnostic: a scheduled job may run on
 # Claude Code or on Codex, and the choice is per-task rather than baked in here.
 # Resolution order, last wins:
