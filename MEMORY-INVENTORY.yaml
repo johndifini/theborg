@@ -6896,3 +6896,38 @@ artifacts:
     review:
       last_reviewed: null
     related: []
+
+  ebert-agents:
+    path: ebert/AGENTS.md
+    type: always_on_instruction
+    status: draft
+    owner: ebert
+    scope: ebert
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-10-11    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code, codex, claude-desktop]
+    review:
+      cadence: monthly
+      last_reviewed: null
+      method: [semantic, best_practice]
+    related: []
+
+  ebert-claude:
+    path: ebert/CLAUDE.md
+    type: compatibility_wrapper
+    status: draft
+    owner: ebert
+    scope: ebert
+    visibility: public
+    canonicality: mirror
+    canonical_ref: ebert-agents
+    introduced: 2026-10-11    # file mtime (untracked; not a history fact)
+    load_mode: always
+    consumers: [claude-code]
+    review:
+      cadence: each_audit
+      last_reviewed: null
+      method: [drift_only]
+    related: []

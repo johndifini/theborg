@@ -23,6 +23,7 @@ This repo is my personal AI workspace, shared in case the patterns, structure, o
 - `architetto/` — The software architect agent. Bootstraps greenfield repos — picking the stack, automated-testing framework, repo structure, and database — then hands them off with the decisions written down.
 - `repos/` — Where `architetto` parks the repos it initializes. Each is its own independent git repo; the workspace git-ignores the contents (structure only, via `.gitkeep`) so product code stays out of The Borg's history.
 - `jony-vibe/` — The graphic design and branding agent. Handles logos, color/type systems, layout, brand guidelines, and image-generation prompts.
+- `ebert/` — The personal entertainment recommender agent. Picks movies, shows, miniseries, and audiobooks for me, my partner, or date night — and remembers what flopped so it never pitches it twice.
 - `bernard/` — A case study, not an agent: the sanitized harness of a private health wiki and its family-facing WhatsApp companion agent (Bernard) — how it was built and what everything does.
 - `design/` — Design assets for The Borg repo itself, made by `jony-vibe` — right now that's the GitHub social preview, the card you see when someone drops a link to this repo in Slack. Design work for a repo under `repos/` lives inside that repo's own `design/` folder instead.
 - `tmp/` — Shared scratch space for any agent's working files. Git-ignored (structure only, via `.gitkeep`), so nobody's half-finished draft ends up in the history.
