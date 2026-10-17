@@ -33,6 +33,7 @@ Use this default system for slide decks unless a project provides its own brand 
 - Never include a footer, including page or slide numbers.
 - Prefer purposeful images, simple charts, and direct data labels. Avoid decorative clutter.
 - When content does not fit, simplify the message, split the slide, or move supporting detail to speaker notes before reducing the font size.
+- Write speaker notes as short bullets, not paragraphs, so the presenter can scan them mid-talk. **Bold** the key phrase in each bullet so it stands out at a glance.
 
 ## Principles
 
