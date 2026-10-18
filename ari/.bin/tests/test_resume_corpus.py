@@ -117,6 +117,7 @@ class ResumeCorpusTests(unittest.TestCase):
         self.write_file("~$locked.docx")
         self.write_file("backup.bak.pdf")
         self.write_file("Older Resumes/archived.docx")
+        self.write_file("Backups/example-20260101T000000.docx")
         self.write_file(".DS_Store")
         self.assertEqual([], self.scan())
 
@@ -164,8 +165,9 @@ class ResumeCorpusTests(unittest.TestCase):
     def test_resolution_rejects_archive_backup_and_non_docx(self) -> None:
         self.write_file("Older Resumes/example.docx")
         self.write_file("example.bak.docx")
+        self.write_file("Backups/example.docx")
         self.write_file("example.pdf")
-        for query in ("Older Resumes/example.docx", "example.bak.docx", "example.pdf"):
+        for query in ("Older Resumes/example.docx", "Backups/example.docx", "example.bak.docx", "example.pdf"):
             with self.subTest(query=query), self.assertRaises(corpus.CorpusError):
                 corpus.resolve_resume(self.resumes, query)
 

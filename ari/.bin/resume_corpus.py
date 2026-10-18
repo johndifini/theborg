@@ -25,7 +25,8 @@ from typing import Any, Iterable
 SCHEMA_VERSION = 1
 HASH_RE = re.compile(r"^[0-9a-f]{64}$")
 BULLET_ID_RE = re.compile(r"^RB-[0-9]+$")
-IGNORED_DIRS = {"Older Resumes"}
+# Archived versions and pre-edit backups are never artifacts to finalize.
+IGNORED_DIRS = {"Older Resumes", "Backups"}
 
 
 class CorpusError(Exception):
@@ -72,7 +73,7 @@ def validate_relative_path(value: Any, suffix: str, label: str) -> str:
     if path.is_absolute() or ".." in path.parts or "." in path.parts:
         raise CorpusError(f"{label} must be a normalized relative path")
     if any(part in IGNORED_DIRS for part in path.parts):
-        raise CorpusError(f"{label} must identify an active resume, not an archive")
+        raise CorpusError(f"{label} must identify an active resume, not an archive or backup")
     if path.suffix.lower() != suffix:
         raise CorpusError(f"{label} must end in {suffix}")
     if ignored_name(path.name):
