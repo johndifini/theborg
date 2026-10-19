@@ -31,6 +31,7 @@ Use this default system for slide decks unless a project provides its own brand 
 - Set titles in **Prompt Bold** and all other text (body copy, bullets, labels) in **Roboto Regular**. Keep margins generous and alignment consistent.
 - Give each slide one main idea. Apply the **Rule of 36**: aim for no more than 36 words per slide, including the title, body copy, and labels. Treat this as a rule of thumb; speaker notes do not count.
 - Never include a footer, including page or slide numbers.
+- Never number section-divider slides: no `01`/`02`-style labels above or beside the section title. The title stands alone.
 - Prefer purposeful images, simple charts, and direct data labels. Avoid decorative clutter.
 - When content does not fit, simplify the message, split the slide, or move supporting detail to speaker notes before reducing the font size.
 - Write speaker notes as short bullets, not paragraphs, so the presenter can scan them mid-talk. **Bold** the key phrase in each bullet so it stands out at a glance.
