@@ -5,11 +5,16 @@ description: "When visually checking a .pptx deck on the Mac Studio: render it w
 # Check .pptx decks in PowerPoint, not Keynote
 
 The `pptx` skill's visual QA assumes LibreOffice. The Mac Studio has no
-LibreOffice, but it has **Microsoft PowerPoint** — the app the deck is for. When
-`soffice` is missing, render with PowerPoint. Do not improvise with Keynote or
+LibreOffice, but it has **Microsoft PowerPoint** — the app a .pptx deliverable
+is opened in. When `soffice` is missing, render with PowerPoint. Do not
+improvise with Keynote or
 Quick Look: both open files PowerPoint repairs or refuses, so a clean Keynote
 render proves nothing. `repos/atm` commit `28eab53` ("Fix deck table cells that
 made PowerPoint offer repair") shipped after passing Keynote QA.
+
+This rule covers .pptx deliverables only. A native Google Slides deck is checked
+in Google Slides (see `jony-vibe/AGENTS.md`); never infer from this rule where
+the user presents.
 
 Export to PDF, then rasterize the pages to inspect them:
 
@@ -52,6 +57,13 @@ EOF
 - Computer use, `screencapture`, and System Events are not a fallback. The app
   has no Screen Recording or Accessibility permission (five sessions,
   2026-09-26/27).
+- Run the pptx skill's `scripts/office/validate.py` by path, under Homebrew
+  Python 3.10+ in a venv with `defusedxml` and `lxml` (for example
+  `/opt/homebrew/bin/python3.14 -m venv ${BORG_ROOT}/tmp/pptx-venv`).
+  `/usr/bin/python3` is 3.9 and fails on `match`, and `-m office.validate`
+  fails on its `helpers` import. Make any replace of the original depend on
+  the validator's exit status: on 2026-10-16 a missing-module error went
+  unnoticed and an unvalidated deck replaced the original.
 
 If PowerPoint cannot run (no GUI session, or no permission to run unsandboxed),
 report the visual check as **blocked**. Do not substitute Keynote or a

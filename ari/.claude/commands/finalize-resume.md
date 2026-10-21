@@ -56,7 +56,9 @@ the method.
 7. Extract text from both the DOCX and the Word-generated PDF and compare their
    substantive content. Stop and request a fresh Word export if headings,
    bullets, metrics, dates, or other material are missing or changed.
-   Also inspect the DOCX core properties and Word PDF metadata. Tailored-resume
+   Also inspect the DOCX core properties and Word PDF metadata. A "Best for printing" PDF carries
+   no Title or Author; judge those from the DOCX core properties and do not
+   fail the PDF for leaving them blank. Tailored-resume
    builders must overwrite inherited template properties. Require a stable,
    role-neutral title (for example, `<Candidate Name> Resume`), the correct
    author, and blank subject, keywords, category, and comments unless a

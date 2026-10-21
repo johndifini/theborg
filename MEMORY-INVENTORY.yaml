@@ -6931,3 +6931,49 @@ artifacts:
       last_reviewed: null
       method: [drift_only]
     related: []
+
+  agents-skills-reddit-via-arctic-shift-skill:
+    path: ".agents/skills/reddit-via-arctic-shift/SKILL.md"
+    type: generated_rule_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-rules-reddit-via-arctic-shift
+    introduced: 2026-10-21    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  claude-rules-reddit-via-arctic-shift:
+    path: ".claude/rules/reddit-via-arctic-shift.md"
+    type: scoped_rule
+    status: draft
+    scope: workspace
+    introduced: 2026-10-21    # file mtime (untracked; not a history fact)
+    consumers: [claude-code, codex]
+    review:
+      last_reviewed: null
+    related: []
+
+  jony-vibe-agents-skills-google-slides-editing-skill:
+    path: jony-vibe/.agents/skills/google-slides-editing/SKILL.md
+    type: generated_rule_bridge
+    status: draft
+    owner: jony-vibe
+    scope: jony-vibe
+    canonical_ref: jony-vibe-claude-rules-google-slides-editing
+    introduced: 2026-10-21    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  jony-vibe-claude-rules-google-slides-editing:
+    path: jony-vibe/.claude/rules/google-slides-editing.md
+    type: scoped_rule
+    status: draft
+    owner: jony-vibe
+    scope: jony-vibe
+    introduced: 2026-10-21    # file mtime (untracked; not a history fact)
+    consumers: [claude-code, codex]
+    review:
+      last_reviewed: null
+    related: []
