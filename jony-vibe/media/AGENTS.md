@@ -20,3 +20,4 @@ Use this directory for standalone media projects that do not belong to an indepe
 - Keep operational instructions in `AGENTS.md`; keep project facts, visual specifications, asset manifests, and prompts in `README.md` instead of duplicating them into always-loaded context.
 - Preserve approved final assets. Create versioned variants rather than overwriting a selected final unless the user explicitly asks for replacement.
 - Store design deliverables for a repository under that repository's `design/` directory, not here.
+- Project directories here are git-ignored on purpose. Never propose committing or pushing them, in a Suggested Next Prompt or anywhere else; a change saved on disk is complete.
