@@ -1007,6 +1007,9 @@ PRIVATE_PATTERNS = (
     r"(^|/)CLAUDE\.local\.md$",
     r"(^|/)\.claude/rules/[^/]*\.local\.md$",
     r"(^|/)\.agents/skills/[^/]*\.local/",
+    # jony-vibe/media/.gitignore keeps every project directory private except
+    # the synthetic example/; a project's own AGENTS.md names it.
+    r"^jony-vibe/media/(?!example/)[^/]+/",
 )
 # Gitignored artifacts that carry an agent's confidential domain data but do not
 # live under `.private/`. Listed individually so each entry is a decision.
