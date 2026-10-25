@@ -6977,3 +6977,32 @@ artifacts:
     review:
       last_reviewed: null
     related: []
+
+  claude-commands-clarify:
+    path: ".claude/commands/clarify.md"
+    type: command
+    status: draft
+    owner: workspace
+    scope: workspace
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-10-25    # file mtime (untracked; not a history fact)
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  codex-home-skills-clarify-skill:
+    path: skills/clarify/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-commands-clarify
+    introduced: 2026-10-25    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
