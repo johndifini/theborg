@@ -11,7 +11,7 @@ Field-tested process for getting the best AI image results.
 
 Draft (or have an LLM draft) a **Midjourney prompt** for the desired image, even though Midjourney won't necessarily be the tool used. The Midjourney prompt format produces the best results across all tools.
 
-When the deliverable is a transformation of an existing image, attach the source image and describe the transformation as explicit, numbered instructions. Good instructions are concrete and constraint-based, e.g.:
+When the deliverable is a transformation of an existing image, attach the source image and describe the transformation as explicit, numbered instructions. Good instructions are concrete and constraint-based, e.g. (the colors are illustrative; take a real project's colors from its brand or deck system):
 
 1. Replace the buzzard with a robot with the same expression.
 2. Use these colors in priority order: `#00F604`, `#F67F00`, `#00B7FF`

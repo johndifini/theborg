@@ -28,6 +28,7 @@ Use this default system for slide decks unless a project provides its own brand 
 
 - Use a 16:9 widescreen canvas with a solid dark-charcoal background (`#121212`) and soft-white text (`#F5F5F5`). Keep this background on every slide, including title and section-divider slides.
 - Keep the social-media palette in fixed roles throughout the deck: green (`#00F604`) is primary, orange (`#F67F00`) is secondary, and blue (`#00B7FF`) is tertiary. Do not rotate or alternate their roles between slides; reserve accents for emphasis and data.
+- Color an accented phrase green by default; color it orange only when the statement is negative (e.g., "Two wrong owners."). Color every hyperlink blue.
 - Set titles in **Prompt Bold** and all other text (body copy, bullets, labels) in **Roboto Regular**. Keep margins generous and alignment consistent.
 - Give each slide one main idea. Apply the **Rule of 36**: aim for no more than 36 words per slide, including the title, body copy, and labels. Treat this as a rule of thumb; speaker notes do not count.
 - Never include a footer, including page or slide numbers.
