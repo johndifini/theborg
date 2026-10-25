@@ -14,7 +14,7 @@ Draft (or have an LLM draft) a **Midjourney prompt** for the desired image, even
 When the deliverable is a transformation of an existing image, attach the source image and describe the transformation as explicit, numbered instructions. Good instructions are concrete and constraint-based, e.g.:
 
 1. Replace the buzzard with a robot with the same expression.
-2. Use these colors in priority order: `#00F604`, `#F67F00`, `#0077F6`
+2. Use these colors in priority order: `#00F604`, `#F67F00`, `#00B7FF`
 3. Use a flat design (no shading).
 4. Keep the star shape as-is.
 5. The robot is wearing headphones, and it has a radio transmitter on its head.

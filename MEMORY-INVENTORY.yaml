@@ -7006,3 +7006,33 @@ artifacts:
     review:
       last_reviewed: null
     related: []
+
+  jony-vibe-claude-commands-slide-visual:
+    path: jony-vibe/.claude/commands/slide-visual.md
+    type: command
+    status: draft
+    owner: jony-vibe
+    scope: jony-vibe
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-10-25    # file mtime (untracked; not a history fact)
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  codex-home-skills-slide-visual-skill:
+    path: skills/slide-visual/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    owner: jony-vibe
+    scope: jony-vibe
+    canonical_ref: jony-vibe-claude-commands-slide-visual
+    introduced: 2026-10-25    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
