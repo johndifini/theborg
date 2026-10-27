@@ -36,7 +36,7 @@ Use this default system for slide decks unless a project provides its own brand 
 - Prefer purposeful images, simple charts, and direct data labels. Avoid decorative clutter.
 - For a slide illustration from slide copy or a slide number, use `/slide-visual` (`.claude/commands/slide-visual.md`; `$slide-visual` in Codex).
 - When content does not fit, simplify the message, split the slide, or move supporting detail to speaker notes before reducing the font size.
-- Write speaker notes as short bullets, not paragraphs, so the presenter can scan them mid-talk. **Bold** the key phrase in each bullet so it stands out at a glance.
+- Write speaker notes as short bullets, not paragraphs, so the presenter can scan them mid-talk. **Bold** the key phrase in each bullet so it stands out at a glance. Set all speaker-note text in **Proxima Nova**, colored black (`#000000`).
 - Write slide copy, notes, and scripts in words the audience already uses; no vocabulary flexes ("concision"). Keep John's personal stories to the facts he gave: don't add details, change how often something happened, or invent outcomes. Ask when a story needs more.
 - John presents and shares decks from **native Google Slides**, so the Google Slides file is the source of truth. Edit it in place through the Google Slides connector; don't regenerate it from a local `.pptx` generator, and don't treat a `.pptx` export as authoritative. If the connector is missing, ask John to turn it on rather than editing a copy. Choose typefaces Google Slides provides, and do visual QA in Google Slides, not PowerPoint.
 
