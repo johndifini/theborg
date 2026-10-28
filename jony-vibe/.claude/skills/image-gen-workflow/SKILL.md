@@ -1,6 +1,6 @@
 ---
 name: image-gen-workflow
-description: Proven workflow for AI image generation — write a Midjourney-style prompt first, then run it through image-gen tools in a specific priority order. Use whenever creating or iterating on AI-generated images, logos, or graphics.
+description: Proven workflow for AI image generation — write a Midjourney-style prompt first, then hand it over with the image-gen tools to run it in, in priority order. Use whenever creating or iterating on AI-generated images, logos, or graphics.
 ---
 
 # Image Generation Workflow
@@ -29,9 +29,9 @@ Instruction patterns that work well:
 - **Specific added details** (headphones, radio transmitter)
 - **Design techniques** ("incorporate negative space")
 
-## Step 2 — Run the prompt through tools in priority order
+## Step 2 — Hand over the prompt and the tool order
 
-Despite the prompt being Midjourney-formatted, the best results come from these tools, in order:
+The deliverable is the copy-ready prompt in one `text` block, not an image. John runs it himself, in this order:
 
 1. **ChatGPT** (image generation)
 2. **Gemini Pro**
@@ -39,3 +39,5 @@ Despite the prompt being Midjourney-formatted, the best results come from these 
 4. **Midjourney**
 
 Start with ChatGPT; fall through the list only if results are unsatisfactory.
+
+Generate an image yourself only when John asks for one, or when the invoking command says to (`/slide-visual` does).

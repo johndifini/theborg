@@ -241,12 +241,20 @@ fi
 # Keep this construction below the sidecar: moving it back above silently
 # reintroduces the mismatch for every read-only task at once.
 # See .claude/rules/readonly-scheduled-tasks.md.
+#
+# The final-message sentences exist because stdout holds only the model's last
+# message. From 2026-10-21 the user-level Stop hook rejected waiq-tts-watch
+# briefings that lacked a Recap; the model answered with the Recap alone, and
+# that 1 KB stub became the emailed report on 10-22, 10-24 and 10-26.
 if [[ -n "$REPORT_FILE" ]]; then
   PREAMBLE_DUTIES="Perform every phase below yourself. This run is READ-ONLY: it \
 has no Bash, no state gate, and no way to email itself. The runner captures your \
 stdout and emails it on success, so do not look for notify-email.sh, do not write \
 state, and do not treat their absence as a reason to stop or to search the \
-filesystem for them."
+filesystem for them. Your final message is the report: the runner saves only \
+that message. Put the whole briefing in one final message and end it with its \
+own ## Recap. If a stop hook asks for a missing section, answer with the full \
+briefing again plus that section, never the section alone."
 else
   PREAMBLE_DUTIES="Perform every phase below yourself, including the state gate, \
 the notify-email.sh delivery, and the state write."
