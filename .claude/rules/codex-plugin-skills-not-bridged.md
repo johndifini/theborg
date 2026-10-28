@@ -24,7 +24,7 @@ Before promising a plugin-backed capability from Codex, check it is there:
 Anything it prints is in the directory but absent from the TSV: a **hand-copied
 plugin**, not a bridged artifact — nothing re-syncs it, so it goes stale the
 next time the Claude plugin updates and nothing reports that. `last30days` is
-currently one: v3.8.3, copied 2026-09-15.
+currently one: v3.31.0, copied 2026-10-27 (replacing v3.8.3 from 2026-09-15).
 
 When you do copy one, take it from the versioned plugin **cache**
 (`~/.claude/plugins/cache/<plugin>/`), not the marketplace checkout, which can
