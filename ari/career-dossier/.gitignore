@@ -4,3 +4,5 @@ node_modules/
 **/.private/
 !dist/
 !dist/**
+# Finder icon file from the Google Drive mirror; re-ignored after the allowlist above.
+Icon?

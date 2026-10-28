@@ -959,6 +959,9 @@ NOISE_NAMES = (
     ("BACKLOG.md", "work queue, not durable memory"),
     (".gitkeep", "directory placeholder"),
     (".DS_Store", "OS noise"),
+    # Finder's custom-folder-icon file. Google Drive's mirror of ~/theborg
+    # drops one into most directories (2,131 in the working tree on 2026-10-27).
+    ("Icon\r", "OS noise"),
     ("settings.json", "harness configuration"),
     ("settings.local.json", "harness configuration"),
 )

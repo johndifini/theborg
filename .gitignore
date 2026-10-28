@@ -10,6 +10,10 @@
 # ── OS / editor noise ────────────────────────────────────────
 .DS_Store
 **/.DS_Store
+# Finder custom-folder icon, literally "Icon" + CR. Google Drive's mirror drops
+# one into most directories. `?` stands in for the CR, which gitignore cannot
+# spell portably; nothing real in the workspace is named Icon plus one character.
+Icon?
 Thumbs.db
 *.swp
 *~

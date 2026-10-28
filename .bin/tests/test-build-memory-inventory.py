@@ -523,6 +523,8 @@ FIXTURE_FILES = {
     "agentx/.claude/skills/pack/reference.md": "# ref\n",
     "agentx/.claude/skills/pack/helper.sh": "#!/bin/sh\n",
     "agentx/.claude/skills/pack/.DS_Store": "noise\n",
+    "agentx/.claude/skills/pack/Icon\r": "",
+    ".claude/rules/Icon\r": "",
     "agentx/.claude/scheduled/job.prompt": "do the thing\n",
     "agentx/.claude/scheduled/job.settings.json": "{}\n",
     "agentx/.claude/scheduled/logs/run.log": "noise\n",
@@ -727,6 +729,10 @@ def test_discovery_pairs_and_companions():
         check("discover: OS noise inside a package is still noise",
               ("agentx/.claude/skills/pack/.DS_Store", "OS noise")
               in result["skipped"], result["skipped"])
+        check("discover: a Finder Icon\\r file is OS noise, in a package or not",
+              ("agentx/.claude/skills/pack/Icon\r", "OS noise") in result["skipped"]
+              and (".claude/rules/Icon\r", "OS noise") in result["skipped"],
+              result["skipped"])
 
         bridge = by_path[("codex_home", "skills/doit/SKILL.md")]
         check("discover: the Codex command bridge is read from its manifest",
