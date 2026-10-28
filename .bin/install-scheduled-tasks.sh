@@ -91,6 +91,9 @@ TASKS=(
   "c4po|c4po-retro|weekly-wed-thu-12-00|prompt"
   "c4po|c4po-backlog-burndown|weekly-wed-01-00-06-10|prompt"
   "c4po|c4po-cli-update|weekly-sun-06-00|cli-update"
+  # Google Drive mirrors Finder `Icon\r` files into .git, where git reads them
+  # as refs and fetch fails. Model-less and cheap, so it runs often.
+  "c4po|c4po-git-icon-sweep|every-15-min|script|.bin/sweep-git-icon-files.sh"
   "mrs-beast|mrs-beast-social-media-drafts|weekly-sun-mon-wed-16-00|prompt"
   # Paused 2026-08-06 for a ~4-month account rebalance: the label is `launchctl
   # disable`d in the gui domain, so --load writes its plist but skips the
@@ -270,6 +273,14 @@ schedule_xml() {
       cal_entry "Weekday=3" "Hour=1" "Minute=0"
       cal_entry "Weekday=3" "Hour=6" "Minute=10"
       printf '    </array>\n'
+      ;;
+    # Every 15 minutes, for model-less sweeps only. StartInterval rather than a
+    # calendar entry: launchd coalesces intervals missed during sleep into one
+    # run on wake, which is what a sweep wants. Never give this to a model job:
+    # it would land inside the burndown window (see
+    # .claude/rules/burndown-window-is-not-schedulable.md).
+    every-15-min)
+      printf '    <key>StartInterval</key>\n    <integer>900</integer>\n'
       ;;
     *)
       echo "unknown schedule id: $1" >&2; return 1 ;;
