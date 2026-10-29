@@ -12,6 +12,9 @@
       "allowManagedDomainsOnly": true
     },
     "filesystem": {
+      "allowRead": [
+        "~/.borg-secrets/.env"
+      ],
       "allowWrite": [
         "${BORG_ROOT}"
       ],

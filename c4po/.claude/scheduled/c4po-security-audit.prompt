@@ -65,8 +65,9 @@ Run the /security-review skill against the current state of ${BORG_ROOT}. Specif
   a python process, hold the values in variables, and print only variable NAMES
   and match counts.
 - any new MCP servers added since last audit
-- `${BORG_ROOT}/tmp/notify-failures.log` — the sentinel `run-scheduled-task.sh`
-  writes when `notify-email.sh` fails. Email is the only outbound channel, so
+- `${BORG_ROOT}/tmp/notify-failures.log` — the sentinel `notify-email.sh` and
+  `run-scheduled-task.sh` write when a send fails, including sends a model job
+  pipes itself. Email is the only outbound channel, so
   entries here are notifications the user never received (including failure
   alerts). Report any entry newer than the last audit as a finding, then note
   it was surfaced. Absent or empty file = nothing to report.

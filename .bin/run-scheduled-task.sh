@@ -343,6 +343,12 @@ else
   # sandbox's allowlisted Gmail SMTP path; a second probe committed in a scratch
   # repo and confirmed that a sibling write outside $BORG_ROOT is blocked.
   #
+  # allowRead re-opens ~/.borg-secrets/.env for notify-email.sh. The local
+  # settings' literal Read(//…/theborg/.env) deny becomes a sandbox read-deny
+  # that follows the workspace .env symlink to its target, so without the
+  # carve-out the plan and wrap emails fail with "no env file found" (2026-10-21
+  # and 10-28). Glob denies such as **/.env do not follow symlinks.
+  #
   # The retro keeps the inherited `auto` mode like every other Claude job. It is
   # the one task that touches cerebruh/, so c4po's Edit deny rules remain its
   # mechanical write guard; the burndown now has those rules plus OS enforcement.
@@ -392,6 +398,8 @@ fi
 # allowlisted Anthropic API path. Claude children disable session persistence so
 # they do not need write access to ~/.claude outside the boundary.
 export BORG_HARNESS="$HARNESS"
+# Names the job in notify-email.sh's failure sentinel when the model sends.
+export BORG_TASK_NAME="$TASK_NAME"
 if [[ "$HARNESS" == codex ]]; then
   export BORG_CHILD_CMD="$HARNESS_BIN exec --dangerously-bypass-approvals-and-sandbox"
 else

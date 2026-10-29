@@ -61,6 +61,23 @@ SUBJECT="${2:-[Borg/$AGENT] notification}"
 # Workspace root = parent of this script's .bin/ dir; BORG_ROOT overrides.
 BORG_ROOT_DIR="${BORG_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 
+# Record every failed send in the sentinel the daily security audit reads, not
+# only the runner's own sends. Model-driven jobs pipe to this script themselves,
+# so a failure there reached only the transcript: the burndown's plan email
+# failed on 2026-10-21 and 10-28 while the run exited 0. All guarded, like the
+# runner's notify_failed — a broken escalation must not mask the real exit code.
+record_failure() {
+  local rc=$?
+  (( rc == 0 )) && return 0
+  local what="notify-email.sh exit $rc: ${SUBJECT//[$'\t\n']/ }"
+  mkdir -p "$BORG_ROOT_DIR/tmp" 2>/dev/null || true
+  printf '%s\t%s\t%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "${BORG_TASK_NAME:-$AGENT}" "$what" \
+    >> "$BORG_ROOT_DIR/tmp/notify-failures.log" 2>/dev/null || true
+  logger -t borg-notify "$what" 2>/dev/null || true
+  return "$rc"
+}
+trap record_failure EXIT
+
 # Find the env file (see header for why the workspace copy is not authoritative).
 ENV_FILE="${BORG_ENV_FILE:-}"
 if [[ -z "$ENV_FILE" ]]; then
