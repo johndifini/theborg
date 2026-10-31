@@ -7036,3 +7036,25 @@ artifacts:
     review:
       last_reviewed: null
     related: []
+
+  agents-skills-exact-page-text-skill:
+    path: ".agents/skills/exact-page-text/SKILL.md"
+    type: generated_rule_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-rules-exact-page-text
+    introduced: 2026-10-31    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  claude-rules-exact-page-text:
+    path: ".claude/rules/exact-page-text.md"
+    type: scoped_rule
+    status: draft
+    scope: workspace
+    introduced: 2026-10-31    # file mtime (untracked; not a history fact)
+    consumers: [claude-code, codex]
+    review:
+      last_reviewed: null
+    related: []
