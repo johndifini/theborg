@@ -34,13 +34,22 @@ url=$1
 [[ $url =~ ^https?:// ]] || { echo "error: not an http(s) URL: $url" >&2; exit 2; }
 
 borg_root=$(cd "$(dirname "$0")/.." && pwd)
-dir=$(mktemp -d "$borg_root/tmp/fetch-page-text.XXXXXX")
+# Codex's sandbox is rooted at the project cwd, so the workspace tmp/ can be
+# unwritable there ("mkdtemp failed … Operation not permitted", 2026-11-01).
+# Fall back to $TMPDIR rather than fail and leave the caller to a summarizer.
+if ! dir=$(mktemp -d "$borg_root/tmp/fetch-page-text.XXXXXX" 2>/dev/null); then
+  dir=$(mktemp -d "${TMPDIR:-/tmp}/fetch-page-text.XXXXXX")
+  echo "note: $borg_root/tmp is not writable here; using $dir" >&2
+fi
 html=$dir/page.html
 out=${2:-$dir/page.txt}
 
-ua='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36'
+# curl's own user agent, deliberately: never spoof a browser one
+# (.claude/rules/reddit-via-arctic-shift.md). Learn and the microsoft.com
+# Copilot pricing pages return the same 200s with it (checked 2026-11-04). If a
+# site refuses it, render the page in headless Chrome instead.
 if ! code=$(curl -sSL --compressed --max-time 60 --max-filesize 20000000 \
-    -A "$ua" -H 'Accept-Language: en-US,en;q=0.9' \
+    -H 'Accept-Language: en-US,en;q=0.9' \
     -o "$html" -w '%{http_code}' "$url"); then
   echo "error: curl failed for $url (output dir $dir)" >&2
   exit 1

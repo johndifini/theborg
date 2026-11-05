@@ -29,7 +29,7 @@ The Borg is a standardized AI workspace that turns prompts, institutional knowle
 - Terminal-only affordances exist in the CLI but **not** in Desktop: `/exit`, `/quit`, `Ctrl+D`, and `Ctrl+C` end a session in the CLI, while Desktop has none of them (start a new chat or close the conversation instead). Headless `claude -p` is CLI-only and does not run in Desktop. Ending a session is zero-token either way — tokens are spent only when a message triggers a model turn.
 - Recurring/scheduled work runs as launchd jobs (`com.theborg.*` namespace). Model tasks use `.prompt` files via `.bin/run-scheduled-task.sh`; deterministic model-less maintenance may use a dedicated checked-in shell runner. These fire whether or not any app is open. Never create scheduled work with the Claude Desktop scheduled-tasks MCP or the `/schedule` skill (those run only while the Desktop app is open); route new job setup through `c4po/`.
 - All agents and subagents use the workspace-root `tmp/` for temporary or working artifacts, regardless of their current directory. Never create `<agent>/tmp/` or another nested scratch directory. Durable confidential material belongs under the owning agent's gitignored `.private/` directory, not in `tmp/`.
-- Claude Code's Bash tool runs **zsh** here. An unquoted glob that matches nothing is an error that aborts the whole command line (`no matches found`); zsh does not pass it through as a literal. Quote globs meant for the program (`grep --include='*.md'`, `find . -name '*.pptx'`). To clear a folder that may be empty, use `find <dir> -name 'qa.*' -delete`, not `rm -f <dir>/qa.*`. A word starting with `=` is also expanded, to a command's path: `echo =====` fails with `==== not found` and aborts the line the same way. Quote separators (`echo '====='`) or use `echo ---`.
+- Claude Code's Bash tool runs **zsh** here. An unquoted glob that matches nothing is an error that aborts the whole command line (`no matches found`); zsh does not pass it through as a literal. Quote globs meant for the program (`grep --include='*.md'`, `find . -name '*.pptx'`). To clear a folder that may be empty, use `find <dir> -name 'qa.*' -delete`, not `rm -f <dir>/qa.*`. A word starting with `=` would also expand to a command's path (`echo =====` → `==== not found`, aborting the line); `~/.zshrc` turns that off with `unsetopt EQUALS` (2026-11-04), but a shell that skips `~/.zshrc` still does it, so quote separators (`echo '====='`) or use `echo ---`.
 - `~/.zshenv` and `~/.borg-secrets/.env` hold live credential values. Never print their lines (`cat`, `sed -n`, `Read`). Look up one variable with `grep -n '^export NAME=' ~/.zshenv | cut -d= -f1`, or test it with `[[ -n $NAME ]]`.
 
 ## Communication style
@@ -43,6 +43,14 @@ The Borg is a standardized AI workspace that turns prompts, institutional knowle
   pushes), gives a diagnosis, or carries more than one list or table; only a
   short direct answer skips it. Work left uncommitted, unpushed, or unverified
   is a follow-up, so that reply also ends with `## Suggested Next Prompt`.
+- Claude Desktop's `wrap_up` tool is app chrome, not the reply. Its `recap`
+  fills a status box and its `ask` fills the next-step box; neither
+  replaces `## Recap` or `## Suggested Next Prompt`. "The box asks your
+  question, so do not ask it again" means don't repeat the question in
+  prose. A reply that reports work still ends with `## Recap`, and one that
+  leaves a follow-up still ends with the fenced `## Suggested Next Prompt`.
+  In the 2026-W45 window the Stop hook rejected 45 replies in 34 sessions,
+  30 of them right after `wrap_up`.
 - When a useful follow-up exists, end with a `## Suggested Next Prompt` section.
   Omit it when the task is complete or no meaningful next step exists. This is
   the one canonical shape for the section, in every channel. Every command,

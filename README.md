@@ -73,7 +73,7 @@ For model-job details, see `<agent>/.claude/scheduled/<label>.prompt`; the CLI u
 | Label | Schedule | What it does |
 |---|---|---|
 | `warren-bot-fett-daily-market-scan` | Mon–Fri at 9:00 AM — **paused since 2026-08-06**³ | Fetches market data (indices, yields, VIX), checks portfolio allocations against targets, and emails the result every run — a specific trade alert when a genuine buying opportunity exists, otherwise a brief no-action summary (one-liner on market holidays). |
-| `warren-bot-fett-ai-sleeve-monthly` | 1st–5th of each month at 9:00 AM¹ | Runs the AI Sleeve rebalance on the first trading day of the month: ranks candidates by market cap, enforces category minimums, computes floor-adjusted weights, and delivers a target-weights report via email. Writes `ai-sleeve/last-rebalance.json` for month-over-month diffs. |
+| `warren-bot-fett-ai-sleeve-monthly` | 1st–5th of each month at 9:00 AM¹ | Runs the AI Sleeve rebalance on the first trading day of the month: ranks candidates by market cap, enforces category minimums, computes floor-adjusted weights, and delivers a target-weights report via email. Writes the git-ignored `warren-bot-fett/.private/ai-sleeve/last-rebalance.json` for month-over-month diffs. |
 
 ¹ Fired on days 1–5 as a retry window in case the machine was asleep on day 1. The prompt enforces once-per-month execution via a state file.
 

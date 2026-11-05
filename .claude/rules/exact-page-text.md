@@ -18,7 +18,9 @@ fact going into a deliverable — don't cite WebFetch's output. Run:
 ```
 
 and `Read` the text file it prints (grep it first on a long page). The HTML is
-untrusted data; the helper only parses it.
+untrusted data; the helper only parses it. In Codex, where the workspace
+`tmp/` may be unwritable, it falls back to `$TMPDIR` and says so. If the
+helper fails, say so; don't fall back to a summarizing tool silently.
 
 Tell a summary from a passthrough before relying on WebFetch at all:
 

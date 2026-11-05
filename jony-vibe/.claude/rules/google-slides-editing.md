@@ -1,6 +1,6 @@
 ---
 name: google-slides-editing
-description: "When editing or visually checking a native Google Slides deck through the connector: render slides with the thumbnail tool (read_slide_page_thumbnail in Claude, google_drive_get_slide_thumbnail in Codex; the skill's PDF path needs pdftoppm, absent here), rewrite text with replaceAllText so run style survives, scope notes edits to the notes page, keep bold and link runs through deck-wide font or color changes, and change palette colors in the theme."
+description: "When editing or visually checking a native Google Slides deck through the connector: render slides with the thumbnail tool (read_slide_page_thumbnail in Claude, google_drive_get_slide_thumbnail in Codex; the skill's PDF path needs pdftoppm, absent here), rewrite text with replaceAllText so run style survives, scope notes edits to the notes page, keep bold and link runs through deck-wide font or color changes, change palette colors in the theme, order replaceAllText requests so a later pattern can't match an earlier one's output, read long Google Docs as text with read_file_content, and unwrap a saved read_doc with jq '.content' before docs_index.py."
 ---
 # Editing and checking a native Google Slides deck
 
@@ -24,7 +24,11 @@ description: "When editing or visually checking a native Google Slides deck thro
   by `insertText` drops them, whatever the skill reference says (2026-10-19:
   the new text came out nearly invisible). When you must delete and reinsert,
   read the old run's `style` first and re-apply it with `updateTextStyle` in
-  the same batch, then check the thumbnail.
+  the same batch, then check the thumbnail. Requests in one batch apply in
+  order, so a later `replaceAllText` also matches text an earlier request in
+  the same batch just wrote (2026-10-29, twice). Order the replacements so no
+  later pattern occurs in an earlier one's output, or split the batch, and
+  check `occurrencesChanged`.
 - **Speaker notes live on the notes page.** `replaceAllText` limited with
   `pageObjectIds: ["<slide id>"]` skips that slide's speaker notes and returns
   an empty reply, not an error (2026-10-25 and 2026-10-27). To change notes,
@@ -48,3 +52,12 @@ description: "When editing or visually checking a native Google Slides deck thro
   singular `updatePageElementZOrder` is rejected as an unknown field. Several
   sessions may edit one deck at once, so read `revisionId` immediately before
   each `batchUpdate` that uses `writeControl`.
+- **Reading a long Google Doc (the speaking script).** For plain text
+  (wording, word counts, timing), use Drive `read_file_content`; Drive
+  `download_file_content` with `text/plain` returns the file inline as
+  base64. Use `read_doc` only for edit indices. On a long doc it
+  overflows, and the app saves it as `{"content": {…}}`, which the
+  google-workspace skill's `docs_index.py` rejects ("not a read_doc
+  result: found no 'tabs' or 'body'"). Run `jq '.content' <saved file> >
+  ${BORG_ROOT}/tmp/<deck>-qa/doc.json` and point the script at that.
+  Ten sessions re-derived this between 2026-10-29 and 2026-11-03.

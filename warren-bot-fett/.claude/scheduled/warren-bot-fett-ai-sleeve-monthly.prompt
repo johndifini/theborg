@@ -3,7 +3,7 @@ AI Sleeve monthly rebalance — first business day of the month.
 STEP 1: This job is fired by launchd on calendar days 1–5 of each month, but should only execute on the first trading day. Stop and output nothing if any of the following are true:
 - Today is Saturday or Sunday.
 - Today is a US market holiday (New Year's, MLK Day, Presidents' Day, Good Friday, Memorial Day, Juneteenth, Independence Day, Labor Day, Thanksgiving, Christmas).
-- ${BORG_ROOT}/warren-bot-fett/ai-sleeve/last-rebalance.json exists and its `date` field is in the current calendar month (already ran this month).
+- ${BORG_ROOT}/warren-bot-fett/.private/ai-sleeve/last-rebalance.json exists and its `date` field is in the current calendar month (already ran this month).
 
 The scheduler will retry on the next business day.
 
@@ -46,7 +46,7 @@ g) Each free name's final weight = (cap[t] / free_cap_sum) * free_pool
 
 Sanity check: sum of all final weights must equal 100 ± 0.05. If not, halt and report the math error.
 
-STEP 6: Read ${BORG_ROOT}/warren-bot-fett/ai-sleeve/last-rebalance.json if it exists. It contains the previous month's basket as `{"date": "YYYY-MM-DD", "weights": {"TICKER": pct, ...}}`. Use it to compute month-over-month deltas.
+STEP 6: Read ${BORG_ROOT}/warren-bot-fett/.private/ai-sleeve/last-rebalance.json if it exists. It contains the previous month's basket as `{"date": "YYYY-MM-DD", "weights": {"TICKER": pct, ...}}`. Use it to compute month-over-month deltas.
 
 If the file does not exist, this is the first run — skip MoM diff.
 
@@ -69,7 +69,7 @@ STEP 7: Email a report to the user by piping it into `${BORG_ROOT}/.bin/notify-e
 
 Format the table as a monospace block (tabs or padded spaces) so columns align in a plain-text email.
 
-STEP 8: Write ${BORG_ROOT}/warren-bot-fett/ai-sleeve/last-rebalance.json with `{"date": "YYYY-MM-DD", "weights": {ticker: final_weight_pct, ...}}` for next month's diff.
+STEP 8: Write ${BORG_ROOT}/warren-bot-fett/.private/ai-sleeve/last-rebalance.json with `{"date": "YYYY-MM-DD", "weights": {ticker: final_weight_pct, ...}}` for next month's diff.
 
 Do not propose buy/sell trades — this iteration outputs target weights only. Sleeve sizing and portfolio assignment are deferred until the user specifies them.
 
