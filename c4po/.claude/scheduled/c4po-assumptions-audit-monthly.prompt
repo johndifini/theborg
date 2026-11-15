@@ -122,8 +122,10 @@ public canonical artifacts in this order:
 
 Generated bridges and compatibility wrappers receive drift review only; select
 their canonical source for semantic review. Deduplicate multiple reasons for the
-same canonical audit unit. A scheduled run reviews at most 12 public semantic
-audit units, including at most 6 knowledge pages/sources. Report how many
+same canonical audit unit. A scheduled run reviews at most 26 public semantic
+audit units, including at most 20 knowledge pages/sources. (Raised from 12 and
+6 on 2026-11-15 at the user's direction, so the 126 pages added in May 2026 get
+their first review by 2027-05-15.) Report how many
 candidates were deferred and the latest date by which the oldest deferred cohort
 must be reviewed. Never silently advance a deferred artifact's review date.
 
@@ -194,8 +196,11 @@ Assumption A — canonical instruction-file size ceiling
      moved OUT of AGENTS.md into a skill or a scoped rule — durable procedures,
      reusable multi-step workflows, or domain knowledge that doesn't need to
      load every session. AGENTS.md should hold only always-on context.
+  The codified ceiling has three numbers since 2026-11-15: lines per file, bytes
+  per file, and bytes per root-to-leaf chain. Re-evaluate all three; the chain
+  limit tracks Codex's `project_doc_max_bytes` default.
   Flag UPDATE if steps 1–2 show the codified ceiling is outdated (give the new
-  number) and/or step 3 finds relocatable content (name the file and what
+  numbers) and/or step 3 finds relocatable content (name the file and what
   should move where).
   Where to update if flagged: the **Size** rule in ${BORG_ROOT}/LINT.md for
   the ceiling number; the specific AGENTS.md file(s) named for content moves.
@@ -286,6 +291,15 @@ Assumption E — "dreaming" is still a custom job, not a native feature
     other skill. Dreams — reading a memory store *plus past session transcripts*
     and emitting a reorganized store — remain a research preview in Claude
     Managed Agents, which this setup does not use.
+  - Update, 2026-11-06 audit: Claude Code 2.1.318 ships an undocumented
+    autoDream pass (an `autoDreamEnabled` setting, a consolidation lock, and
+    `listSessionsTouchedSince`). It reads recent session transcripts but writes
+    only memory files. On 2026-11-15 the user chose to **keep it off**: shared
+    auto-memory changes go through `/remember` and the retro, where they are
+    reviewed. Do not re-flag autoDream merely for existing. Re-check it only if
+    Anthropic documents it, turns it on by default, or extends it to write
+    workspace artifacts (the UPDATE case below). Also confirm it is still off:
+    no consolidation lock in the shared memory directory.
   The gap that keeps `c4po-retro` alive is therefore narrower than "no native
   memory feature", and naming it precisely is what makes this assumption
   decidable: native memory maintenance operates on the memory store and produces
