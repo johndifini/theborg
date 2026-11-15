@@ -1,6 +1,6 @@
 Daily security audit of the ClaudeOS setup at ${BORG_ROOT}.
 
-Run the /security-review skill against the current state of ${BORG_ROOT}. Specifically review:
+Review the current state of ${BORG_ROOT} directly — do not invoke the diff-based /security-review skill, which reviews a branch diff and errors on a clean tree. Specifically review:
 - .claude/settings*.json files in each agent's workspace
 - hooks configured in those settings
 - exposed paths and permission rules

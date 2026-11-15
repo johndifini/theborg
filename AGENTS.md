@@ -49,8 +49,6 @@ The Borg is a standardized AI workspace that turns prompts, institutional knowle
   question, so do not ask it again" means don't repeat the question in
   prose. A reply that reports work still ends with `## Recap`, and one that
   leaves a follow-up still ends with the fenced `## Suggested Next Prompt`.
-  In the 2026-W45 window the Stop hook rejected 45 replies in 34 sessions,
-  30 of them right after `wrap_up`.
 - When a useful follow-up exists, end with a `## Suggested Next Prompt` section.
   Omit it when the task is complete or no meaningful next step exists. This is
   the one canonical shape for the section, in every channel. Every command,

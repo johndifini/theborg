@@ -18,13 +18,25 @@ had the tool.
 
 Before promising a plugin-backed capability from Codex, check it is there:
 
-    comm -23 <(command ls ~/.codex/skills | sort) \
-             <(cut -f1 ~/.codex/skills/.theborg-managed-skills.tsv | sort)
+    comm -12 <(comm -23 <(command ls ~/.codex/skills | sort) \
+                        <(cut -f1 ~/.codex/skills/.theborg-managed-skills.tsv | sort)) \
+             <(find ~/.claude/plugins/cache -path '*/skills/*/SKILL.md' \
+                 | awk -F/ '{print $(NF-1)}' | sort -u)
 
-Anything it prints is in the directory but absent from the TSV: a **hand-copied
-plugin**, not a bridged artifact — nothing re-syncs it, so it goes stale the
-next time the Claude plugin updates and nothing reports that. `last30days` is
-currently one: v3.31.0, copied 2026-10-27 (replacing v3.8.3 from 2026-09-15).
+The inner `comm` lists skills in the directory but absent from the TSV. That
+set also holds Codex-native skills, such as `artifact-template-*` (each ships
+its own `agents/` directory), which are not copies of anything. The outer
+`comm` keeps only names that also exist as a skill in the Claude plugin cache.
+Each name it prints is a **hand-copied plugin**, not a bridged artifact —
+nothing re-syncs it, so it goes stale the next time the Claude plugin updates
+and nothing reports that. `last30days` is currently one: v3.31.0, copied
+2026-10-27 (replacing v3.8.3 from 2026-09-15). Verified 2026-11-15: the
+check prints only `last30days`.
+
+Before hand-copying, run `codex plugin list`. Codex has its own plugin
+marketplaces (`codex plugin add|list|marketplace`, codex-cli 0.166.0 and
+later), and a native Codex build of the plugin, if one exists there, stays
+maintained where a copy does not.
 
 When you do copy one, take it from the versioned plugin **cache**
 (`~/.claude/plugins/cache/<plugin>/`), not the marketplace checkout, which can

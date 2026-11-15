@@ -121,6 +121,8 @@ artifacts:
         reference: "Workspace bootstrap; earliest tracked revision is commit-dated 2026-07-12."
       - kind: requirement
         reference: "LINT.md Coverage — AGENTS.md is required at every context boundary, starting at the workspace root."
+      - kind: incident
+        reference: "2026-W45: the Stop hook rejected 45 replies in 34 sessions, 30 of them right after Claude Desktop's wrap_up; basis for the Communication style bullet that wrap_up is app chrome, not the reply."
     load_mode: always
     consumers: [claude-code, codex, claude-desktop]
     risk: high
@@ -7076,6 +7078,54 @@ artifacts:
     status: draft
     scope: workspace
     introduced: 2026-11-11    # file mtime (untracked; not a history fact)
+    consumers: [claude-code, codex]
+    review:
+      last_reviewed: null
+    related: []
+
+  jony-vibe-agents-skills-talk-timing-skill:
+    path: jony-vibe/.agents/skills/talk-timing/SKILL.md
+    type: generated_rule_bridge
+    status: draft
+    owner: jony-vibe
+    scope: jony-vibe
+    canonical_ref: jony-vibe-claude-rules-talk-timing
+    introduced: 2026-11-15    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  jony-vibe-claude-rules-talk-timing:
+    path: jony-vibe/.claude/rules/talk-timing.md
+    type: scoped_rule
+    status: draft
+    owner: jony-vibe
+    scope: jony-vibe
+    introduced: 2026-11-15    # file mtime (untracked; not a history fact)
+    consumers: [claude-code, codex]
+    review:
+      last_reviewed: null
+    related: []
+
+  ari-agents-skills-docx-editing-skill:
+    path: ari/.agents/skills/docx-editing/SKILL.md
+    type: generated_rule_bridge
+    status: draft
+    owner: ari
+    scope: ari
+    canonical_ref: ari-claude-rules-docx-editing
+    introduced: 2026-11-15    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  ari-claude-rules-docx-editing:
+    path: ari/.claude/rules/docx-editing.md
+    type: scoped_rule
+    status: draft
+    owner: ari
+    scope: ari
+    introduced: 2026-11-15    # file mtime (untracked; not a history fact)
     consumers: [claude-code, codex]
     review:
       last_reviewed: null
