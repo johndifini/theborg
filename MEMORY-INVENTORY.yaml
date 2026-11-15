@@ -7130,3 +7130,43 @@ artifacts:
     review:
       last_reviewed: null
     related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-raw-apple-foundation-model-7a01ac4:
+    path: cerebruh/wikis/local-ai-apple-silicon/raw/apple-foundation-models-on-device-context-size.md
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-11-15    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-local-ai-apple-silicon-wiki-on-device-context-siz-adbaef0:
+    path: cerebruh/wikis/local-ai-apple-silicon/wiki/on-device-context-size-ios27-note.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/local-ai-apple-silicon
+    introduced: 2026-11-15    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-raw-llm-wiki-vs-vector-ra-2ef76d8:
+    path: cerebruh/wikis/personal-knowledge-mgmt/raw/llm-wiki-vs-vector-rag-preregistered-comparison.md
+    type: knowledge_source
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-11-15    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  cerebruh-wikis-personal-knowledge-mgmt-wiki-llm-wiki-vs-rag-prer-4fc3d93:
+    path: cerebruh/wikis/personal-knowledge-mgmt/wiki/llm-wiki-vs-rag-preregistered-study.md
+    type: knowledge_page
+    status: draft
+    scope: cerebruh/wikis/personal-knowledge-mgmt
+    introduced: 2026-11-15    # frontmatter created:
+    review:
+      last_reviewed: null
+    related: []
