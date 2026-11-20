@@ -633,7 +633,7 @@ CANONICALITY_BY_TYPE = {
     "knowledge_source": {"source"},
 }
 
-# Cerebruh content is read-only from C4PO (design principle 6), so no wiki
+# Knowledge-base content is read-only from C4PO (design principle 6), so no wiki
 # artifact may declare a policy the audit could act on unattended.
 CEREBRUH_TYPES = {"knowledge_page", "knowledge_source", "retrieval_index"}
 
@@ -926,7 +926,8 @@ EXCLUDED_PREFIXES = (
     ("bernard", "inert exhibit; bernard/CLAUDE.md forbids executing or adopting it"),
     ("repos", "independent git repositories, each governed by its own AGENTS.md"),
     ("tmp", "shared scratch space; transient by construction"),
-    ("cerebruh/ingest", "staging area for material that is not yet knowledge"),
+    ("knowledge-base/docs/to-organize", "staging area for docs not yet filed or compiled"),
+    ("knowledge-base/.obsidian", "per-machine editor state"),
     (".git", "version-control internals"),
     (".githooks", "executable hooks, not memory"),
     (".obsidian", "per-machine editor state"),
@@ -953,7 +954,7 @@ EXCLUDED_DIR_NAMES = (
 )
 
 # Noise: never memory, wherever it is found. Checked before everything else, so
-# a .DS_Store inside a Cerebruh raw/ directory or a skill package is discarded
+# a .DS_Store inside the knowledge base's docs/ or a skill package is discarded
 # rather than promoted to a source or a package companion.
 NOISE_NAMES = (
     ("BACKLOG.md", "work queue, not durable memory"),
@@ -993,13 +994,39 @@ SELF_GOVERNING_PATHS = frozenset({
 })
 
 # Formats an agent reads as domain data — a resume, a contract, a scan — rather
-# than as instruction, procedure, or ingested knowledge. Exempt under a
-# Cerebruh `raw/` directory, where exactly these formats are knowledge sources.
+# than as instruction, procedure, or ingested knowledge. Exempt under the
+# knowledge base's `docs/`, where exactly these formats are knowledge sources.
 DOCUMENT_SUFFIXES = (
     ".pdf", ".docx", ".doc", ".xlsx", ".xls", ".csv", ".pptx", ".txt", ".rtf",
     ".jpg", ".jpeg", ".png", ".gif", ".heic", ".webp", ".zip", ".tsv",
 )
-RAW_SOURCE_RE = r"^cerebruh/wikis/[^/]+/raw/"
+KB_DOCS = "knowledge-base/docs/"
+KB_WIKIS = "knowledge-base/generated-wikis/"
+# Instruction files tracked inside docs/; everything else there is a user's doc.
+KB_DOC_SCAFFOLDING = frozenset({
+    "knowledge-base/docs/projects/AGENTS.md",
+    "knowledge-base/docs/projects/CLAUDE.md",
+})
+DOC_SOURCE_RE = r"^knowledge-base/docs/(?!to-organize/)"
+
+
+def kb_wiki_name(rel: str):
+    """Sub-wiki a generated-wikis path belongs to, and the path inside it.
+
+    A topic sub-wiki is `generated-wikis/<name>/`; a project sub-wiki is
+    `generated-wikis/projects/<project>/` and is named `projects/<project>`.
+    Returns (None, None) for anything that is not inside a sub-wiki.
+    """
+    if not rel.startswith(KB_WIKIS):
+        return None, None
+    rest = rel[len(KB_WIKIS):].split("/")
+    if rest[0] == "projects":
+        if len(rest) < 3:
+            return None, None
+        return "projects/" + rest[1], rest[2:]
+    if len(rest) < 2:
+        return None, None
+    return rest[0], rest[1:]
 
 # Explicitly private locations, mirroring the .gitignore rules that keep them
 # out of the public repository. A private artifact is discovered and counted,
@@ -1029,8 +1056,9 @@ OVERLAY_BASENAME = "memory-inventory.yaml"
 CODEX_MANIFEST = "skills/.theborg-managed-skills.tsv"
 
 
-# Cerebruh sub-wikis whose records may appear in the tracked registry. Every
-# sub-wiki is gitignored (`cerebruh/wikis/*`), so ignore status cannot tell a
+# Knowledge-base sub-wikis (and the top-level docs/ folders named after them)
+# whose records may appear in the tracked registry. Every sub-wiki and doc is
+# gitignored (`knowledge-base/*`), so ignore status cannot tell a
 # public-topic wiki from a personal one — yet a page name alone can disclose a
 # diagnosis, a medication, or a visit date. So a sub-wiki is PRIVATE unless it
 # is listed here: an unlisted one fails closed into the c4po overlay instead of
@@ -1057,8 +1085,12 @@ PUBLIC_WIKIS = frozenset({
 def _is_private(rel: str) -> bool:
     if rel in PRIVATE_PATHS:
         return True
+    wiki, _ = kb_wiki_name(rel)
+    if wiki is not None and wiki not in PUBLIC_WIKIS:
+        return True
     parts = rel.split("/")
-    if len(parts) >= 4 and parts[:2] == ["cerebruh", "wikis"] and parts[2] not in PUBLIC_WIKIS:
+    if (rel.startswith(KB_DOCS) and len(parts) >= 4 and rel not in KB_DOC_SCAFFOLDING
+            and parts[2] not in PUBLIC_WIKIS):
         return True
     return any(re.search(pat, rel) for pat in PRIVATE_PATTERNS)
 
@@ -1086,9 +1118,9 @@ def _noise_reason(name: str):
 
 
 def _skip_reason(rel: str, name: str):
-    # A Cerebruh raw capture is a knowledge_source whatever its format, so no
-    # format-based skip may fire inside one.
-    if re.match(RAW_SOURCE_RE, rel):
+    # A doc in the knowledge base is a knowledge_source whatever its format, so
+    # no format-based skip may fire inside docs/.
+    if re.match(DOC_SOURCE_RE, rel) and rel not in KB_DOC_SCAFFOLDING:
         return None
     if rel in SELF_GOVERNING_PATHS:
         return None
@@ -1143,7 +1175,7 @@ def is_candidate(rel: str) -> bool:
     """
     parts = rel.split("/")
     name = parts[-1]
-    # cerebruh/template/AGENTS.md is nested three deep and is the canonical
+    # knowledge-mgr-cerebruh/template/AGENTS.md is nested three deep and is the canonical
     # source every sub-wiki symlink points at, so instruction files and their
     # wrappers are candidates at any depth.
     if name in ("AGENTS.md", "CLAUDE.md", "CLAUDE.local.md"):
@@ -1154,7 +1186,7 @@ def is_candidate(rel: str) -> bool:
         return True                                     # agent-level document
     if any(p in (".claude", ".agents", ".private") for p in parts[:-1]):
         return True
-    return rel.startswith("cerebruh/wikis/")
+    return rel.startswith(KB_DOCS) or rel.startswith(KB_WIKIS)
 
 
 def _scope_of(rel: str, marker: str) -> str:
@@ -1272,14 +1304,14 @@ def classify(root: str, rel: str):
     if len(parts) >= 2 and parts[-2] == "scheduled" and name.endswith(".prompt"):
         return art("scheduled_prompt")
 
-    # Cerebruh. Read-only from C4PO; discovery only looks.
-    if rel == "cerebruh/wikis/index.md":
+    # Knowledge base. Read-only from C4PO; discovery only looks.
+    if rel == KB_WIKIS + "index.md":
         return art("retrieval_index")
-    if rel.startswith("cerebruh/wikis/") and len(parts) >= 5:
-        if parts[3] == "wiki" and name.endswith(".md"):
-            return art("retrieval_index" if name == "index.md" else "knowledge_page")
-        if parts[3] == "raw":
-            return art("knowledge_source", "source")
+    wiki, inner = kb_wiki_name(rel)
+    if wiki is not None and len(inner) >= 2 and inner[0] == "wiki" and name.endswith(".md"):
+        return art("retrieval_index" if name == "index.md" else "knowledge_page")
+    if re.match(DOC_SOURCE_RE, rel) and rel not in KB_DOC_SCAFFOLDING:
+        return art("knowledge_source", "source")
 
     # Durable private notes. Restricted to Markdown deliberately: the other
     # things that live under `.private/` are domain documents and runner
@@ -2058,10 +2090,13 @@ def derive_owner_scope(rel: str, path_root: str, canonical_path):
             return derive_owner_scope(canonical_path, "borg_root", None)
         return "workspace", "workspace"
     parts = rel.split("/")
-    if rel.startswith("cerebruh/wikis/") and len(parts) >= 3:
-        return "cerebruh", "cerebruh/wikis/%s" % parts[2]
-    if parts[0] == "cerebruh":
-        return "cerebruh", "cerebruh"
+    wiki, _ = kb_wiki_name(rel)
+    if wiki is not None:
+        return KB_OWNER, KB_WIKIS + wiki
+    if rel.startswith(KB_DOCS):
+        return KB_OWNER, "knowledge-base/docs"
+    if parts[0] in ("knowledge-base", KB_OWNER):
+        return KB_OWNER, parts[0]
     if len(parts) == 1 or parts[0].startswith("."):
         return "workspace", "workspace"
     return parts[0], parts[0]
@@ -2074,15 +2109,19 @@ def derive_owner_scope(rel: str, path_root: str, canonical_path):
 # there rather than opening a new top-level `.private/` directory.
 WORKSPACE_OVERLAY_OWNER = "c4po"
 
+# The agent that owns every knowledge-base record.
+KB_OWNER = "knowledge-mgr-cerebruh"
+
 
 def overlay_path_for(owner: str) -> str:
     """Where a private record for this owner has to live. Never tracked.
 
-    Cerebruh is not an agent and is read-only from every other directory, so a
-    private sub-wiki's records go to C4PO's overlay rather than opening a
-    `cerebruh/.private/`. The record's `owner` stays `cerebruh`.
+    The knowledge base is read-only from every other directory, so a private
+    sub-wiki's or doc's records go to C4PO's overlay rather than opening a
+    `knowledge-mgr-cerebruh/.private/`. The record's `owner` stays
+    `knowledge-mgr-cerebruh`.
     """
-    if owner in ("workspace", "cerebruh"):
+    if owner in ("workspace", KB_OWNER):
         owner = WORKSPACE_OVERLAY_OWNER
     return "%s/.private/%s" % (owner, OVERLAY_BASENAME)
 

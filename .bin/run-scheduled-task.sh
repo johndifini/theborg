@@ -145,7 +145,7 @@ MODEL=opus
 # Per-task extra CLI args, harness-neutral portion. The backlog burndown edits
 # files across the whole workspace (root BACKLOG.md, sibling agents, the
 # git-ignored repos/*); the session retro stages into the sibling
-# cerebruh/ingest/ and pipes to .bin/notify-email.sh. Neither stays inside its
+# knowledge-base/docs/to-organize/ and pipes to .bin/notify-email.sh. Neither stays inside its
 # own agent dir, so both get the workspace root as a writable root — both
 # harnesses accept --add-dir, and codex additionally needs it to widen its
 # workspace-write sandbox, which otherwise confines writes to the cwd. Other
@@ -335,7 +335,7 @@ else
   # file would turn this security boundary into a comment.
   #
   # The sandbox's allowWrite root covers the workspace and every independent
-  # repo below it; its denyWrite entries keep cerebruh wiki content read-only.
+  # repo below it; its denyWrite entries keep knowledge-base content read-only.
   # failIfUnavailable and allowUnsandboxedCommands=false make the boundary a
   # hard gate. acceptEdits keeps file-tool writes unattended while preserving
   # explicit deny rules, and sandboxed Bash auto-runs without per-command
@@ -350,7 +350,7 @@ else
   # and 10-28). Glob denies such as **/.env do not follow symlinks.
   #
   # The retro keeps the inherited `auto` mode like every other Claude job. It is
-  # the one task that touches cerebruh/, so c4po's Edit deny rules remain its
+  # the one task that touches knowledge-base/, so c4po's Edit deny rules remain its
   # mechanical write guard; the burndown now has those rules plus OS enforcement.
   case "$TASK_NAME" in
     c4po-backlog-burndown)

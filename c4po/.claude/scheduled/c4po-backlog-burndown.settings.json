@@ -19,12 +19,11 @@
         "${BORG_ROOT}"
       ],
       "denyWrite": [
-        "${BORG_ROOT}/cerebruh/wikis",
-        "${BORG_ROOT}/cerebruh/template",
-        "${BORG_ROOT}/cerebruh/.obsidian",
-        "${BORG_ROOT}/cerebruh/.claude",
-        "${BORG_ROOT}/cerebruh/CLAUDE.md",
-        "${BORG_ROOT}/cerebruh/CLAUDE.md_bak_20260523_073104"
+        "${BORG_ROOT}/knowledge-base",
+        "${BORG_ROOT}/knowledge-mgr-cerebruh/template",
+        "${BORG_ROOT}/knowledge-mgr-cerebruh/.claude",
+        "${BORG_ROOT}/knowledge-mgr-cerebruh/CLAUDE.md",
+        "${BORG_ROOT}/knowledge-mgr-cerebruh/CLAUDE.md_bak_20260523_073104"
       ]
     }
   }

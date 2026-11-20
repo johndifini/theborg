@@ -100,12 +100,24 @@ mrs-beast/.claude/commands/*-image-prompt.md
 mrs-beast/.claude/scheduled/*-image-prompt.prompt
 mrs-beast/.claude/scheduled/last30days-raw/
 
-# ── cerebruh (second-brain content) ──────────────────────────
-# Track structure + templates + the index, ignore actual notes.
-cerebruh/ingest/*
-!cerebruh/ingest/.gitkeep
-cerebruh/wikis/*
-!cerebruh/wikis/.gitkeep
+# ── knowledge-base (second-brain content) ────────────────────
+# Track the instruction files and folder placeholders; ignore the docs
+# and the generated wikis. knowledge-mgr-cerebruh/ itself is tracked.
+knowledge-base/*
+!knowledge-base/AGENTS.md
+!knowledge-base/CLAUDE.md
+!knowledge-base/docs/
+knowledge-base/docs/*
+!knowledge-base/docs/to-organize/
+knowledge-base/docs/to-organize/*
+!knowledge-base/docs/to-organize/.gitkeep
+!knowledge-base/docs/projects/
+knowledge-base/docs/projects/*
+!knowledge-base/docs/projects/AGENTS.md
+!knowledge-base/docs/projects/CLAUDE.md
+!knowledge-base/generated-wikis/
+knowledge-base/generated-wikis/*
+!knowledge-base/generated-wikis/.gitkeep
 
 # ── architetto (initialized product repos) ───────────────────
 # Each repo under repos/ is its own independent git repo and is NOT

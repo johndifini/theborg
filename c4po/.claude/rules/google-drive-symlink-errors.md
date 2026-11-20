@@ -25,7 +25,9 @@ instead, and note that Drive does not honor `.gitignore`, so `repos/` and
 
 Expected permanent entries:
 
-- 11 x `cerebruh/wikis/*/AGENTS.md` -> `../../template/AGENTS.md`. Required
+- one `knowledge-base/generated-wikis/*/AGENTS.md` per sub-wiki (13 on
+  2026-11-18) -> `../../../knowledge-mgr-cerebruh/template/AGENTS.md`, and
+  one per project sub-wiki under `generated-wikis/projects/`. Required
   by `LINT.md`. **Never** replace these with real files to quiet Drive.
 - `.env` -> `~/.borg-secrets/.env`.
 - `<project>/.claude/commands` directory symlinks — currently

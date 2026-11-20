@@ -385,5 +385,5 @@ before protocol-specific infrastructure is justified.
 - [Vercel static configuration](https://vercel.com/docs/project-configuration/vercel-json)
 - [Vercel custom domains](https://vercel.com/docs/domains/set-up-custom-domain)
 - [Vercel deployment exclusions](https://vercel.com/docs/deployments/vercel-ignore)
-- `cerebruh/wikis/spec-driven-development/wiki/persistence-artifacts.md`
-- `cerebruh/wikis/spec-driven-development/wiki/seven-information-layers.md`
+- `knowledge-base/generated-wikis/spec-driven-development/wiki/persistence-artifacts.md`
+- `knowledge-base/generated-wikis/spec-driven-development/wiki/seven-information-layers.md`

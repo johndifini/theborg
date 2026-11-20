@@ -9,7 +9,7 @@ paths:
   - "**/.claude/commands/*.md"
   - "**/.claude/skills/**"
   - "**/.claude/scheduled/*.prompt"
-  - "cerebruh/wikis/**"
+  - "knowledge-base/**"
   - "MEMORY-INVENTORY*"
   - "**/*-DESIGN.md"
   - "**/MCP.md"

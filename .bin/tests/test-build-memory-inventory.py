@@ -495,8 +495,8 @@ FIXTURE_FILES = {
     "CLAUDE.md": "@AGENTS.md\n",
     "agentx/AGENTS.md": "# agentx\n",
     "agentx/CLAUDE.md": "@AGENTS.md\n",
-    "cerebruh/template/AGENTS.md": "# template\n",
-    "cerebruh/template/CLAUDE.md": "@AGENTS.md\n",
+    "knowledge-mgr-cerebruh/template/AGENTS.md": "# template\n",
+    "knowledge-mgr-cerebruh/template/CLAUDE.md": "@AGENTS.md\n",
 
     # Policy, design, and the registry that governs this inventory.
     "LINT.md": "# lint\n",
@@ -540,17 +540,23 @@ FIXTURE_FILES = {
     "agentx/.private/memory-inventory.yaml": "version: 1\nartifacts:\n",
     "agentx/.private.example/AGENTS.example.md": "# synthetic\n",
 
-    # Cerebruh.
-    "cerebruh/wikis/index.md": "# index\n",
-    "cerebruh/wikis/codex-ecosystem/CLAUDE.md": "@AGENTS.md\n",
-    "cerebruh/wikis/codex-ecosystem/wiki/index.md": "# public index\n",
-    "cerebruh/wikis/codex-ecosystem/wiki/page.md": "# page\n",
-    "cerebruh/wikis/codex-ecosystem/raw/Source.pdf": "%PDF-fake\n",
-    "cerebruh/wikis/codex-ecosystem/raw/.DS_Store": "noise\n",
+    # Knowledge base.
+    "knowledge-base/generated-wikis/index.md": "# index\n",
+    "knowledge-base/generated-wikis/codex-ecosystem/CLAUDE.md": "@AGENTS.md\n",
+    "knowledge-base/generated-wikis/codex-ecosystem/wiki/index.md": "# public index\n",
+    "knowledge-base/generated-wikis/codex-ecosystem/wiki/page.md": "# page\n",
+    "knowledge-base/docs/codex-ecosystem/Source.pdf": "%PDF-fake\n",
+    "knowledge-base/docs/codex-ecosystem/.DS_Store": "noise\n",
     # An unlisted sub-wiki: its page names could disclose its subject.
-    "cerebruh/wikis/unlisted-wiki/wiki/sensitive-page.md": "# page\n",
-    "cerebruh/wikis/unlisted-wiki/raw/Sensitive Source.pdf": "%PDF-fake\n",
-    "cerebruh/ingest/pending.md": "# not yet knowledge\n",
+    "knowledge-base/generated-wikis/unlisted-wiki/wiki/sensitive-page.md": "# page\n",
+    "knowledge-base/docs/unlisted-wiki/Sensitive Source.pdf": "%PDF-fake\n",
+    "knowledge-base/docs/to-organize/pending.md": "# not yet knowledge\n",
+    # A project sub-wiki and the tracked instruction files beside project docs.
+    "knowledge-base/generated-wikis/projects/acme/wiki/plan.md": "# page\n",
+    "knowledge-base/docs/projects/acme/brief.docx": "fake\n",
+    "knowledge-base/docs/projects/AGENTS.md": "# projects\n",
+    "knowledge-base/docs/projects/CLAUDE.md": "@AGENTS.md\n",
+    "knowledge-base/generated-wikis/docs-manifest.tsv": "path\tsha256\twikis\trecorded\n",
 
     # Excluded subtrees.
     "bernard/AGENTS.md": "# exhibit\n",
@@ -565,8 +571,8 @@ EXPECTED = {
     "CLAUDE.md": ("compatibility_wrapper", "mirror", "public"),
     "agentx/AGENTS.md": ("always_on_instruction", "canonical", "public"),
     "agentx/CLAUDE.md": ("compatibility_wrapper", "mirror", "public"),
-    "cerebruh/template/AGENTS.md": ("always_on_instruction", "canonical", "public"),
-    "cerebruh/template/CLAUDE.md": ("compatibility_wrapper", "mirror", "public"),
+    "knowledge-mgr-cerebruh/template/AGENTS.md": ("always_on_instruction", "canonical", "public"),
+    "knowledge-mgr-cerebruh/template/CLAUDE.md": ("compatibility_wrapper", "mirror", "public"),
     "LINT.md": ("policy_registry", "canonical", "public"),
     "agentx/MCP.md": ("policy_registry", "canonical", "public"),
     "MEMORY-INVENTORY.yaml": ("policy_registry", "canonical", "public"),
@@ -584,14 +590,18 @@ EXPECTED = {
     "agentx/.private/AGENTS.md": ("always_on_instruction", "canonical", "private"),
     "agentx/.private/CLAUDE.md": ("compatibility_wrapper", "mirror", "private"),
     "agentx/.private/note.md": ("private_memory", "canonical", "private"),
-    "cerebruh/wikis/index.md": ("retrieval_index", "canonical", "public"),
-    "cerebruh/wikis/codex-ecosystem/AGENTS.md": ("compatibility_wrapper", "mirror", "public"),
-    "cerebruh/wikis/codex-ecosystem/CLAUDE.md": ("compatibility_wrapper", "mirror", "public"),
-    "cerebruh/wikis/codex-ecosystem/wiki/index.md": ("retrieval_index", "canonical", "public"),
-    "cerebruh/wikis/codex-ecosystem/wiki/page.md": ("knowledge_page", "canonical", "public"),
-    "cerebruh/wikis/codex-ecosystem/raw/Source.pdf": ("knowledge_source", "source", "public"),
-    "cerebruh/wikis/unlisted-wiki/wiki/sensitive-page.md": ("knowledge_page", "canonical", "private"),
-    "cerebruh/wikis/unlisted-wiki/raw/Sensitive Source.pdf": ("knowledge_source", "source", "private"),
+    "knowledge-base/generated-wikis/index.md": ("retrieval_index", "canonical", "public"),
+    "knowledge-base/generated-wikis/codex-ecosystem/AGENTS.md": ("compatibility_wrapper", "mirror", "public"),
+    "knowledge-base/generated-wikis/codex-ecosystem/CLAUDE.md": ("compatibility_wrapper", "mirror", "public"),
+    "knowledge-base/generated-wikis/codex-ecosystem/wiki/index.md": ("retrieval_index", "canonical", "public"),
+    "knowledge-base/generated-wikis/codex-ecosystem/wiki/page.md": ("knowledge_page", "canonical", "public"),
+    "knowledge-base/docs/codex-ecosystem/Source.pdf": ("knowledge_source", "source", "public"),
+    "knowledge-base/generated-wikis/unlisted-wiki/wiki/sensitive-page.md": ("knowledge_page", "canonical", "private"),
+    "knowledge-base/docs/unlisted-wiki/Sensitive Source.pdf": ("knowledge_source", "source", "private"),
+    "knowledge-base/generated-wikis/projects/acme/wiki/plan.md": ("knowledge_page", "canonical", "private"),
+    "knowledge-base/docs/projects/acme/brief.docx": ("knowledge_source", "source", "private"),
+    "knowledge-base/docs/projects/AGENTS.md": ("always_on_instruction", "canonical", "public"),
+    "knowledge-base/docs/projects/CLAUDE.md": ("compatibility_wrapper", "mirror", "public"),
 }
 
 
@@ -607,7 +617,7 @@ def build_fixture(base):
     # A sub-wiki AGENTS.md is a symlink to the canonical template, and a
     # directory symlink points back into the tree the way repos/waiq's
     # .claude/commands does.
-    os.symlink("../../template/AGENTS.md", os.path.join(root, "cerebruh/wikis/codex-ecosystem/AGENTS.md"))
+    os.symlink("../../../knowledge-mgr-cerebruh/template/AGENTS.md", os.path.join(root, "knowledge-base/generated-wikis/codex-ecosystem/AGENTS.md"))
     os.symlink("../../.claude/commands", os.path.join(root, "agentx/.claude/borrowed"))
 
     codex_home = os.path.join(base, "codex")
@@ -657,7 +667,7 @@ def test_discovery_classification():
                          if EXPECTED[k] != workspace[k])))
 
         excluded = dict(result["excluded"])
-        for name in ("bernard", "repos", "tmp", "cerebruh/ingest",
+        for name in ("bernard", "repos", "tmp", "knowledge-base/docs/to-organize",
                      "agentx/.private.example",
                      "agentx/.claude/scheduled/logs", "agentx/.claude/scheduled/state"):
             check("discover: excludes %s with a stated reason" % name,
@@ -674,12 +684,12 @@ def test_discovery_classification():
                           (".claude/settings.local.json", "harness configuration"),
                           ("agentx/.private/contract.docx", "domain document"),
                           ("agentx/.private/scheduled-tasks/jobs.tasks", "registration table"),
-                          ("cerebruh/wikis/codex-ecosystem/raw/.DS_Store", "OS noise")):
+                          ("knowledge-base/docs/codex-ecosystem/.DS_Store", "OS noise")):
             check("discover: skips %s" % name, name in skipped, sorted(skipped))
         check("discover: a raw/ capture is a source despite its format, "
               "but OS noise beside it is not",
-              "cerebruh/wikis/codex-ecosystem/raw/Source.pdf" in workspace
-              and "cerebruh/wikis/codex-ecosystem/raw/.DS_Store" in skipped)
+              "knowledge-base/docs/codex-ecosystem/Source.pdf" in workspace
+              and "knowledge-base/docs/codex-ecosystem/.DS_Store" in skipped)
 
         check("discover: nothing in a memory-bearing location is left unclassified",
               result["unclassified"] == [], result["unclassified"])
@@ -700,8 +710,8 @@ def test_discovery_pairs_and_companions():
             (".agents/skills/beta.local/SKILL.md", ".claude/rules/beta.local.md"),
             ("CLAUDE.md", "AGENTS.md"),
             ("agentx/CLAUDE.local.md", "agentx/.private/AGENTS.md"),
-            ("cerebruh/wikis/codex-ecosystem/AGENTS.md", "cerebruh/template/AGENTS.md"),
-            ("cerebruh/wikis/codex-ecosystem/CLAUDE.md", "cerebruh/wikis/codex-ecosystem/AGENTS.md"),
+            ("knowledge-base/generated-wikis/codex-ecosystem/AGENTS.md", "knowledge-mgr-cerebruh/template/AGENTS.md"),
+            ("knowledge-base/generated-wikis/codex-ecosystem/CLAUDE.md", "knowledge-base/generated-wikis/codex-ecosystem/AGENTS.md"),
         ]
         for derived, canonical in pairs:
             record = by_path[("borg_root", derived)]
@@ -983,14 +993,16 @@ def test_bootstrap_over_fixture():
               [p for p in private_paths if p.startswith("agentx/") and p not in body])
         c4po_body = open(os.path.join(root, "c4po/.private/memory-inventory.yaml"),
                          encoding="utf-8").read()
-        unlisted = [p for p in private_paths if p.startswith("cerebruh/wikis/unlisted-wiki/")]
+        unlisted = [p for p in private_paths
+                    if p.startswith(("knowledge-base/generated-wikis/unlisted-wiki/",
+                                      "knowledge-base/docs/unlisted-wiki/"))]
         check("bootstrap: an unlisted sub-wiki's records land in C4PO's overlay",
               len(unlisted) == 2 and all(p in c4po_body for p in unlisted),
               [p for p in unlisted if p not in c4po_body])
-        check("bootstrap: and never in a cerebruh/.private/ overlay",
-              not os.path.exists(os.path.join(root, "cerebruh/.private")))
+        check("bootstrap: and never in a knowledge-mgr-cerebruh/.private/ overlay",
+              not os.path.exists(os.path.join(root, "knowledge-mgr-cerebruh/.private")))
         check("bootstrap: a listed sub-wiki's records stay in the tracked registry",
-              "cerebruh/wikis/codex-ecosystem/wiki/page.md" in tracked)
+              "knowledge-base/generated-wikis/codex-ecosystem/wiki/page.md" in tracked)
         check("bootstrap: an overlay it creates is owner-readable only",
               oct(os.stat(os.path.join(root, "c4po/.private/memory-inventory.yaml")).st_mode
                   & 0o777) == "0o600")

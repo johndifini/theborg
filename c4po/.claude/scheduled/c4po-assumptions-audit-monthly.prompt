@@ -236,11 +236,12 @@ Assumption C — Slash commands remain useful and unsuperseded
   `.claude/commands/`; if a command is retired, also its paired `.prompt` (for
   scheduled commands) and the slash-command listing in ${BORG_ROOT}/README.md.
 
-Assumption D — cerebruh raw source ceiling (75k tokens per sub-wiki)
-  Current guideline (${BORG_ROOT}/cerebruh/INGESTING.md, step 1 of the ingest
-  procedure): each `cerebruh/wikis/<sub-wiki>/raw/` directory should hold less
-  than about 75,000 tokens of raw source documents; exceeding it triggers a
-  proposed split. The number moved out of `cerebruh/AGENTS.md` when INGESTING.md
+Assumption D — knowledge-base source ceiling (75k tokens per sub-wiki)
+  Current guideline (${BORG_ROOT}/knowledge-mgr-cerebruh/INGESTING.md, step 3 of
+  the ingest procedure): the docs feeding each sub-wiki (the rows of
+  `knowledge-base/generated-wikis/docs-manifest.tsv` whose `wikis` column names
+  it) should total less than about 75,000 tokens; exceeding it triggers a
+  proposed split. The number moved out of the knowledge manager's AGENTS.md when INGESTING.md
   was split off to satisfy the LINT.md size rule; AGENTS.md now only routes to
   it, so read the ceiling from INGESTING.md rather than assuming either file.
   This ceiling is ephemeral — it tracks context-window size, model capability,
@@ -249,8 +250,8 @@ Assumption D — cerebruh raw source ceiling (75k tokens per sub-wiki)
   context window scaling limit" or "Obsidian knowledge base RAG threshold"); if
   a different ceiling or a retrieval change makes the 75k number outdated, flag
   UPDATE with the new guidance.
-  Then estimate the total raw-source token count of each sub-wiki: for every
-  `cerebruh/wikis/<sub-wiki>/raw/` directory, sum its source files and
+  Then estimate the total source token count of each sub-wiki: for every
+  sub-wiki, sum the `knowledge-base/docs/` files the manifest assigns to it and
   approximate tokens as bytes/4 — but **only for text-native sources** (.md,
   .txt, .html, .json). For PDFs, raw file size is not a token proxy: embedded
   page images and fonts dominate the bytes and inflate the estimate several-fold
@@ -261,8 +262,9 @@ Assumption D — cerebruh raw source ceiling (75k tokens per sub-wiki)
   with its estimated token count and which method produced it, so an over-limit
   sub-wiki can be proposed for a split.
   Where to update if flagged: the 75k-token ceiling lives in
-  ${BORG_ROOT}/cerebruh/INGESTING.md (editable as lint scaffolding); over-limit
-  sub-wikis are split through cerebruh's own ingest workflow, not here.
+  ${BORG_ROOT}/knowledge-mgr-cerebruh/INGESTING.md (editable as lint scaffolding);
+  over-limit sub-wikis are split through the knowledge manager's own ingest
+  workflow, not here.
 
 Assumption E — "dreaming" is still a custom job, not a native feature
   Current choice: memory maintenance is implemented as one custom c4po job and
@@ -354,25 +356,26 @@ Assumption F — default Claude model set in the scheduled-task runner
   the next audit verifies the new choice.
 
 Assumption G — the LLM Wiki pattern is the best lightweight RAG for this setup
-  Current choice: cerebruh implements Andrej Karpathy's "LLM Wiki" pattern
-  (${BORG_ROOT}/cerebruh/AGENTS.md) — Claude-maintained interlinked markdown
-  pages retrieved by reading `wikis/index.md`, then a sub-wiki's `wiki/index.md`,
+  Current choice: knowledge-mgr-cerebruh implements Andrej Karpathy's "LLM Wiki"
+  pattern (${BORG_ROOT}/knowledge-mgr-cerebruh/AGENTS.md) — Claude-maintained
+  interlinked markdown pages, compiled from the human docs in
+  `knowledge-base/docs/`, retrieved by reading `generated-wikis/index.md`, then a sub-wiki's `wiki/index.md`,
   then the relevant pages into full context. There is no embedding/vector index;
   retrieval is index-guided full-context read. This suits small, curated
   corpora, but the right approach is ephemeral — it tracks corpus size, context
   window, and the maturity of lightweight retrieval tooling.
   Re-evaluate in two steps:
   1. Estimate the workspace's data volume, measuring what retrieval actually
-     loads. Raw sources are never read by the Question-Answering workflow, so
-     size the wiki side first and treat raw as background:
-     - Retrieval corpus: sum `cerebruh/wikis/<sub-wiki>/wiki/**.md` at bytes/4
+     loads. Docs are never read by the Question-Answering workflow, so
+     size the wiki side first and treat docs as background:
+     - Retrieval corpus: sum `knowledge-base/generated-wikis/**/wiki/**.md` at bytes/4
        (markdown, so bytes/4 is sound), and note the page count and mean page
        size.
-     - Per-query fixed cost: the size of `wikis/index.md` plus the **largest**
+     - Per-query fixed cost: the size of `generated-wikis/index.md` plus the **largest**
        sub-wiki `wiki/index.md`. Every query in that domain pays this before it
        reads a single page, so it is the pattern's real pressure point — call it
        out with the sub-wiki name.
-     - Background: total raw-source tokens across all `raw/` directories, reusing
+     - Background: total doc tokens across `knowledge-base/docs/`, reusing
        Assumption D's per-format estimates (text-native bytes/4, PDFs via text
        extraction).
   2. Use WebSearch to check whether a lightweight RAG approach has become a
@@ -391,10 +394,10 @@ Assumption G — the LLM Wiki pattern is the best lightweight RAG for this setup
     data volume (name it and what would change).
   Where to update if flagged: the retrieval approach is codified in the
   Question-Answering workflow and folder structure of
-  ${BORG_ROOT}/cerebruh/AGENTS.md (editable as lint scaffolding); the routing
-  policy in ${BORG_ROOT}/AGENTS.md → "How to use the cerebruh knowledge base"
-  may also need updating. Note that any structural change to cerebruh itself is
-  made through cerebruh's own workflow, not here.
+  ${BORG_ROOT}/knowledge-mgr-cerebruh/AGENTS.md (editable as lint scaffolding);
+  the routing policy in ${BORG_ROOT}/AGENTS.md → "How to use the knowledge-base/"
+  may also need updating. Note that any structural change to the knowledge base
+  itself is made through the knowledge manager's own workflow, not here.
 
 Assumption H — the rolling session-limit window is 5 hours
   The only value pinned here is the **5-hour** rolling session window — usage is
@@ -583,7 +586,7 @@ pointer above).
       {sub-wiki}: ~{token_estimate} tokens ({bytes/4|PDF text extraction|mixed})
       ...
     (omit the "Over-limit sub-wikis" block if none)
-    Where to update: {75k ceiling in cerebruh/INGESTING.md}
+    Where to update: {75k ceiling in knowledge-mgr-cerebruh/INGESTING.md}
 
   Assumption E (native dreaming): {STILL VALID|RECONSIDER|UPDATE}
     {one-line reason if not STILL VALID — name the native feature that
@@ -600,7 +603,7 @@ pointer above).
     (largest index: {sub-wiki})
     {one-line reason if not STILL VALID — the pressure point, and the
      alternative retrieval approach, if any, that now fits better}
-    Where to update: {cerebruh/AGENTS.md retrieval workflow; cerebruh routing in AGENTS.md — changes to cerebruh made via its own workflow}
+    Where to update: {knowledge-mgr-cerebruh/AGENTS.md retrieval workflow; knowledge-base routing in AGENTS.md — changes to the knowledge base made via its own workflow}
 
   Assumption H (session-limit window): {STILL VALID|RECONSIDER|UPDATE}
     Schedule read: {schedule id} fires {time 1} / {time 2}; window {N}h

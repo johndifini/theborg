@@ -30,6 +30,6 @@ namespaced away from `com.theborg.*` before it is given any scheduled jobs
 at all.
 
 Also worth knowing about a fresh clone: most of the substance is gitignored.
-`cerebruh/wikis/*`, every `.private/`, `.env`, `repos/*`, `*.local.md`
+`knowledge-base/` docs and wikis, every `.private/`, `.env`, `repos/*`, `*.local.md`
 rules, `settings.local.json`, and `.private/scheduled-tasks/*.tasks` (which
 the installer itself reads) do not come along.

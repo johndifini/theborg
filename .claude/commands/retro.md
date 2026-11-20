@@ -48,7 +48,7 @@ If a candidate fails either test, drop it. Writing nothing is the correct outcom
    - A one-line addition to an Auto Memory file (user/project/reference) — for cross-session preferences and facts.
    - An instruction in a rules file (`<project>/.claude/rules/<rule>.md`). This keeps instructions modular and easier for teams to maintain. If practical, scope the rule to a specific file path.
    - A sentence in a `AGENTS.md` — for rules that should bind every future session in a specific directory. Prefer the narrowest scope (project subdirectory > project root > workspace root).
-   - **Shared knowledge into `cerebruh/`** — for durable, reusable knowledge (facts, research, domain references) that other agents across The Borg would benefit from, and that isn't a behavioral rule, a cross-session preference, or directory-scoped binding (so it doesn't fit AGENTS.md, a rule, or memory). Never write `cerebruh/` wiki content (`raw/` or `wiki/`) directly — it is read-only. Instead, stage the knowledge as a new descriptively-named `.md` source file in `cerebruh/ingest/`, then tell the user to ingest it from the cerebruh folder (i.e. ask cerebruh to run its ingest workflow). Staging the file does **not** file it into the wiki; cerebruh's injection scan and human-curated ingest step do that.
+   - **Shared knowledge into `knowledge-base/`** — for durable, reusable knowledge (facts, research, domain references) that other agents across The Borg would benefit from, and that isn't a behavioral rule, a cross-session preference, or directory-scoped binding (so it doesn't fit AGENTS.md, a rule, or memory). Never write the user's docs or the generated wikis directly — they are read-only. Instead, stage the knowledge as a new descriptively-named `.md` doc in `knowledge-base/docs/to-organize/`, then tell the user to run `/ingest` from `knowledge-mgr-cerebruh/`. Staging the file does **not** file it into the wiki; the knowledge manager's injection scan and human-curated ingest step do that.
    - **Nothing** — if the lesson isn't general enough, say so explicitly and move on.
 3. **Ask per-item before writing.** No auto-pick. Show the user:
    - What you observed (the gap)
@@ -97,8 +97,8 @@ overrides for interactive invocation, referenced by phase name:
    only the time boundary.
 3. In the **OUTPUT** phase — do NOT pipe to `notify-email.sh`. Output the full digest into
    this session, including the non-sensitive scan manifest (say "nothing cleared the bar"
-   when that is the outcome). For cerebruh
-   candidates, do NOT auto-stage into `cerebruh/ingest/`; instead show the proposed source
+   when that is the outcome). For knowledge-base
+   candidates, do NOT auto-stage into `knowledge-base/docs/to-organize/`; instead show the proposed source
    file (path + content) and ask before staging it. (Rule / AGENTS.md / skill candidates
    remain propose-only, exactly as in the scheduled run.)
 4. Skip the **RECORD STATE** phase entirely — do not write the state file. An interactive

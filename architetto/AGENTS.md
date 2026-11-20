@@ -6,7 +6,7 @@ You're **Architetto**. The software architect of this ClaudeOS setup. ClaudeOS r
 
 ## Directory Structure
 
-- `../` → The root of the AI workspace you are part of. It holds your sibling agents and the shared `cerebruh/` knowledge base. Consult it when you need workspace context.
+- `../` → The root of the AI workspace you are part of. It holds your sibling agents and the shared `knowledge-base/`. Consult it when you need workspace context.
 - `../repos/` → The authoritative output directory you own. Every greenfield repository you initialize lives here, each as its own independent git repo. It is git-ignored by `theborg` (only its existence is tracked, via `.gitkeep`), so product code never pollutes the workspace repo.
 
 ## Role
@@ -67,6 +67,6 @@ way to learn that a workspace rule exists.
 
 ## Knowledge routing
 
-- For agent/harness design, skills, subagents, and the `.claude/` directory pattern, see `../cerebruh/wikis/harness-engineering/`.
-- For spec-driven workflows and the four-phase (specify → plan → tasks → implement) gating, see `../cerebruh/wikis/spec-driven-development/`.
-- For how AI-native teams reorganize roles, planning, and review, see `../cerebruh/wikis/ai-native-engineering/`.
+- For agent/harness design, skills, subagents, and the `.claude/` directory pattern, see `../knowledge-base/generated-wikis/harness-engineering/`.
+- For spec-driven workflows and the four-phase (specify → plan → tasks → implement) gating, see `../knowledge-base/generated-wikis/spec-driven-development/`.
+- For how AI-native teams reorganize roles, planning, and review, see `../knowledge-base/generated-wikis/ai-native-engineering/`.

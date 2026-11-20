@@ -10,7 +10,7 @@ paths:
 Claude Code treats paths under `.claude/` as sensitive and can refuse `Edit`
 and `Write` there regardless of configured permissions. The deny lists in
 `c4po/.claude/settings.local.json` and in the burndown's per-task
-`--settings` policy cover only `cerebruh/` wiki content and `.env` — nothing
+`--settings` policy cover only knowledge-base content (formerly `cerebruh/`) and `.env` — nothing
 under `.claude/scheduled/state/`. The sandbox policy's `allowWrite` is
 `${BORG_ROOT}`, which contains the state directory.
 

@@ -7,7 +7,7 @@ full health record) never leaves its home machine — what's shared here is ever
 of *machinery* wrapped around it, so you can see how it was built and what everything
 does.
 
-The wiki itself follows the same second-brain pattern as [`cerebruh/`](../cerebruh/) —
+The wiki itself follows the same second-brain pattern as [`knowledge-mgr-cerebruh/`](../knowledge-mgr-cerebruh/) —
 ingest → classify → cite → link — pushed to production-grade for the highest-stakes
 domain: a real patient, real PHI, multiple AI agents writing to one record, and a
 non-technical family reading from it.

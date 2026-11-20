@@ -198,8 +198,8 @@ an always-on instruction or retrieved wiki page provided no value.
 | `command` | `.claude/commands/*.md` | Canonical command |
 | `generated_command_bridge` | Codex skills generated from commands | Individual bridge; drift only |
 | `scheduled_prompt` | `.claude/scheduled/*.prompt` | Prompt plus its configuration and runner dependency |
-| `knowledge_page` | `cerebruh/wikis/*/wiki/*.md` | Individual page; substantive review can roll by cohort |
-| `knowledge_source` | `cerebruh/wikis/*/raw/*` | Individual source; provenance and resolvability, not file-size guessing |
+| `knowledge_page` | `knowledge-base/generated-wikis/**/wiki/*.md` | Individual page; substantive review can roll by cohort |
+| `knowledge_source` | `knowledge-base/docs/**` (not `to-organize/`) | Individual source; provenance and resolvability, not file-size guessing |
 | `private_memory` | Agent Auto Memory and durable `.private/` notes | Individual private artifact in a private overlay |
 | `policy_registry` | `LINT.md`, `MCP.md`, source-document procedures | Canonical policy file or registry entry |
 | `retrieval_index` | Top-level and sub-wiki `index.md` files | Individual index plus coverage of its children |
@@ -452,7 +452,7 @@ which belongs to no single agent — go to C4PO's overlay, because C4PO owns thi
 inventory and `AGENTS.md` places durable confidential material under an owning
 agent's `.private/`, not at the workspace root. Private Cerebruh records go there
 too: Cerebruh is not an agent and is read-only from elsewhere, so it gets no
-`.private/` of its own, and the record keeps `owner: cerebruh`. Every sub-wiki is
+`.private/` of its own, and the record keeps `owner: knowledge-mgr-cerebruh`. Every sub-wiki is
 gitignored, so ignore status cannot separate a public-topic wiki from a personal
 one, and a page name alone can disclose a diagnosis or a visit date. A sub-wiki
 is therefore private unless it is named in the builder's `PUBLIC_WIKIS` list. An

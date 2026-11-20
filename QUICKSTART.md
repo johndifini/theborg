@@ -152,5 +152,5 @@ Then test the email path without waiting for a scheduled fire — start Claude C
 
 - [README](./README.md) — what each agent is for, the full scheduled-job list, and every slash command.
 - [SECURITY.md](./SECURITY.md) — read before your first commit.
-- `cerebruh/wikis/index.md` — the shared knowledge base every agent reads from.
+- `knowledge-base/generated-wikis/index.md` — the shared knowledge base every agent reads from. Put your own documents in `knowledge-base/docs/` and run `/ingest` from `knowledge-mgr-cerebruh/` to compile them.
 - Delete the agents you don't want. Nothing here is load-bearing on the rest.

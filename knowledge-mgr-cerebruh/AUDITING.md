@@ -1,6 +1,7 @@
 # Auditing the wiki
 
-The procedure for linting or auditing wiki content. Distinct from the workspace's
+The procedure for linting or auditing the generated wikis in
+`../knowledge-base/generated-wikis/`. Distinct from the workspace's
 `../LINT.md`, which governs `AGENTS.md` files across The Borg — this one is about the
 pages themselves.
 
@@ -22,15 +23,19 @@ corpus in view.
 - Identify concepts mentioned in pages that lack their own page
 - Flag claims that may be outdated based on newer sources
 - Check that all pages follow the Wiki Page format in `AGENTS.md`
-- Resolve each wiki page's `sources:` entries against files in that sub-wiki's `raw/`.
+- Run `ruby docs-changes.rb` and report anything it prints: docs added, changed, moved,
+  or deleted since the last ingest, file-name clashes, and items waiting in
+  `docs/to-organize/`. Any of these means the wikis are stale until the next ingest.
+- Resolve each wiki page's `sources:` entries against the file names of the docs in
+  `generated-wikis/docs-manifest.tsv` whose `wikis` column names that sub-wiki.
   Normalize both sides, in order: Unicode NFKC; fold `’` and `‘` to `'`, `“` and `”`
   to `"`, and `–`, `—`, and `―` to `-`; collapse whitespace runs to one ASCII space;
-  strip leading and trailing whitespace. Raw filenames preserve source-site typography
+  strip leading and trailing whitespace. Doc filenames preserve source-site typography
   while citations get retyped as ASCII, so exact matching silently undercounts provenance.
 - Assert that every `sources:` entry resolves after normalization. Report every unresolved
   entry. Baseline: 349 edges total; 334 exact, 15 normalization-only, 0 unresolved.
   Normalization-only should stay roughly flat; a rising unresolved count is the alarm.
-- Do not rename files or rewrite citations. The accepted tradeoff is that every future
+- Do not rename docs or rewrite citations. The accepted tradeoff is that every future
   consumer of this join must normalize; this file records that requirement.
 - Flag any page containing stray tool-call/markup fragments (e.g. trailing `</content>`, `</invoke>`, or other non-content XML tags) — these are write artifacts, not page content, and should be stripped
 

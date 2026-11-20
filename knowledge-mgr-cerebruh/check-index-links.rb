@@ -3,13 +3,15 @@
 
 Encoding.default_external = Encoding::UTF_8
 
-# Validate local Markdown links in every wiki index. A target must resolve exactly as
+# Validate local Markdown links in every generated wiki index. A target must resolve exactly as
 # written; extensionless links are rejected even if adding `.md` would find a page.
+
+INDEXES = Dir.glob(File.expand_path("../knowledge-base/generated-wikis/**/index.md", __dir__)).sort
 
 failures = []
 checked = 0
 
-Dir.glob("wikis/**/index.md").sort.each do |index|
+INDEXES.each do |index|
   File.foreach(index).with_index(1) do |line, line_number|
     line.scan(/\[[^\]]*\]\(([^)]+)\)/) do |match|
       raw_destination = match.first.strip
@@ -38,7 +40,7 @@ Dir.glob("wikis/**/index.md").sort.each do |index|
 end
 
 if failures.empty?
-  puts "OK: #{checked} local links across #{Dir.glob('wikis/**/index.md').length} index files"
+  puts "OK: #{checked} local links across #{INDEXES.length} index files"
   exit 0
 end
 
