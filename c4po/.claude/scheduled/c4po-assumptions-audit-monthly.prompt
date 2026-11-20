@@ -236,32 +236,46 @@ Assumption C — Slash commands remain useful and unsuperseded
   `.claude/commands/`; if a command is retired, also its paired `.prompt` (for
   scheduled commands) and the slash-command listing in ${BORG_ROOT}/README.md.
 
-Assumption D — knowledge-base source ceiling (75k tokens per sub-wiki)
+Assumption D — sub-wiki size limits (index and compiled pages)
   Current guideline (${BORG_ROOT}/knowledge-mgr-cerebruh/INGESTING.md, step 3 of
-  the ingest procedure): the docs feeding each sub-wiki (the rows of
-  `knowledge-base/generated-wikis/docs-manifest.tsv` whose `wikis` column names
-  it) should total less than about 75,000 tokens; exceeding it triggers a
-  proposed split. The number moved out of the knowledge manager's AGENTS.md when INGESTING.md
-  was split off to satisfy the LINT.md size rule; AGENTS.md now only routes to
-  it, so read the ceiling from INGESTING.md rather than assuming either file.
-  This ceiling is ephemeral — it tracks context-window size, model capability,
-  and the retrieval pattern (full-context read vs. RAG). Use WebSearch to check
-  whether the rationale behind it still holds (search terms like "LLM wiki
-  context window scaling limit" or "Obsidian knowledge base RAG threshold"); if
-  a different ceiling or a retrieval change makes the 75k number outdated, flag
-  UPDATE with the new guidance.
-  Then estimate the total source token count of each sub-wiki: for every
-  sub-wiki, sum the `knowledge-base/docs/` files the manifest assigns to it and
-  approximate tokens as bytes/4 — but **only for text-native sources** (.md,
-  .txt, .html, .json). For PDFs, raw file size is not a token proxy: embedded
-  page images and fonts dominate the bytes and inflate the estimate several-fold
-  (measured 2.3x on this corpus in the 2026-08 audit). Extract the PDF's text
-  layer and use extracted-bytes/4 instead. If a PDF has no text layer (a pure
-  scan), say so and treat its token count as unknown rather than guessing from
-  file size. List any sub-wiki whose estimate exceeds the current ceiling along
-  with its estimated token count and which method produced it, so an over-limit
-  sub-wiki can be proposed for a split.
-  Where to update if flagged: the 75k-token ceiling lives in
+  the ingest procedure): propose a split when a sub-wiki's `wiki/index.md`
+  lists more than about 75 pages or exceeds about 6,000 tokens, or when its
+  compiled pages (`wiki/**/*.md`) exceed about 100,000 tokens. The docs that
+  feed it are logged as information only and never trigger a split. Read the
+  limits from INGESTING.md rather than from this summary or from the knowledge
+  manager's AGENTS.md, which only routes to it.
+  Why these and not raw docs (decided 2026-11-19): a query reads the root
+  index, one sub-wiki index, then a few pages; an ingest reads one doc; an
+  audit resolves `sources:` entries without loading them. Nothing loads a
+  sub-wiki's docs together, so a raw-doc total limits nothing. The old 75k
+  raw-doc ceiling predates the repo's history (initial commit 2026-05-23) and
+  has no recorded source; Karpathy's LLM-wiki gist sets no token limit, only
+  that index-first lookup "works surprisingly well at moderate scale (~100
+  sources, ~hundreds of pages)" before a wiki needs proper search.
+  These limits are ephemeral: they track how well models route from a long
+  index, context-window size, and whether retrieval is still index-first.
+  Use WebSearch to check whether that still holds (search terms like "LLM
+  wiki index scaling limit", "agent index file how many entries", "LLM wiki
+  pattern search vs index"); if newer guidance or a retrieval change (for
+  example, search over wiki pages replacing index-first lookup) makes the
+  limits outdated, flag UPDATE with the new guidance. Assumption G judges the
+  retrieval pattern itself; here judge only the split limits.
+  Then measure every sub-wiki (including `generated-wikis/projects/*`):
+  - Index pages: count the lines in `wiki/index.md` that link to a page in
+    `wiki/`. Index tokens: the file's bytes/4.
+  - Compiled tokens: sum `wiki/**/*.md` at bytes/4 (markdown, so bytes/4 is
+    sound).
+  - Docs (information only): sum the `knowledge-base/docs/` files the
+    manifest assigns to it. Use bytes/4 only for text-native sources (.md,
+    .txt, .html, .json). For PDFs, raw file size is not a token proxy:
+    embedded page images and fonts inflate it several-fold (measured 2.3x on
+    this corpus in the 2026-08 audit), so extract the text layer and use
+    extracted-bytes/4. If a PDF has no text layer (a pure scan), say so and
+    treat its count as unknown rather than guessing from file size.
+  List any sub-wiki over a limit with all three numbers and the limit it
+  breaches, so it can be proposed for a split. Also name any sub-wiki within
+  10% of a limit as approaching.
+  Where to update if flagged: the limits live in
   ${BORG_ROOT}/knowledge-mgr-cerebruh/INGESTING.md (editable as lint scaffolding);
   over-limit sub-wikis are split through the knowledge manager's own ingest
   workflow, not here.
@@ -580,13 +594,13 @@ pointer above).
     (omit per-command block if all STILL VALID)
     Where to update: {the specific command file(s); paired .prompt + README.md if retired}
 
-  Assumption D (raw source ceiling): {STILL VALID|RECONSIDER|UPDATE}
+  Assumption D (sub-wiki size limits): {STILL VALID|RECONSIDER|UPDATE}
     {one-line reason if not STILL VALID}
-    Over-limit sub-wikis:
-      {sub-wiki}: ~{token_estimate} tokens ({bytes/4|PDF text extraction|mixed})
+    Over or approaching a limit:
+      {sub-wiki}: {over|approaching} {index pages|index tokens|compiled tokens} - index {n} pages / ~{index_tokens} tokens, compiled ~{compiled_tokens} tokens, docs ~{doc_tokens} tokens ({bytes/4|PDF text extraction|mixed|unknown})
       ...
-    (omit the "Over-limit sub-wikis" block if none)
-    Where to update: {75k ceiling in knowledge-mgr-cerebruh/INGESTING.md}
+    (omit the "Over or approaching a limit" block if none)
+    Where to update: {size limits in knowledge-mgr-cerebruh/INGESTING.md}
 
   Assumption E (native dreaming): {STILL VALID|RECONSIDER|UPDATE}
     {one-line reason if not STILL VALID — name the native feature that

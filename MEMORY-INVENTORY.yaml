@@ -267,6 +267,8 @@ artifacts:
         reference: "c4po/AGENTS.md Lint enforcement — C4PO owns monthly review of ephemeral best-practice assumptions."
       - kind: design_document
         reference: "c4po/LONG-TERM-MEMORY-INVENTORY-DESIGN.md — revises this prompt into a ten-stage memory-governance orchestrator."
+      - kind: user_request
+        reference: "2026-11-19: Assumption D re-based from a 75k raw-doc ceiling (no recorded source; not in Karpathy's LLM-wiki gist) to sub-wiki index entries/tokens plus compiled page tokens; raw doc totals kept as information only."
     load_mode: scheduled
     consumers: [claude-code, launchd, run-scheduled-task.sh]
     risk: high
@@ -5636,6 +5638,9 @@ artifacts:
     visibility: public
     canonicality: canonical
     introduced: 2026-08-01    # first git add
+    provenance:
+      - kind: user_request
+        reference: "2026-11-19: sub-wiki split trigger changed from ~75k tokens of feeding docs to wiki/index.md entries (~75) or tokens (~6k) and compiled page tokens (~100k); feeding-doc totals logged as information only. Tracked by Assumption D of c4po-assumptions-audit-monthly.prompt."
     load_mode: explicit
     consumers: [claude-code, codex, claude-desktop]
     review:

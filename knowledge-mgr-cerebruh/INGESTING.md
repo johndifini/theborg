@@ -66,7 +66,11 @@ For each `added` or `updated` doc:
 1. Determine which sub-wiki(s) it feeds, and create one if necessary.
     1. A doc under `docs/projects/<project>/` feeds `generated-wikis/projects/<project>/` and nothing else, and that sub-wiki takes no doc from anywhere else. Create the project sub-wiki the first time its folder has a doc.
     1. Any other doc may feed one or more topic sub-wikis, wherever it sits in `docs/`. Its folder is a hint, not a rule.
-    1. Keep each sub-wiki to roughly 75,000 tokens of the docs that feed it (sum the manifest rows that name it). When a sub-wiki would exceed that, propose a split to the user before taking further action.
+    1. Before adding to a sub-wiki, check its size. Propose a split to the user before taking further action when it is over, or this doc would push it over, either limit:
+        1. Its `wiki/index.md` lists more than about 75 pages or exceeds about 6,000 tokens (bytes/4). Every query reads the index before any page, and a long index is where page routing degrades. Karpathy's LLM-wiki gist puts index-first lookup's limit at about 100 sources and hundreds of pages.
+        1. Its compiled pages (`wiki/**/*.md`, bytes/4) exceed about 100,000 tokens, which is roughly what an audit or a reconciliation can still hold in context at once.
+        1. The docs that feed it (sum the manifest rows that name it) are information only. Record their total in the `wiki/log.md` entry, but never split on it: no workflow reads a sub-wiki's docs together.
+        1. A limit only prompts the question. Split along a topic seam, not at an arbitrary page count.
     1. A new topic sub-wiki is `generated-wikis/<sub-wiki>/`, with `AGENTS.md` symlinked to `../../../knowledge-mgr-cerebruh/template/AGENTS.md`, a `CLAUDE.md` containing exactly `@AGENTS.md`, and `wiki/index.md` and `wiki/log.md`. A project sub-wiki has the same layout one level deeper, so its symlink is `../../../../knowledge-mgr-cerebruh/template/AGENTS.md`.
 1. For an `added` doc: create a summary page in the sub-wiki's `wiki/` named after the doc, then create or update concept pages for each major idea or entity.
 1. For an `updated` doc: re-read it whole and reconcile every page that cites it (search `sources:` and `(source: …)` for its file name). Add what is new, revise what changed, and remove claims the doc no longer supports, following the deletion rules in step 4 for each removed claim. Bump `updated` on every page you touch.
