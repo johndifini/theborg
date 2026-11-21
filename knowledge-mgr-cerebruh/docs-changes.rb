@@ -22,7 +22,9 @@ KB = File.expand_path("../knowledge-base", __dir__)
 DOCS = File.join(KB, "docs")
 MANIFEST = File.join(KB, "generated-wikis", "docs-manifest.tsv")
 NOISE = [".DS_Store", ".gitkeep", "Icon\r"].freeze
-SCAFFOLDING = ["projects/AGENTS.md", "projects/CLAUDE.md"].freeze
+# Instruction files, not docs: the projects/ folder's own and each project folder's.
+# ../.bin/build-memory-inventory.py (_is_kb_doc_scaffolding) mirrors this; change both.
+SCAFFOLDING = %r{\Aprojects/([^/]+/)?(AGENTS|CLAUDE)\.md\z}
 
 # A copied imaging disc (CT, MRI) is any folder holding a DICOMDIR. Its image series,
 # bundled viewer app, and autorun files are not documents; only the radiology reports
@@ -46,7 +48,7 @@ def current_docs
   roots = disc_roots
   Dir.glob("**/*", File::FNM_DOTMATCH, base: DOCS).sort.map do |rel|
     next unless File.file?(File.join(DOCS, rel))
-    next if NOISE.include?(File.basename(rel)) || SCAFFOLDING.include?(rel)
+    next if NOISE.include?(File.basename(rel)) || SCAFFOLDING.match?(rel)
     next if disc_content?(rel, roots)
     next if rel.split("/").any? { |part| part.start_with?(".") && part != File.basename(rel) }
     rel

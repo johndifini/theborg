@@ -1007,7 +1007,15 @@ KB_DOC_SCAFFOLDING = frozenset({
     "knowledge-base/docs/projects/AGENTS.md",
     "knowledge-base/docs/projects/CLAUDE.md",
 })
+# A project folder's own AGENTS.md / CLAUDE.md is scaffolding too, never compiled,
+# but it stays private (only the two files above are tracked). Mirrors
+# knowledge-mgr-cerebruh/docs-changes.rb SCAFFOLDING; change both together.
+KB_PROJECT_SCAFFOLDING_RE = r"^knowledge-base/docs/projects/[^/]+/(AGENTS|CLAUDE)\.md$"
 DOC_SOURCE_RE = r"^knowledge-base/docs/(?!to-organize/)"
+
+
+def _is_kb_doc_scaffolding(rel: str) -> bool:
+    return rel in KB_DOC_SCAFFOLDING or re.match(KB_PROJECT_SCAFFOLDING_RE, rel) is not None
 
 
 def kb_wiki_name(rel: str):
@@ -1147,7 +1155,7 @@ def _kb_disc_reason(root: str, rel: str, cache: dict):
 def _skip_reason(rel: str, name: str):
     # A doc in the knowledge base is a knowledge_source whatever its format, so
     # no format-based skip may fire inside docs/.
-    if re.match(DOC_SOURCE_RE, rel) and rel not in KB_DOC_SCAFFOLDING:
+    if re.match(DOC_SOURCE_RE, rel) and not _is_kb_doc_scaffolding(rel):
         return None
     if rel in SELF_GOVERNING_PATHS:
         return None
@@ -1337,7 +1345,7 @@ def classify(root: str, rel: str):
     wiki, inner = kb_wiki_name(rel)
     if wiki is not None and len(inner) >= 2 and inner[0] == "wiki" and name.endswith(".md"):
         return art("retrieval_index" if name == "index.md" else "knowledge_page")
-    if re.match(DOC_SOURCE_RE, rel) and rel not in KB_DOC_SCAFFOLDING:
+    if re.match(DOC_SOURCE_RE, rel) and not _is_kb_doc_scaffolding(rel):
         return art("knowledge_source", "source")
 
     # Durable private notes. Restricted to Markdown deliberately: the other
