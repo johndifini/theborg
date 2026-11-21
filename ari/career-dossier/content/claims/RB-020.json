@@ -1,7 +1,7 @@
 {
-  "approvedAt": "2026-09-02T02:18:00Z",
-  "asOf": "2026-09-01",
-  "claim": "Architected and developed the company's first secure microservices API for financial institutions, taking it from initial design through production launch and knowledge transfer.",
+  "approvedAt": "2026-11-21T03:52:58Z",
+  "asOf": "2026-11-20",
+  "claim": "Architected and developed the company's first secure REST API for financial institutions, taking it from initial design through production launch and knowledge transfer.",
   "evidenceIds": [],
   "evidenceLevel": "resume-sourced",
   "id": "RB-020",
@@ -19,13 +19,13 @@
   "schemaVersion": 1,
   "skills": [
     "API design",
-    "Microservices",
     "Product launch",
+    "REST APIs",
     "Security",
     "Software architecture"
   ],
   "status": "historical",
-  "title": "Architect and launch a partner microservices API",
+  "title": "Architect and launch a partner REST API",
   "type": "experience",
   "visibility": "public"
 }

@@ -1,10 +1,10 @@
 # John DiFini — public career dossier
 
-> Technology executive and financial-services software leader
+> Software engineering leader and former CTO focused on enterprise AI
 
-Technology executive with nearly three decades of experience in financial-services software. Experience spans hands-on development, engineering leadership, platform modernization, product delivery, data systems, and independent AI projects.
+Software engineering leader and former CTO who pairs enterprise AI strategy with hands-on engineering. Experience spans engineering leadership, platform modernization, APIs, data systems, product delivery, and independent AI projects in financial-services software.
 
-As of: 2026-09-03
+As of: 2026-11-20
 
 ## Claims
 
@@ -12,8 +12,8 @@ As of: 2026-09-03
 
 Restructured software-engineering work into smaller autonomous teams to reduce context switching and clarify priorities.
 
-- Type/status: leadership / completed
-- As of: 2026-09-03
+- Type/status: leadership / historical
+- As of: 2026-11-20
 - Evidence level: resume-sourced
 - Skills: Engineering culture, Organizational design, Prioritization, Team autonomy
 - Evidence IDs: none
@@ -23,8 +23,8 @@ Restructured software-engineering work into smaller autonomous teams to reduce c
 
 Set an engineering hiring strategy centered on recruiting high-caliber, creative talent for a fast-paced product environment.
 
-- Type/status: leadership / completed
-- As of: 2026-09-03
+- Type/status: leadership / historical
+- As of: 2026-11-20
 - Evidence level: resume-sourced
 - Skills: Engineering leadership, Hiring strategy, Organizational growth, Talent strategy
 - Evidence IDs: none
@@ -34,8 +34,8 @@ Set an engineering hiring strategy centered on recruiting high-caliber, creative
 
 Led and influenced technical architecture, product, and user-experience design decisions.
 
-- Type/status: leadership / completed
-- As of: 2026-09-03
+- Type/status: leadership / historical
+- As of: 2026-11-20
 - Evidence level: resume-sourced
 - Skills: Architecture, Cross-functional leadership, Product design, User experience
 - Evidence IDs: none
@@ -45,8 +45,8 @@ Led and influenced technical architecture, product, and user-experience design d
 
 Built cross-functional partnerships to identify user needs and translate them into technical solutions.
 
-- Type/status: leadership / completed
-- As of: 2026-09-03
+- Type/status: leadership / historical
+- As of: 2026-11-20
 - Evidence level: resume-sourced
 - Skills: Cross-functional collaboration, Product discovery, Stakeholder management, Technical delivery
 - Evidence IDs: none
@@ -56,8 +56,8 @@ Built cross-functional partnerships to identify user needs and translate them in
 
 Provided technical leadership for teams and systems supporting retirement-services recordkeeping.
 
-- Type/status: leadership / completed
-- As of: 2026-09-03
+- Type/status: leadership / historical
+- As of: 2026-11-20
 - Evidence level: resume-sourced
 - Skills: Engineering leadership, Fintech, Retirement services, Systems leadership
 - Evidence IDs: none
@@ -67,8 +67,8 @@ Provided technical leadership for teams and systems supporting retirement-servic
 
 Updated engineering role titles to align with technology-industry conventions and support a growth-oriented team culture.
 
-- Type/status: leadership / completed
-- As of: 2026-09-03
+- Type/status: leadership / historical
+- As of: 2026-11-20
 - Evidence level: resume-sourced
 - Skills: Engineering culture, Organizational design, Role design, Talent development
 - Evidence IDs: none
@@ -151,14 +151,14 @@ Established coding, security, testing, and quality standards and architectural p
 - Evidence IDs: none
 - Limitations: No proprietary architecture, security control, test procedure, certification, vulnerability result, or quantified quality outcome is disclosed.; The claim describes engineering governance and does not imply sole authorship, sole enforcement authority, or a legal or regulatory compliance determination.
 
-### RB-020: Architect and launch a partner microservices API
+### RB-020: Architect and launch a partner REST API
 
-Architected and developed the company's first secure microservices API for financial institutions, taking it from initial design through production launch and knowledge transfer.
+Architected and developed the company's first secure REST API for financial institutions, taking it from initial design through production launch and knowledge transfer.
 
 - Type/status: experience / historical
-- As of: 2026-09-01
+- As of: 2026-11-20
 - Evidence level: resume-sourced
-- Skills: API design, Microservices, Product launch, Security, Software architecture
+- Skills: API design, Product launch, REST APIs, Security, Software architecture
 - Evidence IDs: none
 - Limitations: No adoption, transaction-volume, revenue, or performance metric is claimed.; The claim is supported by candidate-provided resume evidence rather than independent public documentation.
 
@@ -736,14 +736,14 @@ Designed and developed a transaction-simulation engine for load testing an elect
 
 ### RB-077: Present public talks about AI
 
-Presented two public talks about AI and has a third talk scheduled for November 2026.
+Presented three public talks about AI.
 
-- Type/status: speaking / scheduled
-- As of: 2026-09-03
+- Type/status: speaking / completed
+- As of: 2026-11-20
 - Evidence level: candidate-confirmed
 - Skills: AI education, Public speaking, Technical communication, Thought leadership
 - Evidence IDs: none
-- Limitations: The claim is candidate-confirmed; no attendance, audience, recording, reception, or speaking-impact outcome is asserted.; The November 2026 engagement is scheduled, not completed, and may change.
+- Limitations: The claim is candidate-confirmed; no attendance, audience, recording, reception, or speaking-impact outcome is asserted.
 
 ### RB-078: Create The Borg open-source AI workspace
 

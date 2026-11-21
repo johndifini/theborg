@@ -1,6 +1,6 @@
 {
-  "approvedAt": "2026-09-04T02:48:36Z",
-  "asOf": "2026-09-03",
+  "approvedAt": "2026-11-21T03:52:58Z",
+  "asOf": "2026-11-20",
   "claim": "Provided technical leadership for teams and systems supporting retirement-services recordkeeping.",
   "evidenceIds": [],
   "evidenceLevel": "resume-sourced",
@@ -13,7 +13,7 @@
     "American Trust/EdgeCo Holdings"
   ],
   "period": {
-    "end": null,
+    "end": "2026",
     "start": "2021"
   },
   "schemaVersion": 1,
@@ -23,7 +23,7 @@
     "Retirement services",
     "Systems leadership"
   ],
-  "status": "completed",
+  "status": "historical",
   "title": "Lead retirement-recordkeeping engineering",
   "type": "leadership",
   "visibility": "public"
