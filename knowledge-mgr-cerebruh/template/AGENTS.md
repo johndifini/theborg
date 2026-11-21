@@ -12,7 +12,9 @@ wiki/log.md   -- append-only record of all operations performed by the LLM
 ../           -- the directory containing all sub-wikis (generated-wikis/, or generated-wikis/projects/ for a project)
 ```
 The docs this sub-wiki cites live under `knowledge-base/docs/`. Look a cited file name up
-in `knowledge-base/generated-wikis/docs-manifest.tsv` to find its path.
+in `knowledge-base/generated-wikis/docs-manifest.tsv` to find its path. A citation that
+includes folders (`2024-07-17 Blood Results/insidetracker-bloodwork-history.pdf`) names a
+file name two docs share; match it against the end of the manifest path.
 
 ## Wiki Page format
 Every wiki page follows this structure, which includes YAML frontmatter:

@@ -29,8 +29,9 @@ For each item waiting there (`ruby docs-changes.rb` lists them as `to-organize`)
 1. Put it under `docs/projects/<project>/` only when the user said it belongs to that
    project, or it plainly continues docs already there. A new project folder needs the
    user's yes, because it creates a new project sub-wiki.
-1. If its file name is already used anywhere in `docs/`, stop and ask the user to rename
-   one of them. Citations name docs by file name, so names must be unique.
+1. If its file name is already used in `docs/` with the same content, it is a copy: ask
+   the user which one to keep. A shared name with different content is fine; citations
+   then name the shortest unique trailing path (`AGENTS.md` → Citation rules).
 1. A folder dropped into `to-organize/` moves as one unit unless its contents clearly
    belong in different places.
 1. When the placement is a guess, ask before moving. Otherwise move it with `mv -n`.
@@ -41,8 +42,10 @@ Leave `to-organize/` holding nothing but `.gitkeep` and whatever you asked about
 
 Run `ruby docs-changes.rb` from this directory. It compares `docs/` with
 `generated-wikis/docs-manifest.tsv` and prints one line per change: `added`, `updated`,
-`moved`, `deleted`, and `clash`. It writes nothing. Resolve every `clash` with the user
-before going on. Show the user the change set, then work through it: moves first, then
+`moved`, `deleted`, and `duplicate` (one file name at several paths with identical
+content). It skips copied imaging discs (any folder holding a `DICOMDIR`, apart from its
+`.pdf` reports and `.gdoc` links) and `.zip` archives. It writes nothing. Resolve every
+`duplicate` with the user before going on. Show the user the change set, then work through it: moves first, then
 additions and updates, then deletions.
 
 The manifest has one row per compiled doc: `path` (relative to `docs/`), `sha256`,
@@ -73,7 +76,7 @@ For each `added` or `updated` doc:
         1. A limit only prompts the question. Split along a topic seam, not at an arbitrary page count.
     1. A new topic sub-wiki is `generated-wikis/<sub-wiki>/`, with `AGENTS.md` symlinked to `../../../knowledge-mgr-cerebruh/template/AGENTS.md`, a `CLAUDE.md` containing exactly `@AGENTS.md`, and `wiki/index.md` and `wiki/log.md`. A project sub-wiki has the same layout one level deeper, so its symlink is `../../../../knowledge-mgr-cerebruh/template/AGENTS.md`.
 1. For an `added` doc: create a summary page in the sub-wiki's `wiki/` named after the doc, then create or update concept pages for each major idea or entity.
-1. For an `updated` doc: re-read it whole and reconcile every page that cites it (search `sources:` and `(source: …)` for its file name). Add what is new, revise what changed, and remove claims the doc no longer supports, following the deletion rules in step 4 for each removed claim. Bump `updated` on every page you touch.
+1. For an `updated` doc: re-read it whole and reconcile every page that cites it (search `sources:` and `(source: …)` for its file name, or the qualified path it is cited by). Add what is new, revise what changed, and remove claims the doc no longer supports, following the deletion rules in step 4 for each removed claim. Bump `updated` on every page you touch.
 1. Add links to connect related pages using a relative Markdown link with the file
    extension included: `[text](relative-path/file.md)`. Never omit `.md` from links to
    Markdown files.

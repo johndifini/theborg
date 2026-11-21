@@ -16,4 +16,4 @@ ingest that cannot write its pages stops halfway.
 where to look first, not as the scope: `ruby docs-changes.rb` decides the scope.
 
 End with what each sub-wiki gained, changed, or lost, and anything waiting on the user
-(placements you asked about, clashes, skipped clippings).
+(placements you asked about, duplicates, skipped clippings).

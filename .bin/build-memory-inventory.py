@@ -1117,6 +1117,33 @@ def _noise_reason(name: str):
     return None
 
 
+# A copied imaging disc under the knowledge base's docs/ is any folder holding a
+# DICOMDIR. Its image series, bundled viewer app, and autorun files are not
+# documents; only its radiology reports (.pdf) and Drive links (.gdoc) are. An
+# archive (.zip) anywhere in docs/ is a copy of files, never a doc. Mirrors
+# knowledge-mgr-cerebruh/docs-changes.rb (disc_content?); change both together.
+KB_DISC_MARKER = "DICOMDIR"
+KB_DISC_KEEP = (".pdf", ".gdoc")
+
+
+def _kb_disc_reason(root: str, rel: str, cache: dict):
+    if not re.match(DOC_SOURCE_RE, rel):
+        return None
+    lower = rel.lower()
+    if lower.endswith(".zip"):
+        return "archive in the knowledge base's docs/; a copy of files, not a doc"
+    if lower.endswith(KB_DISC_KEEP):
+        return None
+    parts = rel.split("/")
+    for i in range(3, len(parts)):
+        folder = "/".join(parts[:i])
+        if folder not in cache:
+            cache[folder] = os.path.isfile(os.path.join(root, folder, KB_DISC_MARKER))
+        if cache[folder]:
+            return "imaging-disc content (DICOM series, viewer, autorun); not a doc"
+    return None
+
+
 def _skip_reason(rel: str, name: str):
     # A doc in the knowledge base is a knowledge_source whatever its format, so
     # no format-based skip may fire inside docs/.
@@ -1425,13 +1452,14 @@ def discover(root: str, codex_home=None, home=None):
 
     artifacts, skipped, unclassified, overlays, notes = [], [], [], [], []
     companions = []
+    disc_cache = {}
     for rel in files:
         name = rel.split("/")[-1]
         if not is_candidate(rel):
             continue
         # The overlay registry is the private half of this inventory, not an
         # artifact the inventory governs, so it is counted apart from both.
-        reason = _noise_reason(name)
+        reason = _noise_reason(name) or _kb_disc_reason(root, rel, disc_cache)
         if reason:
             skipped.append((rel, reason))
             continue

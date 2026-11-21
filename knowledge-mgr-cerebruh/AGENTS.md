@@ -72,7 +72,7 @@ Link to related concepts throughout the text.
 ## Citation rules
 - Every factual claim should reference its source doc
 - Use the format (source: filename.pdf) after the claim, naming the doc by its file name
-- A file name resolves to a doc through `docs-manifest.tsv`, so a file name must be unique across all of `docs/` (INGESTING.md says what to do on a clash)
+- A citation resolves to a doc through the `path` column of `docs-manifest.tsv`. When two docs share a file name in different folders, cite each by its shortest trailing path that is unique across `docs/`, e.g. (source: 2024-07-17 Blood Results/insidetracker-bloodwork-history.pdf), in both the claim and `sources:`
 - If two sources disagree, note the contradiction explicitly
 - If a claim has no source, mark it as needing verification
 

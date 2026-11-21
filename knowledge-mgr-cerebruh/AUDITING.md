@@ -24,9 +24,10 @@ corpus in view.
 - Flag claims that may be outdated based on newer sources
 - Check that all pages follow the Wiki Page format in `AGENTS.md`
 - Run `ruby docs-changes.rb` and report anything it prints: docs added, changed, moved,
-  or deleted since the last ingest, file-name clashes, and items waiting in
+  or deleted since the last ingest, duplicate copies, and items waiting in
   `docs/to-organize/`. Any of these means the wikis are stale until the next ingest.
-- Resolve each wiki page's `sources:` entries against the file names of the docs in
+- Resolve each wiki page's `sources:` entries against the file names (or, for a
+  folder-qualified entry, the trailing path) of the docs in
   `generated-wikis/docs-manifest.tsv` whose `wikis` column names that sub-wiki.
   Normalize both sides, in order: Unicode NFKC; fold `’` and `‘` to `'`, `“` and `”`
   to `"`, and `–`, `—`, and `―` to `-`; collapse whitespace runs to one ASCII space;

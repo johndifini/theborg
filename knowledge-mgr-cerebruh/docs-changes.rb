@@ -11,7 +11,7 @@
 #   updated     <path>              in the manifest with a different sha256
 #   moved       <old path> <new>    same content, new path (a rename if the file name changed)
 #   deleted     <path>              in the manifest, gone from docs/
-#   clash       <name> <path> ...   one file name at several paths; citations need it unique
+#   duplicate   <name> <path> ...   one file name at several paths with identical content
 # Exit status is 0 whatever it finds, 2 if the manifest is missing or malformed.
 
 require "digest"
@@ -24,10 +24,30 @@ MANIFEST = File.join(KB, "generated-wikis", "docs-manifest.tsv")
 NOISE = [".DS_Store", ".gitkeep", "Icon\r"].freeze
 SCAFFOLDING = ["projects/AGENTS.md", "projects/CLAUDE.md"].freeze
 
+# A copied imaging disc (CT, MRI) is any folder holding a DICOMDIR. Its image series,
+# bundled viewer app, and autorun files are not documents; only the radiology reports
+# (.pdf) and Drive links (.gdoc) inside it are. An archive (.zip) anywhere is a copy of
+# files, never a doc. ../.bin/build-memory-inventory.py applies the same rule
+# (_kb_disc_reason); change both together.
+DISC_MARKER = "DICOMDIR"
+DISC_KEEP = [".pdf", ".gdoc"].freeze
+
+def disc_roots
+  Dir.glob("**/#{DISC_MARKER}", base: DOCS).map { |rel| File.dirname(rel) }
+end
+
+def disc_content?(rel, roots)
+  return true if File.extname(rel).casecmp?(".zip")
+  return false if DISC_KEEP.include?(File.extname(rel).downcase)
+  roots.any? { |root| root == "." || rel.start_with?("#{root}/") }
+end
+
 def current_docs
+  roots = disc_roots
   Dir.glob("**/*", File::FNM_DOTMATCH, base: DOCS).sort.map do |rel|
     next unless File.file?(File.join(DOCS, rel))
     next if NOISE.include?(File.basename(rel)) || SCAFFOLDING.include?(rel)
+    next if disc_content?(rel, roots)
     next if rel.split("/").any? { |part| part.start_with?(".") && part != File.basename(rel) }
     rel
   end.compact
@@ -70,6 +90,9 @@ end
 end
 gone.each { |path| puts "deleted\t#{path}" }
 
-(compiled + pending).group_by { |rel| File.basename(rel) }.each do |name, paths|
-  puts "clash\t#{name}\t#{paths.join("\t")}" if paths.length > 1
+# Docs may share a file name in different folders (citations then name the shortest
+# unique trailing path; see AGENTS.md -> Citation rules). Only identical content at
+# two paths is reported: that is a copy, and the user should say which one to keep.
+present.keys.group_by { |rel| [File.basename(rel), present[rel]] }.each do |(name, _), paths|
+  puts "duplicate\t#{name}\t#{paths.join("\t")}" if paths.length > 1
 end
