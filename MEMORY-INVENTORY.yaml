@@ -7275,3 +7275,32 @@ artifacts:
     review:
       last_reviewed: null
     related: []
+
+  claude-commands-git-cleanup:
+    path: ".claude/commands/git-cleanup.md"
+    type: command
+    status: draft
+    owner: workspace
+    scope: workspace
+    visibility: public
+    canonicality: canonical
+    introduced: 2026-11-22    # file mtime (untracked; not a history fact)
+    load_mode: explicit
+    consumers: [claude-code]
+    review:
+      cadence: quarterly
+      last_reviewed: null
+      method: [semantic, usage]
+    related: []
+
+  codex-home-skills-git-cleanup-skill:
+    path: skills/git-cleanup/SKILL.md
+    path_root: codex_home
+    type: generated_command_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-commands-git-cleanup
+    introduced: 2026-11-22    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
