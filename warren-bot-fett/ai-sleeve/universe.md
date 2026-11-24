@@ -58,6 +58,9 @@ world_models:
 
 datacenter_reits:
   members: [EQIX, DLR]
+
+frontier_labs:
+  members: [ANT]
 ```
 
 ## Soft excludes (this month)
@@ -68,7 +71,6 @@ SMCI      # auditor resignation / governance overhang from late 2024 not fully r
 CEG       # existing nuclear fleet — unconvinced it can scale with AI demand pace
 VST       # legacy gas/coal/nuclear mix — unconvinced it can scale with AI demand pace
 OPENAI    # pending IPO — at listing, replace placeholder with real ticker, add to a new frontier_labs category, then remove this line
-ANTHROPIC # pending IPO — at listing, replace placeholder with real ticker, add to a new frontier_labs category, then remove this line
 ```
 
 ## Inclusion theses (notes for monthly review)
@@ -85,10 +87,11 @@ ANTHROPIC # pending IPO — at listing, replace placeholder with real ticker, ad
 - **Q** — Qnity Electronics, DuPont's electronics-materials spin-off (NYSE, S&P 500 from 2025-11-01). Semiconductor and interconnect materials — picks-and-shovels of chip fabrication, levered to AI-driven wafer demand. Reevaluate if semiconductor materials growth decouples from AI capex.
 - **ARM** — IP licensor; royalties scale with every AI-capable mobile/edge SoC and increasingly with datacenter Arm-based silicon (Graviton, Grace).
 - **CRWV / NBIS** — neocloud GPU-rental capacity; complements hyperscalers when GPU supply is the binding constraint. Forced in via `ai_neoclouds` min.
-- **IREN** — vertically integrated neocloud; ex-bitcoin miner (Iris Energy) that owns its power and data-center sites, a structural cost edge over GPU-only renters. Distant third in the public pure-play tier (~$17B cap vs. CRWV/NBIS at $50B+). Reevaluate if the AI-cloud pivot stalls or it reverts toward crypto-mining economics.
+- **IREN** — vertically integrated neocloud; ex-bitcoin miner (Iris Energy) that owns its power and data-center sites, a structural cost edge over GPU-only renters. Distant third in the public pure-play tier (~$6B cap vs. CRWV/NBIS at ~$27–29B as of 2026-11-23). Reevaluate if the AI-cloud pivot stalls or it reverts toward crypto-mining economics.
 - **SPCX** — SpaceX (IPO'd 2026-06-12). **Reclassified to `hyperscalers` 2026-06-27** (was `ai_neoclouds`): the Feb 2026 xAI acquisition brought in Colossus 1 (~220K NVIDIA GPUs) and Grok, and SpaceX is now leasing frontier-scale compute — Anthropic ~$1.25B/mo, Google ~$920M/mo (~110K GPUs from Oct 2026), plus Reflection — ~$76B through 2029 (~$25B/yr, exceeding Starlink + launch + AI combined). Owns the fleet *and* a frontier model it serves: the vertically integrated own-the-infra profile of META/GOOGL/ORCL, not the rent-a-GPU neocloud profile of CRWV/NBIS. Starlink connectivity and the AI1 orbital-datacenter constellation are upside optionality, not the core compute thesis. Reevaluate if the compute-leasing contracts fail to renew past 2029 or orbital economics prove uneconomic.
 - **NOK** — optical and data-center networking gear (IP routing, optical transport) for AI buildout interconnect; complements ANET on the systems side. Reevaluate if AI-driven networking demand fails to offset legacy telco-capex softness.
 - **CSCO** — data-center switching/routing and optics for AI fabric; Ethernet-for-AI positioning against ANET. Reevaluate if AI orders fail to offset legacy campus-networking softness.
 - **HPE** — AI servers (ProLiant, Cray AI supercomputers) and GreenLake consumption infrastructure, plus networking from Aruba and the Juniper acquisition. Reevaluate if AI systems demand fails to offset legacy compute/storage softness or Juniper integration stalls.
 - **EQIX** — datacenter REIT; retail colocation + interconnection. Moat is network density at its IBX hubs (carrier/cloud clustering → high switching costs). Levered to AI inference/edge where low-latency interconnect matters.
 - **DLR** — datacenter REIT; wholesale/hyperscale capacity leased to the hyperscalers (MSFT/GOOGL/AMZN/META). More direct hyperscaler-capex leverage than EQIX, but more exposed to supply gluts and power-availability constraints.
+- **ANT** — Anthropic, PBC (Nasdaq IPO 2026-11-19 at $83; ~$1.17T cap as of 2026-11-23). Frontier-model lab (Claude) and one of the largest buyers of AI compute — it leases capacity from SPCX, AWS, and Google — so it sits at the demand end of the buildout the rest of the sleeve supplies. Replaced the `ANTHROPIC` pending-IPO soft-exclude placeholder on 2026-11-23. Off-charter relative to picks-and-shovels, so `frontier_labs` carries no `min` and ANT must re-earn its slot on market cap every month; with only a few trading days since listing, its cap is volatile. Reevaluate if revenue growth fails to keep pace with compute commitments, or once OPENAI lists and joins `frontier_labs`.
