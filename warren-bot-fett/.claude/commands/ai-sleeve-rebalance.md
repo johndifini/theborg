@@ -19,9 +19,12 @@ Overrides for interactive invocation:
    write is suppressed (see below).
 3. STEP 7 — do NOT pipe to `notify-email.sh`. Instead, output the full report
    directly into this session.
-4. SKIP STEP 8 entirely — do NOT write `.private/ai-sleeve/last-rebalance.json`. That file
+4. KEEP STEP 8, with `run_type` = `interactive` — write
+   `.private/ai-sleeve/history/{today}-interactive.csv`. The scheduled job never
+   reads it, so it cannot disturb the baseline. Name its path in the report.
+5. SKIP STEP 9 entirely — do NOT write `.private/ai-sleeve/last-rebalance.json`. That file
    is the month-over-month diff baseline for the scheduled run; an interactive
    run must not clobber it.
-5. If a step halts with an error — do NOT pipe the failure email to
-   `notify-email.sh`. Report the halt reason and details directly into this
-   session.
+6. If a step halts with an error — do NOT pipe the failure email to
+   `notify-email.sh`, and do NOT write the history CSV. Report the halt reason
+   and details directly into this session.

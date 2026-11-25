@@ -69,8 +69,22 @@ STEP 7: Email a report to the user by piping it into `${BORG_ROOT}/.bin/notify-e
 
 Format the table as a monospace block (tabs or padded spaces) so columns align in a plain-text email.
 
-STEP 8: Write ${BORG_ROOT}/warren-bot-fett/.private/ai-sleeve/last-rebalance.json with `{"date": "YYYY-MM-DD", "weights": {ticker: final_weight_pct, ...}}` for next month's diff.
+STEP 8: Write the run's history CSV with Bash (`mkdir -p` the directory first) to ${BORG_ROOT}/warren-bot-fett/.private/ai-sleeve/history/{today}-{run_type}.csv, where `run_type` is `scheduled` for this job. A rerun on the same date with the same `run_type` overwrites that day's file. One header row, then one row per basket name in rank order, comma-separated, with these columns:
+- `date` — today, YYYY-MM-DD
+- `run_type` — `scheduled` or `interactive`
+- `rank` — 1..`basket_size`, matching the STEP 7 table
+- `ticker`
+- `weight_pct` — final weight from STEP 5, two decimals
+- `status` — `free` or `floored`
+- `forced` — `true` or `false`, from STEP 4e
+- `cap_b` — the market cap used in STEP 3, in $B, two decimals
+- `categories` — every category whose `members` list the ticker, semicolon-separated (e.g. `chip_designers;foundry_semicap`)
+- `cap_source` — the source the cap actually came from: `stockanalysis.com/stocks`, `stockanalysis.com/etf`, or `companiesmarketcap.com`
+
+These files are a record, not a baseline: no step reads them, and STEP 6 must not use them in place of last-rebalance.json.
+
+STEP 9: Write ${BORG_ROOT}/warren-bot-fett/.private/ai-sleeve/last-rebalance.json with `{"date": "YYYY-MM-DD", "weights": {ticker: final_weight_pct, ...}}` for next month's diff. This file stays the sole month-over-month baseline.
 
 Do not propose buy/sell trades — this iteration outputs target weights only. Sleeve sizing and portfolio assignment are deferred until the user specifies them.
 
-If any step above halts with an error (over-constrained category, no valid swap, weight-sum mismatch, etc.), still email: pipe the halt reason and details into `${BORG_ROOT}/.bin/notify-email.sh warren-bot-fett "AI Sleeve — monthly rebalance FAILED — {today}"`, and do NOT write last-rebalance.json (so the scheduler retries). The user should hear from this job every month it executes, success or failure. End that failure body with a `## Suggested Next Prompt` section too, naming the specific halt (the over-constrained category, the unresolvable swap) so the fix can start from the email.
+If any step above halts with an error (over-constrained category, no valid swap, weight-sum mismatch, etc.), still email: pipe the halt reason and details into `${BORG_ROOT}/.bin/notify-email.sh warren-bot-fett "AI Sleeve — monthly rebalance FAILED — {today}"`, and do NOT write the history CSV or last-rebalance.json (so the scheduler retries and no partial basket is recorded). The user should hear from this job every month it executes, success or failure. End that failure body with a `## Suggested Next Prompt` section too, naming the specific halt (the over-constrained category, the unresolvable swap) so the fix can start from the email.

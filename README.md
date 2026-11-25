@@ -74,7 +74,7 @@ For model-job details, see `<agent>/.claude/scheduled/<label>.prompt`; the CLI u
 | Label | Schedule | What it does |
 |---|---|---|
 | `warren-bot-fett-daily-market-scan` | Mon–Fri at 9:00 AM — **paused since 2026-08-06**³ | Fetches market data (indices, yields, VIX), checks portfolio allocations against targets, and emails the result every run — a specific trade alert when a genuine buying opportunity exists, otherwise a brief no-action summary (one-liner on market holidays). |
-| `warren-bot-fett-ai-sleeve-monthly` | 1st–5th of each month at 9:00 AM¹ | Runs the AI Sleeve rebalance on the first trading day of the month: ranks candidates by market cap, enforces category minimums, computes floor-adjusted weights, and delivers a target-weights report via email. Writes the git-ignored `warren-bot-fett/.private/ai-sleeve/last-rebalance.json` for month-over-month diffs. |
+| `warren-bot-fett-ai-sleeve-monthly` | 1st–5th of each month at 9:00 AM¹ | Runs the AI Sleeve rebalance on the first trading day of the month: ranks candidates by market cap, enforces category minimums, computes floor-adjusted weights, and delivers a target-weights report via email. Writes the git-ignored `warren-bot-fett/.private/ai-sleeve/last-rebalance.json` for month-over-month diffs, plus a dated per-run CSV record under `warren-bot-fett/.private/ai-sleeve/history/`. |
 
 ¹ Fired on days 1–5 as a retry window in case the machine was asleep on day 1. The prompt enforces once-per-month execution via a state file.
 
@@ -126,7 +126,7 @@ Every prompt-driven Borg-agent scheduled task has a matching interactive command
 | `/social-media-drafts` | mrs-beast | Runs the `mrs-beast-social-media-drafts` logic interactively, outputting the post draft and infographic prompt to the session instead of email. Always drafts something even if the topics log rules everything out, and does not append to that log, so it never spends a topic the scheduled run hasn't used. |
 | `/slide-visual` | jony-vibe | Generates one slide-ready illustration from supplied slide copy or a numbered slide in the current deck. In Codex, invoke it as `$slide-visual`; if the deck for a slide number is unclear, it asks for the deck. |
 | `/market-scan` | warren-bot-fett | Runs the `warren-bot-fett-daily-market-scan` logic interactively, reporting the full scan (allocations vs. targets, deviations, opportunity verdict) to the session instead of email. Skips the market-holiday gate so it always runs. |
-| `/ai-sleeve-rebalance` | warren-bot-fett | Runs the `warren-bot-fett-ai-sleeve-monthly` logic interactively, reporting target weights and the month-over-month diff to the session instead of email. Skips the once-per-month gate and does not write `last-rebalance.json`, so it never clobbers the scheduled run's diff baseline. |
+| `/ai-sleeve-rebalance` | warren-bot-fett | Runs the `warren-bot-fett-ai-sleeve-monthly` logic interactively, reporting target weights and the month-over-month diff to the session instead of email. Skips the once-per-month gate and does not write `last-rebalance.json`, so it never clobbers the scheduled run's diff baseline; it does write a `history/{date}-interactive.csv` record. |
 ## Status
 
 This is one person’s working setup, not a polished product.
