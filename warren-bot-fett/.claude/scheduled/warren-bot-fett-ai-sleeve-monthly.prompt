@@ -7,7 +7,7 @@ STEP 1: This job is fired by launchd on calendar days 1–5 of each month, but s
 
 The scheduler will retry on the next business day.
 
-STEP 2: Read ${BORG_ROOT}/warren-bot-fett/ai-sleeve/universe.md. Extract:
+STEP 2: Read ${BORG_ROOT}/warren-bot-fett/ai-sleeve/universe.md for the report (soft-exclude notes, inclusion theses). The STEP 3–5 script parses and validates it itself, as defined here, and halts (exit 2) on any failure below or on a malformed code block. It extracts:
 - `basket_size` and `floor_pct` from the Tunables YAML block
 - `ticker_floors` from the Tunables YAML block if present — a map of `{TICKER: floor_pct}` overrides (empty map if absent)
 - The `categories` block: each entry is `{name, members: [list of tickers], min: integer (default 0 if absent)}`
@@ -19,32 +19,25 @@ Validate:
 - For each category, drop soft-excluded tickers from its effective members. If `len(effective_members) < min` for any category, halt and report which category is over-constrained by soft-excludes.
 - The sum of all category `min` values must not exceed `basket_size`. If exceeded, halt with details.
 
-STEP 3: For each active candidate, fetch current total market cap. Use stockanalysis.com as primary source: https://stockanalysis.com/stocks/{TICKER_LOWER}/ — the market cap appears on the overview page. If a ticker page fails, fall back to https://stockanalysis.com/etf/{TICKER_LOWER}/ for ETFs, then to companiesmarketcap.com search. Do NOT use Yahoo Finance — it returns 503 to WebFetch.
+STEP 3–5 (script): Run the checked-in solver, which implements STEP 2's parsing and validation and the cap fetch, selection, and weighting below. Do not hand-write a solver, retype category maps, or fetch caps another way:
 
-Record cap in $B for each ticker.
+```sh
+python3 ${BORG_ROOT}/warren-bot-fett/ai-sleeve/rebalance.py --write-history --run-type {run_type} --text > ${BORG_ROOT}/tmp/ai-sleeve-{today}-{run_type}.json
+```
 
-STEP 4: Select the basket using constraint-aware cap-ranking.
+`run_type` is `scheduled` for this job. The script prints a JSON result on stdout (the basket table on stderr) and exits:
+- `0` — `status: ok`. The result holds `basket` (rank, ticker, weight_pct, status, forced, raw_cap_rank, cap_b, categories, cap_source, fetched_at), `categories` (min, present, forced), `swaps`, `soft_excludes` with their notes, and every candidate's cap. It has already written STEP 8's files (`history_files`).
+- `2` — `status: halt`. `reason` and `details` name the over-constrained category, the colliding categories and the competing candidate, or the weight-sum mismatch. Treat it as a halt of the step it names (see the failure rule at the end).
+- `3` — `status: needs_review`. `flags` lists each ticker whose page failed or whose two fetches in this run disagree by more than 10% (both values are shown). Cross-check each flagged ticker on companiesmarketcap.com (search by company name), report both values in the email, and re-run with `--manual-cap TICKER=<n><T|B|M>` for each reconciled value; its `cap_source` becomes `companiesmarketcap.com`. If a value cannot be reconciled, halt per the `AGENTS.md` cross-check rule.
 
-a) Rank all candidates by cap descending. Provisionally take the top `basket_size`.
+Also cross-check any cap that moved more than 50% since last-rebalance.json's month or is an obvious peer outlier, per `AGENTS.md`, and pass the reconciled value with `--manual-cap`.
 
-b) For each category, count how many of its `members` are in the provisional basket. If count < min, the category has a shortfall of (min - count).
+What the script does, for reference (the script, not this text, is what runs; change both together):
+- STEP 3, caps: each candidate's https://stockanalysis.com/stocks/{TICKER_LOWER}/ page, falling back to https://stockanalysis.com/etf/{TICKER_LOWER}/, fetched twice with plain curl and its default user agent. The cap is the page's single `marketCap:"<n><T|B|M>"` field in its embedded data; a page with no such field, or with two different values, counts as a failed fetch. Yahoo Finance is never used. Each ticker's `cap_source` and fetch time are recorded.
+- STEP 4, selection: rank all candidates by cap descending (ties by ticker) and provisionally take the top `basket_size`. While any category with a `min` is short, take the first short category in universe.md order, pick its highest-cap missing member, and swap out the lowest-cap basket name that is not a member of any still-short category and whose removal would not push another category below its min. If no such name exists, halt with the colliding categories and the competing candidate. "Forced" names are those in the final basket but not in the provisional top N.
+- STEP 5, weights: raw_weight = cap / sum(basket caps). A name is "floored" if raw_weight < its floor (`ticker_floors` override, else `floor_pct`) and gets exactly that floor; free names share 100 − sum(floors) pro rata by cap. Weights are rounded to two decimals, and their sum must be 100 ± 0.05 or the run halts.
 
-c) If there are shortfalls: resolve them iteratively. For each unsatisfied category, pick the highest-cap missing member as the inclusion candidate. Find the lowest-cap name currently in the basket that is NOT a member of any still-unsatisfied category and whose removal would NOT push another category below its min. Swap: remove that name, insert the inclusion candidate. Repeat until all categories are satisfied.
-
-d) If no valid swap exists (every basket name is either constraint-protected or its removal would violate another constraint), halt and report which categories collide and which candidates are competing for the same slot.
-
-e) The final basket has exactly `basket_size` names. Track which names were "forced" (would not have been in the cap-ranked top N without the constraint system) — needed for the report in STEP 7.
-
-STEP 5: Compute weights:
-a) raw_weight[t] = cap[t] / sum(cap for top N)
-b) effective_floor[t] = ticker_floors[t] if t is in ticker_floors, else floor_pct. Mark each name "floored" if raw_weight[t] < effective_floor[t], else "free"
-c) Each floored name's final weight = effective_floor[t]
-d) floored_total = sum(effective_floor[t] for all floored names)
-e) free_pool = 100 - floored_total
-f) free_cap_sum = sum(cap for free names)
-g) Each free name's final weight = (cap[t] / free_cap_sum) * free_pool
-
-Sanity check: sum of all final weights must equal 100 ± 0.05. If not, halt and report the math error.
+STEP 3b (report-only): For each soft_excludes line whose note says "pending IPO", check whether the company now trades on a US exchange (its stockanalysis.com/stocks/{guess}/ page shows an IPO date and exchange, or one web search). If it has listed, do not edit universe.md: add a report line "LISTED: <name> as <TICKER> on <date> — run add-ai-universe-ticker before next month" and name it in the Suggested Next Prompt. Also flag any "## Inclusion theses" bullet that quotes a market cap more than 50% away from this run's STEP 3 cap for that ticker.
 
 STEP 6: Read ${BORG_ROOT}/warren-bot-fett/.private/ai-sleeve/last-rebalance.json if it exists. It contains the previous month's basket as `{"date": "YYYY-MM-DD", "weights": {"TICKER": pct, ...}}`. Use it to compute month-over-month deltas.
 
@@ -55,7 +48,7 @@ STEP 7: Email a report to the user by piping it into `${BORG_ROOT}/.bin/notify-e
 - Target weights table (rank, ticker, weight %, status: free/floored). Mark forced names with a trailing "*".
 - Category status: for each category, list its min, members present in the basket, and any forced inclusions. Example: `power_generation (min 2): GEV, BE* — BE forced (rank N/A in raw cap order)`.
 - MoM section: weight deltas for held names, list of new entrants and dropouts (only if last-rebalance.json existed)
-- Soft excludes section: the current excluded list with their inline notes from universe.md
+- Soft excludes section: the current excluded list with their inline notes from universe.md, plus any STEP 3b LISTED lines and stale-thesis flags
 - Reminder line: "Theses for AAPL, TSLA, and discretionary names should be reevaluated — see universe.md."
 
 - Last, a `## Suggested Next Prompt` section per the workspace `AGENTS.md`
@@ -69,17 +62,9 @@ STEP 7: Email a report to the user by piping it into `${BORG_ROOT}/.bin/notify-e
 
 Format the table as a monospace block (tabs or padded spaces) so columns align in a plain-text email.
 
-STEP 8: Write the run's history CSV with Bash (`mkdir -p` the directory first) to ${BORG_ROOT}/warren-bot-fett/.private/ai-sleeve/history/{today}-{run_type}.csv, where `run_type` is `scheduled` for this job. A rerun on the same date with the same `run_type` overwrites that day's file. One header row, then one row per basket name in rank order, comma-separated, with these columns:
-- `date` — today, YYYY-MM-DD
-- `run_type` — `scheduled` or `interactive`
-- `rank` — 1..`basket_size`, matching the STEP 7 table
-- `ticker`
-- `weight_pct` — final weight from STEP 5, two decimals
-- `status` — `free` or `floored`
-- `forced` — `true` or `false`, from STEP 4e
-- `cap_b` — the market cap used in STEP 3, in $B, two decimals
-- `categories` — every category whose `members` list the ticker, semicolon-separated (e.g. `chip_designers;foundry_semicap`)
-- `cap_source` — the source the cap actually came from: `stockanalysis.com/stocks`, `stockanalysis.com/etf`, or `companiesmarketcap.com`
+STEP 8: The STEP 3–5 script run already wrote this run's history under ${BORG_ROOT}/warren-bot-fett/.private/ai-sleeve/history/ (it writes nothing when it halts or needs review). Confirm both paths in its `history_files` exist; do not write or edit them by hand. A rerun on the same date with the same `run_type` overwrites that day's files.
+- `{today}-{run_type}.csv` — one header row, then one row per basket name in rank order, with columns `date`, `run_type`, `rank` (matching the STEP 7 table), `ticker`, `weight_pct` (two decimals), `status` (`free`/`floored`), `forced` (`true`/`false`), `cap_b` ($B, two decimals), `categories` (every category whose `members` list the ticker, semicolon-separated), `cap_source` (`stockanalysis.com/stocks`, `stockanalysis.com/etf`, or `companiesmarketcap.com`), and `fetched_at` (UTC, ISO 8601).
+- `{today}-{run_type}.caps.tsv` — every active candidate's cap, source, and fetch time, so the run can be replayed exactly: `rebalance.py --caps <that file> --universe <universe.md as of that run>`.
 
 These files are a record, not a baseline: no step reads them, and STEP 6 must not use them in place of last-rebalance.json.
 
