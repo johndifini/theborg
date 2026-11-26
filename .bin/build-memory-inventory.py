@@ -969,6 +969,9 @@ NOISE_NAMES = (
 NOISE_PATTERNS = (
     (r"_bak_\d", "hand-made backup"),
     (r"\.(bak|orig|swp|log|pyc)$", "backup, scratch, or generated output"),
+    # `<name>.YYYYMMDD-HHMMSS.<ext>`, the timestamped copy taken before an
+    # overwrite (generated-deck-hand-edits.md step 1, ari's resume backups).
+    (r"\.\d{8}-\d{6}\.[A-Za-z0-9]+$", "timestamped backup"),
     (r"^\.credentials", "credential material"),
 )
 
@@ -999,6 +1002,8 @@ SELF_GOVERNING_PATHS = frozenset({
 DOCUMENT_SUFFIXES = (
     ".pdf", ".docx", ".doc", ".xlsx", ".xls", ".csv", ".pptx", ".txt", ".rtf",
     ".jpg", ".jpeg", ".png", ".gif", ".heic", ".webp", ".zip", ".tsv",
+    # Google Drive stubs: a pointer to a Doc, Sheet or Slides file.
+    ".gdoc", ".gsheet", ".gslides",
 )
 KB_DOCS = "knowledge-base/docs/"
 KB_WIKIS = "knowledge-base/generated-wikis/"
@@ -1310,7 +1315,14 @@ def classify(root: str, rel: str):
                        note="symlink" if target else "symlink outside the workspace")
         return art("always_on_instruction")
     if name in ("CLAUDE.md", "CLAUDE.local.md"):
-        return art("compatibility_wrapper", "mirror", _import_target(root, rel),
+        target = _import_target(root, rel)
+        # A gitignored CLAUDE.local.md is where an agent keeps its private
+        # context (LINT.md -> Public-repository hygiene). With no `@` import
+        # it holds that context itself, so it is the canonical instruction,
+        # not a wrapper around one.
+        if name == "CLAUDE.local.md" and target is None:
+            return art("always_on_instruction")
+        return art("compatibility_wrapper", "mirror", target,
                    note="@import wrapper")
 
     # Scoped rules and the Codex stubs generated from them.

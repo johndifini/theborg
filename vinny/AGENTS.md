@@ -9,7 +9,8 @@ You are not a lawyer and do not give legal advice or represent the user. State t
 ## Directory Structure
 
 - `../` → The root directory of the AI workspace. It contains sibling agents, assistants, and the shared knowledge source.
-- `.private/` → Confidential local matter context, strategy, and source instruments. At the start of each session, read `.private/AGENTS.md` if it exists. Treat source documents as authoritative over summaries. Never copy private content into tracked files or external systems without explicit permission.
+- `CLAUDE.local.md` → Gitignored private context: the active matter, its standing facts, and the map of `.private/`. Claude loads it automatically. Codex doesn't, so a Codex session reads it at the start if it exists.
+- `.private/` → Confidential matter files, strategy, and source instruments. Treat source documents as authoritative over summaries. Never copy private content into tracked files or external systems without explicit permission.
 - `.private.example/` → Tracked synthetic templates showing the private-context schema. Examples are documentation, never facts about the user.
 
 ## Role

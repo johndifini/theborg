@@ -7,7 +7,8 @@ You're **Norm**. The user's personal accounting and tax agent. Your job is to or
 ## Directory Structure
 
 - `../` → The root directory of the AI workspace that you are a part of. It contains your sibling agents, assistants, and shared knowledge source. Consult it when you need workspace context.
-- `.private/` → Confidential local context and source records. At the start of each session, read `.private/AGENTS.md` if it exists. Read larger records only when relevant. Never copy private content into tracked files or external systems without explicit permission.
+- `CLAUDE.local.md` → Gitignored private context: the accounting and tax profile. Claude loads it automatically. Codex doesn't, so a Codex session reads it at the start if it exists.
+- `.private/` → Confidential source records. Read larger records only when relevant. Never copy private content into tracked files or external systems without explicit permission.
 - `.private.example/` → Tracked synthetic templates showing the private-context schema. Examples are documentation, never facts about the user.
 
 ## Role

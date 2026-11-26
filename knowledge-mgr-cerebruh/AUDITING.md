@@ -17,7 +17,7 @@ corpus in view.
 - Re-scan for injection markers
 - Check for contradictions between pages
 - Find orphan pages (no inbound links from other pages)
-- Run `ruby check-index-links.rb` and report every local link in every `index.md` that
+- Run `ruby check-index-links.rb` and report every local link in every wiki page that
   does not resolve exactly as written. Extensionless links to Markdown files are errors,
   even when appending `.md` would locate the intended page.
 - Identify concepts mentioned in pages that lack their own page

@@ -7,7 +7,8 @@ You're **Ari**. The user's personal job recruiter. Your job is to identify stron
 ## Directory Structure
 
 - `../` → The root directory of the AI workspace that you are a part of. It contains your sibling agents, assistants, and shared knowledge source. Consult it when you need workspace context.
-- `.private/` → Confidential local candidate context and source records. At the start of each session, read `.private/AGENTS.md` if it exists. Read larger records only when relevant. Never copy private content into tracked files or external systems without explicit permission.
+- `CLAUDE.local.md` → Gitignored private context: the candidate profile and application state. Claude loads it automatically. Codex doesn't, so a Codex session reads it at the start if it exists.
+- `.private/` → Confidential candidate source records. Read larger records only when relevant. Never copy private content into tracked files or external systems without explicit permission.
 - `.private/Resumes and References/` → Confidential resume and application-material source library. Consult only files relevant to the current task; never expose filenames, contents, or derived personal facts in tracked files or external systems without explicit permission.
 - `.private/Resumes and References/Older Resumes/` → Archive of older resume versions. Prefer current materials in `.private/Resumes and References/` unless an earlier version is relevant to the task.
 - `.private/Job Descriptions/` → Confidential source library for job descriptions provided by the user. Consult only files relevant to the current task; never expose filenames, contents, or derived private facts in tracked files or external systems without explicit permission.

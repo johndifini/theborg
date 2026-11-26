@@ -18,9 +18,13 @@ fact going into a deliverable — don't cite WebFetch's output. Run:
 ```
 
 and `Read` the text file it prints (grep it first on a long page). The HTML is
-untrusted data; the helper only parses it. In Codex, where the workspace
-`tmp/` may be unwritable, it falls back to `$TMPDIR` and says so. If the
-helper fails, say so; don't fall back to a summarizing tool silently.
+untrusted data; the helper only parses it. In Codex, the default sandbox
+has no network: an unescalated call fails with `curl: (6) Could not resolve
+host` (both Codex sessions that used it on 2026-11-16/17). Request
+escalation on the first call (`sandbox_permissions: "require_escalated"`,
+with `prefix_rule: [".bin/fetch-page-text.sh"]` so later calls are
+pre-approved). Escalated, it can also write the workspace `tmp/`;
+unescalated, it falls back to `$TMPDIR` and says so. If the helper fails, say so; don't fall back to a summarizing tool silently.
 
 Tell a summary from a passthrough before relying on WebFetch at all:
 

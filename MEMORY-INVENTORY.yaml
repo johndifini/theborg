@@ -7304,3 +7304,93 @@ artifacts:
     review:
       last_reviewed: null
     related: []
+
+  agents-skills-kb-ingest-needs-knowledge-mgr-session-skill:
+    path: ".agents/skills/kb-ingest-needs-knowledge-mgr-session/SKILL.md"
+    type: generated_rule_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-rules-kb-ingest-needs-knowledge-mgr-session
+    introduced: 2026-11-26    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  claude-rules-kb-ingest-needs-knowledge-mgr-session:
+    path: ".claude/rules/kb-ingest-needs-knowledge-mgr-session.md"
+    type: scoped_rule
+    status: draft
+    scope: workspace
+    introduced: 2026-11-26    # file mtime (untracked; not a history fact)
+    consumers: [claude-code, codex]
+    review:
+      last_reviewed: null
+    related: []
+
+  agents-skills-pipe-hides-exit-status-skill:
+    path: ".agents/skills/pipe-hides-exit-status/SKILL.md"
+    type: generated_rule_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-rules-pipe-hides-exit-status
+    introduced: 2026-11-26    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  claude-rules-pipe-hides-exit-status:
+    path: ".claude/rules/pipe-hides-exit-status.md"
+    type: scoped_rule
+    status: draft
+    scope: workspace
+    introduced: 2026-11-26    # file mtime (untracked; not a history fact)
+    consumers: [claude-code, codex]
+    review:
+      last_reviewed: null
+    related: []
+
+  agents-skills-podcast-video-transcripts-skill:
+    path: ".agents/skills/podcast-video-transcripts/SKILL.md"
+    type: generated_rule_bridge
+    status: draft
+    scope: workspace
+    canonical_ref: claude-rules-podcast-video-transcripts
+    introduced: 2026-11-26    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  claude-rules-podcast-video-transcripts:
+    path: ".claude/rules/podcast-video-transcripts.md"
+    type: scoped_rule
+    status: draft
+    scope: workspace
+    introduced: 2026-11-26    # file mtime (untracked; not a history fact)
+    consumers: [claude-code, codex]
+    review:
+      last_reviewed: null
+    related: []
+
+  ari-agents-skills-linkedin-live-profile-reads-skill:
+    path: ari/.agents/skills/linkedin-live-profile-reads/SKILL.md
+    type: generated_rule_bridge
+    status: draft
+    owner: ari
+    scope: ari
+    canonical_ref: ari-claude-rules-linkedin-live-profile-reads
+    introduced: 2026-11-26    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  ari-claude-rules-linkedin-live-profile-reads:
+    path: ari/.claude/rules/linkedin-live-profile-reads.md
+    type: scoped_rule
+    status: draft
+    owner: ari
+    scope: ari
+    introduced: 2026-11-26    # file mtime (untracked; not a history fact)
+    consumers: [claude-code, codex]
+    review:
+      last_reviewed: null
+    related: []

@@ -17,7 +17,7 @@ I curate the docs, ask questions, and guide the analysis. You compile, answer, a
 INGESTING.md                                  -- the ingest procedure. Read before ingesting; not always-on context.
 AUDITING.md                                   -- the wiki audit procedure. Read when asked to audit.
 template/                                     -- AGENTS.md / CLAUDE.md every sub-wiki uses (symlinked)
-check-index-links.rb                          -- validates every local link in every generated index.md
+check-index-links.rb                          -- validates every local link in every generated wiki page
 .claude/commands/ingest.md                    -- `/ingest`: run INGESTING.md over all of docs/
 ../knowledge-base/AGENTS.md                   -- the knowledge base's own rules, read by every agent there
 ../knowledge-base/docs/                       -- human working docs; never edit their contents
@@ -101,6 +101,7 @@ never from inside a sub-wiki — the contradiction and orphan checks need the wh
 - Always update `generated-wikis/index.md`, the sub-wiki's `wiki/index.md` and `wiki/log.md`, and `docs-manifest.tsv` after changes
 - Keep page names, sub-wiki names, and the `docs/` folders you create lowercase with hyphens (e.g., `machine-learning.md`)
 - Include the `.md` extension in every relative link to a Markdown file, and run
-  `ruby check-index-links.rb` after changing any `index.md`.
+  `ruby check-index-links.rb` after changing any wiki page. It checks
+  `generated-wikis/index.md` and every page under each `wiki/`, not only the indexes.
 - Write in clear, plain language
 - When uncertain about how to categorize something, ask the user

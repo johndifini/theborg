@@ -49,9 +49,22 @@ For redlines, pull the `<w:ins>` / `<w:del>` blocks separately and read
 
 ### PDFs with a text layer
 
-Most PDFs have one. `pdftotext` is **not** installed; neither is `pypdf`. Do not
-build a venv for this — macOS ships PDFKit and `swiftc` is available. Write the
-extractor once into the session scratchpad:
+Most PDFs have one. `pdftotext` is **not** installed; neither are `mutool`,
+`qpdf`, `pypdf` or `pdftoppm`, and the `Read` tool's `pages` option fails here
+for that reason ("pdftoppm is not installed", 2026-11-23). Don't probe for them.
+Use the workspace helper, which compiles the PDFKit recipes below once and
+caches the binary under `tmp/pdfkit-bin/`:
+
+```sh
+.bin/pdf-text.sh <file.pdf> [first last]       # text, === PAGE n === markers, NULs stripped
+.bin/pdf-text.sh --meta <file.pdf>             # attributes, annotations, no-text pages, fonts
+.bin/pdf-text.sh --render <file.pdf> <first> <last> <outdir> [scale]
+```
+
+`--meta` is the method for the ingest gate's hidden-content check on a PDF
+(metadata, annotations and their URLs, form-field values), and lists the
+embedded fonts for checking a Word export. The Swift below is the helper's
+documented source; you only need it if the helper fails:
 
 ```swift
 // pdftext.swift — usage: ./pdftext <file.pdf> [firstPage] [lastPage]
@@ -114,7 +127,9 @@ for i in (first - 1)..<last {
 
 A rendered page of a personal document can carry an SSN or an account number.
 Write them to the session scratchpad, never to `tmp/`, and delete them when
-you are done reading.
+you are done reading. This is the one exception to the workspace rule that
+scratch goes in `tmp/`: `tmp/` is mirrored to Drive. It is why `--render`
+requires an explicit outdir.
 
 ### Scanned PDFs and photographed documents
 

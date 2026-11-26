@@ -257,7 +257,12 @@ own ## Recap. If a stop hook asks for a missing section, answer with the full \
 briefing again plus that section, never the section alone."
 else
   PREAMBLE_DUTIES="Perform every phase below yourself, including the state gate, \
-the notify-email.sh delivery, and the state write."
+the notify-email.sh delivery, and the state write. Make every state-file write \
+its own Bash call, and never chain cleanup to one. Leave this run's scratch files \
+in the workspace tmp/: headless, rm -r, rm -rf and find -delete there are refused \
+(by the removal safety check, or as not auto-allowable by a prefix rule), even \
+with a literal absolute path, and the whole command line is refused with them \
+(2026-10-26, 2026-11-15, 2026-11-18 twice, 2026-11-25)."
 fi
 
 PROMPT_CONTENT="You are a scheduled (headless) run of the task named \

@@ -411,7 +411,7 @@ Read these before acting:
 2. `ari/career-dossier/docs/IMPLEMENTATION-PLAN.md`
 3. Workspace-root `AGENTS.md`
 4. `ari/AGENTS.md`
-5. `ari/.private/AGENTS.md` only when Ari begins private-provenance work
+5. `ari/CLAUDE.local.md` only when Ari begins private-provenance work
 
 ADR-0001 is accepted and the Phase 0 gate is closed. The continuation section
 above is the current operational entry point; the foundation sections below are
@@ -582,7 +582,7 @@ created during project initialization was removed.
 Ari then owns Phases 5, 6, and 9 because they involve candidate evidence and job
 alignment:
 
-1. Read `ari/.private/AGENTS.md` before private files.
+1. Read `ari/CLAUDE.local.md` before private files.
 2. Create the private provenance and publication-manifest sidecars from tracked
    synthetic schemas.
 3. Map stable public claim IDs to private source artifacts without duplicating

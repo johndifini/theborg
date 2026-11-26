@@ -536,8 +536,12 @@ FIXTURE_FILES = {
     "agentx/.private/CLAUDE.md": "@AGENTS.md\n",
     "agentx/.private/note.md": "# note\n",
     "agentx/.private/contract.docx": "binary-ish\n",
+    "agentx/.private/Ledger.gsheet": "{\"doc_id\": \"x\"}\n",
+    "agentx/.private/Backups/note.20261120-135936.md": "# old copy\n",
     "agentx/.private/scheduled-tasks/jobs.tasks": "table\n",
     "agentx/.private/memory-inventory.yaml": "version: 1\nartifacts:\n",
+    # A CLAUDE.local.md that holds the private context itself, with no import.
+    "agenty/CLAUDE.local.md": "# private context\n",
     "agentx/.private.example/AGENTS.example.md": "# synthetic\n",
 
     # Knowledge base.
@@ -589,6 +593,7 @@ EXPECTED = {
     "agentx/CLAUDE.local.md": ("compatibility_wrapper", "mirror", "private"),
     "agentx/.private/AGENTS.md": ("always_on_instruction", "canonical", "private"),
     "agentx/.private/CLAUDE.md": ("compatibility_wrapper", "mirror", "private"),
+    "agenty/CLAUDE.local.md": ("always_on_instruction", "canonical", "private"),
     "agentx/.private/note.md": ("private_memory", "canonical", "private"),
     "knowledge-base/generated-wikis/index.md": ("retrieval_index", "canonical", "public"),
     "knowledge-base/generated-wikis/codex-ecosystem/AGENTS.md": ("compatibility_wrapper", "mirror", "public"),
@@ -683,6 +688,8 @@ def test_discovery_classification():
                           (".gitignore", "repository configuration"),
                           (".claude/settings.local.json", "harness configuration"),
                           ("agentx/.private/contract.docx", "domain document"),
+                          ("agentx/.private/Ledger.gsheet", "domain document"),
+                          ("agentx/.private/Backups/note.20261120-135936.md", "timestamped backup"),
                           ("agentx/.private/scheduled-tasks/jobs.tasks", "registration table"),
                           ("knowledge-base/docs/codex-ecosystem/.DS_Store", "OS noise")):
             check("discover: skips %s" % name, name in skipped, sorted(skipped))

@@ -59,7 +59,8 @@ EOF
   2026-09-26/27).
 - Run the pptx skill's `scripts/office/validate.py` by path, under Homebrew
   Python 3.10+ in a venv with `defusedxml` and `lxml` (for example
-  `/opt/homebrew/bin/python3.14 -m venv ${BORG_ROOT}/tmp/pptx-venv`).
+  `/opt/homebrew/bin/python3 -m venv ${BORG_ROOT}/tmp/pptx-venv`; recreate
+  the venv if its interpreter is gone — Homebrew dropped 3.14 by 2026-11-25).
   `/usr/bin/python3` is 3.9 and fails on `match`, and `-m office.validate`
   fails on its `helpers` import. Make any replace of the original depend on
   the validator's exit status: on 2026-10-16 a missing-module error went

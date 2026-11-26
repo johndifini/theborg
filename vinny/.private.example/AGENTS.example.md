@@ -16,6 +16,6 @@
 
 ## Rules
 
-- Read `matter-file.md` first.
+- Read `.private/matter-file.md` first.
 - Treat signed source instruments as authoritative over summaries and drafts.
 - Label internal-only strategy and keep it out of circulation drafts.

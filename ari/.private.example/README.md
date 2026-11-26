@@ -1,6 +1,6 @@
 # Private context example
 
-Copy `AGENTS.example.md` to `.private/AGENTS.md` and replace the synthetic values locally. Copy `RESUME-BULLET-BANK.example.md` to `.private/Resume Bullet Bank.md`, remove the synthetic entries, and populate it only from private source records or candidate confirmation. Create `.private/CLAUDE.md` containing only `@AGENTS.md`, then create `CLAUDE.local.md` in the agent root containing `@.private/AGENTS.md` so Claude Code loads the private context.
+Copy `AGENTS.example.md` to `CLAUDE.local.md` in the agent root and replace the synthetic values locally. Claude Code loads that file automatically; Codex reads it through the pointer in `AGENTS.md`. Copy `RESUME-BULLET-BANK.example.md` to `.private/Resume Bullet Bank.md`, remove the synthetic entries, and populate it only from private source records or candidate confirmation.
 
 The career-dossier publication workflow uses the synthetic contracts in:
 

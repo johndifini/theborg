@@ -1,6 +1,6 @@
 # Private Ebert Context
 
-Parent scaffold: `../AGENTS.md`. Watch history: `WATCH-LOG.md`.
+Parent scaffold: `AGENTS.md`. Watch history: `.private/WATCH-LOG.md`.
 
 ## Household
 

@@ -15,7 +15,7 @@ the method.
 
 ## Resolve and preflight
 
-1. Re-read `${BORG_ROOT}/ari/.private/AGENTS.md` and the private manifest schema
+1. Re-read `${BORG_ROOT}/ari/CLAUDE.local.md` and the private manifest schema
    documentation before handling candidate files.
 2. Resolve the source with:
 
@@ -105,7 +105,15 @@ the method.
     Never infer `submitted` merely from PDF export.
 16. Run `resume_corpus.py validate` again, then run the scanner in dry-run mode.
     The finalized artifact must no longer appear as pending.
+17. If step 14 reused an artifact ID, run
+    `python3 ari/.bin/dossier_publication.py audit` from the workspace root and
+    read its output, not a pipeline's exit status. Reusing an ID replaces the
+    artifact's bullet set, so any provenance claim the rebuilt resume dropped
+    fails with "resume manifest artifact no longer selects RB-NNN". Back up
+    `Career Claim Provenance.json`, repoint each such claim to another recorded
+    artifact that still selects it, and rerun until audit resolves every claim.
+    Report the repair. Never delete a claim's provenance to clear the error.
 
 Report the resolved DOCX, exported PDF, page-verification result, harvested
 bullet IDs and variants, any claims awaiting confirmation, manifest artifact
-ID/status, and the final dry-run result.
+ID/status, the final dry-run result, and any provenance repair from step 17.

@@ -19,4 +19,6 @@ Recurring workflow for adding a company to the AI sleeve investable universe. Mo
 5. **Add a parallel `## Inclusion theses` bullet** matching sibling format:
    `- **TICKER** — <one-line thesis>; Reevaluate if <condition>.`
 
-6. **Report** the category placement and note that the name competes on market cap at the next rebalance.
+6. **Re-read the edited code blocks.** Confirm every closing ``` of `categories` and `soft_excludes` sits on its own line (deleting a placeholder line together with its newline glues the fence onto the line before, and the monthly job then misreads the exclude list), and that the new thesis bullet follows the last member of its group rather than splitting a pair.
+
+7. **Report** the category placement and note that the name competes on market cap at the next rebalance.
