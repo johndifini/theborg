@@ -84,7 +84,7 @@ Read and follow the instructions in
 `${BORG_ROOT}` in that file as the repo root — the output of
 `git rev-parse --show-toplevel` (the `theborg` directory).
 
-The prompt's phases are named (GATE, WINDOW, HARVEST, OUTPUT, RECORD STATE). Apply these
+The prompt's phases are named (GATE, WINDOW, HARVEST, CARRY FORWARD, OUTPUT, RESUME, RECORD STATE). Apply these
 overrides for interactive invocation, referenced by phase name:
 
 1. Skip the **GATE** phase entirely — do not check the weekly state file. An interactive
@@ -100,6 +100,8 @@ overrides for interactive invocation, referenced by phase name:
    when that is the outcome). For knowledge-base
    candidates, do NOT auto-stage into `knowledge-base/docs/to-organize/`; instead show the proposed source
    file (path + content) and ask before staging it. (Rule / AGENTS.md / skill candidates
-   remain propose-only, exactly as in the scheduled run.)
+   remain propose-only, exactly as in the scheduled run.) After the digest, go straight to
+   the **RESUME** phase's decision handling: the user is already here, so no resume prompt
+   is needed.
 4. Skip the **RECORD STATE** phase entirely — do not write the state file. An interactive
    run must not move the harvest-window boundary for the next scheduled run.
