@@ -7394,3 +7394,27 @@ artifacts:
     review:
       last_reviewed: null
     related: []
+
+  c4po-agents-skills-last30days-reddit-lane-skill:
+    path: c4po/.agents/skills/last30days-reddit-lane/SKILL.md
+    type: generated_rule_bridge
+    status: draft
+    owner: c4po
+    scope: c4po
+    canonical_ref: c4po-claude-rules-last30days-reddit-lane
+    introduced: 2026-11-27    # file mtime (untracked; not a history fact)
+    review:
+      last_reviewed: null
+    related: []
+
+  c4po-claude-rules-last30days-reddit-lane:
+    path: c4po/.claude/rules/last30days-reddit-lane.md
+    type: scoped_rule
+    status: draft
+    owner: c4po
+    scope: c4po
+    introduced: 2026-11-27    # file mtime (untracked; not a history fact)
+    consumers: [claude-code, codex]
+    review:
+      last_reviewed: null
+    related: []
