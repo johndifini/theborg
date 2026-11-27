@@ -29,9 +29,13 @@ its own `agents/` directory), which are not copies of anything. The outer
 `comm` keeps only names that also exist as a skill in the Claude plugin cache.
 Each name it prints is a **hand-copied plugin**, not a bridged artifact —
 nothing re-syncs it, so it goes stale the next time the Claude plugin updates
-and nothing reports that. `last30days` is currently one: v3.31.0, copied
-2026-10-27 (replacing v3.8.3 from 2026-09-15). Verified 2026-11-15: the
-check prints only `last30days`.
+and nothing reports that. None is left: on 2026-11-26 `last30days` moved
+from a hand-copy (v3.31.0) to its native Codex plugin
+(`codex plugin marketplace add mvanhorn/last30days-skill`, then
+`codex plugin add last30days@last30days-skill`), and the check prints
+nothing. The weekly `c4po-cli-update` job reports when either copy falls
+behind the latest release; it never updates one, because a new release
+needs `/vet-skill` first.
 
 Before hand-copying, run `codex plugin list`. Codex has its own plugin
 marketplaces (`codex plugin add|list|marketplace`, codex-cli 0.166.0 and

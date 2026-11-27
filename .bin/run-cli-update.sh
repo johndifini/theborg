@@ -113,6 +113,80 @@ run_doctor() {
   (cd "$BORG_ROOT" && "$binary" doctor </dev/null) > "$doctor_output" 2>&1
 }
 
+# Third-party plugins to watch for drift: "<plugin>@<marketplace> <owner/repo>".
+# Report-only, on purpose. A new release must pass /vet-skill before it is
+# installed, and both marketplaces install the default branch's head, not the
+# tagged release (2026-11-26: last30days "4.6.0" installed as ed7ec67, 50
+# commits past the v4.6.0 tag). So this job compares versions and says so; it
+# never runs `plugin update` itself.
+readonly WATCHED_PLUGINS=(
+  "last30days@last30days-skill mvanhorn/last30days-skill"
+)
+
+# Latest release tag of owner/repo, without the leading "v". Plain curl, no
+# token: the unauthenticated GitHub API allows 60 calls an hour.
+latest_release() {
+  curl -fsS --max-time 20 -H 'Accept: application/vnd.github+json' \
+    "https://api.github.com/repos/$1/releases/latest" 2>/dev/null |
+    python3 -I -c 'import json,sys; print(json.load(sys.stdin)["tag_name"].lstrip("v"))' 2>/dev/null
+}
+
+# Installed version of <plugin>@<marketplace> in Claude Code, or "".
+claude_plugin_version() {
+  python3 -I - "$1" <<'PY' 2>/dev/null
+import json, os, sys
+path = os.path.expanduser("~/.claude/plugins/installed_plugins.json")
+entries = json.load(open(path)).get("plugins", {}).get(sys.argv[1], [])
+print(entries[0].get("version", "") if entries else "")
+PY
+}
+
+# Installed version of <plugin>@<marketplace> in Codex, or "".
+codex_plugin_version() {
+  "${CODEX_BIN:-codex}" plugin list 2>/dev/null |
+    awk -v id="$1" '$1 == id && /installed/ { print $(NF-1); exit }'   # columns: PLUGIN STATUS VERSION SOURCE
+}
+
+# Appends one line per watched plugin and harness to $2; returns 1 when any
+# installed copy is behind its latest release, 2 when a check could not run.
+check_plugin_drift() {
+  local claude_present="$1" output_file="$2" codex_present="$3"
+  local entry id repo latest installed harness behind=0 unknown=0
+  {
+    echo
+    echo "--- third-party plugins (report-only; vet before updating) ---"
+  } >> "$output_file"
+  for entry in "${WATCHED_PLUGINS[@]}"; do
+    id=${entry%% *}; repo=${entry#* }
+    latest="$(latest_release "$repo")"
+    if [[ -z "$latest" ]]; then
+      echo "$id: could not read the latest release of $repo" >> "$output_file"
+      unknown=1
+      continue
+    fi
+    for harness in claude codex; do
+      if [[ $harness == claude ]]; then
+        [[ $claude_present -eq 1 ]] || continue
+        installed="$(claude_plugin_version "$id")"
+      else
+        [[ $codex_present -eq 1 ]] || continue
+        installed="$(codex_plugin_version "$id")"
+      fi
+      if [[ -z "$installed" ]]; then
+        echo "$id ($harness): not installed" >> "$output_file"
+      elif [[ "$installed" == "$latest" ]]; then
+        echo "$id ($harness): $installed, current" >> "$output_file"
+      else
+        echo "$id ($harness): $installed installed, $latest released — BEHIND" >> "$output_file"
+        behind=1
+      fi
+    done
+  done
+  [[ $behind -eq 1 ]] && return 1
+  [[ $unknown -eq 1 ]] && return 2
+  return 0
+}
+
 main() {
   local _caller_root="${BORG_ROOT:-}"
   BORG_ROOT="${BORG_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
@@ -142,6 +216,7 @@ main() {
 
   local started_at finished_at status=0 doctor_status=0 parser_status=0
   local known_count=0 new_count=0 subject doctor_summary
+  local drift_status=0 plugin_summary
   started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
   echo "===== $started_at start $TASK_NAME =====" > "$RUN_OUTPUT"
@@ -212,6 +287,15 @@ main() {
     fi
   fi
 
+  # Drift is information, not failure: it never changes $status, so a new
+  # upstream release cannot turn the weekly email into a FAILED one.
+  check_plugin_drift "$claude_present" "$RUN_OUTPUT" "$codex_present" || drift_status=$?
+  case $drift_status in
+    0) plugin_summary="Third-party plugins: all current." ;;
+    1) plugin_summary="Third-party plugins: an update is available (see below); vet it before installing." ;;
+    *) plugin_summary="Third-party plugins: could not check every release (see below)." ;;
+  esac
+
   finished_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
   echo "===== $finished_at updates and doctor complete (exit $status) =====" >> "$RUN_OUTPUT"
   cat "$RUN_OUTPUT" >> "$LOG_FILE"
@@ -225,6 +309,7 @@ main() {
 
   if ! {
     echo "$doctor_summary"
+    echo "$plugin_summary"
     if [[ $new_count -gt 0 ]]; then
       echo
       cat "$NEW_FINDINGS"
@@ -242,15 +327,17 @@ main() {
     # when the run actually left something to do: a clean update with no new
     # doctor findings has no meaningful next step, and the convention omits the
     # section rather than handing back a weekly chore this job already automates.
-    if [[ $status -ne 0 || ${new_count:-0} -gt 0 ]]; then
+    if [[ $status -ne 0 || ${new_count:-0} -gt 0 || $drift_status -eq 1 ]]; then
       echo
       echo "## Suggested Next Prompt"
       echo
       echo '```text'
       if [[ $status -ne 0 ]]; then
         echo "Weekly CLI maintenance failed with exit $status — read $LOG_FILE, diagnose the failure, and propose a fix."
-      else
+      elif [[ ${new_count:-0} -gt 0 ]]; then
         echo "Triage the ${new_count} new Claude doctor finding(s) from this week's CLI maintenance in $LOG_FILE and propose a fix for each."
+      else
+        echo "From c4po/, run /vet-skill on each third-party plugin this week's CLI maintenance reports as BEHIND in $LOG_FILE and, if it passes, update its Claude and Codex copies."
       fi
       echo '```'
     fi
