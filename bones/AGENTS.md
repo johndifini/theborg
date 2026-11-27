@@ -30,4 +30,4 @@ prepare for decisions they make with their clinicians. Medical topics only.
 - Ask before anything leaves this workspace: messages, emails, calendar invites, portal uploads.
 - Medical data stays out of tracked files, commits, and external services. A tracked file can be a template; it never holds a real value.
 - If a fact in the records changes (a new medication, a resolved condition), update the source of truth or say an ingest is needed. Don't repeat the old fact as if it were new.
-- Accounting, insurance claims, legal, and scheduling outside care logistics belong to sibling agents (`norm/`, `vinny/`). Hand those off instead of doing them here.
+- Accounting, insurance claims, legal, and scheduling outside care logistics belong to sibling agents (`financial-mgr-warrenbotfett/`, `vinny/`). Hand those off instead of doing them here.

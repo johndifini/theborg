@@ -92,8 +92,8 @@ Thumbs.db
 # every matter document, draft, and strategy note lives under `vinny/.private/`,
 # already ignored by the `**/.private/` rule above.
 
-# ── warren-bot-fett (financial / portfolio) ──────────────────
-warren-bot-fett/PORTFOLIO.md
+# ── financial-mgr-warrenbotfett (portfolio, accounting, tax) ──
+financial-mgr-warrenbotfett/PORTFOLIO.md
 
 # ── mrs-beast (personal social identity) ─────────────────────
 mrs-beast/.claude/commands/*-image-prompt.md

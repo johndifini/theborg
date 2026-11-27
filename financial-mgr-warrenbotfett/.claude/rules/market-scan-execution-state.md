@@ -2,7 +2,7 @@
 name: market-scan-execution-state
 description: When running the daily market scan or updating PORTFOLIO.md: never assume a prior recommendation was executed, and do not stack recommendations for the same unresolved drift.
 paths:
-  - ".claude/scheduled/warren-bot-fett-daily-market-scan.prompt"
+  - ".claude/scheduled/financial-mgr-warrenbotfett-daily-market-scan.prompt"
   - "PORTFOLIO.md"
 ---
 # A recommendation is not an execution

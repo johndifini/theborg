@@ -4,11 +4,11 @@ private: true
 ---
 
 Re-verify the 2026 estimated-tax safe harbor interactively. Same logic as the one-shot
-launchd job `com.theborg.norm-q4-withholding-recheck`, executed here in the session instead
+launchd job `com.theborg.financial-mgr-warrenbotfett-q4-withholding-recheck`, executed here in the session instead
 of on its scheduled date — no duplicated instructions.
 
 Read and follow the instructions in
-`${BORG_ROOT}/norm/.claude/scheduled/norm-q4-withholding-recheck.prompt`.
+`${BORG_ROOT}/financial-mgr-warrenbotfett/.claude/scheduled/financial-mgr-warrenbotfett-q4-withholding-recheck.prompt`.
 Treat every occurrence of `${BORG_ROOT}` in that file as the repo root — the
 output of `git rev-parse --show-toplevel` (the `theborg` directory).
 

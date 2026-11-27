@@ -16,9 +16,8 @@ This repo is my personal AI workspace, shared in case the patterns, structure, o
 - `knowledge-base/` — The shared second brain. `docs/` is mine to scribble in; `generated-wikis/` is the compiled version for agents. Personal knowledge, reusable context, and other things Future Me will definitely forget.
 - `c4po/` — The workspace administrator agent. Handles things like uptime, config, security, monitoring, and general “please don’t let this catch fire” duties.
 - `mrs-beast/` — The social media manager agent. Helps with posts, ideas, drafts, and occasionally making me sound more clever than I am.
-- `warren-bot-fett/` — The investment portfolio manager agent. Tracks portfolio ideas, market context, and other financially flavored stuff.
+- `financial-mgr-warrenbotfett/` — The financial manager agent (Warren Botfett): portfolio management plus personal accounting and tax. Tracks allocations and market context, organizes financial records, and prepares work for licensed-professional review.
 - `bones/` — The family medical assistant agent. Tracks health context, surfaces medical information, and helps the family stay on top of care decisions.
-- `norm/` — The personal accounting and tax agent. Organizes financial records, supports tax planning and compliance, and prepares work for licensed-professional review.
 - `ari/` — The personal job recruiter agent. Finds suitable roles, tailors applications, prepares interviews, and helps evaluate offers.
 - `vinny/` — The personal legal-document and deal-negotiation agent. Reads agreements, tracks negotiation state, and prepares working material for counsel review.
 - `architetto/` — The software architect agent. Bootstraps greenfield repos — picking the stack, automated-testing framework, repo structure, and database — then hands them off with the decisions written down.
@@ -69,12 +68,12 @@ For model-job details, see `<agent>/.claude/scheduled/<label>.prompt`; the CLI u
 |---|---|---|
 | `mrs-beast-social-media-drafts` | Sun, Mon, Wed at 4:00 PM | Surveys the last 7 days of shipped work across the workspace and the WAIQ app, picks the single most interesting change (skipping topics already posted about), and emails one X (Twitter) post draft plus a ready-to-paste infographic prompt. |
 
-### warren-bot-fett
+### financial-mgr-warrenbotfett
 
 | Label | Schedule | What it does |
 |---|---|---|
-| `warren-bot-fett-daily-market-scan` | Mon–Fri at 9:00 AM — **paused since 2026-08-06**³ | Fetches market data (indices, yields, VIX), checks portfolio allocations against targets, and emails the result every run — a specific trade alert when a genuine buying opportunity exists, otherwise a brief no-action summary (one-liner on market holidays). |
-| `warren-bot-fett-ai-sleeve-monthly` | 1st–5th of each month at 9:00 AM¹ | Runs the AI Sleeve rebalance on the first trading day of the month: ranks candidates by market cap, enforces category minimums, computes floor-adjusted weights, and delivers a target-weights report via email. Writes the git-ignored `warren-bot-fett/.private/ai-sleeve/last-rebalance.json` for month-over-month diffs, plus a dated per-run CSV record under `warren-bot-fett/.private/ai-sleeve/history/`. |
+| `financial-mgr-warrenbotfett-daily-market-scan` | Mon–Fri at 9:00 AM — **paused since 2026-08-06**³ | Fetches market data (indices, yields, VIX), checks portfolio allocations against targets, and emails the result every run — a specific trade alert when a genuine buying opportunity exists, otherwise a brief no-action summary (one-liner on market holidays). |
+| `financial-mgr-warrenbotfett-ai-sleeve-monthly` | 1st–5th of each month at 9:00 AM¹ | Runs the AI Sleeve rebalance on the first trading day of the month: ranks candidates by market cap, enforces category minimums, computes floor-adjusted weights, and delivers a target-weights report via email. Writes the git-ignored `financial-mgr-warrenbotfett/.private/ai-sleeve/last-rebalance.json` for month-over-month diffs, plus a dated per-run CSV record under `financial-mgr-warrenbotfett/.private/ai-sleeve/history/`. |
 
 ¹ Fired on days 1–5 as a retry window in case the machine was asleep on day 1. The prompt enforces once-per-month execution via a state file.
 
@@ -82,7 +81,7 @@ For model-job details, see `<agent>/.claude/scheduled/<label>.prompt`; the CLI u
 
 ³ Paused for a ~4-month account rebalance via `launchctl disable`, so the row stays in the installer's task table and its plist stays current, but `--load` skips the bootstrap instead of failing. A private one-shot job fires 2026-12-06 to ask whether to resume; re-enabling is deliberately manual:
 ```
-launchctl enable gui/$(id -u)/com.theborg.warren-bot-fett-daily-market-scan
+launchctl enable gui/$(id -u)/com.theborg.financial-mgr-warrenbotfett-daily-market-scan
 .bin/install-scheduled-tasks.sh --load
 ```
 
@@ -125,8 +124,8 @@ Every prompt-driven Borg-agent scheduled task has a matching interactive command
 | `/ingest` | knowledge-mgr-cerebruh | Compiles the knowledge base: files whatever is waiting in `knowledge-base/docs/to-organize/` into a folder under `docs/`, then reconciles every added, updated, moved, or deleted doc into `knowledge-base/generated-wikis/` (injection-scanned; claims resting only on a deleted doc are removed). Run it from `knowledge-mgr-cerebruh/`. Follows `INGESTING.md`. |
 | `/social-media-drafts` | mrs-beast | Runs the `mrs-beast-social-media-drafts` logic interactively, outputting the post draft and infographic prompt to the session instead of email. Always drafts something even if the topics log rules everything out, and does not append to that log, so it never spends a topic the scheduled run hasn't used. |
 | `/slide-visual` | jony-vibe | Generates one slide-ready illustration from supplied slide copy or a numbered slide in the current deck. In Codex, invoke it as `$slide-visual`; if the deck for a slide number is unclear, it asks for the deck. |
-| `/market-scan` | warren-bot-fett | Runs the `warren-bot-fett-daily-market-scan` logic interactively, reporting the full scan (allocations vs. targets, deviations, opportunity verdict) to the session instead of email. Skips the market-holiday gate so it always runs. |
-| `/ai-sleeve-rebalance` | warren-bot-fett | Runs the `warren-bot-fett-ai-sleeve-monthly` logic interactively, reporting target weights and the month-over-month diff to the session instead of email. Skips the once-per-month gate and does not write `last-rebalance.json`, so it never clobbers the scheduled run's diff baseline; it does write a `history/{date}-interactive.csv` record. |
+| `/market-scan` | financial-mgr-warrenbotfett | Runs the `financial-mgr-warrenbotfett-daily-market-scan` logic interactively, reporting the full scan (allocations vs. targets, deviations, opportunity verdict) to the session instead of email. Skips the market-holiday gate so it always runs. |
+| `/ai-sleeve-rebalance` | financial-mgr-warrenbotfett | Runs the `financial-mgr-warrenbotfett-ai-sleeve-monthly` logic interactively, reporting target weights and the month-over-month diff to the session instead of email. Skips the once-per-month gate and does not write `last-rebalance.json`, so it never clobbers the scheduled run's diff baseline; it does write a `history/{date}-interactive.csv` record. |
 ## Status
 
 This is one person’s working setup, not a polished product.

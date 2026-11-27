@@ -8,9 +8,8 @@ The Borg is a standardized AI workspace that turns prompts, institutional knowle
 - `knowledge-base/` — shared second-brain knowledge base available to every directory of The Borg: `docs/` holds the user's working documents (for humans), `generated-wikis/` their compiled form (for agents). Everything in it is git-ignored except its instruction files and folder placeholders.
 - `c4po/` — An agent that functions as this AI workspace's administrator (uptime, config, security, monitoring)
 - `mrs-beast/` — An agent that functions as a social media manager
-- `warren-bot-fett/` — An agent that functions as an investment portfolio manager
+- `financial-mgr-warrenbotfett/` — An agent that functions as the user's financial manager: manages the family investment portfolios and acts as personal accounting and tax assistant (organizes records, supports planning and compliance, prepares CPA-reviewable work).
 - `bones/` — An agent that functions as a family medical assistant
-- `norm/` — An agent that functions as a personal accounting and tax assistant: organizes records, supports planning and compliance, and prepares CPA-reviewable work.
 - `ari/` — An agent that functions as a personal job recruiter: identifies suitable opportunities, tailors application materials, and supports interview and offer decisions.
 - `vinny/` — An agent that functions as a personal legal-document and deal-negotiation assistant: reads agreements, tracks negotiation state, and prepares counsel-reviewable working material.
 - `architetto/` — An agent that functions as a software architect: bootstraps greenfield repositories (stack, automated-testing framework, repo structure, database) and hands each off with the decisions recorded.

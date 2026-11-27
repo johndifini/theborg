@@ -100,8 +100,8 @@ TASKS=(
   # bootstrap (see the disabled check below) rather than failing with EIO. The
   # row stays so the job remains in the tracked inventory; the one-shot reminder
   # below fires 2026-12-06 to ask whether to re-enable it.
-  "warren-bot-fett|warren-bot-fett-daily-market-scan|weekly-mon-fri-09-00|prompt"
-  "warren-bot-fett|warren-bot-fett-ai-sleeve-monthly|month-first5-17-00|prompt"
+  "financial-mgr-warrenbotfett|financial-mgr-warrenbotfett-daily-market-scan|weekly-mon-fri-09-00|prompt"
+  "financial-mgr-warrenbotfett|financial-mgr-warrenbotfett-ai-sleeve-monthly|month-first5-17-00|prompt"
 )
 
 # Where each row came from, index-aligned with TASKS. Only used to make a bad

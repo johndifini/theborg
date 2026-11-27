@@ -3,11 +3,11 @@ description: Run the daily market scan interactively, reporting results to this 
 ---
 
 Run the daily market scan interactively. Same logic as the launchd job
-`com.theborg.warren-bot-fett-daily-market-scan`, executed here in the
+`com.theborg.financial-mgr-warrenbotfett-daily-market-scan`, executed here in the
 session instead of on a schedule — no duplicated instructions.
 
 Read and follow the instructions in
-`${BORG_ROOT}/warren-bot-fett/.claude/scheduled/warren-bot-fett-daily-market-scan.prompt`.
+`${BORG_ROOT}/financial-mgr-warrenbotfett/.claude/scheduled/financial-mgr-warrenbotfett-daily-market-scan.prompt`.
 Treat every occurrence of `${BORG_ROOT}` in that file as the repo root — the
 output of `git rev-parse --show-toplevel` (the `theborg` directory).
 

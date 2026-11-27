@@ -1,11 +1,11 @@
-# PORTFOLIO.md — Portfolio Manager Long-Term Memory
+# PORTFOLIO.md — Portfolio Manager Long-Term Memory (operational state)
 
 > Template. Copy to `PORTFOLIO.md` (gitignored) and replace **every** value
 > below with your own. Nothing in this file may describe a real portfolio,
 > account, entity, instrument, person, or family circumstance — the placeholders
 > show shape only, and the shape is the only part that is public. That structure
-> is what the scheduled jobs (`warren-bot-fett-daily-market-scan.prompt`,
-> `warren-bot-fett-ai-sleeve-monthly.prompt`) expect to find.
+> is what the scheduled jobs (`financial-mgr-warrenbotfett-daily-market-scan.prompt`,
+> `financial-mgr-warrenbotfett-ai-sleeve-monthly.prompt`) expect to find.
 >
 > In particular, entity and trust details, governing-instrument citations,
 > beneficiary and family structure, estate-tax posture, and the account
@@ -33,23 +33,7 @@ article and section numbers in the private copy.>
 
 ## Asset Allocation Principles (All Portfolios)
 
-### Equity/Bond Split (Age-Based Glide Path)
-- **High Risk:** Equity % = 120 − age of youngest spouse/beneficiary
-- **Medium Risk:** Equity % = 115 − age of youngest spouse/beneficiary
-- Bond % = remainder (100 − Equity %)
-
-### International/Domestic Splits
-- **International Equity:** 25–30% of total equity (high risk → 30%, medium risk → 25%)
-- **Domestic Equity:** remainder of equity bucket
-- **International Bonds:** 20% of total bonds
-- **Domestic Bonds:** 80% of total bonds
-
-### Security Selection Rules
-- **ETFs preferred**, mutual funds acceptable (lesser extent)
-- **Individual equities OK** — including for tax-advantaged or alternative strategies
-- **Individual bonds NOT allowed** — use bond ETFs/funds instead
-- Freedom to choose tax-advantaged investments (e.g., muni ETFs for trust tax efficiency)
-- Freedom to include alternative investments (REITs, commodities, etc.) via ETFs/equities
+The glide-path formulas, splits, security selection rules, asset category framework and asset location map are not kept here. They live in the user's `knowledge-base/docs/asset-allocation/allocation-principles.md` and its compiled `asset-allocation` sub-wiki. This file holds only their per-portfolio application.
 
 ### Portfolio Participants & Risk
 - **PORTFOLIO_A:** youngest born <YEAR> (age <N> in <YEAR>), risk 3.0 (high)
@@ -64,29 +48,6 @@ Risk scale: 1–3 continuous. 2 = medium (factor 115, 25% int'l eq), 3 = high (f
 **EXAMPLE-TRUST** (factor 117.5, age <N>): Dom Eq <pct>% | Int'l Eq <pct>% | Dom Bonds <pct>% | Int'l Bonds <pct>%
 
 *Recalculate annually as ages increment.*
-
-## Asset Category Framework
-
-Categories within asset classes are **tactical, not formulaic**. Priority order:
-
-1. **Tax consequences** in taxable accounts (highest priority)
-2. **Current market conditions**
-3. **Diversification** across the following dimensions:
-
-### Bond Diversification
-**Duration:** Short | Intermediate | Long
-**Quality:** Low (high-yield/junk) | Mid | High (investment-grade) | Treasury
-- TIPS may be included at PM discretion for inflation protection
-
-### Equity Diversification
-**Capitalization:** Large | Mid | Small
-**Style:** Value | Blend | Growth
-**Sector/Industry:** Consider concentration risk across sectors (tech, healthcare, financials, etc.)
-
-### Notes
-- Factor exposure (momentum, quality, low-vol) — not in scope for now
-- Muni bonds preferred in trust accounts for tax efficiency (compressed brackets)
-- Category allocation is flexible and judgment-driven, unlike the rigid class allocation formula
 
 ## Portfolio Data Source
 - Google Sheet CSV Export: `<paste-your-csv-export-url-here>`

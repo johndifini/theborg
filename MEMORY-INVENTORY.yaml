@@ -667,23 +667,6 @@ artifacts:
       method: [semantic, best_practice]
     related: []
 
-  norm-agents:
-    path: norm/AGENTS.md
-    type: always_on_instruction
-    status: draft
-    owner: norm
-    scope: norm
-    visibility: public
-    canonicality: canonical
-    introduced: 2026-08-15    # first git add
-    load_mode: always
-    consumers: [claude-code, codex, claude-desktop]
-    review:
-      cadence: monthly
-      last_reviewed: null
-      method: [semantic, best_practice]
-    related: []
-
   vinny-agents:
     path: vinny/AGENTS.md
     type: always_on_instruction
@@ -702,11 +685,11 @@ artifacts:
     related: []
 
   warren-bot-fett-agents:
-    path: warren-bot-fett/AGENTS.md
+    path: financial-mgr-warrenbotfett/AGENTS.md
     type: always_on_instruction
     status: draft
-    owner: warren-bot-fett
-    scope: warren-bot-fett
+    owner: financial-mgr-warrenbotfett
+    scope: financial-mgr-warrenbotfett
     visibility: public
     canonicality: canonical
     introduced: 2026-07-12    # first git add
@@ -1026,11 +1009,11 @@ artifacts:
     related: []
 
   norm-claude-commands-q4-withholding-recheck:
-    path: norm/.claude/commands/q4-withholding-recheck.md
+    path: financial-mgr-warrenbotfett/.claude/commands/q4-withholding-recheck.md
     type: command
     status: draft
-    owner: norm
-    scope: norm
+    owner: financial-mgr-warrenbotfett
+    scope: financial-mgr-warrenbotfett
     visibility: public
     canonicality: canonical
     introduced: 2026-08-16    # first git add
@@ -1043,11 +1026,11 @@ artifacts:
     related: []
 
   warren-bot-fett-claude-commands-ai-sleeve-rebalance:
-    path: warren-bot-fett/.claude/commands/ai-sleeve-rebalance.md
+    path: financial-mgr-warrenbotfett/.claude/commands/ai-sleeve-rebalance.md
     type: command
     status: draft
-    owner: warren-bot-fett
-    scope: warren-bot-fett
+    owner: financial-mgr-warrenbotfett
+    scope: financial-mgr-warrenbotfett
     visibility: public
     canonicality: canonical
     introduced: 2026-05-28    # first git add
@@ -1060,11 +1043,11 @@ artifacts:
     related: []
 
   warren-bot-fett-claude-commands-market-scan:
-    path: warren-bot-fett/.claude/commands/market-scan.md
+    path: financial-mgr-warrenbotfett/.claude/commands/market-scan.md
     type: command
     status: draft
-    owner: warren-bot-fett
-    scope: warren-bot-fett
+    owner: financial-mgr-warrenbotfett
+    scope: financial-mgr-warrenbotfett
     visibility: public
     canonicality: canonical
     introduced: 2026-05-28    # first git add
@@ -1652,24 +1635,6 @@ artifacts:
       method: [drift_only]
     related: []
 
-  norm-claude:
-    path: norm/CLAUDE.md
-    type: compatibility_wrapper
-    status: draft
-    owner: norm
-    scope: norm
-    visibility: public
-    canonicality: mirror
-    canonical_ref: norm-agents
-    introduced: 2026-08-15    # first git add
-    load_mode: always
-    consumers: [claude-code]
-    review:
-      cadence: each_audit
-      last_reviewed: null
-      method: [drift_only]
-    related: []
-
   vinny-claude:
     path: vinny/CLAUDE.md
     type: compatibility_wrapper
@@ -1689,11 +1654,11 @@ artifacts:
     related: []
 
   warren-bot-fett-claude:
-    path: warren-bot-fett/CLAUDE.md
+    path: financial-mgr-warrenbotfett/CLAUDE.md
     type: compatibility_wrapper
     status: draft
-    owner: warren-bot-fett
-    scope: warren-bot-fett
+    owner: financial-mgr-warrenbotfett
+    scope: financial-mgr-warrenbotfett
     visibility: public
     canonicality: mirror
     canonical_ref: warren-bot-fett-agents
@@ -1728,8 +1693,8 @@ artifacts:
     path_root: codex_home
     type: generated_command_bridge
     status: draft
-    owner: warren-bot-fett
-    scope: warren-bot-fett
+    owner: financial-mgr-warrenbotfett
+    scope: financial-mgr-warrenbotfett
     canonical_ref: warren-bot-fett-claude-commands-ai-sleeve-rebalance
     introduced: 2026-09-01    # file mtime (untracked; not a history fact)
     review:
@@ -1828,8 +1793,8 @@ artifacts:
     path_root: codex_home
     type: generated_command_bridge
     status: draft
-    owner: warren-bot-fett
-    scope: warren-bot-fett
+    owner: financial-mgr-warrenbotfett
+    scope: financial-mgr-warrenbotfett
     canonical_ref: warren-bot-fett-claude-commands-market-scan
     introduced: 2026-09-01    # file mtime (untracked; not a history fact)
     review:
@@ -1878,8 +1843,8 @@ artifacts:
     path_root: codex_home
     type: generated_command_bridge
     status: draft
-    owner: norm
-    scope: norm
+    owner: financial-mgr-warrenbotfett
+    scope: financial-mgr-warrenbotfett
     canonical_ref: norm-claude-commands-q4-withholding-recheck
     introduced: 2026-09-01    # file mtime (untracked; not a history fact)
     review:
@@ -2032,11 +1997,11 @@ artifacts:
     related: []
 
   warren-bot-fett-agents-skills-market-scan-execution-state-skill:
-    path: warren-bot-fett/.agents/skills/market-scan-execution-state/SKILL.md
+    path: financial-mgr-warrenbotfett/.agents/skills/market-scan-execution-state/SKILL.md
     type: generated_rule_bridge
     status: draft
-    owner: warren-bot-fett
-    scope: warren-bot-fett
+    owner: financial-mgr-warrenbotfett
+    scope: financial-mgr-warrenbotfett
     canonical_ref: warren-bot-fett-claude-rules-market-scan-execution-state
     introduced: 2026-08-15    # first git add
     review:
@@ -2044,11 +2009,11 @@ artifacts:
     related: []
 
   warren-bot-fett-agents-skills-yahoo-chart-daily-return-skill:
-    path: warren-bot-fett/.agents/skills/yahoo-chart-daily-return/SKILL.md
+    path: financial-mgr-warrenbotfett/.agents/skills/yahoo-chart-daily-return/SKILL.md
     type: generated_rule_bridge
     status: draft
-    owner: warren-bot-fett
-    scope: warren-bot-fett
+    owner: financial-mgr-warrenbotfett
+    scope: financial-mgr-warrenbotfett
     canonical_ref: warren-bot-fett-claude-rules-yahoo-chart-daily-return
     introduced: 2026-08-15    # first git add
     review:
@@ -5803,11 +5768,11 @@ artifacts:
     related: []
 
   warren-bot-fett-claude-skills-add-ai-universe-ticker-skill:
-    path: warren-bot-fett/.claude/skills/add-ai-universe-ticker/SKILL.md
+    path: financial-mgr-warrenbotfett/.claude/skills/add-ai-universe-ticker/SKILL.md
     type: procedural_skill
     status: draft
-    owner: warren-bot-fett
-    scope: warren-bot-fett
+    owner: financial-mgr-warrenbotfett
+    scope: financial-mgr-warrenbotfett
     visibility: public
     canonicality: canonical
     introduced: 2026-06-21    # first git add
@@ -6092,11 +6057,11 @@ artifacts:
     related: []
 
   norm-claude-scheduled-norm-q4-withholding-recheck:
-    path: norm/.claude/scheduled/norm-q4-withholding-recheck.prompt
+    path: financial-mgr-warrenbotfett/.claude/scheduled/financial-mgr-warrenbotfett-q4-withholding-recheck.prompt
     type: scheduled_prompt
     status: draft
-    owner: norm
-    scope: norm
+    owner: financial-mgr-warrenbotfett
+    scope: financial-mgr-warrenbotfett
     visibility: public
     canonicality: canonical
     introduced: 2026-08-16    # first git add
@@ -6109,11 +6074,11 @@ artifacts:
     related: []
 
   warren-bot-fett-claude-scheduled-warren-bot-fett-ai-sleeve-monthly:
-    path: warren-bot-fett/.claude/scheduled/warren-bot-fett-ai-sleeve-monthly.prompt
+    path: financial-mgr-warrenbotfett/.claude/scheduled/financial-mgr-warrenbotfett-ai-sleeve-monthly.prompt
     type: scheduled_prompt
     status: draft
-    owner: warren-bot-fett
-    scope: warren-bot-fett
+    owner: financial-mgr-warrenbotfett
+    scope: financial-mgr-warrenbotfett
     visibility: public
     canonicality: canonical
     introduced: 2026-05-23    # first git add
@@ -6126,11 +6091,11 @@ artifacts:
     related: []
 
   warren-bot-fett-claude-scheduled-warren-bot-fett-daily-market-scan:
-    path: warren-bot-fett/.claude/scheduled/warren-bot-fett-daily-market-scan.prompt
+    path: financial-mgr-warrenbotfett/.claude/scheduled/financial-mgr-warrenbotfett-daily-market-scan.prompt
     type: scheduled_prompt
     status: draft
-    owner: warren-bot-fett
-    scope: warren-bot-fett
+    owner: financial-mgr-warrenbotfett
+    scope: financial-mgr-warrenbotfett
     visibility: public
     canonicality: canonical
     introduced: 2026-05-23    # first git add
@@ -6188,11 +6153,11 @@ artifacts:
     related: []
 
   warren-bot-fett-claude-rules-market-scan-execution-state:
-    path: warren-bot-fett/.claude/rules/market-scan-execution-state.md
+    path: financial-mgr-warrenbotfett/.claude/rules/market-scan-execution-state.md
     type: scoped_rule
     status: draft
-    owner: warren-bot-fett
-    scope: warren-bot-fett
+    owner: financial-mgr-warrenbotfett
+    scope: financial-mgr-warrenbotfett
     introduced: 2026-08-08    # first git add
     consumers: [claude-code, codex]
     review:
@@ -6200,11 +6165,11 @@ artifacts:
     related: []
 
   warren-bot-fett-claude-rules-yahoo-chart-daily-return:
-    path: warren-bot-fett/.claude/rules/yahoo-chart-daily-return.md
+    path: financial-mgr-warrenbotfett/.claude/rules/yahoo-chart-daily-return.md
     type: scoped_rule
     status: draft
-    owner: warren-bot-fett
-    scope: warren-bot-fett
+    owner: financial-mgr-warrenbotfett
+    scope: financial-mgr-warrenbotfett
     introduced: 2026-08-01    # first git add
     consumers: [claude-code, codex]
     review:

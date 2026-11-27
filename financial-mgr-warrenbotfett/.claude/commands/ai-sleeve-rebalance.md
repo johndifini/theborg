@@ -3,11 +3,11 @@ description: Run the monthly AI Sleeve rebalance interactively, reporting result
 ---
 
 Run the monthly AI Sleeve rebalance interactively. Same logic as the launchd job
-`com.theborg.warren-bot-fett-ai-sleeve-monthly`, executed here in the
+`com.theborg.financial-mgr-warrenbotfett-ai-sleeve-monthly`, executed here in the
 session instead of on a schedule — no duplicated instructions.
 
 Read and follow the instructions in
-`${BORG_ROOT}/warren-bot-fett/.claude/scheduled/warren-bot-fett-ai-sleeve-monthly.prompt`.
+`${BORG_ROOT}/financial-mgr-warrenbotfett/.claude/scheduled/financial-mgr-warrenbotfett-ai-sleeve-monthly.prompt`.
 Treat every occurrence of `${BORG_ROOT}` in that file as the repo root — the
 output of `git rev-parse --show-toplevel` (the `theborg` directory).
 

@@ -42,7 +42,7 @@ file already exists, update it in place without overwriting unrelated entries.
 
 Because the memory store is keyed to the git repo root, **all agents under the
 same repo share it** (e.g., in The Borg: bones, c4po, mrs-beast,
-warren-bot-fett all read/write the same directory). Two consequences:
+financial-mgr-warrenbotfett all read/write the same directory). Two consequences:
 
 - Name topic files by topic and owning agent when relevant so each agent can
   quickly find its own context. Keep only a short description and link in

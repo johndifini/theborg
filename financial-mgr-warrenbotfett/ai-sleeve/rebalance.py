@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """AI sleeve rebalance: STEP 2-5 and STEP 8 of the monthly prompt, reproducibly.
 
-The prompt `warren-bot-fett/.claude/scheduled/warren-bot-fett-ai-sleeve-monthly.prompt`
+The prompt `financial-mgr-warrenbotfett/.claude/scheduled/financial-mgr-warrenbotfett-ai-sleeve-monthly.prompt`
 owns the method; this script is its executable form. It:
 
 * parses `ai-sleeve/universe.md` (Tunables, `categories`, `soft_excludes`);

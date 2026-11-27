@@ -39,7 +39,7 @@ ordinary version numbers, and launchd labels are not account identifiers.
 
 Then perform a model judgment pass for private domain facts. Keep this pass
 deliberately narrow: read only tracked `bones/AGENTS.md`, `bones/CLAUDE.md`, and
-every tracked file under `warren-bot-fett/`, `norm/`, `ari/`, `vinny/`, and
+every tracked file under `financial-mgr-warrenbotfett/`, `ari/`, `vinny/`, and
 `ebert/`. Decide from meaning and context; do not reduce this class to keywords.
 Private medical facts, holdings, balances, tax circumstances, career history,
 compensation, application state, agreement facts, negotiation strategy, and

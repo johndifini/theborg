@@ -14,7 +14,7 @@
 # over Gmail SMTP via curl — no server, nothing to clobber.
 #
 # Usage: notify-email.sh <agent> [subject] < body
-#   agent   — c4po | mrs-beast | warren-bot-fett (labels the From line + subject)
+#   agent   — c4po | mrs-beast | financial-mgr-warrenbotfett (labels the From line + subject)
 #   subject — optional; defaults to "[Borg/<agent>] notification"
 #
 # Credentials come from the Borg's single consolidated env file (chmod 600).

@@ -1,6 +1,6 @@
 """Tests for ai-sleeve/rebalance.py against a fixture universe with fixed caps.
 
-Run: python3 -m unittest discover -s warren-bot-fett/ai-sleeve/tests
+Run: python3 -m unittest discover -s financial-mgr-warrenbotfett/ai-sleeve/tests
 """
 
 import contextlib

@@ -1057,7 +1057,7 @@ PRIVATE_PATTERNS = (
 # Gitignored artifacts that carry an agent's confidential domain data but do not
 # live under `.private/`. Listed individually so each entry is a decision.
 PRIVATE_PATHS = frozenset({
-    "warren-bot-fett/PORTFOLIO.md",
+    "financial-mgr-warrenbotfett/PORTFOLIO.md",
     "mrs-beast/.claude/commands/ai-week-image-prompt.md",
     "mrs-beast/.claude/scheduled/mrs-beast-ai-week-image-prompt.prompt",
 })

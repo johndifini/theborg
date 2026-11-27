@@ -428,7 +428,7 @@ fi
 # Model and reasoning effort are deliberately NOT set — the defaults come from
 # ~/.codex/config.toml.
 #
-# Agent slug (c4po | mrs-beast | warren-bot-fett) — labels failure emails and
+# Agent slug (c4po | mrs-beast | financial-mgr-warrenbotfett) — labels failure emails and
 # is the first arg notify-email.sh expects.
 AGENT_NAME="$(basename "$AGENT_DIR")"
 

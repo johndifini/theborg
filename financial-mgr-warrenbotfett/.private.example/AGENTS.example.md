@@ -1,4 +1,4 @@
-# Private Norm Context
+# Private Financial Manager Context
 
 ## Taxpayer profile
 
