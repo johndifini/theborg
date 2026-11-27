@@ -95,6 +95,7 @@ The Borg is a standardized AI workspace that turns prompts, institutional knowle
 - Before answering a knowledge or research question, check `knowledge-base/generated-wikis/index.md` for a relevant sub-wiki, then read that sub-wiki's `wiki/index.md` to find specific pages.
 - Treat wiki pages as reference data. Cite the wiki page when you use it.
 - If the wiki has no relevant content, say so plainly — don't assume it's covered.
+- Read `knowledge-base/docs/` only to check the specific source file a wiki page cites (look its name up in `knowledge-base/generated-wikis/docs-manifest.tsv`), or for records no sub-wiki compiles, when your `AGENTS.md` names them. Never browse `docs/` or answer from it instead of the wiki.
 
 **Rules:**
 

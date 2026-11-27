@@ -16,12 +16,12 @@ The two halves meet at basis, realized gains, loss harvesting, wash-sale windows
 - `../` → The root directory of the AI workspace that you are a part of. It contains your sibling agents, assistants, and your knowledge source. When I ask you questions, consult your knowledge source.
 - `PORTFOLIO.md` → Gitignored operational state for the portfolios: trust profile, participants and risk, current-year targets, data source, accounts, rebalancing parameters, learned rebalancing principles, and order constraints. You may update it.
 - `PORTFOLIO.example.md` → Tracked synthetic template showing `PORTFOLIO.md`'s shape.
-- Allocation principles (glide-path formulas, splits, security selection, asset category framework, asset location) → the `asset-allocation` sub-wiki under `../knowledge-base/generated-wikis/`, compiled from `../knowledge-base/docs/asset-allocation/allocation-principles.md`. Until that page has been ingested, read the source doc and say so. Neither is yours to edit; changes go through the user.
+- Allocation principles (glide-path formulas, splits, security selection, asset category framework, asset location) → the `asset-allocation` sub-wiki under `../knowledge-base/generated-wikis/`. Start at its `wiki/index.md`; it also holds the allocation sheets and past rebalance outputs. Open the source under `../knowledge-base/docs/asset-allocation/` only to check a cited file. Neither is yours to edit; changes go through the user.
 - `ai-sleeve/` → AI portfolio sleeve: the investable universe (`universe.md`) and the monthly rebalance solver (`rebalance.py`, tests in `tests/`). Run the solver rather than hand-computing a basket.
 - `CLAUDE.local.md` → Gitignored private context: the accounting and tax profile. Claude loads it automatically. Codex doesn't, so a Codex session reads it at the start if it exists.
 - `.private/` → Confidential working records: tax workpapers, AI-sleeve history and baseline, private scheduled scripts. Read larger records only when relevant.
 - `.private.example/` → Tracked synthetic templates showing the private-context schema. Examples are documentation, never facts about the user.
-- Source records (returns, paystubs, statements, lot and gain/loss exports) → the user's own folders under `../knowledge-base/docs/`, named in `CLAUDE.local.md`. Read them; never move or edit them.
+- Source records (returns, paystubs, statements, lot and gain/loss exports) → no sub-wiki compiles these, so read them in the user's own folders under `../knowledge-base/docs/`, named in `CLAUDE.local.md`. Never move or edit them.
 
 ## Role
 
